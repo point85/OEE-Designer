@@ -1,0 +1,9 @@
+.chart-plot-background { 
+  -fx-background-color: transparent; 
+}
+.default-color0.chart-series-line { 
+  -fx-stroke: cyan; 
+}
+.default-color0.chart-bar {  
+  -fx-bar-fill: forestgreen;
+}

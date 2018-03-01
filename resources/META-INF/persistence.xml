@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+
+    <persistence-unit name="OEE" transaction-type="RESOURCE_LOCAL">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        
+      	<!-- specify name of jar file containing the entity classes 
+        <jar-file>oee-domain-1.0.jar</jar-file>   
+        -->     
+
+        <!-- entity classes -->                
+      	<class>org.point85.domain.collector.DataCollector</class>
+      	<class>org.point85.domain.collector.DataSource</class>
+      	<class>org.point85.domain.collector.EventHistory</class>
+      	<class>org.point85.domain.collector.ProductionHistory</class>
+      	<class>org.point85.domain.collector.SetupHistory</class>
+      	
+      	<class>org.point85.domain.http.HttpSource</class>
+      	<class>org.point85.domain.messaging.MessagingSource</class>
+      	<class>org.point85.domain.opc.da.OpcDaSource</class>
+      	<class>org.point85.domain.opc.ua.OpcUaSource</class>
+      	<class>org.point85.domain.web.WebSource</class>
+      	
+      	<class>org.point85.domain.plant.Area</class>
+      	<class>org.point85.domain.plant.Enterprise</class>
+      	<class>org.point85.domain.plant.Equipment</class>
+      	<class>org.point85.domain.plant.EquipmentMaterial</class>
+      	<class>org.point85.domain.plant.Material</class>
+      	<class>org.point85.domain.plant.PlantEntity</class>
+      	<class>org.point85.domain.plant.ProductionLine</class>
+      	<class>org.point85.domain.plant.Reason</class>
+      	<class>org.point85.domain.plant.Site</class>
+      	<class>org.point85.domain.plant.WorkCell</class>
+      	
+      	<class>org.point85.domain.script.ScriptResolver</class>
+      	<class>org.point85.domain.uom.UnitOfMeasure</class>
+      	
+      	<class>org.point85.domain.workschedule.NonWorkingPeriod</class>
+      	<class>org.point85.domain.workschedule.Rotation</class>
+      	<class>org.point85.domain.workschedule.RotationSegment</class>
+      	<class>org.point85.domain.workschedule.Shift</class>      	
+      	<class>org.point85.domain.workschedule.Team</class>
+      	<class>org.point85.domain.workschedule.WorkSchedule</class>  
+        
+		<!-- use the listed entity classes -->
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+
+        <properties>
+        	<property name="hibernate.dialect" value="org.hibernate.dialect.SQLServer2012Dialect"/>
+					
+         	<!-- <property name="javax.persistence.jdbc.url" value="jdbc:sqlserver://Kent-Acer:1433;databaseName=JPA"/> -->
+         	<property name="javax.persistence.jdbc.url" value="jdbc:sqlserver://localhost:1433;databaseName=OEE"/>
+         	<property name="javax.persistence.jdbc.user" value="Point85"/>
+         	<property name="javax.persistence.jdbc.password" value="Point85"/>
+         	         	
+         	<property name="javax.persistence.jdbc.driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
+         	
+         	<!-- lazy loading without a transaction -->
+         	<property name="hibernate.enable_lazy_load_no_trans" value="true"/>
+         	
+         	<!--  multiple representations of the same entity are being merged -->
+         	<property name="hibernate.event.merge.entity_copy_observer" value="allow"/>
+         	
+         	<!-- Configuring Connection Pool 
+      		<property name="hibernate.c3p0.min_size" value="5" />
+      		<property name="hibernate.c3p0.max_size" value="20" />
+      		<property name="hibernate.c3p0.timeout" value="1000" />
+      		<property name="hibernate.c3p0.max_statements" value="50" />
+      		<property name="hibernate.c3p0.idle_test_period" value="2000" />
+      		-->
+      		 
+         	
+         	<!-- debugging -->
+         	<!-- <property name="hibernate.generate_statistics" value="true" /> -->
+         	<property name="show_sql" value="true"/>
+        	<property name="format_sql" value="true"/>
+        	<!-- <property name="hibernate.ejb.interceptor" value="org.point85.oee.persistence.AuditInterceptor" /> -->
+        </properties>
+    </persistence-unit>
+</persistence>
