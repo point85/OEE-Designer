@@ -791,7 +791,7 @@ public class DashboardController extends DialogController implements CategoryCli
 								.setValue(showCumulative ? incrementTotalProduction(totalReject) : totalReject);
 					} else {
 
-						tiProduction.getLeaderBoardItems().get(RND.nextInt(3)).setValue(RND.nextDouble() * 80);
+						tiProduction.getLeaderBoardItems().get(RND.nextInt(2)).setValue(RND.nextDouble() * 80);
 					}
 
 					// material

@@ -6,11 +6,7 @@
 
     <persistence-unit name="OEE" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        
-      	<!-- specify name of jar file containing the entity classes 
-        <jar-file>oee-domain-1.0.jar</jar-file>   
-        -->     
-
+    
         <!-- entity classes -->                
       	<class>org.point85.domain.collector.DataCollector</class>
       	<class>org.point85.domain.collector.DataSource</class>
@@ -38,12 +34,12 @@
       	<class>org.point85.domain.script.ScriptResolver</class>
       	<class>org.point85.domain.uom.UnitOfMeasure</class>
       	
-      	<class>org.point85.domain.workschedule.NonWorkingPeriod</class>
-      	<class>org.point85.domain.workschedule.Rotation</class>
-      	<class>org.point85.domain.workschedule.RotationSegment</class>
-      	<class>org.point85.domain.workschedule.Shift</class>      	
-      	<class>org.point85.domain.workschedule.Team</class>
-      	<class>org.point85.domain.workschedule.WorkSchedule</class>  
+      	<class>org.point85.domain.schedule.NonWorkingPeriod</class>
+      	<class>org.point85.domain.schedule.Rotation</class>
+      	<class>org.point85.domain.schedule.RotationSegment</class>
+      	<class>org.point85.domain.schedule.Shift</class>      	
+      	<class>org.point85.domain.schedule.Team</class>
+      	<class>org.point85.domain.schedule.WorkSchedule</class>    
         
 		<!-- use the listed entity classes -->
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
@@ -54,8 +50,7 @@
          	<!-- <property name="javax.persistence.jdbc.url" value="jdbc:sqlserver://Kent-Acer:1433;databaseName=JPA"/> -->
          	<property name="javax.persistence.jdbc.url" value="jdbc:sqlserver://localhost:1433;databaseName=OEE"/>
          	<property name="javax.persistence.jdbc.user" value="Point85"/>
-         	<property name="javax.persistence.jdbc.password" value="Point85"/>
-         	         	
+         	<property name="javax.persistence.jdbc.password" value="Point85"/>       	         	
          	<property name="javax.persistence.jdbc.driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
          	
          	<!-- lazy loading without a transaction -->
@@ -64,20 +59,17 @@
          	<!--  multiple representations of the same entity are being merged -->
          	<property name="hibernate.event.merge.entity_copy_observer" value="allow"/>
          	
-         	<!-- Configuring Connection Pool 
+         	<!-- Configuring Connection Pool -->
       		<property name="hibernate.c3p0.min_size" value="5" />
       		<property name="hibernate.c3p0.max_size" value="20" />
       		<property name="hibernate.c3p0.timeout" value="1000" />
       		<property name="hibernate.c3p0.max_statements" value="50" />
       		<property name="hibernate.c3p0.idle_test_period" value="2000" />
-      		-->
-      		 
          	
          	<!-- debugging -->
          	<!-- <property name="hibernate.generate_statistics" value="true" /> -->
-         	<property name="show_sql" value="true"/>
-        	<property name="format_sql" value="true"/>
-        	<!-- <property name="hibernate.ejb.interceptor" value="org.point85.oee.persistence.AuditInterceptor" /> -->
+         	<!-- <property name="show_sql" value="true"/> -->
+        	<!-- <property name="format_sql" value="true"/> -->
         </properties>
     </persistence-unit>
 </persistence>

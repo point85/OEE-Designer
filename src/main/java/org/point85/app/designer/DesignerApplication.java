@@ -1,7 +1,5 @@
 package org.point85.app.designer;
 
-import java.net.URL;
-
 import org.point85.app.Images;
 import org.point85.app.LoaderFactory;
 import org.point85.app.dashboard.DashboardController;
@@ -99,28 +97,27 @@ public class DesignerApplication extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			// create application context
-			appContext = new OeeContext();
-
-			// UI
-			primaryStage.setTitle("OEE Designer");
-			primaryStage.getIcons().add(Images.point85Image);
-
 			// Load root layout from fxml file.
-			URL url = getClass().getResource("DesignerApplication.fxml");
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(url);
+			loader.setLocation(getClass().getResource("DesignerApplication.fxml"));
 			AnchorPane mainLayout = (AnchorPane) loader.load();
-
-			// Show the scene containing the root layout.
-			Scene scene = new Scene(mainLayout);
-			primaryStage.setScene(scene);
 
 			// Give the controller access to the main app.
 			physicalModelController = loader.getController();
 			physicalModelController.initialize(this);
 
+			// create application context
+			appContext = new OeeContext();
+
+			// Show the scene containing the root layout.
+			Scene scene = new Scene(mainLayout);
+
+			// UI
+			primaryStage.setTitle("OEE Designer");
+			primaryStage.getIcons().add(Images.point85Image);
+			primaryStage.setScene(scene);
 			primaryStage.show();
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

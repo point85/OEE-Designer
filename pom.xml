@@ -30,7 +30,7 @@
     <artifactId>gson</artifactId>
     <version>2.8.2</version>
 </dependency>
-        
+     
 <!-- jcifs for Open SCADA -->
 <dependency>
     <groupId>jcifs</groupId>
@@ -46,7 +46,6 @@
     <version>1.1.0.v20130529</version>
 </dependency>
 
-
 <!-- OpenSCADA jinterop fork -->
 <dependency>
     <groupId>org.openscada</groupId>
@@ -60,34 +59,13 @@
     <artifactId>utgard</artifactId>
     <version>1.4</version>
 </dependency>
-
         
 <!--  OPC UA -->
 <!-- https://mvnrepository.com/artifact/org.eclipse.milo/sdk-client -->
+<!-- also loads stack-client, stack-core, sdk-core -->
 <dependency>
     <groupId>org.eclipse.milo</groupId>
     <artifactId>sdk-client</artifactId>
-    <version>0.1.6</version>
-</dependency>
-
-<!-- https://mvnrepository.com/artifact/org.eclipse.milo/sdk-core -->
-<dependency>
-    <groupId>org.eclipse.milo</groupId>
-    <artifactId>sdk-core</artifactId>
-    <version>0.1.6</version>
-</dependency>
-
-<!-- https://mvnrepository.com/artifact/org.eclipse.milo/stack-client  -->
-<dependency>
-    <groupId>org.eclipse.milo</groupId>
-    <artifactId>stack-client</artifactId>
-    <version>0.1.6</version>
-</dependency>
-
-<!-- https://mvnrepository.com/artifact/org.eclipse.milo/stack-core -->
-<dependency>
-    <groupId>org.eclipse.milo</groupId>
-    <artifactId>stack-core</artifactId>
     <version>0.1.6</version>
 </dependency>
 
@@ -112,13 +90,7 @@
     <groupId>log4j</groupId>
     <artifactId>log4j</artifactId>
     <version>1.2.17</version>
-</dependency>
-
-<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
-<dependency>
-    <groupId>org.slf4j</groupId>
-    <artifactId>slf4j-api</artifactId>
-    <version>1.7.25</version>
+    <scope>runtime</scope>
 </dependency>
 
 <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-log4j12 -->
@@ -126,14 +98,22 @@
     <groupId>org.slf4j</groupId>
     <artifactId>slf4j-log4j12</artifactId>
     <version>1.7.25</version>
-    <scope>test</scope>
+    <scope>runtime</scope>
 </dependency>
-
+ 
 <!-- https://mvnrepository.com/artifact/org.slf4j/jul-to-slf4j -->
 <dependency>
     <groupId>org.slf4j</groupId>
     <artifactId>jul-to-slf4j</artifactId>
     <version>1.7.25</version>
+    <scope>runtime</scope>
+</dependency>
+
+<!-- RABBITMQ AMQP -->
+<dependency>
+    <groupId>com.rabbitmq</groupId>
+    <artifactId>amqp-client</artifactId>
+    <version>5.1.1</version>
 </dependency>
 
 <!-- DATABASE -->
@@ -142,14 +122,7 @@
     <groupId>com.microsoft.sqlserver</groupId>
     <artifactId>mssql-jdbc</artifactId>
     <version>6.2.2.jre8</version>
-    <scope>test</scope>
-</dependency>
-
-<!-- RABBITMQ AMQP -->
-<dependency>
-    <groupId>com.rabbitmq</groupId>
-    <artifactId>amqp-client</artifactId>
-    <version>5.1.1</version>
+    <scope>runtime</scope>
 </dependency>
 
 <!-- OEE Domain jar -->

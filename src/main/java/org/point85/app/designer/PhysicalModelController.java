@@ -210,17 +210,66 @@ public class PhysicalModelController extends DesignerController {
 		return tvEntities.getRoot();
 	}
 
+	private void setProgress(boolean on) {
+		if (on) {
+			Platform.runLater(() -> {
+				piEntities.setVisible(true);
+			});
+		} else {
+			Platform.runLater(() -> {
+				piEntities.setVisible(false);
+			});
+		}
+	}
+
+	private void showRootEntities(List<PlantEntity> entities) {
+		try {
+			// add them to the root entity
+			ObservableList<TreeItem<EntityNode>> children = getRootEntityItem().getChildren();
+			children.clear();
+
+			for (PlantEntity entity : entities) {
+				TreeItem<EntityNode> entityItem = new TreeItem<>(new EntityNode(entity));
+				children.add(entityItem);
+				setEntityGraphic(entityItem);
+			}
+
+			// refresh tree view
+			getRootEntityItem().setExpanded(true);
+			tvEntities.getSelectionModel().clearSelection();
+			tvEntities.refresh();
+		} catch (Exception e) {
+			AppUtils.showErrorDialog("Unable to fetch plant entities.  Check database connection.  " + e.getMessage());
+		} finally {
+			piEntities.setVisible(false);
+		}
+	}
+
 	// initialize app
 	void initialize(DesignerApplication app) throws Exception {
+
 		// main app
 		setApp(app);
 
 		// fill in the top-level entity nodes
-		boolean runOnPlatform = true;
+		int launch = 1;
 
-		if (runOnPlatform) {
+		if (launch == 0) {
+			piEntities.setVisible(true);
+
+			new Thread() {
+				public void run() {
+					List<PlantEntity> entities = fetchTopEntities();
+
+					Platform.runLater(() -> {
+						showRootEntities(entities);
+					});
+				}
+			}.start();
+		} else if (launch == 1) {
 			Platform.runLater(() -> {
 				try {
+					// piEntities.setVisible(true);
 					populateTopEntityNodes();
 				} catch (Exception e) {
 					AppUtils.showErrorDialog(
@@ -229,13 +278,17 @@ public class PhysicalModelController extends DesignerController {
 					piEntities.setVisible(false);
 				}
 			});
-		} else {
+		} else if (launch == 2) {
+			piEntities.setVisible(true);
+
 			// service
 			EntityManagerService service = new EntityManagerService();
 
 			service.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
 				@Override
 				public void handle(WorkerStateEvent event) {
+					piEntities.setVisible(false);
+
 					String value = (String) event.getSource().getValue();
 
 					if (value != null) {
@@ -289,12 +342,24 @@ public class PhysicalModelController extends DesignerController {
 		onSelectEquipmentMaterial();
 	}
 
+	private List<PlantEntity> fetchTopEntities() {
+		long before = System.currentTimeMillis();
+		List<PlantEntity> entities = PersistencyService.instance().fetchTopPlantEntities();
+		if (logger.isInfoEnabled()) {
+			logger.info("Time to fetch entities " + (System.currentTimeMillis() - before) + " msec.");
+		}
+		Collections.sort(entities);
+		return entities;
+	}
+
 	// display top-level entities
 	private void populateTopEntityNodes() throws Exception {
-		tvEntities.getSelectionModel().clearSelection();
-
 		// fetch the entities
+		long before = System.currentTimeMillis();
 		List<PlantEntity> entities = PersistencyService.instance().fetchTopPlantEntities();
+		if (logger.isInfoEnabled()) {
+			logger.info("Time to fetch entities " + (System.currentTimeMillis() - before) + " msec.");
+		}
 		Collections.sort(entities);
 
 		// add them to the root entity
@@ -309,8 +374,8 @@ public class PhysicalModelController extends DesignerController {
 
 		// refresh tree view
 		getRootEntityItem().setExpanded(true);
+		tvEntities.getSelectionModel().clearSelection();
 		tvEntities.refresh();
-
 	}
 
 	private void onSelectEntity(TreeItem<EntityNode> oldItem, TreeItem<EntityNode> newItem) throws Exception {
