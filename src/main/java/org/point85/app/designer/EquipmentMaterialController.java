@@ -5,7 +5,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.point85.app.AppUtils;
-import org.point85.app.Images;
+import org.point85.app.ImageEnum;
+import org.point85.app.ImageManager;
 import org.point85.domain.persistence.PersistencyService;
 import org.point85.domain.plant.Equipment;
 import org.point85.domain.plant.EquipmentMaterial;
@@ -25,7 +26,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 
 public class EquipmentMaterialController extends DesignerController {
 
@@ -90,7 +90,7 @@ public class EquipmentMaterialController extends DesignerController {
 	@FXML
 	private TableColumn<EquipmentMaterial, String> rejectUnitCol;
 
-	void initialize(DesignerApplication app) {
+	void initialize(DesignerApplication app) throws Exception {
 		setApp(app);
 		setImages();
 		initializeMaterialTable();
@@ -174,28 +174,28 @@ public class EquipmentMaterialController extends DesignerController {
 		equipment.setEquipmentMaterials(equipmentMaterials);
 	}
 
-	protected void setImages() {
+	protected void setImages() throws Exception {
 		// new equipment material
-		btNewMaterial.setGraphic(new ImageView(Images.newImage));
+		btNewMaterial.setGraphic(ImageManager.instance().getImageView(ImageEnum.NEW));
 		btNewMaterial.setContentDisplay(ContentDisplay.RIGHT);
 
 		// add equipment material
-		btAddMaterial.setGraphic(new ImageView(Images.addImage));
+		btAddMaterial.setGraphic(ImageManager.instance().getImageView(ImageEnum.ADD));
 		btAddMaterial.setContentDisplay(ContentDisplay.RIGHT);
 
 		// remove equipment material
-		btRemoveMaterial.setGraphic(new ImageView(Images.removeImage));
+		btRemoveMaterial.setGraphic(ImageManager.instance().getImageView(ImageEnum.REMOVE));
 		btRemoveMaterial.setContentDisplay(ContentDisplay.RIGHT);
 
 		// find material
-		btFindMaterial.setGraphic(new ImageView(Images.materialImage));
+		btFindMaterial.setGraphic(ImageManager.instance().getImageView(ImageEnum.MATERIAL));
 		btFindMaterial.setContentDisplay(ContentDisplay.CENTER);
 
 		// find UOMs
-		btFindIRRUnit.setGraphic(new ImageView(Images.uomImage));
+		btFindIRRUnit.setGraphic(ImageManager.instance().getImageView(ImageEnum.UOM));
 		btFindIRRUnit.setContentDisplay(ContentDisplay.CENTER);
 
-		btFindRejectUnit.setGraphic(new ImageView(Images.uomImage));
+		btFindRejectUnit.setGraphic(ImageManager.instance().getImageView(ImageEnum.UOM));
 		btFindRejectUnit.setContentDisplay(ContentDisplay.CENTER);
 	}
 

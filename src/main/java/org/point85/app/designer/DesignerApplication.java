@@ -1,7 +1,7 @@
 package org.point85.app.designer;
 
+import org.point85.app.ImageEnum;
 import org.point85.app.ImageManager;
-import org.point85.app.Images;
 import org.point85.app.LoaderFactory;
 import org.point85.app.dashboard.DashboardController;
 import org.point85.app.dashboard.DashboardDialogController;
@@ -132,7 +132,7 @@ public class DesignerApplication extends Application {
 
 			// UI
 			primaryStage.setTitle("OEE Designer");
-			primaryStage.getIcons().add(Images.point85Image);
+			primaryStage.getIcons().add(ImageManager.instance().getImage(ImageEnum.POINT85));
 			primaryStage.setScene(scene);
 			primaryStage.show();
 

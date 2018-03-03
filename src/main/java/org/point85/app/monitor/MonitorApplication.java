@@ -8,7 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.point85.app.AppUtils;
-import org.point85.app.Images;
+import org.point85.app.ImageEnum;
+import org.point85.app.ImageManager;
 import org.point85.domain.collector.CollectorState;
 import org.point85.domain.collector.DataCollector;
 import org.point85.domain.messaging.ApplicationMessage;
@@ -58,11 +59,8 @@ public class MonitorApplication extends Application implements MessageListener {
 	public void start(Stage primaryStage) {
 		try {
 			primaryStage.setTitle("OEE Monitor");
-			primaryStage.getIcons().add(Images.point85Image);
+			primaryStage.getIcons().add(ImageManager.instance().getImage(ImageEnum.POINT85));
 
-			// Load root layout from fxml file.
-			// AnchorPane mainLayout = (AnchorPane)
-			// FXMLLoader.load(getClass().getResource("MonitorApplication.fxml"));
 			URL url = getClass().getResource("Monitor.fxml");
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(url);

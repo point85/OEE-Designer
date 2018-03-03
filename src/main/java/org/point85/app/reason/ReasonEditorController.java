@@ -13,7 +13,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.point85.app.AppUtils;
-import org.point85.app.Images;
+import org.point85.app.ImageEnum;
+import org.point85.app.ImageManager;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
 import org.point85.domain.performance.TimeLoss;
@@ -33,7 +34,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 
 /**
@@ -148,7 +148,7 @@ public class ReasonEditorController extends DesignerDialogController {
 			boolean isChanged = setAttributes(oldItem);
 
 			if (isChanged) {
-				oldItem.setGraphic(new ImageView(Images.changedImage));
+				oldItem.setGraphic(ImageManager.instance().getImageView(ImageEnum.CHANGED));
 				addEditedReason(oldItem);
 				tvReasons.refresh();
 			}
@@ -172,7 +172,7 @@ public class ReasonEditorController extends DesignerDialogController {
 			for (Reason child : children) {
 				TreeItem<ReasonNode> entityItem = new TreeItem<>(new ReasonNode(child));
 				newItem.getChildren().add(entityItem);
-				entityItem.setGraphic(new ImageView(Images.reasonImage));
+				entityItem.setGraphic(ImageManager.instance().getImageView(ImageEnum.REASON));
 			}
 		}
 		newItem.setExpanded(true);
@@ -180,33 +180,33 @@ public class ReasonEditorController extends DesignerDialogController {
 
 	// images for editor buttons
 	@Override
-	protected void setImages() {
+	protected void setImages() throws Exception {
 		super.setImages();
 
 		// new
-		btNew.setGraphic(new ImageView(Images.newImage));
+		btNew.setGraphic(ImageManager.instance().getImageView(ImageEnum.NEW));
 		btNew.setContentDisplay(ContentDisplay.RIGHT);
 
 		// save
-		btSave.setGraphic(new ImageView(Images.saveImage));
+		btSave.setGraphic(ImageManager.instance().getImageView(ImageEnum.SAVE));
 		btSave.setContentDisplay(ContentDisplay.RIGHT);
 
 		// refresh
-		btRefresh.setGraphic(new ImageView(Images.refreshImage));
+		btRefresh.setGraphic(ImageManager.instance().getImageView(ImageEnum.REFRESH));
 		btRefresh.setContentDisplay(ContentDisplay.RIGHT);
 
 		// delete
-		btDelete.setGraphic(new ImageView(Images.deleteImage));
+		btDelete.setGraphic(ImageManager.instance().getImageView(ImageEnum.DELETE));
 		btDelete.setContentDisplay(ContentDisplay.RIGHT);
 
 		// import
-		btImport.setGraphic(new ImageView(Images.importImage));
+		btImport.setGraphic(ImageManager.instance().getImageView(ImageEnum.IMPORT));
 		btImport.setContentDisplay(ContentDisplay.RIGHT);
 
 		// context menu
-		miSaveAll.setGraphic(new ImageView(Images.saveAllImage));
-		miRefreshAll.setGraphic(new ImageView(Images.refreshAllImage));
-		miClearSelection.setGraphic(new ImageView(Images.clearImage));
+		miSaveAll.setGraphic(ImageManager.instance().getImageView(ImageEnum.SAVE_ALL));
+		miRefreshAll.setGraphic(ImageManager.instance().getImageView(ImageEnum.REFRESH_ALL));
+		miClearSelection.setGraphic(ImageManager.instance().getImageView(ImageEnum.CLEAR));
 	}
 
 	// show the Reason attributes
@@ -240,7 +240,7 @@ public class ReasonEditorController extends DesignerDialogController {
 		for (Reason reason : reasons) {
 			TreeItem<ReasonNode> reasonItem = new TreeItem<>(new ReasonNode(reason));
 			children.add(reasonItem);
-			reasonItem.setGraphic(new ImageView(Images.reasonImage));
+			reasonItem.setGraphic(ImageManager.instance().getImageView(ImageEnum.REASON));
 		}
 
 		// refresh tree view
@@ -311,7 +311,7 @@ public class ReasonEditorController extends DesignerDialogController {
 		}
 
 		if (isDirty) {
-			reasonItem.setGraphic(new ImageView(Images.changedImage));
+			reasonItem.setGraphic(ImageManager.instance().getImageView(ImageEnum.CHANGED));
 			addEditedReason(reasonItem);
 		}
 
@@ -354,12 +354,12 @@ public class ReasonEditorController extends DesignerDialogController {
 			// add new child reason if not a top level
 			if (!parentReason.getName().equals(Reason.ROOT_REASON_NAME)) {
 				parentReason.addChild(newReason);
-				parentItem.setGraphic(new ImageView(Images.changedImage));
+				parentItem.setGraphic(ImageManager.instance().getImageView(ImageEnum.CHANGED));
 			}
 
 			// add to tree view
 			parentItem.getChildren().add(selectedReasonItem);
-			selectedReasonItem.setGraphic(new ImageView(Images.changedImage));
+			selectedReasonItem.setGraphic(ImageManager.instance().getImageView(ImageEnum.CHANGED));
 			addEditedReason(selectedReasonItem);
 
 			parentItem.setExpanded(true);
@@ -370,8 +370,8 @@ public class ReasonEditorController extends DesignerDialogController {
 		return true;
 	}
 
-	private void resetGraphic(TreeItem<ReasonNode> parentItem) {
-		parentItem.setGraphic(new ImageView(Images.reasonImage));
+	private void resetGraphic(TreeItem<ReasonNode> parentItem) throws Exception {
+		parentItem.setGraphic(ImageManager.instance().getImageView(ImageEnum.REASON));
 
 		for (TreeItem<ReasonNode> reasonItem : parentItem.getChildren()) {
 			resetGraphic(reasonItem);
@@ -419,7 +419,7 @@ public class ReasonEditorController extends DesignerDialogController {
 				ReasonNode node = editedReasonItem.getValue();
 				Reason saved = (Reason) PersistencyService.instance().save(node.getReason());
 				node.setReason(saved);
-				editedReasonItem.setGraphic(new ImageView(Images.reasonImage));
+				editedReasonItem.setGraphic(ImageManager.instance().getImageView(ImageEnum.REASON));
 			}
 
 			editedReasonItems.clear();

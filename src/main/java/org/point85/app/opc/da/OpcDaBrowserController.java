@@ -12,7 +12,6 @@ import org.openscada.opc.dcom.da.OPCITEMSTATE;
 import org.point85.app.AppUtils;
 import org.point85.app.ImageEnum;
 import org.point85.app.ImageManager;
-import org.point85.app.Images;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.domain.opc.da.OpcDaBrowserLeaf;
 import org.point85.domain.opc.da.OpcDaClient;
@@ -170,8 +169,6 @@ public class OpcDaBrowserController extends OpcDaController {
 				});
 
 		lvAvailableTags.setCellFactory(param -> new ListCell<OpcDaBrowserLeaf>() {
-			private ImageView imageView = new ImageView(Images.tagImage);
-
 			@Override
 			public void updateItem(OpcDaBrowserLeaf leaf, boolean empty) {
 				super.updateItem(leaf, empty);
@@ -180,7 +177,11 @@ public class OpcDaBrowserController extends OpcDaController {
 					setGraphic(null);
 				} else {
 					setText(leaf.getItemId());
-					setGraphic(imageView);
+					try {
+						setGraphic(ImageManager.instance().getImageView(ImageEnum.TAG));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		});
@@ -326,7 +327,8 @@ public class OpcDaBrowserController extends OpcDaController {
 			// browse root tags
 			treeBrowser = getApp().getOpcDaClient().getTreeBrowser();
 			OpcDaTagTreeBranch rootBranch = treeBrowser.browseBranches();
-			OpcDaTagTreeItem treeRoot = new OpcDaTagTreeItem(rootBranch, treeBrowser, new ImageView(Images.folderImage));
+			ImageView rootView = ImageManager.instance().getImageView(ImageEnum.FOLDER);
+			OpcDaTagTreeItem treeRoot = new OpcDaTagTreeItem(rootBranch, treeBrowser, rootView);
 
 			tvBrowser.setRoot(treeRoot);
 			treeRoot.setExpanded(true);

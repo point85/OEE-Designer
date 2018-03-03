@@ -37,7 +37,7 @@ public class UomImporterController extends DialogController {
 	}
 
 	@FXML
-	public void initialize() {
+	public void initialize() throws Exception {
 		// set unit types
 		for (UnitType unitType : UnitType.values()) {
 			unitTypes.add(unitType.toString());
@@ -62,12 +62,6 @@ public class UomImporterController extends DialogController {
 		for (UnitOfMeasure uom : uoms) {
 			unitItems.add(new UomItem(uom));
 		}
-	}
-
-	// images for buttons
-	@Override
-	protected void setImages() {
-		super.setImages();
 	}
 
 	private class UomItem {

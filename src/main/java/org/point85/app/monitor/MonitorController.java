@@ -7,7 +7,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.point85.app.AppUtils;
-import org.point85.app.Images;
+import org.point85.app.ImageEnum;
+import org.point85.app.ImageManager;
 import org.point85.app.LoaderFactory;
 import org.point85.app.dashboard.DashboardController;
 import org.point85.domain.collector.CollectorState;
@@ -73,7 +74,7 @@ public class MonitorController {
 
 	@FXML
 	private Tab tbNotifications;
-	
+
 	@FXML
 	private Tab tbCollectorStatus;
 
@@ -176,7 +177,7 @@ public class MonitorController {
 					onSelectDashboard();
 				} else if (newValue.equals(tbNotifications)) {
 					onSelectNotifications();
-				} else if (newValue.equals(tbCollectorStatus)) { 
+				} else if (newValue.equals(tbCollectorStatus)) {
 					onSelectCollectorStatus();
 				}
 			} catch (Exception e) {
@@ -348,7 +349,7 @@ public class MonitorController {
 	private void onSelectNotifications() throws Exception {
 
 	}
-	
+
 	private void onSelectCollectorStatus() {
 		this.onRefresh();
 	}
@@ -368,25 +369,25 @@ public class MonitorController {
 
 		switch (level) {
 		case AREA:
-			nodeView = new ImageView(Images.areaImage);
+			nodeView = ImageManager.instance().getImageView(ImageEnum.AREA);
 			break;
 		case ENTERPRISE:
-			nodeView = new ImageView(Images.enterpriseImage);
+			nodeView = ImageManager.instance().getImageView(ImageEnum.ENTERPRISE);
 			break;
 		case EQUIPMENT:
-			nodeView = new ImageView(Images.equipmentImage);
+			nodeView = ImageManager.instance().getImageView(ImageEnum.EQUIPMENT);
 			break;
 
 		case PRODUCTION_LINE:
-			nodeView = new ImageView(Images.lineImage);
+			nodeView = ImageManager.instance().getImageView(ImageEnum.LINE);
 			break;
 
 		case SITE:
-			nodeView = new ImageView(Images.siteImage);
+			nodeView = ImageManager.instance().getImageView(ImageEnum.SITE);
 			break;
 
 		case WORK_CELL:
-			nodeView = new ImageView(Images.cellImage);
+			nodeView = ImageManager.instance().getImageView(ImageEnum.CELL);
 			break;
 
 		default:

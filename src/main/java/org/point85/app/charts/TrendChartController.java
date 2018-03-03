@@ -6,7 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.point85.app.AppUtils;
-import org.point85.app.Images;
+import org.point85.app.ImageEnum;
+import org.point85.app.ImageManager;
 import org.point85.app.LoaderFactory;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerController;
@@ -38,7 +39,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -250,30 +250,24 @@ public class TrendChartController extends DesignerController {
 		});
 	}
 
-	private void toggleTrendButton() {
+	private void toggleTrendButton() throws Exception {
 		if (subscriber.isSubscribed()) {
-			btToggleTrend.setGraphic(new ImageView(Images.stopImage));
+			btToggleTrend.setGraphic(ImageManager.instance().getImageView(ImageEnum.STOP));
 			btToggleTrend.setText("Stop");
 		} else {
-			btToggleTrend.setGraphic(new ImageView(Images.startImage));
+			btToggleTrend.setGraphic(ImageManager.instance().getImageView(ImageEnum.START));
 			btToggleTrend.setText("Start");
 		}
 	}
 
 	// images for buttons
-	protected void setButtonImages() {
-
+	protected void setButtonImages() throws Exception {
 		// start trend
-		btToggleTrend.setGraphic(new ImageView(Images.startImage));
+		btToggleTrend.setGraphic(ImageManager.instance().getImageView(ImageEnum.START));
 		btToggleTrend.setContentDisplay(ContentDisplay.RIGHT);
-		btToggleTrend.setText("Start Trending");
-
-		// stop trend
-		// btStopTrend.setGraphic(new ImageView(Images.stopImage));
-		// btStopTrend.setContentDisplay(ContentDisplay.RIGHT);
 
 		// clear trend
-		btResetTrend.setGraphic(new ImageView(Images.clearImage));
+		btResetTrend.setGraphic(ImageManager.instance().getImageView(ImageEnum.CLEAR));
 		btResetTrend.setContentDisplay(ContentDisplay.RIGHT);
 	}
 

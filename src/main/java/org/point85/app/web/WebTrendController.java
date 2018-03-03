@@ -76,12 +76,6 @@ public class WebTrendController extends DesignerDialogController implements Data
 		return spTrendChart;
 	}
 
-	// images for buttons
-	@Override
-	protected void setImages() {
-		super.setImages();
-	}
-
 	public void setScriptResolver(ScriptResolver scriptResolver) throws Exception {
 		trendChartController.setScriptResolver(scriptResolver);
 

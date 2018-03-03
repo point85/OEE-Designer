@@ -21,7 +21,6 @@ import org.eclipse.milo.opcua.stack.core.types.structured.ReferenceDescription;
 import org.point85.app.AppUtils;
 import org.point85.app.ImageEnum;
 import org.point85.app.ImageManager;
-import org.point85.app.Images;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.domain.DomainUtils;
 import org.point85.domain.opc.ua.OpcUaServerStatus;
@@ -304,15 +303,15 @@ public class OpcUaBrowserController extends OpcUaController {
 		super.setImages();
 
 		// connect
-		btConnect.setGraphic(new ImageView(Images.connectImage));
+		btConnect.setGraphic(ImageManager.instance().getImageView(ImageEnum.CONNECT));
 		btConnect.setContentDisplay(ContentDisplay.RIGHT);
 
 		// disconnect
-		btDisconnect.setGraphic(new ImageView(Images.disconnectImage));
+		btDisconnect.setGraphic(ImageManager.instance().getImageView(ImageEnum.DISCONNECT));
 		btDisconnect.setContentDisplay(ContentDisplay.RIGHT);
 
 		// cancel connect
-		btCancelConnect.setGraphic(new ImageView(Images.cancelImage));
+		btCancelConnect.setGraphic(ImageManager.instance().getImageView(ImageEnum.CANCEL));
 		btCancelConnect.setContentDisplay(ContentDisplay.RIGHT);
 
 		// new
@@ -388,13 +387,13 @@ public class OpcUaBrowserController extends OpcUaController {
 		}
 	}
 
-	private Image getNodeImage(ReferenceDescription ref) {
+	private Image getNodeImage(ReferenceDescription ref) throws Exception {
 		NodeClass nodeClass = ref.getNodeClass();
 		Image image = null;
 		if (nodeClass.equals(NodeClass.Object)) {
-			image = Images.folderImage;
+			image = ImageManager.instance().getImage(ImageEnum.FOLDER);
 		} else if (nodeClass.equals(NodeClass.Variable)) {
-			image = Images.valueImage;
+			image = ImageManager.instance().getImage(ImageEnum.VALUE);
 		}
 		return image;
 	}

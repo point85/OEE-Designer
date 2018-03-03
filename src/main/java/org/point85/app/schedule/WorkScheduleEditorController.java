@@ -11,7 +11,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.point85.app.AppUtils;
-import org.point85.app.Images;
+import org.point85.app.ImageEnum;
+import org.point85.app.ImageManager;
 import org.point85.app.LoaderFactory;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
@@ -49,7 +50,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -566,7 +566,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 	}
 
 	@FXML
-	public void initialize() {
+	public void initialize() throws Exception {
 		// images for controls
 		setImages();
 	}
@@ -616,7 +616,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 			boolean isChanged = setAttributes(oldItem);
 
 			if (isChanged) {
-				oldItem.setGraphic(new ImageView(Images.changedImage));
+				oldItem.setGraphic(ImageManager.instance().getImageView(ImageEnum.CHANGED));
 				tvSchedules.refresh();
 			}
 		}
@@ -744,92 +744,92 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 
 	@Override
 	// images for editor buttons
-	protected void setImages() {
+	protected void setImages() throws Exception {
 		super.setImages();
 
 		// new schedule
-		btNew.setGraphic(new ImageView(Images.newImage));
+		btNew.setGraphic(ImageManager.instance().getImageView(ImageEnum.NEW));
 		btNew.setContentDisplay(ContentDisplay.RIGHT);
 
 		// save schedule
-		btSave.setGraphic(new ImageView(Images.saveImage));
+		btSave.setGraphic(ImageManager.instance().getImageView(ImageEnum.SAVE));
 		btSave.setContentDisplay(ContentDisplay.RIGHT);
 
 		// refesh schedule
-		btRefresh.setGraphic(new ImageView(Images.refreshImage));
+		btRefresh.setGraphic(ImageManager.instance().getImageView(ImageEnum.REFRESH));
 		btRefresh.setContentDisplay(ContentDisplay.RIGHT);
 
 		// delete schedule
-		btDelete.setGraphic(new ImageView(Images.deleteImage));
+		btDelete.setGraphic(ImageManager.instance().getImageView(ImageEnum.DELETE));
 		btDelete.setContentDisplay(ContentDisplay.RIGHT);
 
 		// new shift
-		btNewShift.setGraphic(new ImageView(Images.newImage));
+		btNewShift.setGraphic(ImageManager.instance().getImageView(ImageEnum.NEW));
 		btNewShift.setContentDisplay(ContentDisplay.LEFT);
 
 		// add shift
-		btAddShift.setGraphic(new ImageView(Images.addImage));
+		btAddShift.setGraphic(ImageManager.instance().getImageView(ImageEnum.ADD));
 		btAddShift.setContentDisplay(ContentDisplay.LEFT);
 
 		// remove shift
-		btRemoveShift.setGraphic(new ImageView(Images.removeImage));
+		btRemoveShift.setGraphic(ImageManager.instance().getImageView(ImageEnum.REMOVE));
 		btRemoveShift.setContentDisplay(ContentDisplay.LEFT);
 
 		// new team
-		btNewTeam.setGraphic(new ImageView(Images.newImage));
+		btNewTeam.setGraphic(ImageManager.instance().getImageView(ImageEnum.NEW));
 		btNewTeam.setContentDisplay(ContentDisplay.LEFT);
 
 		// add team
-		btAddTeam.setGraphic(new ImageView(Images.addImage));
+		btAddTeam.setGraphic(ImageManager.instance().getImageView(ImageEnum.ADD));
 		btAddTeam.setContentDisplay(ContentDisplay.LEFT);
 
 		// remove team
-		btRemoveTeam.setGraphic(new ImageView(Images.removeImage));
+		btRemoveTeam.setGraphic(ImageManager.instance().getImageView(ImageEnum.REMOVE));
 		btRemoveTeam.setContentDisplay(ContentDisplay.LEFT);
 
 		// new rotation
-		btNewRotation.setGraphic(new ImageView(Images.newImage));
+		btNewRotation.setGraphic(ImageManager.instance().getImageView(ImageEnum.NEW));
 		btNewRotation.setContentDisplay(ContentDisplay.LEFT);
 
 		// add rotation
-		btAddRotation.setGraphic(new ImageView(Images.addImage));
+		btAddRotation.setGraphic(ImageManager.instance().getImageView(ImageEnum.ADD));
 		btAddRotation.setContentDisplay(ContentDisplay.LEFT);
 
 		// remove rotation
-		btRemoveRotation.setGraphic(new ImageView(Images.removeImage));
+		btRemoveRotation.setGraphic(ImageManager.instance().getImageView(ImageEnum.REMOVE));
 		btRemoveRotation.setContentDisplay(ContentDisplay.LEFT);
 
 		// new rotation segment
-		btNewRotationSegment.setGraphic(new ImageView(Images.newImage));
+		btNewRotationSegment.setGraphic(ImageManager.instance().getImageView(ImageEnum.NEW));
 		btNewRotationSegment.setContentDisplay(ContentDisplay.LEFT);
 
 		// add rotation segment
-		btAddRotationSegment.setGraphic(new ImageView(Images.addImage));
+		btAddRotationSegment.setGraphic(ImageManager.instance().getImageView(ImageEnum.ADD));
 		btAddRotationSegment.setContentDisplay(ContentDisplay.LEFT);
 
 		// remove rotation segment
-		btRemoveRotationSegment.setGraphic(new ImageView(Images.removeImage));
+		btRemoveRotationSegment.setGraphic(ImageManager.instance().getImageView(ImageEnum.REMOVE));
 		btRemoveRotationSegment.setContentDisplay(ContentDisplay.LEFT);
 
 		// new non-working period
-		btNewNonWorkingPeriod.setGraphic(new ImageView(Images.newImage));
+		btNewNonWorkingPeriod.setGraphic(ImageManager.instance().getImageView(ImageEnum.REMOVE));
 		btNewNonWorkingPeriod.setContentDisplay(ContentDisplay.LEFT);
 
 		// add non-working period
-		btAddNonWorkingPeriod.setGraphic(new ImageView(Images.addImage));
+		btAddNonWorkingPeriod.setGraphic(ImageManager.instance().getImageView(ImageEnum.ADD));
 		btAddNonWorkingPeriod.setContentDisplay(ContentDisplay.LEFT);
 
 		// remove non-working period
-		btRemoveNonWorkingPeriod.setGraphic(new ImageView(Images.removeImage));
+		btRemoveNonWorkingPeriod.setGraphic(ImageManager.instance().getImageView(ImageEnum.REMOVE));
 		btRemoveNonWorkingPeriod.setContentDisplay(ContentDisplay.LEFT);
 
 		// choose template schedule
-		btChooseSchedule.setGraphic(new ImageView(Images.chooseImage));
+		btChooseSchedule.setGraphic(ImageManager.instance().getImageView(ImageEnum.CHOOSE));
 		btChooseSchedule.setContentDisplay(ContentDisplay.RIGHT);
 
 		// context menu
-		miSaveAll.setGraphic(new ImageView(Images.saveAllImage));
-		miRefreshAll.setGraphic(new ImageView(Images.refreshAllImage));
+		miSaveAll.setGraphic(ImageManager.instance().getImageView(ImageEnum.SAVE_ALL));
+		miRefreshAll.setGraphic(ImageManager.instance().getImageView(ImageEnum.REFRESH_ALL));
 	}
 
 	private void resetEditor() {
@@ -912,8 +912,8 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		}
 	}
 
-	private void resetGraphic(TreeItem<ScheduleNode> scheduleItem) {
-		scheduleItem.setGraphic(new ImageView(Images.scheduleImage));
+	private void resetGraphic(TreeItem<ScheduleNode> scheduleItem) throws Exception {
+		scheduleItem.setGraphic(ImageManager.instance().getImageView(ImageEnum.SCHEDULE));
 	}
 
 	@FXML
@@ -1004,10 +1004,10 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		return isDirty;
 	}
 
-	private void addEditedSchedule(TreeItem<ScheduleNode> scheduleItem) {
+	private void addEditedSchedule(TreeItem<ScheduleNode> scheduleItem) throws Exception {
 		if (!editedScheduleItems.contains(scheduleItem)) {
 			editedScheduleItems.add(scheduleItem);
-			scheduleItem.setGraphic(new ImageView(Images.changedImage));
+			scheduleItem.setGraphic(ImageManager.instance().getImageView(ImageEnum.CHANGED));
 		}
 	}
 
@@ -1030,7 +1030,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		}
 	}
 
-	private void removeEditedSchedule(TreeItem<ScheduleNode> scheduleItem) {
+	private void removeEditedSchedule(TreeItem<ScheduleNode> scheduleItem) throws Exception {
 		resetGraphic(scheduleItem);
 		editedScheduleItems.remove(scheduleItem);
 	}

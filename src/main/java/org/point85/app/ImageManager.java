@@ -26,6 +26,10 @@ public class ImageManager {
 	}
 
 	public ImageView getImageView(ImageEnum id) throws Exception {
+		return new ImageView(getImage(id));
+	}
+
+	public Image getImage(ImageEnum id) throws Exception {
 		Image image = imageCache.get(id);
 
 		if (image == null) {
@@ -174,7 +178,6 @@ public class ImageManager {
 			}
 			imageCache.put(id, image);
 		}
-		return new ImageView(image);
-
+		return image;
 	}
 }

@@ -5,7 +5,8 @@ import java.util.List;
 
 import org.point85.app.AppUtils;
 import org.point85.app.DialogController;
-import org.point85.app.Images;
+import org.point85.app.ImageEnum;
+import org.point85.app.ImageManager;
 import org.point85.domain.collector.CollectorState;
 import org.point85.domain.collector.DataCollector;
 import org.point85.domain.persistence.PersistencyService;
@@ -17,7 +18,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 
 public class DataCollectorController extends DialogController {
 	private DataCollector collectorConfiguration;
@@ -57,7 +57,7 @@ public class DataCollectorController extends DialogController {
 
 	public void initialize(DesignerApplication app) throws Exception {
 		// main app
-		//setApp(app);
+		// setApp(app);
 
 		// button images
 		setImages();
@@ -77,15 +77,15 @@ public class DataCollectorController extends DialogController {
 		super.setImages();
 
 		// new
-		btNew.setGraphic(new ImageView(Images.newImage));
+		btNew.setGraphic(ImageManager.instance().getImageView(ImageEnum.NEW));
 		btNew.setContentDisplay(ContentDisplay.LEFT);
 
 		// save
-		btSave.setGraphic(new ImageView(Images.saveImage));
+		btSave.setGraphic(ImageManager.instance().getImageView(ImageEnum.SAVE));
 		btSave.setContentDisplay(ContentDisplay.LEFT);
 
 		// delete
-		btDelete.setGraphic(new ImageView(Images.deleteImage));
+		btDelete.setGraphic(ImageManager.instance().getImageView(ImageEnum.DELETE));
 		btDelete.setContentDisplay(ContentDisplay.LEFT);
 	}
 

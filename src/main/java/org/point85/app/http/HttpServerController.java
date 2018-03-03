@@ -5,7 +5,8 @@ import java.util.List;
 
 import org.point85.app.AppUtils;
 import org.point85.app.DialogController;
-import org.point85.app.Images;
+import org.point85.app.ImageEnum;
+import org.point85.app.ImageManager;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.domain.http.HttpSource;
 import org.point85.domain.persistence.PersistencyService;
@@ -18,14 +19,13 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 
 public class HttpServerController extends DialogController {
 	// current source
 	private HttpSource dataSource;
 
 	// list of servers and ports
-	private ObservableList<HttpSource>  servers = FXCollections.observableArrayList(new ArrayList<>());
+	private ObservableList<HttpSource> servers = FXCollections.observableArrayList(new ArrayList<>());
 
 	@FXML
 	private TextField tfHost;
@@ -56,7 +56,7 @@ public class HttpServerController extends DialogController {
 
 	public void initialize(DesignerApplication app) throws Exception {
 		// main app
-		//setApp(app);
+		// setApp(app);
 
 		// button images
 		setImages();
@@ -71,15 +71,15 @@ public class HttpServerController extends DialogController {
 		super.setImages();
 
 		// new
-		btNew.setGraphic(new ImageView(Images.newImage));
+		btNew.setGraphic(ImageManager.instance().getImageView(ImageEnum.NEW));
 		btNew.setContentDisplay(ContentDisplay.LEFT);
 
 		// save
-		btSave.setGraphic(new ImageView(Images.saveImage));
+		btSave.setGraphic(ImageManager.instance().getImageView(ImageEnum.SAVE));
 		btSave.setContentDisplay(ContentDisplay.LEFT);
 
 		// delete
-		btDelete.setGraphic(new ImageView(Images.deleteImage));
+		btDelete.setGraphic(ImageManager.instance().getImageView(ImageEnum.DELETE));
 		btDelete.setContentDisplay(ContentDisplay.LEFT);
 	}
 
@@ -97,22 +97,16 @@ public class HttpServerController extends DialogController {
 	@FXML
 	private void onSelectDataSource() {
 		/*
-		String sourceId = getDataSourceId();
-		if (sourceId == null || sourceId.length() == 0) {
-			return;
-		}
+		 * String sourceId = getDataSourceId(); if (sourceId == null ||
+		 * sourceId.length() == 0) { return; }
+		 * 
+		 * // retrieve data source by name HttpSource source = null; try { source =
+		 * (HttpSource)
+		 * PersistencyService.getInstance().fetchByName(HttpSource.HTTP_SRC_BY_NAME,
+		 * sourceId); setSource(source); } catch (Exception e) { // not saved yet
+		 * return; }
+		 */
 
-		// retrieve data source by name
-		HttpSource source = null;
-		try {
-			source = (HttpSource) PersistencyService.getInstance().fetchByName(HttpSource.HTTP_SRC_BY_NAME, sourceId);
-			setSource(source);
-		} catch (Exception e) {
-			// not saved yet
-			return;
-		}
-		*/
-		
 		dataSource = cbDataSources.getSelectionModel().getSelectedItem();
 
 		this.tfHost.setText(dataSource.getHost());

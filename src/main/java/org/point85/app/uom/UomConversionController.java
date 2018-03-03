@@ -27,7 +27,8 @@ package org.point85.app.uom;
 import java.util.Collections;
 
 import org.point85.app.AppUtils;
-import org.point85.app.Images;
+import org.point85.app.ImageEnum;
+import org.point85.app.ImageManager;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
 import org.point85.domain.uom.MeasurementSystem;
@@ -43,7 +44,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 
 /**
  * Controller for converting Units of Measure
@@ -106,7 +106,7 @@ public class UomConversionController extends DesignerDialogController {
 	}
 	
 	@FXML
-	public void initialize() {
+	public void initialize() throws Exception {
 		// set unit types
 		cbUnitTypes.getItems().addAll(getUnitTypes());
 
@@ -246,11 +246,11 @@ public class UomConversionController extends DesignerDialogController {
 
 	// images for buttons
 	@Override
-	protected void setImages() {
+	protected void setImages() throws Exception {
 		super.setImages();
 
 		// converter
-		btConvert.setGraphic(new ImageView(Images.convertImage));
+		btConvert.setGraphic(ImageManager.instance().getImageView(ImageEnum.CONVERT));
 		btConvert.setContentDisplay(ContentDisplay.LEFT);
 	}
 }

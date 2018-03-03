@@ -4,7 +4,8 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 
 import org.point85.app.AppUtils;
-import org.point85.app.Images;
+import org.point85.app.ImageEnum;
+import org.point85.app.ImageManager;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
 import org.point85.domain.persistence.PersistencyService;
@@ -22,7 +23,6 @@ import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 
 public class ScriptResolverController extends DesignerDialogController {
 
@@ -109,35 +109,35 @@ public class ScriptResolverController extends DesignerDialogController {
 
 	// images for buttons
 	@Override
-	protected void setImages() {
+	protected void setImages() throws Exception {
 		super.setImages();
 
 		// execute
-		btExecute.setGraphic(new ImageView(Images.executeImage));
+		btExecute.setGraphic(ImageManager.instance().getImageView(ImageEnum.EXECUTE));
 		btExecute.setContentDisplay(ContentDisplay.RIGHT);
 
 		// clear script
-		btClearScript.setGraphic(new ImageView(Images.clearImage));
+		btClearScript.setGraphic(ImageManager.instance().getImageView(ImageEnum.CLEAR));
 		btClearScript.setContentDisplay(ContentDisplay.RIGHT);
 
 		// clear result
-		btClearResult.setGraphic(new ImageView(Images.clearImage));
+		btClearResult.setGraphic(ImageManager.instance().getImageView(ImageEnum.CLEAR));
 		btClearResult.setContentDisplay(ContentDisplay.RIGHT);
 
 		// set value
-		btSetValue.setGraphic(new ImageView(Images.applyImage));
+		btSetValue.setGraphic(ImageManager.instance().getImageView(ImageEnum.APPLY));
 		btSetValue.setContentDisplay(ContentDisplay.LEFT);
 
 		// set value
-		btSetLastValue.setGraphic(new ImageView(Images.applyImage));
+		btSetLastValue.setGraphic(ImageManager.instance().getImageView(ImageEnum.APPLY));
 		btSetLastValue.setContentDisplay(ContentDisplay.LEFT);
 
 		// find material
-		btFindMaterial.setGraphic(new ImageView(Images.materialImage));
+		btFindMaterial.setGraphic(ImageManager.instance().getImageView(ImageEnum.MATERIAL));
 		btFindMaterial.setContentDisplay(ContentDisplay.LEFT);
 
 		// find a reason
-		btFindReason.setGraphic(new ImageView(Images.reasonImage));
+		btFindReason.setGraphic(ImageManager.instance().getImageView(ImageEnum.REASON));
 		btFindReason.setContentDisplay(ContentDisplay.LEFT);
 	}
 

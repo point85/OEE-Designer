@@ -11,7 +11,6 @@ import java.util.Set;
 import org.point85.app.AppUtils;
 import org.point85.app.ImageEnum;
 import org.point85.app.ImageManager;
-import org.point85.app.Images;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
 import org.point85.domain.persistence.PersistencyService;
@@ -30,7 +29,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 
 /**
@@ -134,7 +132,7 @@ public class MaterialEditorController extends DesignerDialogController {
 			boolean isChanged = setAttributes(oldItem);
 
 			if (isChanged) {
-				oldItem.setGraphic(new ImageView(Images.changedImage));
+				oldItem.setGraphic(ImageManager.instance().getImageView(ImageEnum.CHANGED));
 				tvMaterials.refresh();
 			}
 		}
@@ -284,7 +282,7 @@ public class MaterialEditorController extends DesignerDialogController {
 		}
 
 		if (isDirty) {
-			materialItem.setGraphic(new ImageView(Images.changedImage));
+			materialItem.setGraphic(ImageManager.instance().getImageView(ImageEnum.CHANGED));
 			addEditedMaterial(materialItem);
 		}
 		return isDirty;
@@ -307,7 +305,7 @@ public class MaterialEditorController extends DesignerDialogController {
 		for (String category : categories) {
 			MaterialNode categoryNode = new MaterialNode(category);
 			TreeItem<MaterialNode> categoryItem = new TreeItem<>(categoryNode);
-			categoryItem.setGraphic(new ImageView(Images.categoryImage));
+			categoryItem.setGraphic(ImageManager.instance().getImageView(ImageEnum.CATEGORY));
 			getRootMaterialItem().getChildren().add(categoryItem);
 		}
 
@@ -348,7 +346,7 @@ public class MaterialEditorController extends DesignerDialogController {
 			if (parentCategoryItem == null) {
 				// new category
 				parentCategoryItem = new TreeItem<>(new MaterialNode(category));
-				parentCategoryItem.setGraphic(new ImageView(Images.categoryImage));
+				parentCategoryItem.setGraphic(ImageManager.instance().getImageView(ImageEnum.CATEGORY));
 				getRootMaterialItem().getChildren().add(parentCategoryItem);
 			}
 
@@ -360,8 +358,8 @@ public class MaterialEditorController extends DesignerDialogController {
 		}
 	}
 
-	private void resetGraphic(TreeItem<MaterialNode> materialItem) {
-		materialItem.setGraphic(new ImageView(Images.materialImage));
+	private void resetGraphic(TreeItem<MaterialNode> materialItem) throws Exception {
+		materialItem.setGraphic(ImageManager.instance().getImageView(ImageEnum.MATERIAL));
 	}
 
 	@FXML
@@ -393,7 +391,7 @@ public class MaterialEditorController extends DesignerDialogController {
 		}
 	}
 
-	private void updateCategory(TreeItem<MaterialNode> materialItem) {
+	private void updateCategory(TreeItem<MaterialNode> materialItem) throws Exception {
 
 		Material material = materialItem.getValue().getMaterial();
 
@@ -426,7 +424,7 @@ public class MaterialEditorController extends DesignerDialogController {
 			if (parentItem == null) {
 				// new category
 				parentItem = new TreeItem<>(new MaterialNode(material.getCategory()));
-				parentItem.setGraphic(new ImageView(Images.categoryImage));
+				parentItem.setGraphic(ImageManager.instance().getImageView(ImageEnum.CATEGORY));
 				tvMaterials.getRoot().getChildren().add(parentItem);
 			}
 			parentItem.getChildren().add(newItem);

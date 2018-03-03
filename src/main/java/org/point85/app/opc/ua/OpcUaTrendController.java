@@ -11,7 +11,8 @@ import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.StatusCode;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.ServerState;
 import org.point85.app.AppUtils;
-import org.point85.app.Images;
+import org.point85.app.ImageEnum;
+import org.point85.app.ImageManager;
 import org.point85.app.LoaderFactory;
 import org.point85.app.charts.DataSubscriber;
 import org.point85.app.charts.TrendChartController;
@@ -32,7 +33,6 @@ import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.SplitPane;
-import javafx.scene.image.ImageView;
 
 public class OpcUaTrendController extends OpcUaController implements OpcUaAsynchListener, DataSubscriber {
 	// trend chart
@@ -86,19 +86,19 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 
 	// images for buttons
 	@Override
-	protected void setImages() {
+	protected void setImages() throws Exception {
 		super.setImages();
 
 		// connect
-		btConnect.setGraphic(new ImageView(Images.connectImage));
+		btConnect.setGraphic(ImageManager.instance().getImageView(ImageEnum.CONNECT));
 		btConnect.setContentDisplay(ContentDisplay.RIGHT);
 
 		// disconnect
-		btDisconnect.setGraphic(new ImageView(Images.disconnectImage));
+		btDisconnect.setGraphic(ImageManager.instance().getImageView(ImageEnum.DISCONNECT));
 		btDisconnect.setContentDisplay(ContentDisplay.RIGHT);
 
 		// cancel connect
-		btCancelConnect.setGraphic(new ImageView(Images.cancelImage));
+		btCancelConnect.setGraphic(ImageManager.instance().getImageView(ImageEnum.CANCEL));
 		btCancelConnect.setContentDisplay(ContentDisplay.RIGHT);
 	}
 

@@ -29,7 +29,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.point85.app.AppUtils;
-import org.point85.app.Images;
+import org.point85.app.ImageEnum;
+import org.point85.app.ImageManager;
 import org.point85.app.LoaderFactory;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
@@ -60,7 +61,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -283,32 +283,32 @@ public class UomEditorController extends DesignerDialogController {
 
 	// images for controls
 	@Override
-	protected void setImages() {
+	protected void setImages() throws Exception {
 		super.setImages();
 
 		// new
-		btNew.setGraphic(new ImageView(Images.newImage));
+		btNew.setGraphic(ImageManager.instance().getImageView(ImageEnum.NEW));
 		btNew.setContentDisplay(ContentDisplay.RIGHT);
 
 		// save
-		btSave.setGraphic(new ImageView(Images.saveImage));
+		btSave.setGraphic(ImageManager.instance().getImageView(ImageEnum.SAVE));
 		btSave.setContentDisplay(ContentDisplay.RIGHT);
 
 		// refresh
-		btRefresh.setGraphic(new ImageView(Images.refreshImage));
+		btRefresh.setGraphic(ImageManager.instance().getImageView(ImageEnum.REFRESH));
 		btRefresh.setContentDisplay(ContentDisplay.RIGHT);
 
 		// delete
-		btDelete.setGraphic(new ImageView(Images.deleteImage));
+		btDelete.setGraphic(ImageManager.instance().getImageView(ImageEnum.DELETE));
 		btDelete.setContentDisplay(ContentDisplay.RIGHT);
 
 		// import
-		btImport.setGraphic(new ImageView(Images.importImage));
+		btImport.setGraphic(ImageManager.instance().getImageView(ImageEnum.IMPORT));
 		btImport.setContentDisplay(ContentDisplay.RIGHT);
 
 		// context menu
-		miSaveAll.setGraphic(new ImageView(Images.saveAllImage));
-		miRefreshAll.setGraphic(new ImageView(Images.refreshAllImage));
+		miSaveAll.setGraphic(ImageManager.instance().getImageView(ImageEnum.SAVE_ALL));
+		miRefreshAll.setGraphic(ImageManager.instance().getImageView(ImageEnum.REFRESH_ALL));
 	}
 
 	@FXML
@@ -371,7 +371,7 @@ public class UomEditorController extends DesignerDialogController {
 			for (UnitOfMeasure child : children) {
 				UomNode uomNode = new UomNode(child);
 				TreeItem<UomNode> uomItem = new TreeItem<>(uomNode);
-				uomItem.setGraphic(new ImageView(Images.uomImage));
+				uomItem.setGraphic(ImageManager.instance().getImageView(ImageEnum.UOM));
 				item.getChildren().add(uomItem);
 			}
 		}
@@ -515,7 +515,7 @@ public class UomEditorController extends DesignerDialogController {
 		for (String category : categories) {
 			UomNode categoryNode = new UomNode(category);
 			TreeItem<UomNode> categoryItem = new TreeItem<>(categoryNode);
-			categoryItem.setGraphic(new ImageView(Images.categoryImage));
+			categoryItem.setGraphic(ImageManager.instance().getImageView(ImageEnum.CATEGORY));
 			getRootUomItem().getChildren().add(categoryItem);
 		}
 
@@ -575,7 +575,7 @@ public class UomEditorController extends DesignerDialogController {
 				UomNode node = modifiedItem.getValue();
 				UnitOfMeasure saved = (UnitOfMeasure) PersistencyService.instance().save(node.getUnitOfMeasure());
 				node.setUnitOfMeasure(saved);
-				modifiedItem.setGraphic(new ImageView(Images.uomImage));
+				modifiedItem.setGraphic(ImageManager.instance().getImageView(ImageEnum.UOM));
 			}
 			editedUomItems.clear();
 
@@ -592,7 +592,7 @@ public class UomEditorController extends DesignerDialogController {
 			// new child
 			uom = new UnitOfMeasure();
 			selectedUomItem = new TreeItem<>(new UomNode(uom));
-			selectedUomItem.setGraphic(new ImageView(Images.uomImage));
+			selectedUomItem.setGraphic(ImageManager.instance().getImageView(ImageEnum.UOM));
 			setUomAttributes(selectedUomItem);
 			editedUomItems.add(selectedUomItem);
 
@@ -612,7 +612,7 @@ public class UomEditorController extends DesignerDialogController {
 			if (parentCategoryItem == null) {
 				// new category
 				parentCategoryItem = new TreeItem<>(new UomNode(category));
-				parentCategoryItem.setGraphic(new ImageView(Images.categoryImage));
+				parentCategoryItem.setGraphic(ImageManager.instance().getImageView(ImageEnum.CATEGORY));
 				getRootUomItem().getChildren().add(parentCategoryItem);
 			}
 
@@ -639,7 +639,7 @@ public class UomEditorController extends DesignerDialogController {
 
 			UnitOfMeasure saved = (UnitOfMeasure) PersistencyService.instance().save(uom);
 			selectedUomItem.getValue().setUnitOfMeasure(saved);
-			selectedUomItem.setGraphic(new ImageView(Images.uomImage));
+			selectedUomItem.setGraphic(ImageManager.instance().getImageView(ImageEnum.UOM));
 
 			editedUomItems.remove(selectedUomItem);
 
@@ -659,7 +659,7 @@ public class UomEditorController extends DesignerDialogController {
 
 			setUomAttributes(selectedUomItem);
 
-			selectedUomItem.setGraphic(new ImageView(Images.changedImage));
+			selectedUomItem.setGraphic(ImageManager.instance().getImageView(ImageEnum.CHANGED));
 			tvUoms.refresh();
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
@@ -926,8 +926,8 @@ public class UomEditorController extends DesignerDialogController {
 		}
 	}
 
-	private void resetGraphic(TreeItem<UomNode> uomItem) {
-		uomItem.setGraphic(new ImageView(Images.uomImage));
+	private void resetGraphic(TreeItem<UomNode> uomItem) throws Exception {
+		uomItem.setGraphic(ImageManager.instance().getImageView(ImageEnum.UOM));
 	}
 
 	@FXML
