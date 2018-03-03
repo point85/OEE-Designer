@@ -57,7 +57,7 @@ public class DataCollectorController extends DialogController {
 
 	public void initialize(DesignerApplication app) throws Exception {
 		// main app
-		// setApp(app);
+		//setApp(app);
 
 		// button images
 		setImages();
@@ -73,7 +73,7 @@ public class DataCollectorController extends DialogController {
 
 	// images for buttons
 	@Override
-	protected void setImages() {
+	protected void setImages() throws Exception {
 		super.setImages();
 
 		// new

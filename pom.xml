@@ -133,4 +133,20 @@
 </dependency>
 
   </dependencies>
+ 
+<build>
+<plugins>
+<!-- javapackager plugin -->  
+<plugin>
+    <groupId>com.zenjava</groupId>
+    <artifactId>javafx-maven-plugin</artifactId>
+    <version>8.8.3</version>
+    <configuration>
+        <mainClass>org.point85.app.designer.DesignerApplication</mainClass>
+        <verbose>true</verbose>
+    </configuration>
+</plugin>
+</plugins>
+</build>
+
 </project>

@@ -10,6 +10,8 @@ import org.openscada.opc.dcom.common.KeyedResult;
 import org.openscada.opc.dcom.common.KeyedResultSet;
 import org.openscada.opc.dcom.da.OPCITEMSTATE;
 import org.point85.app.AppUtils;
+import org.point85.app.ImageEnum;
+import org.point85.app.ImageManager;
 import org.point85.app.Images;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.domain.opc.da.OpcDaBrowserLeaf;
@@ -239,31 +241,31 @@ public class OpcDaBrowserController extends OpcDaController {
 
 	// images for buttons
 	@Override
-	protected void setImages() {
+	protected void setImages() throws Exception {
 		super.setImages();
 
 		// connect
-		btConnect.setGraphic(new ImageView(Images.connectImage));
+		btConnect.setGraphic(ImageManager.instance().getImageView(ImageEnum.CONNECT));
 		btConnect.setContentDisplay(ContentDisplay.RIGHT);
 
 		// disconnect
-		btDisconnect.setGraphic(new ImageView(Images.disconnectImage));
+		btDisconnect.setGraphic(ImageManager.instance().getImageView(ImageEnum.DISCONNECT));
 		btDisconnect.setContentDisplay(ContentDisplay.RIGHT);
 
 		// cancel connect
-		btCancelConnect.setGraphic(new ImageView(Images.cancelImage));
+		btCancelConnect.setGraphic(ImageManager.instance().getImageView(ImageEnum.CANCEL));
 		btCancelConnect.setContentDisplay(ContentDisplay.RIGHT);
 
 		// new
-		btNew.setGraphic(new ImageView(Images.newImage));
+		btNew.setGraphic(ImageManager.instance().getImageView(ImageEnum.NEW));
 		btNew.setContentDisplay(ContentDisplay.LEFT);
 
 		// save
-		btSave.setGraphic(new ImageView(Images.saveImage));
+		btSave.setGraphic(ImageManager.instance().getImageView(ImageEnum.SAVE));
 		btSave.setContentDisplay(ContentDisplay.LEFT);
 
 		// delete
-		btDelete.setGraphic(new ImageView(Images.deleteImage));
+		btDelete.setGraphic(ImageManager.instance().getImageView(ImageEnum.DELETE));
 		btDelete.setContentDisplay(ContentDisplay.LEFT);
 	}
 

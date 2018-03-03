@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.point85.app.AppUtils;
+import org.point85.app.ImageEnum;
+import org.point85.app.ImageManager;
 import org.point85.app.Images;
 import org.point85.app.LoaderFactory;
 import org.point85.domain.persistence.PersistencyService;
@@ -58,7 +60,6 @@ import javafx.scene.layout.AnchorPane;
  */
 public class PhysicalModelController extends DesignerController {
 	// logger
-	@SuppressWarnings("unused")
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	// list of edited plant entities
@@ -210,18 +211,6 @@ public class PhysicalModelController extends DesignerController {
 		return tvEntities.getRoot();
 	}
 
-	private void setProgress(boolean on) {
-		if (on) {
-			Platform.runLater(() -> {
-				piEntities.setVisible(true);
-			});
-		} else {
-			Platform.runLater(() -> {
-				piEntities.setVisible(false);
-			});
-		}
-	}
-
 	private void showRootEntities(List<PlantEntity> entities) {
 		try {
 			// add them to the root entity
@@ -247,7 +236,6 @@ public class PhysicalModelController extends DesignerController {
 
 	// initialize app
 	void initialize(DesignerApplication app) throws Exception {
-
 		// main app
 		setApp(app);
 
@@ -269,7 +257,6 @@ public class PhysicalModelController extends DesignerController {
 		} else if (launch == 1) {
 			Platform.runLater(() -> {
 				try {
-					// piEntities.setVisible(true);
 					populateTopEntityNodes();
 				} catch (Exception e) {
 					AppUtils.showErrorDialog(
@@ -307,6 +294,10 @@ public class PhysicalModelController extends DesignerController {
 		// toolbar
 		initializeToolbar();
 
+		if (logger.isInfoEnabled()) {
+			logger.info("Initialized toolbar");
+		}
+
 		// add the tree view listener for entity selection
 		tvEntities.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
 			try {
@@ -340,6 +331,11 @@ public class PhysicalModelController extends DesignerController {
 
 		// select equipment material
 		onSelectEquipmentMaterial();
+
+		if (logger.isInfoEnabled()) {
+			logger.info("Finished physical model init");
+		}
+
 	}
 
 	private List<PlantEntity> fetchTopEntities() {
@@ -362,20 +358,49 @@ public class PhysicalModelController extends DesignerController {
 		}
 		Collections.sort(entities);
 
+		if (logger.isInfoEnabled()) {
+			logger.info("Adding plant entities to tree view");
+		}
+
 		// add them to the root entity
 		ObservableList<TreeItem<EntityNode>> children = getRootEntityItem().getChildren();
 		children.clear();
 
+		if (logger.isInfoEnabled()) {
+			logger.info("Step 1");
+		}
+
 		for (PlantEntity entity : entities) {
+			if (logger.isInfoEnabled()) {
+				logger.info("Entity: " + entity.getName());
+			}
+
 			TreeItem<EntityNode> entityItem = new TreeItem<>(new EntityNode(entity));
+			if (logger.isInfoEnabled()) {
+				logger.info("Created entity item");
+			}
 			children.add(entityItem);
+			if (logger.isInfoEnabled()) {
+				logger.info("Added entity item");
+			}
 			setEntityGraphic(entityItem);
+
+			if (logger.isInfoEnabled()) {
+				logger.info("Step 2");
+			}
 		}
 
 		// refresh tree view
 		getRootEntityItem().setExpanded(true);
 		tvEntities.getSelectionModel().clearSelection();
+		if (logger.isInfoEnabled()) {
+			logger.info("Step 3");
+		}
 		tvEntities.refresh();
+		if (logger.isInfoEnabled()) {
+			logger.info("Step 4");
+		}
+
 	}
 
 	private void onSelectEntity(TreeItem<EntityNode> oldItem, TreeItem<EntityNode> newItem) throws Exception {
@@ -725,30 +750,31 @@ public class PhysicalModelController extends DesignerController {
 
 		switch (level) {
 		case AREA:
-			nodeView = new ImageView(Images.areaImage);
+			nodeView = ImageManager.instance().getImageView(ImageEnum.AREA);
 			break;
 		case ENTERPRISE:
-			nodeView = new ImageView(Images.enterpriseImage);
+			nodeView = ImageManager.instance().getImageView(ImageEnum.ENTERPRISE);
 			break;
 		case EQUIPMENT:
-			nodeView = new ImageView(Images.equipmentImage);
+			nodeView = ImageManager.instance().getImageView(ImageEnum.EQUIPMENT);
 			break;
 
 		case PRODUCTION_LINE:
-			nodeView = new ImageView(Images.lineImage);
+			nodeView = ImageManager.instance().getImageView(ImageEnum.LINE);
 			break;
 
 		case SITE:
-			nodeView = new ImageView(Images.siteImage);
+			nodeView = ImageManager.instance().getImageView(ImageEnum.SITE);
 			break;
 
 		case WORK_CELL:
-			nodeView = new ImageView(Images.cellImage);
+			nodeView = ImageManager.instance().getImageView(ImageEnum.CELL);
 			break;
 
 		default:
 			break;
 		}
+
 		item.setGraphic(nodeView);
 	}
 

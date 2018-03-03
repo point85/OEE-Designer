@@ -3,7 +3,6 @@ package org.point85.app;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
-import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 public abstract class DialogController {
@@ -16,6 +15,7 @@ public abstract class DialogController {
 	// stage for the dialog
 	@FXML
 	private Stage dialogStage;
+
 
 	public Stage getDialogStage() {
 		return this.dialogStage;
@@ -39,14 +39,14 @@ public abstract class DialogController {
 	}
 
 	// images for controls
-	protected void setImages() {
+	protected void setImages() throws Exception {
 		// OK
-		btOK.setGraphic(new ImageView(Images.okImage));
+		btOK.setGraphic(ImageManager.instance().getImageView(ImageEnum.OK));
 		btOK.setContentDisplay(ContentDisplay.LEFT);
 
 		// Cancel
 		if (btCancel != null) {
-			btCancel.setGraphic(new ImageView(Images.cancelImage));
+			btCancel.setGraphic(ImageManager.instance().getImageView(ImageEnum.CANCEL));
 			btCancel.setContentDisplay(ContentDisplay.LEFT);
 		}
 	}

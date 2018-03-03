@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.point85.app.AppUtils;
+import org.point85.app.ImageEnum;
+import org.point85.app.ImageManager;
 import org.point85.app.Images;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
@@ -96,7 +98,7 @@ public class MaterialEditorController extends DesignerDialogController {
 	}
 
 	@FXML
-	public void initialize() {
+	public void initialize() throws Exception {
 		// images for buttons
 		setImages();
 
@@ -171,32 +173,32 @@ public class MaterialEditorController extends DesignerDialogController {
 
 	// images for controls
 	@Override
-	protected void setImages() {
+	protected void setImages() throws Exception {
 		super.setImages();
 
 		// new
-		btNew.setGraphic(new ImageView(Images.newImage));
+		btNew.setGraphic(ImageManager.instance().getImageView(ImageEnum.NEW));
 		btNew.setContentDisplay(ContentDisplay.RIGHT);
 
 		// save
-		btSave.setGraphic(new ImageView(Images.saveImage));
+		btSave.setGraphic(ImageManager.instance().getImageView(ImageEnum.SAVE));
 		btSave.setContentDisplay(ContentDisplay.RIGHT);
 
 		// refresh
-		btRefresh.setGraphic(new ImageView(Images.refreshImage));
+		btRefresh.setGraphic(ImageManager.instance().getImageView(ImageEnum.REFRESH));
 		btRefresh.setContentDisplay(ContentDisplay.RIGHT);
 
 		// delete
-		btDelete.setGraphic(new ImageView(Images.deleteImage));
+		btDelete.setGraphic(ImageManager.instance().getImageView(ImageEnum.DELETE));
 		btDelete.setContentDisplay(ContentDisplay.RIGHT);
 
 		// import
-		btImport.setGraphic(new ImageView(Images.importImage));
+		btImport.setGraphic(ImageManager.instance().getImageView(ImageEnum.IMPORT));
 		btImport.setContentDisplay(ContentDisplay.RIGHT);
 
 		// context menu
-		miSaveAll.setGraphic(new ImageView(Images.saveAllImage));
-		miRefreshAll.setGraphic(new ImageView(Images.refreshAllImage));
+		miSaveAll.setGraphic(ImageManager.instance().getImageView(ImageEnum.SAVE_ALL));
+		miRefreshAll.setGraphic(ImageManager.instance().getImageView(ImageEnum.REFRESH_ALL));
 	}
 
 	// show the Material attributes

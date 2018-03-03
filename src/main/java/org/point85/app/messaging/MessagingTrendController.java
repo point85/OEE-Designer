@@ -83,7 +83,7 @@ public class MessagingTrendController extends DesignerDialogController implement
 
 	// images for buttons
 	@Override
-	protected void setImages() {
+	protected void setImages() throws Exception {
 		super.setImages();
 	}
 

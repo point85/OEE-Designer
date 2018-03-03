@@ -85,7 +85,7 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 
 	// images for buttons
 	@Override
-	protected void setImages() {
+	protected void setImages() throws Exception {
 		super.setImages();
 	}
 

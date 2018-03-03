@@ -67,7 +67,7 @@ public class HttpServerController extends DialogController {
 
 	// images for buttons
 	@Override
-	protected void setImages() {
+	protected void setImages() throws Exception {
 		super.setImages();
 
 		// new

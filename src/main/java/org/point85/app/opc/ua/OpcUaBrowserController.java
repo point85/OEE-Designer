@@ -19,6 +19,8 @@ import org.eclipse.milo.opcua.stack.core.types.enumerated.ServerState;
 import org.eclipse.milo.opcua.stack.core.types.structured.BuildInfo;
 import org.eclipse.milo.opcua.stack.core.types.structured.ReferenceDescription;
 import org.point85.app.AppUtils;
+import org.point85.app.ImageEnum;
+import org.point85.app.ImageManager;
 import org.point85.app.Images;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.domain.DomainUtils;
@@ -298,7 +300,7 @@ public class OpcUaBrowserController extends OpcUaController {
 
 	// images for buttons
 	@Override
-	protected void setImages() {
+	protected void setImages() throws Exception {
 		super.setImages();
 
 		// connect
@@ -314,15 +316,15 @@ public class OpcUaBrowserController extends OpcUaController {
 		btCancelConnect.setContentDisplay(ContentDisplay.RIGHT);
 
 		// new
-		btNew.setGraphic(new ImageView(Images.newImage));
+		btNew.setGraphic(ImageManager.instance().getImageView(ImageEnum.NEW));
 		btNew.setContentDisplay(ContentDisplay.LEFT);
 
 		// save
-		btSave.setGraphic(new ImageView(Images.saveImage));
+		btSave.setGraphic(ImageManager.instance().getImageView(ImageEnum.SAVE));
 		btSave.setContentDisplay(ContentDisplay.LEFT);
 
 		// delete
-		btDelete.setGraphic(new ImageView(Images.deleteImage));
+		btDelete.setGraphic(ImageManager.instance().getImageView(ImageEnum.DELETE));
 		btDelete.setContentDisplay(ContentDisplay.LEFT);
 	}
 

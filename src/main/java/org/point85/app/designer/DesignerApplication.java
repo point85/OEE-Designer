@@ -1,5 +1,6 @@
 package org.point85.app.designer;
 
+import org.point85.app.ImageManager;
 import org.point85.app.Images;
 import org.point85.app.LoaderFactory;
 import org.point85.app.dashboard.DashboardController;
@@ -38,6 +39,8 @@ import org.point85.domain.script.OeeContext;
 import org.point85.domain.script.ScriptResolver;
 import org.point85.domain.uom.UnitOfMeasure;
 import org.point85.domain.web.WebSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -49,6 +52,9 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 public class DesignerApplication extends Application {
+	// logger
+	private final Logger logger = LoggerFactory.getLogger(getClass());
+
 	// physical model controller
 	private PhysicalModelController physicalModelController;
 
@@ -97,6 +103,10 @@ public class DesignerApplication extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
+			if (logger.isInfoEnabled()) {
+				logger.info("Launching OEE Designer");
+			}
+
 			// Load root layout from fxml file.
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(getClass().getResource("DesignerApplication.fxml"));
@@ -106,8 +116,16 @@ public class DesignerApplication extends Application {
 			physicalModelController = loader.getController();
 			physicalModelController.initialize(this);
 
+			if (logger.isInfoEnabled()) {
+				logger.info("Initialized physical model controller");
+			}
+
 			// create application context
 			appContext = new OeeContext();
+
+			if (logger.isInfoEnabled()) {
+				logger.info("Created OEE context");
+			}
 
 			// Show the scene containing the root layout.
 			Scene scene = new Scene(mainLayout);
@@ -117,6 +135,10 @@ public class DesignerApplication extends Application {
 			primaryStage.getIcons().add(Images.point85Image);
 			primaryStage.setScene(scene);
 			primaryStage.show();
+
+			if (logger.isInfoEnabled()) {
+				logger.info("Showed primary stage");
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();

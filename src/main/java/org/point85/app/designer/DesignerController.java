@@ -1,8 +1,5 @@
 package org.point85.app.designer;
 
-import java.util.HashMap;
-import java.util.Map;
-
 // base controller class
 public abstract class DesignerController {
 
