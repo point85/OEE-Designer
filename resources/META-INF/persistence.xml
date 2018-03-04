@@ -59,12 +59,19 @@
          	<!--  multiple representations of the same entity are being merged -->
          	<property name="hibernate.event.merge.entity_copy_observer" value="allow"/>
          	
-         	<!-- Configuring Connection Pool -->
+         	<!-- HikariCP -->
+         	<property name="hibernate.hikari.minimumIdle" value="5" />
+      		<property name="hibernate.hikari.maximumPoolSize" value="10" />
+      		<property name="hibernate.hikari.idleTimeout" value="30000" />
+      		<property name="hibernate.connection.provider_class" value="org.hibernate.hikaricp.internal.HikariCPConnectionProvider" />
+         	
+         	<!-- C3P0 Connection Pool 
       		<property name="hibernate.c3p0.min_size" value="5" />
       		<property name="hibernate.c3p0.max_size" value="20" />
       		<property name="hibernate.c3p0.timeout" value="1000" />
       		<property name="hibernate.c3p0.max_statements" value="50" />
       		<property name="hibernate.c3p0.idle_test_period" value="2000" />
+      		-->
          	
          	<!-- debugging -->
          	<!-- <property name="hibernate.generate_statistics" value="true" /> -->
