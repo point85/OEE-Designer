@@ -234,7 +234,7 @@ public class PhysicalModelController extends DesignerController {
 		setApp(app);
 
 		// fill in the top-level entity nodes
-		int launch = -1;
+		int launch = 1;
 
 		if (launch == 0) {
 			piEntities.setVisible(true);
@@ -334,7 +334,7 @@ public class PhysicalModelController extends DesignerController {
 	}
 
 	// display top-level entities
-	private void populateTopEntityNodes() throws Exception {
+	private void populateTopEntityNodes() throws Exception {		
 		// fetch the entities
 		long before = System.currentTimeMillis();
 		List<PlantEntity> entities = PersistencyService.instance().fetchTopPlantEntities();
