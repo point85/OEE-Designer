@@ -18,8 +18,6 @@ import org.point85.domain.messaging.MessagingSource;
 import org.point85.domain.messaging.PublisherSubscriber;
 import org.point85.domain.messaging.RoutingKey;
 import org.point85.domain.script.ScriptResolver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Envelope;
@@ -36,9 +34,6 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
 
 public class MessagingTrendController extends DesignerDialogController implements MessageListener, DataSubscriber {
-	// logger
-	private final Logger logger = LoggerFactory.getLogger(getClass());
-
 	private static int queueCounter = 0;
 
 	// RabbitMQ message publisher/subscriber
@@ -70,7 +65,7 @@ public class MessagingTrendController extends DesignerDialogController implement
 
 			trendChartController = loader.getController();
 			trendChartController.initialize(getApp());
-		
+
 			// data provider
 			trendChartController.setProvider(this);
 
@@ -110,7 +105,7 @@ public class MessagingTrendController extends DesignerDialogController implement
 	@FXML
 	protected void onCancel() {
 		super.onCancel();
-		
+
 		try {
 			unsubscribeFromDataSource();
 		} catch (Exception e) {
@@ -154,7 +149,7 @@ public class MessagingTrendController extends DesignerDialogController implement
 			List<RoutingKey> keys = new ArrayList<>();
 			keys.add(RoutingKey.EQUIPMENT_SOURCE_EVENT);
 			pubsub.connectToBroker(source.getHost(), source.getPort(), queueName, false, keys, this);
-			
+
 			// start the trend
 			trendChartController.onStartTrending();
 		}
@@ -167,7 +162,7 @@ public class MessagingTrendController extends DesignerDialogController implement
 		}
 		pubsub.disconnect();
 		pubsub = null;
-		
+
 		// stop the trend
 		trendChartController.onStopTrending();
 	}
@@ -182,8 +177,7 @@ public class MessagingTrendController extends DesignerDialogController implement
 		try {
 			channel.basicAck(envelope.getDeliveryTag(), PublisherSubscriber.ACK_MULTIPLE);
 		} catch (Exception e) {
-			logger.error("Failed to ack message: " + e.getMessage());
-			return;
+			throw new Exception("Failed to ack message: " + e.getMessage());
 		}
 
 		MessageType type = message.getMessageType();
@@ -193,23 +187,12 @@ public class MessagingTrendController extends DesignerDialogController implement
 			handleEquipmentEvent((EquipmentEventMessage) message);
 			break;
 
-		case NOTIFICATION:
-			// TODO
-			logger.info(message.toString());
-			break;
-
 		default:
-			if (logger.isInfoEnabled()) {
-				logger.info("Received unknown message.");
-			}
-			break;
+			throw new Exception("Received unknown message of type " + message);
 		}
 	}
 
 	private void handleEquipmentEvent(EquipmentEventMessage message) throws Exception {
-		if (logger.isInfoEnabled()) {
-			logger.info("Received equipment event message: " + message);
-		}
 
 		OffsetDateTime odt = DomainUtils.offsetDateTimeFromString(message.getTimestamp());
 		ResolutionService service = new ResolutionService(message.getSourceId(), message.getValue(), odt);
@@ -221,7 +204,7 @@ public class MessagingTrendController extends DesignerDialogController implement
 
 				if (t != null) {
 					// connection failed
-					logger.error("Resolution service failed: " + t.getMessage());
+					t.printStackTrace();
 				}
 			}
 		});
@@ -236,34 +219,32 @@ public class MessagingTrendController extends DesignerDialogController implement
 			if (pubsub == null) {
 				throw new Exception("The trend is not connected to an RMQ broker.");
 			}
-			
+
 			ScriptResolver scriptResolver = trendChartController.getScriptResolver();
-			//MessagingSource dataSource = (MessagingSource) scriptResolver.getDataSource();
-			
+			// MessagingSource dataSource = (MessagingSource)
+			// scriptResolver.getDataSource();
+
 			/*
-			Integer port = dataSource.getPort();
-			
-			if (port == null) {
-				throw new Exception("A host and port must be specified");
-			}
-			
-			PublisherSubscriber pubsub = pubsubs.get(hostPort);
-
-			if (pubsub == null) {
-				pubsub = new PublisherSubscriber();
-				pubsubs.put(hostPort, pubsub);
-
-				String[] tokens = hostPort.split(":");
-
-				pubsub.connect(tokens[0], Integer.valueOf(tokens[1]));
-			}
-			*/
+			 * Integer port = dataSource.getPort();
+			 * 
+			 * if (port == null) { throw new Exception("A host and port must be specified");
+			 * }
+			 * 
+			 * PublisherSubscriber pubsub = pubsubs.get(hostPort);
+			 * 
+			 * if (pubsub == null) { pubsub = new PublisherSubscriber();
+			 * pubsubs.put(hostPort, pubsub);
+			 * 
+			 * String[] tokens = hostPort.split(":");
+			 * 
+			 * pubsub.connect(tokens[0], Integer.valueOf(tokens[1])); }
+			 */
 
 			String sourceId = scriptResolver.getSourceId();
 			String value = tfLoopbackValue.getText();
-			
-			//OffsetDateTime odt = OffsetDateTime.now();
-			//String timestamp = odt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+
+			// OffsetDateTime odt = OffsetDateTime.now();
+			// String timestamp = odt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 
 			EquipmentEventMessage msg = new EquipmentEventMessage();
 			msg.setSourceId(sourceId);

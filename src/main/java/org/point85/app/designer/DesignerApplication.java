@@ -39,8 +39,6 @@ import org.point85.domain.script.OeeContext;
 import org.point85.domain.script.ScriptResolver;
 import org.point85.domain.uom.UnitOfMeasure;
 import org.point85.domain.web.WebSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -52,9 +50,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 public class DesignerApplication extends Application {
-	// logger
-	private final Logger logger = LoggerFactory.getLogger(getClass());
-
 	// physical model controller
 	private PhysicalModelController physicalModelController;
 
@@ -126,6 +121,7 @@ public class DesignerApplication extends Application {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			stop();
 		}
 	}
 

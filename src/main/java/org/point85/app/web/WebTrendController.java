@@ -9,8 +9,6 @@ import org.point85.app.charts.TrendChartController;
 import org.point85.app.designer.DesignerDialogController;
 import org.point85.domain.script.ScriptResolver;
 import org.point85.domain.web.WebSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javafx.application.Platform;
 import javafx.concurrent.Service;
@@ -26,9 +24,6 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
 
 public class WebTrendController extends DesignerDialogController implements DataSubscriber {
-	// logger
-	private final Logger logger = LoggerFactory.getLogger(getClass());
-	
 	private static final String WEB_SERVER_STATE = "RUNNING";
 
 	// trend chart
@@ -69,7 +64,7 @@ public class WebTrendController extends DesignerDialogController implements Data
 			trendChartController.setProvider(this);
 
 			setImages();
-			
+
 			lbState.setText(WEB_SERVER_STATE);
 			lbState.setTextFill(STARTED_COLOR);
 		}
@@ -157,7 +152,7 @@ public class WebTrendController extends DesignerDialogController implements Data
 
 					if (t != null) {
 						// connection failed
-						logger.error(t.getMessage());
+						t.printStackTrace();
 					}
 				}
 			});

@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.point85.app.AppUtils;
-import org.point85.app.Images;
 import org.point85.app.ImageManager;
+import org.point85.app.Images;
 import org.point85.app.LoaderFactory;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
@@ -24,8 +24,6 @@ import org.point85.domain.schedule.RotationSegment;
 import org.point85.domain.schedule.Shift;
 import org.point85.domain.schedule.Team;
 import org.point85.domain.schedule.WorkSchedule;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -56,10 +54,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 public class WorkScheduleEditorController extends DesignerDialogController {
-	// logger
-	@SuppressWarnings("unused")
-	private final Logger logger = LoggerFactory.getLogger(getClass());
-
 	private static final String ROOT_SCHEDULE_NAME = "All Schedules";
 
 	// schedule being edited or viewed

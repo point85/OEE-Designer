@@ -18,8 +18,6 @@ import org.point85.domain.http.HttpEventListener;
 import org.point85.domain.http.HttpSource;
 import org.point85.domain.http.OeeHttpServer;
 import org.point85.domain.script.ScriptResolver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 
@@ -37,9 +35,6 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
 
 public class HttpTrendController extends DesignerDialogController implements HttpEventListener, DataSubscriber {
-	// logger
-	private final Logger logger = LoggerFactory.getLogger(getClass());
-
 	// http server
 	private OeeHttpServer httpServer;
 
@@ -175,7 +170,7 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 
 				if (t != null) {
 					// connection failed
-					logger.error(t.getMessage());
+					t.printStackTrace();
 				}
 			}
 		});
@@ -214,18 +209,16 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 			int codeGroup = conn.getResponseCode() / 100;
 
 			if (codeGroup != 2) {
-				throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
-			}
-
-			if (logger.isInfoEnabled()) {
-				logger.info("Server returned code " + conn.getResponseCode());
+				String msg = "Failed : error code : " + conn.getResponseCode();
+				msg += "\nEquipment event response ...";
+				
 				BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
-
 				String output;
-				logger.info("Equipment event response ...");
+
 				while ((output = br.readLine()) != null) {
-					logger.info(output);
+					msg += "\n" + output;
 				}
+				throw new Exception(msg);
 			}
 
 			conn.disconnect();

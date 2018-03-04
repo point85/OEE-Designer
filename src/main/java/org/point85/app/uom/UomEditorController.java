@@ -29,8 +29,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.point85.app.AppUtils;
-import org.point85.app.Images;
 import org.point85.app.ImageManager;
+import org.point85.app.Images;
 import org.point85.app.LoaderFactory;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
@@ -41,8 +41,6 @@ import org.point85.domain.uom.Prefix;
 import org.point85.domain.uom.UnitOfMeasure;
 import org.point85.domain.uom.UnitOfMeasure.MeasurementType;
 import org.point85.domain.uom.UnitType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -73,10 +71,6 @@ import javafx.stage.StageStyle;
  *
  */
 public class UomEditorController extends DesignerDialogController {
-	// logger
-	@SuppressWarnings("unused")
-	private final Logger logger = LoggerFactory.getLogger(getClass());
-
 	// custom UOM category
 	private static final String CUSTOM_CATEGORY = "Uncategorized";
 

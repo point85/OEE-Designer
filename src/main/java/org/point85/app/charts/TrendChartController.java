@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.point85.app.AppUtils;
-import org.point85.app.Images;
 import org.point85.app.ImageManager;
+import org.point85.app.Images;
 import org.point85.app.LoaderFactory;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerController;
@@ -19,8 +19,6 @@ import org.point85.domain.script.OeeContext;
 import org.point85.domain.script.ResolvedEvent;
 import org.point85.domain.script.ScriptResolver;
 import org.point85.domain.script.ScriptResolverType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
@@ -45,9 +43,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 public class TrendChartController extends DesignerController {
-	// logging utility
-	private static Logger logger = LoggerFactory.getLogger(TrendChartController.class);
-
 	// chart views
 	private static final int INPUT_VALUE_VIEW = 0;
 	private static final int OUTPUT_VALUE_VIEW = 1;

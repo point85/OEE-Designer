@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.point85.app.AppUtils;
-import org.point85.app.Images;
 import org.point85.app.ImageManager;
+import org.point85.app.Images;
 import org.point85.app.LoaderFactory;
 import org.point85.domain.persistence.PersistencyService;
 import org.point85.domain.plant.Area;
@@ -22,8 +22,6 @@ import org.point85.domain.plant.WorkCell;
 import org.point85.domain.schedule.WorkSchedule;
 import org.point85.domain.script.ScriptResolver;
 import org.point85.domain.script.ScriptResolverType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
@@ -58,9 +56,6 @@ import javafx.scene.layout.AnchorPane;
  *
  */
 public class PhysicalModelController extends DesignerController {
-	// logger
-	private final Logger logger = LoggerFactory.getLogger(getClass());
-
 	// list of edited plant entities
 	private Set<TreeItem<EntityNode>> editedEntityItems = new HashSet<>();
 
@@ -326,19 +321,14 @@ public class PhysicalModelController extends DesignerController {
 
 		// select equipment material
 		onSelectEquipmentMaterial();
-
-		if (logger.isInfoEnabled()) {
-			logger.info("Finished physical model init");
-		}
-
 	}
 
 	private List<PlantEntity> fetchTopEntities() {
 		long before = System.currentTimeMillis();
 		List<PlantEntity> entities = PersistencyService.instance().fetchTopPlantEntities();
-		if (logger.isInfoEnabled()) {
-			logger.info("Time to fetch entities " + (System.currentTimeMillis() - before) + " msec.");
-		}
+
+		System.out.println("Time to fetch entities " + (System.currentTimeMillis() - before) + " msec.");
+
 		Collections.sort(entities);
 		return entities;
 	}
@@ -348,54 +338,25 @@ public class PhysicalModelController extends DesignerController {
 		// fetch the entities
 		long before = System.currentTimeMillis();
 		List<PlantEntity> entities = PersistencyService.instance().fetchTopPlantEntities();
-		if (logger.isInfoEnabled()) {
-			logger.info("Time to fetch entities " + (System.currentTimeMillis() - before) + " msec.");
-		}
-		Collections.sort(entities);
 
-		if (logger.isInfoEnabled()) {
-			logger.info("Adding plant entities to tree view");
-		}
+		System.out.println("Time to fetch entities " + (System.currentTimeMillis() - before) + " msec.");
+
+		Collections.sort(entities);
 
 		// add them to the root entity
 		ObservableList<TreeItem<EntityNode>> children = getRootEntityItem().getChildren();
 		children.clear();
 
-		if (logger.isInfoEnabled()) {
-			logger.info("Step 1");
-		}
-
 		for (PlantEntity entity : entities) {
-			if (logger.isInfoEnabled()) {
-				logger.info("Entity: " + entity.getName());
-			}
-
 			TreeItem<EntityNode> entityItem = new TreeItem<>(new EntityNode(entity));
-			if (logger.isInfoEnabled()) {
-				logger.info("Created entity item");
-			}
 			children.add(entityItem);
-			if (logger.isInfoEnabled()) {
-				logger.info("Added entity item");
-			}
 			setEntityGraphic(entityItem);
-
-			if (logger.isInfoEnabled()) {
-				logger.info("Step 2");
-			}
 		}
 
 		// refresh tree view
 		getRootEntityItem().setExpanded(true);
 		tvEntities.getSelectionModel().clearSelection();
-		if (logger.isInfoEnabled()) {
-			logger.info("Step 3");
-		}
 		tvEntities.refresh();
-		if (logger.isInfoEnabled()) {
-			logger.info("Step 4");
-		}
-
 	}
 
 	private void onSelectEntity(TreeItem<EntityNode> oldItem, TreeItem<EntityNode> newItem) throws Exception {

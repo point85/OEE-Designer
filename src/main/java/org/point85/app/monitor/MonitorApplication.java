@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.point85.app.AppUtils;
-import org.point85.app.Images;
 import org.point85.app.ImageManager;
+import org.point85.app.Images;
 import org.point85.domain.collector.CollectorState;
 import org.point85.domain.collector.DataCollector;
 import org.point85.domain.messaging.ApplicationMessage;
@@ -22,8 +22,6 @@ import org.point85.domain.messaging.NotificationSeverity;
 import org.point85.domain.messaging.PublisherSubscriber;
 import org.point85.domain.messaging.RoutingKey;
 import org.point85.domain.persistence.PersistencyService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.rabbitmq.client.Channel;
@@ -37,9 +35,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class MonitorApplication extends Application implements MessageListener {
-	// logger
-	private final Logger logger = LoggerFactory.getLogger(getClass());
-
 	// data collectors being monitored
 	private List<DataCollector> collectors;
 
@@ -127,10 +122,6 @@ public class MonitorApplication extends Application implements MessageListener {
 
 					pubSubs.put(key, pubsub);
 					notificationPubSubs.add(pubsub);
-
-					if (logger.isInfoEnabled()) {
-						logger.info("Connected to RMQ broker " + key + " for collector " + collector.getName());
-					}
 				}
 			}
 		}
@@ -146,8 +137,7 @@ public class MonitorApplication extends Application implements MessageListener {
 		try {
 			channel.basicAck(envelope.getDeliveryTag(), PublisherSubscriber.ACK_MULTIPLE);
 		} catch (Exception e) {
-			logger.error("Failed to ack message: " + e.getMessage());
-			return;
+			throw new Exception("Failed to ack message: " + e.getMessage());
 		}
 
 		MessageType type = message.getMessageType();

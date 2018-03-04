@@ -71,7 +71,7 @@ public class ImageManager {
 				image = new Image(path + "Convert.png", DIM, DIM, true, true);
 				break;
 			case DASHBOARD:
-				image = new Image(path + "DashBoard.png", DIM, DIM, true, true);
+				image = new Image(path + "Dashboard.png", DIM, DIM, true, true);
 				break;
 			case DELETE:
 				image = new Image(path + "Delete.png", DIM, DIM, true, true);
@@ -131,7 +131,7 @@ public class ImageManager {
 				image = new Image(path + "Remove.png", DIM, DIM, true, true);
 				break;
 			case RMQ:
-				image = new Image(path + "RmqSource.png", DIM, DIM, true, true);
+				image = new Image(path + "RMQSource.png", DIM, DIM, true, true);
 				break;
 			case SAVE:
 				image = new Image(path + "Save.png", DIM, DIM, true, true);

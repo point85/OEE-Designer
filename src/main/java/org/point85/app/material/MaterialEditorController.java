@@ -9,14 +9,12 @@ import java.util.List;
 import java.util.Set;
 
 import org.point85.app.AppUtils;
-import org.point85.app.Images;
 import org.point85.app.ImageManager;
+import org.point85.app.Images;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
 import org.point85.domain.persistence.PersistencyService;
 import org.point85.domain.plant.Material;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -38,9 +36,6 @@ import javafx.stage.FileChooser;
  *
  */
 public class MaterialEditorController extends DesignerDialogController {
-	// logger
-	private final Logger logger = LoggerFactory.getLogger(getClass());
-
 	// custom UOM category
 	private static final String NO_CATEGORY = "Uncategorized";
 
@@ -552,10 +547,8 @@ public class MaterialEditorController extends DesignerDialogController {
 		File selectedFile = fileChooser.showOpenDialog(null);
 
 		if (selectedFile == null) {
-
 			return;
 		}
-		logger.info("Importing materials from file " + selectedFile.getName());
 
 		// read each line
 		BufferedReader br = new BufferedReader(new FileReader(selectedFile));

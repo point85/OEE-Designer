@@ -13,15 +13,13 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.point85.app.AppUtils;
-import org.point85.app.Images;
 import org.point85.app.ImageManager;
+import org.point85.app.Images;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
 import org.point85.domain.performance.TimeLoss;
 import org.point85.domain.persistence.PersistencyService;
 import org.point85.domain.plant.Reason;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -43,9 +41,6 @@ import javafx.stage.FileChooser;
  *
  */
 public class ReasonEditorController extends DesignerDialogController {
-	// logger
-	private final Logger logger = LoggerFactory.getLogger(getClass());
-
 	// list of edited reasons
 	private Set<TreeItem<ReasonNode>> editedReasonItems = new HashSet<>();
 
@@ -533,10 +528,8 @@ public class ReasonEditorController extends DesignerDialogController {
 			selectedFile = fileChooser.showOpenDialog(null);
 
 			if (selectedFile == null) {
-
 				return;
 			}
-			logger.info("Importing reasons from file " + selectedFile.getName());
 
 			// first pass to create the reasons
 			Map<Reason, String> parentReasons = new HashMap<>();
