@@ -10,7 +10,7 @@ import org.openscada.opc.dcom.common.KeyedResult;
 import org.openscada.opc.dcom.common.KeyedResultSet;
 import org.openscada.opc.dcom.da.OPCITEMSTATE;
 import org.point85.app.AppUtils;
-import org.point85.app.ImageEnum;
+import org.point85.app.Images;
 import org.point85.app.ImageManager;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.domain.opc.da.OpcDaBrowserLeaf;
@@ -178,7 +178,7 @@ public class OpcDaBrowserController extends OpcDaController {
 				} else {
 					setText(leaf.getItemId());
 					try {
-						setGraphic(ImageManager.instance().getImageView(ImageEnum.TAG));
+						setGraphic(ImageManager.instance().getImageView(Images.TAG));
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -246,27 +246,27 @@ public class OpcDaBrowserController extends OpcDaController {
 		super.setImages();
 
 		// connect
-		btConnect.setGraphic(ImageManager.instance().getImageView(ImageEnum.CONNECT));
+		btConnect.setGraphic(ImageManager.instance().getImageView(Images.CONNECT));
 		btConnect.setContentDisplay(ContentDisplay.RIGHT);
 
 		// disconnect
-		btDisconnect.setGraphic(ImageManager.instance().getImageView(ImageEnum.DISCONNECT));
+		btDisconnect.setGraphic(ImageManager.instance().getImageView(Images.DISCONNECT));
 		btDisconnect.setContentDisplay(ContentDisplay.RIGHT);
 
 		// cancel connect
-		btCancelConnect.setGraphic(ImageManager.instance().getImageView(ImageEnum.CANCEL));
+		btCancelConnect.setGraphic(ImageManager.instance().getImageView(Images.CANCEL));
 		btCancelConnect.setContentDisplay(ContentDisplay.RIGHT);
 
 		// new
-		btNew.setGraphic(ImageManager.instance().getImageView(ImageEnum.NEW));
+		btNew.setGraphic(ImageManager.instance().getImageView(Images.NEW));
 		btNew.setContentDisplay(ContentDisplay.LEFT);
 
 		// save
-		btSave.setGraphic(ImageManager.instance().getImageView(ImageEnum.SAVE));
+		btSave.setGraphic(ImageManager.instance().getImageView(Images.SAVE));
 		btSave.setContentDisplay(ContentDisplay.LEFT);
 
 		// delete
-		btDelete.setGraphic(ImageManager.instance().getImageView(ImageEnum.DELETE));
+		btDelete.setGraphic(ImageManager.instance().getImageView(Images.DELETE));
 		btDelete.setContentDisplay(ContentDisplay.LEFT);
 	}
 
@@ -327,7 +327,7 @@ public class OpcDaBrowserController extends OpcDaController {
 			// browse root tags
 			treeBrowser = getApp().getOpcDaClient().getTreeBrowser();
 			OpcDaTagTreeBranch rootBranch = treeBrowser.browseBranches();
-			ImageView rootView = ImageManager.instance().getImageView(ImageEnum.FOLDER);
+			ImageView rootView = ImageManager.instance().getImageView(Images.FOLDER);
 			OpcDaTagTreeItem treeRoot = new OpcDaTagTreeItem(rootBranch, treeBrowser, rootView);
 
 			tvBrowser.setRoot(treeRoot);

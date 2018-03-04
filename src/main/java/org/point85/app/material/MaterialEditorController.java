@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.point85.app.AppUtils;
-import org.point85.app.ImageEnum;
+import org.point85.app.Images;
 import org.point85.app.ImageManager;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
@@ -132,7 +132,7 @@ public class MaterialEditorController extends DesignerDialogController {
 			boolean isChanged = setAttributes(oldItem);
 
 			if (isChanged) {
-				oldItem.setGraphic(ImageManager.instance().getImageView(ImageEnum.CHANGED));
+				oldItem.setGraphic(ImageManager.instance().getImageView(Images.CHANGED));
 				tvMaterials.refresh();
 			}
 		}
@@ -175,28 +175,28 @@ public class MaterialEditorController extends DesignerDialogController {
 		super.setImages();
 
 		// new
-		btNew.setGraphic(ImageManager.instance().getImageView(ImageEnum.NEW));
+		btNew.setGraphic(ImageManager.instance().getImageView(Images.NEW));
 		btNew.setContentDisplay(ContentDisplay.RIGHT);
 
 		// save
-		btSave.setGraphic(ImageManager.instance().getImageView(ImageEnum.SAVE));
+		btSave.setGraphic(ImageManager.instance().getImageView(Images.SAVE));
 		btSave.setContentDisplay(ContentDisplay.RIGHT);
 
 		// refresh
-		btRefresh.setGraphic(ImageManager.instance().getImageView(ImageEnum.REFRESH));
+		btRefresh.setGraphic(ImageManager.instance().getImageView(Images.REFRESH));
 		btRefresh.setContentDisplay(ContentDisplay.RIGHT);
 
 		// delete
-		btDelete.setGraphic(ImageManager.instance().getImageView(ImageEnum.DELETE));
+		btDelete.setGraphic(ImageManager.instance().getImageView(Images.DELETE));
 		btDelete.setContentDisplay(ContentDisplay.RIGHT);
 
 		// import
-		btImport.setGraphic(ImageManager.instance().getImageView(ImageEnum.IMPORT));
+		btImport.setGraphic(ImageManager.instance().getImageView(Images.IMPORT));
 		btImport.setContentDisplay(ContentDisplay.RIGHT);
 
 		// context menu
-		miSaveAll.setGraphic(ImageManager.instance().getImageView(ImageEnum.SAVE_ALL));
-		miRefreshAll.setGraphic(ImageManager.instance().getImageView(ImageEnum.REFRESH_ALL));
+		miSaveAll.setGraphic(ImageManager.instance().getImageView(Images.SAVE_ALL));
+		miRefreshAll.setGraphic(ImageManager.instance().getImageView(Images.REFRESH_ALL));
 	}
 
 	// show the Material attributes
@@ -282,7 +282,7 @@ public class MaterialEditorController extends DesignerDialogController {
 		}
 
 		if (isDirty) {
-			materialItem.setGraphic(ImageManager.instance().getImageView(ImageEnum.CHANGED));
+			materialItem.setGraphic(ImageManager.instance().getImageView(Images.CHANGED));
 			addEditedMaterial(materialItem);
 		}
 		return isDirty;
@@ -305,7 +305,7 @@ public class MaterialEditorController extends DesignerDialogController {
 		for (String category : categories) {
 			MaterialNode categoryNode = new MaterialNode(category);
 			TreeItem<MaterialNode> categoryItem = new TreeItem<>(categoryNode);
-			categoryItem.setGraphic(ImageManager.instance().getImageView(ImageEnum.CATEGORY));
+			categoryItem.setGraphic(ImageManager.instance().getImageView(Images.CATEGORY));
 			getRootMaterialItem().getChildren().add(categoryItem);
 		}
 
@@ -346,7 +346,7 @@ public class MaterialEditorController extends DesignerDialogController {
 			if (parentCategoryItem == null) {
 				// new category
 				parentCategoryItem = new TreeItem<>(new MaterialNode(category));
-				parentCategoryItem.setGraphic(ImageManager.instance().getImageView(ImageEnum.CATEGORY));
+				parentCategoryItem.setGraphic(ImageManager.instance().getImageView(Images.CATEGORY));
 				getRootMaterialItem().getChildren().add(parentCategoryItem);
 			}
 
@@ -359,7 +359,7 @@ public class MaterialEditorController extends DesignerDialogController {
 	}
 
 	private void resetGraphic(TreeItem<MaterialNode> materialItem) throws Exception {
-		materialItem.setGraphic(ImageManager.instance().getImageView(ImageEnum.MATERIAL));
+		materialItem.setGraphic(ImageManager.instance().getImageView(Images.MATERIAL));
 	}
 
 	@FXML
@@ -424,7 +424,7 @@ public class MaterialEditorController extends DesignerDialogController {
 			if (parentItem == null) {
 				// new category
 				parentItem = new TreeItem<>(new MaterialNode(material.getCategory()));
-				parentItem.setGraphic(ImageManager.instance().getImageView(ImageEnum.CATEGORY));
+				parentItem.setGraphic(ImageManager.instance().getImageView(Images.CATEGORY));
 				tvMaterials.getRoot().getChildren().add(parentItem);
 			}
 			parentItem.getChildren().add(newItem);

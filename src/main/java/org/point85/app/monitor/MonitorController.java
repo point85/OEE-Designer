@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.point85.app.AppUtils;
-import org.point85.app.ImageEnum;
+import org.point85.app.Images;
 import org.point85.app.ImageManager;
 import org.point85.app.LoaderFactory;
 import org.point85.app.dashboard.DashboardController;
@@ -369,25 +369,25 @@ public class MonitorController {
 
 		switch (level) {
 		case AREA:
-			nodeView = ImageManager.instance().getImageView(ImageEnum.AREA);
+			nodeView = ImageManager.instance().getImageView(Images.AREA);
 			break;
 		case ENTERPRISE:
-			nodeView = ImageManager.instance().getImageView(ImageEnum.ENTERPRISE);
+			nodeView = ImageManager.instance().getImageView(Images.ENTERPRISE);
 			break;
 		case EQUIPMENT:
-			nodeView = ImageManager.instance().getImageView(ImageEnum.EQUIPMENT);
+			nodeView = ImageManager.instance().getImageView(Images.EQUIPMENT);
 			break;
 
 		case PRODUCTION_LINE:
-			nodeView = ImageManager.instance().getImageView(ImageEnum.LINE);
+			nodeView = ImageManager.instance().getImageView(Images.LINE);
 			break;
 
 		case SITE:
-			nodeView = ImageManager.instance().getImageView(ImageEnum.SITE);
+			nodeView = ImageManager.instance().getImageView(Images.SITE);
 			break;
 
 		case WORK_CELL:
-			nodeView = ImageManager.instance().getImageView(ImageEnum.CELL);
+			nodeView = ImageManager.instance().getImageView(Images.CELL);
 			break;
 
 		default:

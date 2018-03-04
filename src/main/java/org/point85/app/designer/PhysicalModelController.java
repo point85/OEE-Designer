@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.point85.app.AppUtils;
-import org.point85.app.ImageEnum;
+import org.point85.app.Images;
 import org.point85.app.ImageManager;
 import org.point85.app.LoaderFactory;
 import org.point85.domain.persistence.PersistencyService;
@@ -293,10 +293,6 @@ public class PhysicalModelController extends DesignerController {
 		// toolbar
 		initializeToolbar();
 
-		if (logger.isInfoEnabled()) {
-			logger.info("Initialized toolbar");
-		}
-
 		// add the tree view listener for entity selection
 		tvEntities.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
 			try {
@@ -412,7 +408,7 @@ public class PhysicalModelController extends DesignerController {
 			boolean isChanged = setAttributes(oldItem);
 
 			if (isChanged) {
-				oldItem.setGraphic(ImageManager.instance().getImageView(ImageEnum.CHANGED));
+				oldItem.setGraphic(ImageManager.instance().getImageView(Images.CHANGED));
 				this.addEditedPlantEntity(oldItem);
 				tvEntities.refresh();
 			}
@@ -444,73 +440,73 @@ public class PhysicalModelController extends DesignerController {
 
 	private void initializeToolbar() throws Exception {
 		// toolbar
-		btMaterialEditor.setGraphic(ImageManager.instance().getImageView(ImageEnum.MATERIAL));
+		btMaterialEditor.setGraphic(ImageManager.instance().getImageView(Images.MATERIAL));
 		btMaterialEditor.setTooltip(new Tooltip("Display material editor."));
 
-		btReasonEditor.setGraphic(ImageManager.instance().getImageView(ImageEnum.REASON));
+		btReasonEditor.setGraphic(ImageManager.instance().getImageView(Images.REASON));
 		btReasonEditor.setTooltip(new Tooltip("Display reason editor."));
 
-		btScheduleEditor.setGraphic(ImageManager.instance().getImageView(ImageEnum.SCHEDULE));
+		btScheduleEditor.setGraphic(ImageManager.instance().getImageView(Images.SCHEDULE));
 		btScheduleEditor.setTooltip(new Tooltip("Display work schedule editor."));
 
-		btUomEditor.setGraphic(ImageManager.instance().getImageView(ImageEnum.UOM));
+		btUomEditor.setGraphic(ImageManager.instance().getImageView(Images.UOM));
 		btUomEditor.setTooltip(new Tooltip("Display unit of measure editor."));
 
-		btOpcDaBrowser.setGraphic(ImageManager.instance().getImageView(ImageEnum.OPC_DA));
+		btOpcDaBrowser.setGraphic(ImageManager.instance().getImageView(Images.OPC_DA));
 		btOpcDaBrowser.setTooltip(new Tooltip("Display OPC DA browser."));
 
-		btOpcUaBrowser.setGraphic(ImageManager.instance().getImageView(ImageEnum.OPC_UA));
+		btOpcUaBrowser.setGraphic(ImageManager.instance().getImageView(Images.OPC_UA));
 		btOpcUaBrowser.setTooltip(new Tooltip("Display OPC UA browser."));
 
-		btHttpServerEditor.setGraphic(ImageManager.instance().getImageView(ImageEnum.HTTP));
+		btHttpServerEditor.setGraphic(ImageManager.instance().getImageView(Images.HTTP));
 		btHttpServerEditor.setTooltip(new Tooltip("Display HTTP server editor."));
 
-		btRmqBrokerEditor.setGraphic(ImageManager.instance().getImageView(ImageEnum.RMQ));
+		btRmqBrokerEditor.setGraphic(ImageManager.instance().getImageView(Images.RMQ));
 		btRmqBrokerEditor.setTooltip(new Tooltip("Display RabbitMQ broker editor."));
 
-		btWebServerEditor.setGraphic(ImageManager.instance().getImageView(ImageEnum.WEB));
+		btWebServerEditor.setGraphic(ImageManager.instance().getImageView(Images.WEB));
 		btWebServerEditor.setTooltip(new Tooltip("Display web server editor."));
 
-		btCollectorEditor.setGraphic(ImageManager.instance().getImageView(ImageEnum.COLLECTOR));
+		btCollectorEditor.setGraphic(ImageManager.instance().getImageView(Images.COLLECTOR));
 		btCollectorEditor.setTooltip(new Tooltip("Display collector configuration editor."));
 
-		btUomConverter.setGraphic(ImageManager.instance().getImageView(ImageEnum.CONVERT));
+		btUomConverter.setGraphic(ImageManager.instance().getImageView(Images.CONVERT));
 		btUomConverter.setTooltip(new Tooltip("Display Unit of Measure Converter."));
 
-		btScriptEditor.setGraphic(ImageManager.instance().getImageView(ImageEnum.SCRIPT));
+		btScriptEditor.setGraphic(ImageManager.instance().getImageView(Images.SCRIPT));
 		btScriptEditor.setTooltip(new Tooltip("Display Script Editor."));
 	}
 
 	// images for editor buttons
 	protected void setImages() throws Exception {
 		// new entity
-		btNew.setGraphic(ImageManager.instance().getImageView(ImageEnum.NEW));
+		btNew.setGraphic(ImageManager.instance().getImageView(Images.NEW));
 		btNew.setContentDisplay(ContentDisplay.RIGHT);
 
 		// save entity
-		btSave.setGraphic(ImageManager.instance().getImageView(ImageEnum.SAVE));
+		btSave.setGraphic(ImageManager.instance().getImageView(Images.SAVE));
 		btSave.setContentDisplay(ContentDisplay.RIGHT);
 
 		// save all
-		btRefresh.setGraphic(ImageManager.instance().getImageView(ImageEnum.REFRESH));
+		btRefresh.setGraphic(ImageManager.instance().getImageView(Images.REFRESH));
 		btRefresh.setContentDisplay(ContentDisplay.RIGHT);
 
 		// delete entity
-		btDelete.setGraphic(ImageManager.instance().getImageView(ImageEnum.DELETE));
+		btDelete.setGraphic(ImageManager.instance().getImageView(Images.DELETE));
 		btDelete.setContentDisplay(ContentDisplay.RIGHT);
 
 		// work schedule
-		btWorkSchedule.setGraphic(ImageManager.instance().getImageView(ImageEnum.SCHEDULE));
+		btWorkSchedule.setGraphic(ImageManager.instance().getImageView(Images.SCHEDULE));
 		btWorkSchedule.setContentDisplay(ContentDisplay.LEFT);
 
 		// dashboard
-		btDashboard.setGraphic(ImageManager.instance().getImageView(ImageEnum.DASHBOARD));
+		btDashboard.setGraphic(ImageManager.instance().getImageView(Images.DASHBOARD));
 		btDashboard.setContentDisplay(ContentDisplay.RIGHT);
 
 		// context menu
-		miSaveAll.setGraphic(ImageManager.instance().getImageView(ImageEnum.SAVE_ALL));
-		miRefreshAll.setGraphic(ImageManager.instance().getImageView(ImageEnum.REFRESH_ALL));
-		miClearSelection.setGraphic(ImageManager.instance().getImageView(ImageEnum.CLEAR));
+		miSaveAll.setGraphic(ImageManager.instance().getImageView(Images.SAVE_ALL));
+		miRefreshAll.setGraphic(ImageManager.instance().getImageView(Images.REFRESH_ALL));
+		miClearSelection.setGraphic(ImageManager.instance().getImageView(Images.CLEAR));
 	}
 
 	@FXML
@@ -724,12 +720,12 @@ public class PhysicalModelController extends DesignerController {
 			// add new child entity if not a top level
 			if (!parentEntity.getName().equals(PlantEntity.ROOT_ENTITY_NAME)) {
 				parentEntity.addChild(newEntity);
-				parentItem.setGraphic(ImageManager.instance().getImageView(ImageEnum.CHANGED));
+				parentItem.setGraphic(ImageManager.instance().getImageView(Images.CHANGED));
 			}
 
 			// add to tree view
 			parentItem.getChildren().add(selectedEntityItem);
-			selectedEntityItem.setGraphic(ImageManager.instance().getImageView(ImageEnum.CHANGED));
+			selectedEntityItem.setGraphic(ImageManager.instance().getImageView(Images.CHANGED));
 			addEditedPlantEntity(selectedEntityItem);
 
 			parentItem.setExpanded(true);
@@ -749,25 +745,25 @@ public class PhysicalModelController extends DesignerController {
 
 		switch (level) {
 		case AREA:
-			nodeView = ImageManager.instance().getImageView(ImageEnum.AREA);
+			nodeView = ImageManager.instance().getImageView(Images.AREA);
 			break;
 		case ENTERPRISE:
-			nodeView = ImageManager.instance().getImageView(ImageEnum.ENTERPRISE);
+			nodeView = ImageManager.instance().getImageView(Images.ENTERPRISE);
 			break;
 		case EQUIPMENT:
-			nodeView = ImageManager.instance().getImageView(ImageEnum.EQUIPMENT);
+			nodeView = ImageManager.instance().getImageView(Images.EQUIPMENT);
 			break;
 
 		case PRODUCTION_LINE:
-			nodeView = ImageManager.instance().getImageView(ImageEnum.LINE);
+			nodeView = ImageManager.instance().getImageView(Images.LINE);
 			break;
 
 		case SITE:
-			nodeView = ImageManager.instance().getImageView(ImageEnum.SITE);
+			nodeView = ImageManager.instance().getImageView(Images.SITE);
 			break;
 
 		case WORK_CELL:
-			nodeView = ImageManager.instance().getImageView(ImageEnum.CELL);
+			nodeView = ImageManager.instance().getImageView(Images.CELL);
 			break;
 
 		default:
@@ -976,7 +972,7 @@ public class PhysicalModelController extends DesignerController {
 
 	private void addEditedPlantEntity(TreeItem<EntityNode> item) throws Exception {
 		if (item != null && !editedEntityItems.contains(item)) {
-			item.setGraphic(ImageManager.instance().getImageView(ImageEnum.CHANGED));
+			item.setGraphic(ImageManager.instance().getImageView(Images.CHANGED));
 			editedEntityItems.add(item);
 		}
 	}

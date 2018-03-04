@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.point85.app.AppUtils;
 import org.point85.app.DialogController;
-import org.point85.app.ImageEnum;
+import org.point85.app.Images;
 import org.point85.app.ImageManager;
 import org.point85.domain.collector.CollectorState;
 import org.point85.domain.collector.DataCollector;
@@ -77,15 +77,15 @@ public class DataCollectorController extends DialogController {
 		super.setImages();
 
 		// new
-		btNew.setGraphic(ImageManager.instance().getImageView(ImageEnum.NEW));
+		btNew.setGraphic(ImageManager.instance().getImageView(Images.NEW));
 		btNew.setContentDisplay(ContentDisplay.LEFT);
 
 		// save
-		btSave.setGraphic(ImageManager.instance().getImageView(ImageEnum.SAVE));
+		btSave.setGraphic(ImageManager.instance().getImageView(Images.SAVE));
 		btSave.setContentDisplay(ContentDisplay.LEFT);
 
 		// delete
-		btDelete.setGraphic(ImageManager.instance().getImageView(ImageEnum.DELETE));
+		btDelete.setGraphic(ImageManager.instance().getImageView(Images.DELETE));
 		btDelete.setContentDisplay(ContentDisplay.LEFT);
 	}
 

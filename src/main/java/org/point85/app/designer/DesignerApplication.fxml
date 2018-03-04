@@ -99,12 +99,12 @@
                   </GridPane>
                   <TabPane fx:id="tpEntity" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="200.0">
                     <tabs>
-                      <Tab fx:id="tbEquipMaterials" text="Processed Material">
+                      <Tab fx:id="tbEquipMaterials" closable="false" text="Processed Material">
                         <content>
                           <AnchorPane fx:id="apEquipMaterial" minHeight="0.0" minWidth="0.0" />
                         </content>
                       </Tab>
-                      <Tab fx:id="tbAvailability" text="Data Collection">
+                      <Tab fx:id="tbAvailability" closable="false" text="Data Collection">
                         <content>
                           <AnchorPane fx:id="apAvailability" minHeight="0.0" minWidth="0.0" />
                         </content>

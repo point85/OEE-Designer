@@ -11,7 +11,7 @@ import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.StatusCode;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.ServerState;
 import org.point85.app.AppUtils;
-import org.point85.app.ImageEnum;
+import org.point85.app.Images;
 import org.point85.app.ImageManager;
 import org.point85.app.LoaderFactory;
 import org.point85.app.charts.DataSubscriber;
@@ -90,15 +90,15 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 		super.setImages();
 
 		// connect
-		btConnect.setGraphic(ImageManager.instance().getImageView(ImageEnum.CONNECT));
+		btConnect.setGraphic(ImageManager.instance().getImageView(Images.CONNECT));
 		btConnect.setContentDisplay(ContentDisplay.RIGHT);
 
 		// disconnect
-		btDisconnect.setGraphic(ImageManager.instance().getImageView(ImageEnum.DISCONNECT));
+		btDisconnect.setGraphic(ImageManager.instance().getImageView(Images.DISCONNECT));
 		btDisconnect.setContentDisplay(ContentDisplay.RIGHT);
 
 		// cancel connect
-		btCancelConnect.setGraphic(ImageManager.instance().getImageView(ImageEnum.CANCEL));
+		btCancelConnect.setGraphic(ImageManager.instance().getImageView(Images.CANCEL));
 		btCancelConnect.setContentDisplay(ContentDisplay.RIGHT);
 	}
 

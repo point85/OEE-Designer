@@ -10,7 +10,7 @@ public class ImageManager {
 	private static final String path = "/org/point85/images/";
 	private static final int DIM = 16;
 
-	private ConcurrentMap<ImageEnum, Image> imageCache;
+	private ConcurrentMap<Images, Image> imageCache;
 
 	private static ImageManager imageManager;
 
@@ -25,11 +25,11 @@ public class ImageManager {
 		return imageManager;
 	}
 
-	public ImageView getImageView(ImageEnum id) throws Exception {
+	public ImageView getImageView(Images id) throws Exception {
 		return new ImageView(getImage(id));
 	}
 
-	public Image getImage(ImageEnum id) throws Exception {
+	public Image getImage(Images id) throws Exception {
 		Image image = imageCache.get(id);
 
 		if (image == null) {

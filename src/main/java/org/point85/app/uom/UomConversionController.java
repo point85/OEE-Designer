@@ -27,7 +27,7 @@ package org.point85.app.uom;
 import java.util.Collections;
 
 import org.point85.app.AppUtils;
-import org.point85.app.ImageEnum;
+import org.point85.app.Images;
 import org.point85.app.ImageManager;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
@@ -250,7 +250,7 @@ public class UomConversionController extends DesignerDialogController {
 		super.setImages();
 
 		// converter
-		btConvert.setGraphic(ImageManager.instance().getImageView(ImageEnum.CONVERT));
+		btConvert.setGraphic(ImageManager.instance().getImageView(Images.CONVERT));
 		btConvert.setContentDisplay(ContentDisplay.LEFT);
 	}
 }

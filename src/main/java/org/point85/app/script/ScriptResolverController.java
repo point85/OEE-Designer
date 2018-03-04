@@ -4,7 +4,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 
 import org.point85.app.AppUtils;
-import org.point85.app.ImageEnum;
+import org.point85.app.Images;
 import org.point85.app.ImageManager;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
@@ -113,31 +113,31 @@ public class ScriptResolverController extends DesignerDialogController {
 		super.setImages();
 
 		// execute
-		btExecute.setGraphic(ImageManager.instance().getImageView(ImageEnum.EXECUTE));
+		btExecute.setGraphic(ImageManager.instance().getImageView(Images.EXECUTE));
 		btExecute.setContentDisplay(ContentDisplay.RIGHT);
 
 		// clear script
-		btClearScript.setGraphic(ImageManager.instance().getImageView(ImageEnum.CLEAR));
+		btClearScript.setGraphic(ImageManager.instance().getImageView(Images.CLEAR));
 		btClearScript.setContentDisplay(ContentDisplay.RIGHT);
 
 		// clear result
-		btClearResult.setGraphic(ImageManager.instance().getImageView(ImageEnum.CLEAR));
+		btClearResult.setGraphic(ImageManager.instance().getImageView(Images.CLEAR));
 		btClearResult.setContentDisplay(ContentDisplay.RIGHT);
 
 		// set value
-		btSetValue.setGraphic(ImageManager.instance().getImageView(ImageEnum.APPLY));
+		btSetValue.setGraphic(ImageManager.instance().getImageView(Images.APPLY));
 		btSetValue.setContentDisplay(ContentDisplay.LEFT);
 
 		// set value
-		btSetLastValue.setGraphic(ImageManager.instance().getImageView(ImageEnum.APPLY));
+		btSetLastValue.setGraphic(ImageManager.instance().getImageView(Images.APPLY));
 		btSetLastValue.setContentDisplay(ContentDisplay.LEFT);
 
 		// find material
-		btFindMaterial.setGraphic(ImageManager.instance().getImageView(ImageEnum.MATERIAL));
+		btFindMaterial.setGraphic(ImageManager.instance().getImageView(Images.MATERIAL));
 		btFindMaterial.setContentDisplay(ContentDisplay.LEFT);
 
 		// find a reason
-		btFindReason.setGraphic(ImageManager.instance().getImageView(ImageEnum.REASON));
+		btFindReason.setGraphic(ImageManager.instance().getImageView(Images.REASON));
 		btFindReason.setContentDisplay(ContentDisplay.LEFT);
 	}
 

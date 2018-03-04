@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.point85.app.AppUtils;
-import org.point85.app.ImageEnum;
+import org.point85.app.Images;
 import org.point85.app.ImageManager;
 import org.point85.domain.persistence.PersistencyService;
 import org.point85.domain.plant.Equipment;
@@ -176,26 +176,26 @@ public class EquipmentMaterialController extends DesignerController {
 
 	protected void setImages() throws Exception {
 		// new equipment material
-		btNewMaterial.setGraphic(ImageManager.instance().getImageView(ImageEnum.NEW));
+		btNewMaterial.setGraphic(ImageManager.instance().getImageView(Images.NEW));
 		btNewMaterial.setContentDisplay(ContentDisplay.RIGHT);
 
 		// add equipment material
-		btAddMaterial.setGraphic(ImageManager.instance().getImageView(ImageEnum.ADD));
+		btAddMaterial.setGraphic(ImageManager.instance().getImageView(Images.ADD));
 		btAddMaterial.setContentDisplay(ContentDisplay.RIGHT);
 
 		// remove equipment material
-		btRemoveMaterial.setGraphic(ImageManager.instance().getImageView(ImageEnum.REMOVE));
+		btRemoveMaterial.setGraphic(ImageManager.instance().getImageView(Images.REMOVE));
 		btRemoveMaterial.setContentDisplay(ContentDisplay.RIGHT);
 
 		// find material
-		btFindMaterial.setGraphic(ImageManager.instance().getImageView(ImageEnum.MATERIAL));
+		btFindMaterial.setGraphic(ImageManager.instance().getImageView(Images.MATERIAL));
 		btFindMaterial.setContentDisplay(ContentDisplay.CENTER);
 
 		// find UOMs
-		btFindIRRUnit.setGraphic(ImageManager.instance().getImageView(ImageEnum.UOM));
+		btFindIRRUnit.setGraphic(ImageManager.instance().getImageView(Images.UOM));
 		btFindIRRUnit.setContentDisplay(ContentDisplay.CENTER);
 
-		btFindRejectUnit.setGraphic(ImageManager.instance().getImageView(ImageEnum.UOM));
+		btFindRejectUnit.setGraphic(ImageManager.instance().getImageView(Images.UOM));
 		btFindRejectUnit.setContentDisplay(ContentDisplay.CENTER);
 	}
 

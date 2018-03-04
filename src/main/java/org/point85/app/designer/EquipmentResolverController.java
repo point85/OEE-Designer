@@ -8,7 +8,7 @@ import java.util.Set;
 import org.eclipse.milo.opcua.stack.core.BuiltinDataType;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.point85.app.AppUtils;
-import org.point85.app.ImageEnum;
+import org.point85.app.Images;
 import org.point85.app.ImageManager;
 import org.point85.app.opc.ua.OpcUaTreeNode;
 import org.point85.domain.collector.DataCollector;
@@ -345,31 +345,31 @@ public class EquipmentResolverController extends DesignerController {
 
 	protected void setImages() throws Exception {
 		// new resolver
-		btNewResolver.setGraphic(ImageManager.instance().getImageView(ImageEnum.NEW));
+		btNewResolver.setGraphic(ImageManager.instance().getImageView(Images.NEW));
 		btNewResolver.setContentDisplay(ContentDisplay.RIGHT);
 
 		// add resolver
-		btAddResolver.setGraphic(ImageManager.instance().getImageView(ImageEnum.ADD));
+		btAddResolver.setGraphic(ImageManager.instance().getImageView(Images.ADD));
 		btAddResolver.setContentDisplay(ContentDisplay.RIGHT);
 
 		// remove resolver
-		btRemoveResolver.setGraphic(ImageManager.instance().getImageView(ImageEnum.REMOVE));
+		btRemoveResolver.setGraphic(ImageManager.instance().getImageView(Images.REMOVE));
 		btRemoveResolver.setContentDisplay(ContentDisplay.RIGHT);
 
 		// script execution
-		btRun.setGraphic(ImageManager.instance().getImageView(ImageEnum.EXECUTE));
+		btRun.setGraphic(ImageManager.instance().getImageView(Images.EXECUTE));
 		btRun.setContentDisplay(ContentDisplay.RIGHT);
 
 		// browse to data source
-		btBrowseSource.setGraphic(ImageManager.instance().getImageView(ImageEnum.SOURCE));
+		btBrowseSource.setGraphic(ImageManager.instance().getImageView(Images.SOURCE));
 		btBrowseSource.setContentDisplay(ContentDisplay.CENTER);
 
 		// script editor
-		btEditScript.setGraphic(ImageManager.instance().getImageView(ImageEnum.SCRIPT));
+		btEditScript.setGraphic(ImageManager.instance().getImageView(Images.SCRIPT));
 		btEditScript.setContentDisplay(ContentDisplay.CENTER);
 
 		// collector editor
-		btEditCollector.setGraphic(ImageManager.instance().getImageView(ImageEnum.COLLECTOR));
+		btEditCollector.setGraphic(ImageManager.instance().getImageView(Images.COLLECTOR));
 		btEditCollector.setContentDisplay(ContentDisplay.CENTER);
 	}
 
@@ -391,19 +391,19 @@ public class EquipmentResolverController extends DesignerController {
 		ImageView buttonImage = null;
 		switch (sourceType) {
 		case HTTP:
-			buttonImage = ImageManager.instance().getImageView(ImageEnum.HTTP);
+			buttonImage = ImageManager.instance().getImageView(Images.HTTP);
 			break;
 		case MESSAGING:
-			buttonImage = ImageManager.instance().getImageView(ImageEnum.RMQ);
+			buttonImage = ImageManager.instance().getImageView(Images.RMQ);
 			break;
 		case OPC_DA:
-			buttonImage = ImageManager.instance().getImageView(ImageEnum.OPC_DA);
+			buttonImage = ImageManager.instance().getImageView(Images.OPC_DA);
 			break;
 		case OPC_UA:
-			buttonImage = ImageManager.instance().getImageView(ImageEnum.OPC_UA);
+			buttonImage = ImageManager.instance().getImageView(Images.OPC_UA);
 			break;
 		case WEB:
-			buttonImage = ImageManager.instance().getImageView(ImageEnum.WEB);
+			buttonImage = ImageManager.instance().getImageView(Images.WEB);
 			break;
 		default:
 			break;

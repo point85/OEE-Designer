@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.point85.app.AppUtils;
-import org.point85.app.ImageEnum;
+import org.point85.app.Images;
 import org.point85.app.ImageManager;
 import org.point85.app.LoaderFactory;
 import org.point85.app.designer.DesignerApplication;
@@ -252,10 +252,10 @@ public class TrendChartController extends DesignerController {
 
 	private void toggleTrendButton() throws Exception {
 		if (subscriber.isSubscribed()) {
-			btToggleTrend.setGraphic(ImageManager.instance().getImageView(ImageEnum.STOP));
+			btToggleTrend.setGraphic(ImageManager.instance().getImageView(Images.STOP));
 			btToggleTrend.setText("Stop");
 		} else {
-			btToggleTrend.setGraphic(ImageManager.instance().getImageView(ImageEnum.START));
+			btToggleTrend.setGraphic(ImageManager.instance().getImageView(Images.START));
 			btToggleTrend.setText("Start");
 		}
 	}
@@ -263,11 +263,11 @@ public class TrendChartController extends DesignerController {
 	// images for buttons
 	protected void setButtonImages() throws Exception {
 		// start trend
-		btToggleTrend.setGraphic(ImageManager.instance().getImageView(ImageEnum.START));
+		btToggleTrend.setGraphic(ImageManager.instance().getImageView(Images.START));
 		btToggleTrend.setContentDisplay(ContentDisplay.RIGHT);
 
 		// clear trend
-		btResetTrend.setGraphic(ImageManager.instance().getImageView(ImageEnum.CLEAR));
+		btResetTrend.setGraphic(ImageManager.instance().getImageView(Images.CLEAR));
 		btResetTrend.setContentDisplay(ContentDisplay.RIGHT);
 	}
 
@@ -298,10 +298,6 @@ public class TrendChartController extends DesignerController {
 		case AVAILABILITY:
 			// plot loss category
 			TimeLoss loss = resolvedItem.getReason().getLossCategory();
-			if (loss == null) {
-				logger.warn("Time loss category is null");
-				break;
-			}
 			plotData(resolvedItem.getInputValue(), loss.toString());
 			break;
 		case JOB:
@@ -342,7 +338,6 @@ public class TrendChartController extends DesignerController {
 
 	private void plotData(final Object inputValue, final Object plottedValue) throws Exception {
 		if (inputValue == null) {
-			logger.warn("The input value is null");
 			return;
 		}
 

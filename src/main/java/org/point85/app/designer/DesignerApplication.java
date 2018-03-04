@@ -1,7 +1,7 @@
 package org.point85.app.designer;
 
-import org.point85.app.ImageEnum;
 import org.point85.app.ImageManager;
+import org.point85.app.Images;
 import org.point85.app.LoaderFactory;
 import org.point85.app.dashboard.DashboardController;
 import org.point85.app.dashboard.DashboardDialogController;
@@ -103,10 +103,6 @@ public class DesignerApplication extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			if (logger.isInfoEnabled()) {
-				logger.info("Launching OEE Designer");
-			}
-
 			// Load root layout from fxml file.
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(getClass().getResource("DesignerApplication.fxml"));
@@ -116,29 +112,17 @@ public class DesignerApplication extends Application {
 			physicalModelController = loader.getController();
 			physicalModelController.initialize(this);
 
-			if (logger.isInfoEnabled()) {
-				logger.info("Initialized physical model controller");
-			}
-
 			// create application context
 			appContext = new OeeContext();
-
-			if (logger.isInfoEnabled()) {
-				logger.info("Created OEE context");
-			}
 
 			// Show the scene containing the root layout.
 			Scene scene = new Scene(mainLayout);
 
 			// UI
 			primaryStage.setTitle("OEE Designer");
-			primaryStage.getIcons().add(ImageManager.instance().getImage(ImageEnum.POINT85));
+			primaryStage.getIcons().add(ImageManager.instance().getImage(Images.POINT85));
 			primaryStage.setScene(scene);
 			primaryStage.show();
-
-			if (logger.isInfoEnabled()) {
-				logger.info("Showed primary stage");
-			}
 
 		} catch (Exception e) {
 			e.printStackTrace();

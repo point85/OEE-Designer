@@ -41,12 +41,12 @@ public abstract class DialogController {
 	// images for controls
 	protected void setImages() throws Exception {
 		// OK
-		btOK.setGraphic(ImageManager.instance().getImageView(ImageEnum.OK));
+		btOK.setGraphic(ImageManager.instance().getImageView(Images.OK));
 		btOK.setContentDisplay(ContentDisplay.LEFT);
 
 		// Cancel
 		if (btCancel != null) {
-			btCancel.setGraphic(ImageManager.instance().getImageView(ImageEnum.CANCEL));
+			btCancel.setGraphic(ImageManager.instance().getImageView(Images.CANCEL));
 			btCancel.setContentDisplay(ContentDisplay.LEFT);
 		}
 	}
