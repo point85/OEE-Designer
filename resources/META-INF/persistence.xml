@@ -7,7 +7,7 @@
     <persistence-unit name="OEE" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
     
-        <!-- entity classes -->                
+        <!-- entity classes --> 	            
       	<class>org.point85.domain.collector.DataCollector</class>
       	<class>org.point85.domain.collector.DataSource</class>
       	<class>org.point85.domain.collector.EventHistory</class>
@@ -33,13 +33,13 @@
       	
       	<class>org.point85.domain.script.ScriptResolver</class>
       	<class>org.point85.domain.uom.UnitOfMeasure</class>
-      	
+ 
       	<class>org.point85.domain.schedule.NonWorkingPeriod</class>
       	<class>org.point85.domain.schedule.Rotation</class>
       	<class>org.point85.domain.schedule.RotationSegment</class>
       	<class>org.point85.domain.schedule.Shift</class>      	
       	<class>org.point85.domain.schedule.Team</class>
-      	<class>org.point85.domain.schedule.WorkSchedule</class>    
+      	<class>org.point85.domain.schedule.WorkSchedule</class>   
         
 		<!-- use the listed entity classes -->
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
