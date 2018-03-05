@@ -1,5 +1,6 @@
 package org.point85.app.designer;
 
+import org.point85.app.AppUtils;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
 import org.point85.app.LoaderFactory;
@@ -42,6 +43,7 @@ import org.point85.domain.uom.UnitOfMeasure;
 import org.point85.domain.web.WebSource;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.SplitPane;
@@ -119,6 +121,30 @@ public class DesignerApplication extends Application {
 			primaryStage.getIcons().add(ImageManager.instance().getImage(Images.POINT85));
 			primaryStage.setScene(scene);
 			primaryStage.show();
+
+			int populate = 1;
+
+			if (populate == 1) {
+				Platform.runLater(() -> {
+					try {
+						physicalModelController.populateTopEntityNodes();
+					} catch (Exception e) {
+						AppUtils.showErrorDialog(
+								"Unable to fetch plant entities.  Check database connection.  " + e.getMessage());
+					} finally {
+						physicalModelController.turnOffProgressIndictor();
+					}
+				});
+			} else if (populate == 2) {
+				try {
+					physicalModelController.populateTopEntityNodes();
+				} catch (Exception e) {
+					AppUtils.showErrorDialog(
+							"Unable to fetch plant entities.  Check database connection.  " + e.getMessage());
+				} finally {
+					physicalModelController.turnOffProgressIndictor();
+				}
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -585,9 +611,6 @@ public class DesignerApplication extends Application {
 		// set the script resolver
 		webTrendController.setScriptResolver(scriptResolver);
 
-		// start HTTP server
-		// webTrendController.onStartServer();
-
 		// show the window
 		webTrendController.getDialogStage().show();
 	}
@@ -734,7 +757,10 @@ public class DesignerApplication extends Application {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		//PersistencyService.instance().initialize();
+		// create the EMF
+		PersistencyService.instance().initialize();
+
+		// start GUI
 		launch(args);
 	}
 

@@ -223,9 +223,7 @@ public class PhysicalModelController extends DesignerController {
 			tvEntities.refresh();
 		} catch (Exception e) {
 			AppUtils.showErrorDialog("Unable to fetch plant entities.  Check database connection.  " + e.getMessage());
-		} finally {
-			piEntities.setVisible(false);
-		}
+		} 
 	}
 
 	// initialize app
@@ -234,7 +232,7 @@ public class PhysicalModelController extends DesignerController {
 		setApp(app);
 
 		// fill in the top-level entity nodes
-		int launch = 1;
+		int launch = -1;
 
 		if (launch == 0) {
 			piEntities.setVisible(true);
@@ -324,22 +322,26 @@ public class PhysicalModelController extends DesignerController {
 	}
 
 	private List<PlantEntity> fetchTopEntities() {
-		long before = System.currentTimeMillis();
+		//long before = System.currentTimeMillis();
 		List<PlantEntity> entities = PersistencyService.instance().fetchTopPlantEntities();
 
-		System.out.println("Time to fetch entities " + (System.currentTimeMillis() - before) + " msec.");
+		//System.out.println("Time to fetch entities " + (System.currentTimeMillis() - before) + " msec.");
 
 		Collections.sort(entities);
 		return entities;
 	}
+	
+	void turnOffProgressIndictor() {
+		piEntities.setVisible(false);
+	}
 
 	// display top-level entities
-	private void populateTopEntityNodes() throws Exception {		
+	void populateTopEntityNodes() throws Exception {		
 		// fetch the entities
-		long before = System.currentTimeMillis();
+		//long before = System.currentTimeMillis();
 		List<PlantEntity> entities = PersistencyService.instance().fetchTopPlantEntities();
 
-		System.out.println("Time to fetch entities " + (System.currentTimeMillis() - before) + " msec.");
+		//System.out.println("Time to fetch entities " + (System.currentTimeMillis() - before) + " msec.");
 
 		Collections.sort(entities);
 
