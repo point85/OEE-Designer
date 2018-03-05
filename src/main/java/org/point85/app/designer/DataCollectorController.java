@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.point85.app.AppUtils;
 import org.point85.app.DialogController;
-import org.point85.app.Images;
 import org.point85.app.ImageManager;
+import org.point85.app.Images;
 import org.point85.domain.collector.CollectorState;
 import org.point85.domain.collector.DataCollector;
 import org.point85.domain.persistence.PersistencyService;
@@ -107,8 +107,7 @@ public class DataCollectorController extends DialogController {
 		// retrieve collector by name
 		DataCollector configuration = null;
 		try {
-			configuration = (DataCollector) PersistencyService.instance().fetchByName(DataCollector.COLLECT_BY_NAME,
-					collector);
+			configuration = PersistencyService.instance().fetchCollectorByName(collector);
 			setCollectorDefinition(configuration);
 		} catch (Exception e) {
 			// not saved yet

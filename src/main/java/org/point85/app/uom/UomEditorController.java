@@ -505,6 +505,7 @@ public class UomEditorController extends DesignerDialogController {
 
 		// fetch the categories
 		List<String> categories = PersistencyService.instance().fetchCategories();
+		Collections.sort(categories);
 
 		for (String category : categories) {
 			UomNode categoryNode = new UomNode(category);
@@ -933,8 +934,8 @@ public class UomEditorController extends DesignerDialogController {
 
 			if (getSelectedUom().getKey() != null) {
 				// read from database
-				UnitOfMeasure uom = (UnitOfMeasure) PersistencyService.instance().fetchByKey(UnitOfMeasure.class,
-						getSelectedUom().getKey());
+				UnitOfMeasure uom = (UnitOfMeasure) PersistencyService.instance()
+						.fetchUomByKey(getSelectedUom().getKey());
 				selectedUomItem.getValue().setUnitOfMeasure(uom);
 				resetGraphic(selectedUomItem);
 				displayAttributes(uom);

@@ -6,8 +6,9 @@
   <artifactId>oee-designer</artifactId>
   <version>1.0.0</version>
   <packaging>jar</packaging>
-
-  <url>http://maven.apache.org</url>
+  
+  <name>Point85 OEE Designer Application</name>
+  <url>https://github.com/point85</url>
 
   <properties>
     <maven.compiler.source>1.8</maven.compiler.source>

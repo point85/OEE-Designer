@@ -10,8 +10,8 @@ import org.openscada.opc.dcom.common.KeyedResult;
 import org.openscada.opc.dcom.common.KeyedResultSet;
 import org.openscada.opc.dcom.da.OPCITEMSTATE;
 import org.point85.app.AppUtils;
-import org.point85.app.Images;
 import org.point85.app.ImageManager;
+import org.point85.app.Images;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.domain.opc.da.OpcDaBrowserLeaf;
 import org.point85.domain.opc.da.OpcDaClient;
@@ -401,12 +401,10 @@ public class OpcDaBrowserController extends OpcDaController {
 		}
 
 		// retrieve data source by name (ProgId)
-		OpcDaSource source = null;
-		try {
-			source = (OpcDaSource) PersistencyService.instance().fetchByName(OpcDaSource.DA_SRC_BY_NAME,
-					getSelectedProgId());
+		OpcDaSource source = PersistencyService.instance().fetchOpcDaSourceByName(getSelectedProgId());
+		if (source != null) {
 			setSource(source);
-		} catch (Exception e) {
+		} else {
 			// not saved yet
 			return;
 		}

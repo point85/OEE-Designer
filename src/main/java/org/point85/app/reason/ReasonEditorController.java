@@ -483,8 +483,7 @@ public class ReasonEditorController extends DesignerDialogController {
 
 			if (getSelectedReason().getKey() != null) {
 				// read from database
-				Reason reason = (Reason) PersistencyService.instance().fetchByKey(Reason.class,
-						getSelectedReason().getKey());
+				Reason reason = PersistencyService.instance().fetchReasonByKey(getSelectedReason().getKey());
 				selectedReasonItem.getValue().setReason(reason);
 				resetGraphic(selectedReasonItem.getParent());
 				displayAttributes(reason);
@@ -576,7 +575,7 @@ public class ReasonEditorController extends DesignerDialogController {
 
 					Reason reason = null;
 					try {
-						reason = (Reason) PersistencyService.instance().fetchByName(Reason.REASON_BY_NAME, name);
+						reason = PersistencyService.instance().fetchReasonByName(name);
 
 						// update
 						reason.setName(name);
@@ -602,8 +601,7 @@ public class ReasonEditorController extends DesignerDialogController {
 
 			// second pass
 			for (Entry<Reason, String> entry : parentReasons.entrySet()) {
-				Reason parentReason = (Reason) PersistencyService.instance().fetchByName(Reason.REASON_BY_NAME,
-						entry.getValue());
+				Reason parentReason = PersistencyService.instance().fetchReasonByName(entry.getValue());
 
 				if (parentReason == null) {
 					throw new Exception("Parent reason " + entry.getValue() + " is not defined.");

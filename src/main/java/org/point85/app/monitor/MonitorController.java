@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.point85.app.AppUtils;
-import org.point85.app.Images;
 import org.point85.app.ImageManager;
+import org.point85.app.Images;
 import org.point85.app.LoaderFactory;
 import org.point85.app.dashboard.DashboardController;
 import org.point85.domain.collector.CollectorState;
@@ -467,7 +467,7 @@ public class MonitorController {
 		if (selectedEntity == null) {
 			// load the entity
 			String name = newItem.getValue().getEntityName();
-			selectedEntity = (PlantEntity) PersistencyService.instance().fetchByName(PlantEntity.ENTITY_BY_NAME, name);
+			selectedEntity = PersistencyService.instance().fetchPlantEntityByName(name);
 			newItem.getValue().setPlantEntity(selectedEntity);
 		}
 

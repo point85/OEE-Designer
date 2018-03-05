@@ -919,11 +919,11 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 
 			if (getSelectedSchedule().getKey() != null) {
 				// read from database
-				WorkSchedule material = (WorkSchedule) PersistencyService.instance().fetchByKey(WorkSchedule.class,
-						getSelectedSchedule().getKey());
-				selectedScheduleItem.getValue().setWorkSchedule(material);
+				WorkSchedule schedule = PersistencyService.instance()
+						.fetchScheduleByKey(getSelectedSchedule().getKey());
+				selectedScheduleItem.getValue().setWorkSchedule(schedule);
 				resetGraphic(selectedScheduleItem);
-				displayAttributes(material);
+				displayAttributes(schedule);
 			} else {
 				// remove from tree
 				selectedScheduleItem.getParent().getChildren().remove(selectedScheduleItem);

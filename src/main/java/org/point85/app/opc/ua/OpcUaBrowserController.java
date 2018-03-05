@@ -19,10 +19,12 @@ import org.eclipse.milo.opcua.stack.core.types.enumerated.ServerState;
 import org.eclipse.milo.opcua.stack.core.types.structured.BuildInfo;
 import org.eclipse.milo.opcua.stack.core.types.structured.ReferenceDescription;
 import org.point85.app.AppUtils;
-import org.point85.app.Images;
 import org.point85.app.ImageManager;
+import org.point85.app.Images;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.domain.DomainUtils;
+import org.point85.domain.collector.DataSource;
+import org.point85.domain.collector.DataSourceType;
 import org.point85.domain.opc.ua.OpcUaServerStatus;
 import org.point85.domain.opc.ua.OpcUaSource;
 import org.point85.domain.persistence.PersistencyService;
@@ -267,10 +269,9 @@ public class OpcUaBrowserController extends OpcUaController {
 				UInteger[] dims = getApp().getOpcUaClient().getArrayDimensions(nodeId);
 
 				// check for matrix
-				if (dims.length == 1) {
+				if (dims != null && dims.length == 1) {
 					typeText = "Array of " + javaType.getSimpleName() + " with dimension " + arrayToString(dims);
 				} else {
-
 					typeText = "Matrix of " + javaType.getSimpleName() + " with dimensions " + arrayToString(dims);
 				}
 				StringBuffer sb = new StringBuffer();
@@ -477,11 +478,11 @@ public class OpcUaBrowserController extends OpcUaController {
 		}
 
 		// retrieve data source by name
-		OpcUaSource source = null;
-		try {
-			source = (OpcUaSource) PersistencyService.instance().fetchByName(OpcUaSource.UA_SRC_BY_NAME, name);
+		OpcUaSource source = PersistencyService.instance().fetchOpcUaSourceByName(name);
+
+		if (source != null) {
 			setSource(source);
-		} catch (Exception e) {
+		} else {
 			// not saved yet
 			return;
 		}
@@ -560,11 +561,11 @@ public class OpcUaBrowserController extends OpcUaController {
 
 	private void populateDataSources() {
 		// fetch the sources
-		List<OpcUaSource> sources = PersistencyService.instance().fetchOpcUaSources();
+		List<DataSource> sources = PersistencyService.instance().fetchDataSources(DataSourceType.OPC_UA);
 
 		servers.clear();
-		for (OpcUaSource source : sources) {
-			servers.add(source.getEndpointUrl());
+		for (DataSource source : sources) {
+			servers.add(((OpcUaSource)source).getEndpointUrl());
 		}
 
 		if (servers.size() == 1) {

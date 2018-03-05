@@ -27,8 +27,8 @@ package org.point85.app.uom;
 import java.util.Collections;
 
 import org.point85.app.AppUtils;
-import org.point85.app.Images;
 import org.point85.app.ImageManager;
+import org.point85.app.Images;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
 import org.point85.domain.uom.MeasurementSystem;

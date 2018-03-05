@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.point85.app.AppUtils;
-import org.point85.app.Images;
 import org.point85.app.ImageManager;
+import org.point85.app.Images;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
+import org.point85.domain.collector.DataSource;
+import org.point85.domain.collector.DataSourceType;
 import org.point85.domain.messaging.MessagingSource;
 import org.point85.domain.persistence.PersistencyService;
 
@@ -179,11 +181,11 @@ public class MqBrokerController extends DesignerDialogController {
 
 	private void populateDataSources() {
 		// fetch the server ids
-		List<MessagingSource> sources = PersistencyService.instance().fetchMessagingSources();
+		List<DataSource> sources = PersistencyService.instance().fetchDataSources(DataSourceType.MESSAGING);
 
 		brokers.clear();
-		for (MessagingSource source : sources) {
-			brokers.add(source);
+		for (DataSource source : sources) {
+			brokers.add((MessagingSource)source);
 		}
 		cbDataSources.setItems(brokers);
 

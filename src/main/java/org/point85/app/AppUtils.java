@@ -5,13 +5,7 @@ import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
-import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -21,7 +15,6 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.TimeZone;
 
-import org.eclipse.milo.opcua.stack.core.types.builtin.DateTime;
 import org.point85.domain.persistence.PersistencyService;
 import org.point85.domain.uom.MeasurementSystem;
 import org.point85.domain.uom.Prefix;
@@ -133,7 +126,7 @@ public abstract class AppUtils {
 	// type
 	public static ObservableList<String> getCustomSymbols(UnitType unitType) {
 
-		List<Object[]> rows = PersistencyService.instance().fetchSymbolsAndNames(unitType);
+		List<String[]> rows = PersistencyService.instance().fetchUomSymbolsAndNamesByType(unitType);
 
 		List<String> displayStrings = new ArrayList<>(rows.size());
 
@@ -201,7 +194,7 @@ public abstract class AppUtils {
 
 		return String.format("%02d", hours) + ":" + String.format("%02d", minutes);
 	}
-	
+
 	// get the UOM from cache first, then from the database if not found
 	public static UnitOfMeasure getUOMForConversion(Prefix prefix, String symbol) throws Exception {
 		UnitOfMeasure uom = null;
@@ -229,7 +222,7 @@ public abstract class AppUtils {
 
 		return uom;
 	}
-	
+
 	// get the UOM from the database first, then from cache if not found
 	public static UnitOfMeasure getUOMForEditing(String symbol) throws Exception {
 		UnitOfMeasure uom = null;
@@ -248,7 +241,7 @@ public abstract class AppUtils {
 
 		if (uom == null) {
 			// get from cache next
-			uom =MeasurementSystem.instance().getUOM(symbol);
+			uom = MeasurementSystem.instance().getUOM(symbol);
 		}
 
 		// bring referenced units into persistence context

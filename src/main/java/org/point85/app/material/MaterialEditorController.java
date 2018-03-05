@@ -516,8 +516,7 @@ public class MaterialEditorController extends DesignerDialogController {
 
 			if (getSelectedMaterial().getKey() != null) {
 				// read from database
-				Material material = (Material) PersistencyService.instance().fetchByKey(Material.class,
-						getSelectedMaterial().getKey());
+				Material material = PersistencyService.instance().fetchMaterialByKey(getSelectedMaterial().getKey());
 				selectedMaterialItem.getValue().setMaterial(material);
 				resetGraphic(selectedMaterialItem);
 				displayAttributes(material);
@@ -580,7 +579,7 @@ public class MaterialEditorController extends DesignerDialogController {
 
 				Material material = null;
 				try {
-					material = (Material) PersistencyService.instance().fetchByName(Material.MATL_BY_NAME, name);
+					material = PersistencyService.instance().fetchMaterialByName(name);
 
 					// update
 					material.setName(name);

@@ -5,8 +5,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.point85.app.AppUtils;
-import org.point85.app.Images;
 import org.point85.app.ImageManager;
+import org.point85.app.Images;
 import org.point85.domain.persistence.PersistencyService;
 import org.point85.domain.plant.Equipment;
 import org.point85.domain.plant.EquipmentMaterial;
@@ -301,8 +301,7 @@ public class EquipmentMaterialController extends DesignerController {
 			Material material = selectedEquipmentMaterial.getMaterial();
 
 			if (material == null) {
-				material = (Material) PersistencyService.instance().fetchByName(Material.MATL_BY_NAME,
-						lbMatlId.getText());
+				material = PersistencyService.instance().fetchMaterialByName(lbMatlId.getText());
 				selectedEquipmentMaterial.setMaterial(material);
 			}
 
