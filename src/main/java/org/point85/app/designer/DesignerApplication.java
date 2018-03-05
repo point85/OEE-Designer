@@ -30,6 +30,7 @@ import org.point85.domain.opc.da.OpcDaClient;
 import org.point85.domain.opc.ua.UaOpcClient;
 import org.point85.domain.performance.EquipmentLoss;
 import org.point85.domain.performance.EquipmentLossManager;
+import org.point85.domain.persistence.PersistencyService;
 import org.point85.domain.plant.Equipment;
 import org.point85.domain.plant.Material;
 import org.point85.domain.plant.PlantEntity;
@@ -733,6 +734,7 @@ public class DesignerApplication extends Application {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		//PersistencyService.instance().initialize();
 		launch(args);
 	}
 
