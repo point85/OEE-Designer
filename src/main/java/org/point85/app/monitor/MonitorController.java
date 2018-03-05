@@ -19,7 +19,7 @@ import org.point85.domain.messaging.CollectorServerStatusMessage;
 import org.point85.domain.messaging.NotificationSeverity;
 import org.point85.domain.performance.EquipmentLoss;
 import org.point85.domain.performance.TimeLoss;
-import org.point85.domain.persistence.PersistencyService;
+import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.EntityLevel;
 import org.point85.domain.plant.Equipment;
 import org.point85.domain.plant.PlantEntity;
@@ -401,7 +401,7 @@ public class MonitorController {
 		tvEntities.getSelectionModel().clearSelection();
 
 		// fetch the entities
-		List<PlantEntity> entities = PersistencyService.instance().fetchTopPlantEntities();
+		List<PlantEntity> entities = PersistenceService.instance().fetchTopPlantEntities();
 		Collections.sort(entities);
 
 		// add them to the root entity
@@ -449,7 +449,7 @@ public class MonitorController {
 		states.add(CollectorState.RUNNING);
 		states.add(CollectorState.DEV);
 
-		List<DataCollector> collectors = PersistencyService.instance().fetchCollectorsByHostAndState(hostNames, states);
+		List<DataCollector> collectors = PersistenceService.instance().fetchCollectorsByHostAndState(hostNames, states);
 
 		serverCollectors.clear();
 		serverCollectors.addAll(collectors);
@@ -467,7 +467,7 @@ public class MonitorController {
 		if (selectedEntity == null) {
 			// load the entity
 			String name = newItem.getValue().getEntityName();
-			selectedEntity = PersistencyService.instance().fetchPlantEntityByName(name);
+			selectedEntity = PersistenceService.instance().fetchPlantEntityByName(name);
 			newItem.getValue().setPlantEntity(selectedEntity);
 		}
 
@@ -581,7 +581,7 @@ public class MonitorController {
 
 	@FXML
 	private void onRefresh() {
-		List<DataCollector> collectors = PersistencyService.instance().fetchAllDataCollectors();
+		List<DataCollector> collectors = PersistenceService.instance().fetchAllDataCollectors();
 
 		serverStatus.clear();
 		for (DataCollector collector : collectors) {

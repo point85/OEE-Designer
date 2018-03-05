@@ -13,7 +13,7 @@ import org.point85.app.ImageManager;
 import org.point85.app.Images;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
-import org.point85.domain.persistence.PersistencyService;
+import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Material;
 
 import javafx.collections.ObservableList;
@@ -144,7 +144,7 @@ public class MaterialEditorController extends DesignerDialogController {
 		}
 
 		// show the material children too
-		List<Material> children = PersistencyService.instance()
+		List<Material> children = PersistenceService.instance()
 				.fetchMaterialsByCategory(newItem.getValue().getCategory());
 		Collections.sort(children);
 
@@ -292,7 +292,7 @@ public class MaterialEditorController extends DesignerDialogController {
 	// populate the tree view categories
 	private void populateCategories() throws Exception {
 		// fetch the categories
-		List<String> categories = PersistencyService.instance().fetchMaterialCategories();
+		List<String> categories = PersistenceService.instance().fetchMaterialCategories();
 		Collections.sort(categories);
 
 		getRootMaterialItem().getChildren().clear();
@@ -370,7 +370,7 @@ public class MaterialEditorController extends DesignerDialogController {
 
 			// save the material
 			Material material = getSelectedMaterial();
-			Material saved = (Material) PersistencyService.instance().save(material);
+			Material saved = (Material) PersistenceService.instance().save(material);
 
 			selectedMaterialItem.getValue().setMaterial(saved);
 			resetGraphic(selectedMaterialItem);
@@ -435,7 +435,7 @@ public class MaterialEditorController extends DesignerDialogController {
 			// save all modified materials
 			for (TreeItem<MaterialNode> editedMaterialItem : editedMaterialItems) {
 				MaterialNode node = editedMaterialItem.getValue();
-				Material saved = (Material) PersistencyService.instance().save(node.getMaterial());
+				Material saved = (Material) PersistenceService.instance().save(node.getMaterial());
 				node.setMaterial(saved);
 				resetGraphic(editedMaterialItem);
 			}
@@ -469,7 +469,7 @@ public class MaterialEditorController extends DesignerDialogController {
 		try {
 			// delete
 			Material toDelete = getSelectedMaterial();
-			PersistencyService.instance().delete(toDelete);
+			PersistenceService.instance().delete(toDelete);
 
 			// remove this material from the tree
 			TreeItem<MaterialNode> childNode = tvMaterials.getSelectionModel().getSelectedItem();
@@ -516,7 +516,7 @@ public class MaterialEditorController extends DesignerDialogController {
 
 			if (getSelectedMaterial().getKey() != null) {
 				// read from database
-				Material material = PersistencyService.instance().fetchMaterialByKey(getSelectedMaterial().getKey());
+				Material material = PersistenceService.instance().fetchMaterialByKey(getSelectedMaterial().getKey());
 				selectedMaterialItem.getValue().setMaterial(material);
 				resetGraphic(selectedMaterialItem);
 				displayAttributes(material);
@@ -579,7 +579,7 @@ public class MaterialEditorController extends DesignerDialogController {
 
 				Material material = null;
 				try {
-					material = PersistencyService.instance().fetchMaterialByName(name);
+					material = PersistenceService.instance().fetchMaterialByName(name);
 
 					// update
 					material.setName(name);
@@ -591,7 +591,7 @@ public class MaterialEditorController extends DesignerDialogController {
 					material.setCategory(category);
 				}
 
-				PersistencyService.instance().save(material);
+				PersistenceService.instance().save(material);
 			}
 		} catch (Exception e) {
 			throw e;

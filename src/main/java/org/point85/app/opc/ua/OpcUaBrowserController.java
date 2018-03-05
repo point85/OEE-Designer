@@ -27,7 +27,7 @@ import org.point85.domain.collector.DataSource;
 import org.point85.domain.collector.DataSourceType;
 import org.point85.domain.opc.ua.OpcUaServerStatus;
 import org.point85.domain.opc.ua.OpcUaSource;
-import org.point85.domain.persistence.PersistencyService;
+import org.point85.domain.persistence.PersistenceService;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -478,7 +478,7 @@ public class OpcUaBrowserController extends OpcUaController {
 		}
 
 		// retrieve data source by name
-		OpcUaSource source = PersistencyService.instance().fetchOpcUaSourceByName(name);
+		OpcUaSource source = PersistenceService.instance().fetchOpcUaSourceByName(name);
 
 		if (source != null) {
 			setSource(source);
@@ -501,7 +501,7 @@ public class OpcUaBrowserController extends OpcUaController {
 			// delete
 			OpcUaSource source = getSource();
 			if (source != null) {
-				PersistencyService.instance().delete(source);
+				PersistenceService.instance().delete(source);
 				servers.remove(getSource().getId());
 
 				onNewDataSource();
@@ -549,7 +549,7 @@ public class OpcUaBrowserController extends OpcUaController {
 			dataSource.setName(name);
 
 			// save data source
-			PersistencyService.instance().save(dataSource);
+			PersistenceService.instance().save(dataSource);
 
 			// update list
 			populateDataSources();
@@ -561,7 +561,7 @@ public class OpcUaBrowserController extends OpcUaController {
 
 	private void populateDataSources() {
 		// fetch the sources
-		List<DataSource> sources = PersistencyService.instance().fetchDataSources(DataSourceType.OPC_UA);
+		List<DataSource> sources = PersistenceService.instance().fetchDataSources(DataSourceType.OPC_UA);
 
 		servers.clear();
 		for (DataSource source : sources) {

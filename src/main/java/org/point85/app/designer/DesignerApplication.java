@@ -31,7 +31,7 @@ import org.point85.domain.opc.da.OpcDaClient;
 import org.point85.domain.opc.ua.UaOpcClient;
 import org.point85.domain.performance.EquipmentLoss;
 import org.point85.domain.performance.EquipmentLossManager;
-import org.point85.domain.persistence.PersistencyService;
+import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Equipment;
 import org.point85.domain.plant.Material;
 import org.point85.domain.plant.PlantEntity;
@@ -758,7 +758,7 @@ public class DesignerApplication extends Application {
 	 */
 	public static void main(String[] args) {
 		// create the EMF
-		PersistencyService.instance().initialize();
+		PersistenceService.instance().initialize();
 
 		// start GUI
 		launch(args);

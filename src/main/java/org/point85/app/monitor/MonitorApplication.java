@@ -21,7 +21,7 @@ import org.point85.domain.messaging.MessageType;
 import org.point85.domain.messaging.NotificationSeverity;
 import org.point85.domain.messaging.PublisherSubscriber;
 import org.point85.domain.messaging.RoutingKey;
-import org.point85.domain.persistence.PersistencyService;
+import org.point85.domain.persistence.PersistenceService;
 
 import com.google.gson.Gson;
 import com.rabbitmq.client.Channel;
@@ -96,7 +96,7 @@ public class MonitorApplication extends Application implements MessageListener {
 		states.add(CollectorState.READY);
 		states.add(CollectorState.RUNNING);
 
-		collectors = PersistencyService.instance().fetchCollectorsByState(states);
+		collectors = PersistenceService.instance().fetchCollectorsByState(states);
 
 		// connect to notification brokers for consuming only
 		Map<String, PublisherSubscriber> pubSubs = new HashMap<>();

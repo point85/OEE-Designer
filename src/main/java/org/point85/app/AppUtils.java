@@ -15,7 +15,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.TimeZone;
 
-import org.point85.domain.persistence.PersistencyService;
+import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.uom.MeasurementSystem;
 import org.point85.domain.uom.Prefix;
 import org.point85.domain.uom.UnitOfMeasure;
@@ -126,7 +126,7 @@ public abstract class AppUtils {
 	// type
 	public static ObservableList<String> getCustomSymbols(UnitType unitType) {
 
-		List<String[]> rows = PersistencyService.instance().fetchUomSymbolsAndNamesByType(unitType);
+		List<String[]> rows = PersistenceService.instance().fetchUomSymbolsAndNamesByType(unitType);
 
 		List<String> displayStrings = new ArrayList<>(rows.size());
 
@@ -208,7 +208,7 @@ public abstract class AppUtils {
 
 		if (uom == null) {
 			// database next
-			uom = PersistencyService.instance().fetchUOMBySymbol(symbol);
+			uom = PersistenceService.instance().fetchUOMBySymbol(symbol);
 
 			if (uom != null) {
 				// cache it
@@ -232,7 +232,7 @@ public abstract class AppUtils {
 		}
 
 		// look in database first
-		uom = PersistencyService.instance().fetchUOMBySymbol(symbol);
+		uom = PersistenceService.instance().fetchUOMBySymbol(symbol);
 
 		if (uom != null) {
 			// cache it
@@ -245,7 +245,7 @@ public abstract class AppUtils {
 		}
 
 		// bring referenced units into persistence context
-		PersistencyService.instance().fetchReferencedUnits(uom);
+		PersistenceService.instance().fetchReferencedUnits(uom);
 
 		return uom;
 	}

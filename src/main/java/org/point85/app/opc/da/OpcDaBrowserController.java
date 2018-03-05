@@ -21,7 +21,7 @@ import org.point85.domain.opc.da.OpcDaSource;
 import org.point85.domain.opc.da.OpcDaTagTreeBranch;
 import org.point85.domain.opc.da.OpcDaTreeBrowser;
 import org.point85.domain.opc.da.OpcDaVariant;
-import org.point85.domain.persistence.PersistencyService;
+import org.point85.domain.persistence.PersistenceService;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -401,7 +401,7 @@ public class OpcDaBrowserController extends OpcDaController {
 		}
 
 		// retrieve data source by name (ProgId)
-		OpcDaSource source = PersistencyService.instance().fetchOpcDaSourceByName(getSelectedProgId());
+		OpcDaSource source = PersistenceService.instance().fetchOpcDaSourceByName(getSelectedProgId());
 		if (source != null) {
 			setSource(source);
 		} else {
@@ -422,7 +422,7 @@ public class OpcDaBrowserController extends OpcDaController {
 			// delete
 			OpcDaSource source = getSource();
 			if (source != null) {
-				PersistencyService.instance().delete(source);
+				PersistenceService.instance().delete(source);
 				progIds.remove(getSource().getProgId());
 
 				onNewDataSource();
@@ -462,7 +462,7 @@ public class OpcDaBrowserController extends OpcDaController {
 			dataSource.setProgId(getProgId());
 			dataSource.setDescription(getDescription());
 
-			PersistencyService.instance().save(dataSource);
+			PersistenceService.instance().save(dataSource);
 
 			populateDataSources();
 
@@ -473,7 +473,7 @@ public class OpcDaBrowserController extends OpcDaController {
 
 	private void populateDataSources() {
 		// fetch the prog ids
-		List<String> ids = PersistencyService.instance().fetchProgIds();
+		List<String> ids = PersistenceService.instance().fetchProgIds();
 
 		progIds.clear();
 		for (String id : ids) {

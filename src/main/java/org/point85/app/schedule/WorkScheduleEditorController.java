@@ -17,7 +17,7 @@ import org.point85.app.LoaderFactory;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
 import org.point85.domain.performance.TimeLoss;
-import org.point85.domain.persistence.PersistencyService;
+import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.schedule.NonWorkingPeriod;
 import org.point85.domain.schedule.Rotation;
 import org.point85.domain.schedule.RotationSegment;
@@ -725,7 +725,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 	private void displaySchedules() throws Exception {
 		getRootScheduleItem().getChildren().clear();
 
-		List<WorkSchedule> schedules = PersistencyService.instance().fetchWorkSchedules();
+		List<WorkSchedule> schedules = PersistenceService.instance().fetchWorkSchedules();
 		Collections.sort(schedules);
 
 		for (WorkSchedule schedule : schedules) {
@@ -891,7 +891,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 			}
 
 			// delete
-			PersistencyService.instance().delete(toDelete);
+			PersistenceService.instance().delete(toDelete);
 
 			// remove this schedule from the tree
 			TreeItem<ScheduleNode> selectedScheduleItem = tvSchedules.getSelectionModel().getSelectedItem();
@@ -919,7 +919,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 
 			if (getSelectedSchedule().getKey() != null) {
 				// read from database
-				WorkSchedule schedule = PersistencyService.instance()
+				WorkSchedule schedule = PersistenceService.instance()
 						.fetchScheduleByKey(getSelectedSchedule().getKey());
 				selectedScheduleItem.getValue().setWorkSchedule(schedule);
 				resetGraphic(selectedScheduleItem);
@@ -1043,7 +1043,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 
 			// save the created or updated work schedule
 			WorkSchedule schedule = getSelectedSchedule();
-			WorkSchedule saved = (WorkSchedule) PersistencyService.instance().save(schedule);
+			WorkSchedule saved = (WorkSchedule) PersistenceService.instance().save(schedule);
 			selectedScheduleItem.getValue().setWorkSchedule(saved);
 			removeEditedSchedule(selectedScheduleItem);
 
@@ -1063,7 +1063,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 			// save all modified schedules
 			for (TreeItem<ScheduleNode> editedScheduleItem : editedScheduleItems) {
 				ScheduleNode node = editedScheduleItem.getValue();
-				WorkSchedule saved = (WorkSchedule) PersistencyService.instance().save(node.getWorkSchedule());
+				WorkSchedule saved = (WorkSchedule) PersistenceService.instance().save(node.getWorkSchedule());
 				node.setWorkSchedule(saved);
 				resetGraphic(editedScheduleItem);
 			}
@@ -1382,7 +1382,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 			}
 
 			// check for team reference
-			List<Team> referencingTeams = PersistencyService.instance().fetchTeamCrossReferences(rotation);
+			List<Team> referencingTeams = PersistenceService.instance().fetchTeamCrossReferences(rotation);
 
 			if (referencingTeams.size() != 0) {
 				String teamNames = "";
@@ -1639,7 +1639,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 			WorkSchedule schedule = templateController.getSelectedSchedule();
 
 			if (schedule != null) {
-				PersistencyService.instance().save(schedule);
+				PersistenceService.instance().save(schedule);
 
 				displaySchedules();
 			}

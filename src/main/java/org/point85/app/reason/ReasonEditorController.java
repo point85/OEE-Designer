@@ -18,7 +18,7 @@ import org.point85.app.Images;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
 import org.point85.domain.performance.TimeLoss;
-import org.point85.domain.persistence.PersistencyService;
+import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Reason;
 
 import javafx.collections.ObservableList;
@@ -225,7 +225,7 @@ public class ReasonEditorController extends DesignerDialogController {
 		tvReasons.getSelectionModel().clearSelection();
 
 		// fetch the reasons
-		List<Reason> reasons = PersistencyService.instance().fetchTopReasons();
+		List<Reason> reasons = PersistenceService.instance().fetchTopReasons();
 		Collections.sort(reasons);
 
 		// add them to the root reason
@@ -388,7 +388,7 @@ public class ReasonEditorController extends DesignerDialogController {
 
 			// save the reason
 			Reason reason = getSelectedReason();
-			Reason saved = (Reason) PersistencyService.instance().save(reason);
+			Reason saved = (Reason) PersistenceService.instance().save(reason);
 
 			selectedReasonItem.getValue().setReason(saved);
 			resetGraphic(selectedReasonItem.getParent());
@@ -412,7 +412,7 @@ public class ReasonEditorController extends DesignerDialogController {
 			// save all modified reasons
 			for (TreeItem<ReasonNode> editedReasonItem : editedReasonItems) {
 				ReasonNode node = editedReasonItem.getValue();
-				Reason saved = (Reason) PersistencyService.instance().save(node.getReason());
+				Reason saved = (Reason) PersistenceService.instance().save(node.getReason());
 				node.setReason(saved);
 				editedReasonItem.setGraphic(ImageManager.instance().getImageView(Images.REASON));
 			}
@@ -446,10 +446,10 @@ public class ReasonEditorController extends DesignerDialogController {
 			if (parentReason != null) {
 				// remove from parent with orphan removal
 				parentReason.removeChild(selectedReason);
-				PersistencyService.instance().save(parentReason);
+				PersistenceService.instance().save(parentReason);
 			} else {
 				// cascade delete
-				PersistencyService.instance().delete(selectedReason);
+				PersistenceService.instance().delete(selectedReason);
 			}
 
 			// remove this reason from the tree
@@ -483,7 +483,7 @@ public class ReasonEditorController extends DesignerDialogController {
 
 			if (getSelectedReason().getKey() != null) {
 				// read from database
-				Reason reason = PersistencyService.instance().fetchReasonByKey(getSelectedReason().getKey());
+				Reason reason = PersistenceService.instance().fetchReasonByKey(getSelectedReason().getKey());
 				selectedReasonItem.getValue().setReason(reason);
 				resetGraphic(selectedReasonItem.getParent());
 				displayAttributes(reason);
@@ -575,7 +575,7 @@ public class ReasonEditorController extends DesignerDialogController {
 
 					Reason reason = null;
 					try {
-						reason = PersistencyService.instance().fetchReasonByName(name);
+						reason = PersistenceService.instance().fetchReasonByName(name);
 
 						// update
 						reason.setName(name);
@@ -587,7 +587,7 @@ public class ReasonEditorController extends DesignerDialogController {
 						reason.setLossCategory(loss);
 					}
 
-					Reason savedReason = (Reason) PersistencyService.instance().save(reason);
+					Reason savedReason = (Reason) PersistenceService.instance().save(reason);
 
 					if (parentName != null) {
 						parentReasons.put(savedReason, parentName);
@@ -601,7 +601,7 @@ public class ReasonEditorController extends DesignerDialogController {
 
 			// second pass
 			for (Entry<Reason, String> entry : parentReasons.entrySet()) {
-				Reason parentReason = PersistencyService.instance().fetchReasonByName(entry.getValue());
+				Reason parentReason = PersistenceService.instance().fetchReasonByName(entry.getValue());
 
 				if (parentReason == null) {
 					throw new Exception("Parent reason " + entry.getValue() + " is not defined.");
@@ -610,7 +610,7 @@ public class ReasonEditorController extends DesignerDialogController {
 				Reason childReason = entry.getKey();
 				parentReason.addChild(childReason);
 
-				PersistencyService.instance().save(childReason);
+				PersistenceService.instance().save(childReason);
 			}
 
 			// fill in the top-level reason nodes

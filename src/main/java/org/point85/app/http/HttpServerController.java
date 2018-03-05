@@ -11,7 +11,7 @@ import org.point85.app.designer.DesignerApplication;
 import org.point85.domain.collector.DataSource;
 import org.point85.domain.collector.DataSourceType;
 import org.point85.domain.http.HttpSource;
-import org.point85.domain.persistence.PersistencyService;
+import org.point85.domain.persistence.PersistenceService;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -123,7 +123,7 @@ public class HttpServerController extends DialogController {
 		try {
 			// delete
 			if (dataSource != null) {
-				PersistencyService.instance().delete(dataSource);
+				PersistenceService.instance().delete(dataSource);
 				servers.remove(dataSource);
 
 				onNewDataSource();
@@ -166,7 +166,7 @@ public class HttpServerController extends DialogController {
 			dataSource.setName(name);
 
 			// save data source
-			PersistencyService.instance().save(dataSource);
+			PersistenceService.instance().save(dataSource);
 
 			// update list
 			if (dataSource.getKey() == null) {
@@ -181,7 +181,7 @@ public class HttpServerController extends DialogController {
 
 	private void populateDataSources() {
 		// fetch the server ids
-		List<DataSource> sources = PersistencyService.instance().fetchDataSources(DataSourceType.HTTP);
+		List<DataSource> sources = PersistenceService.instance().fetchDataSources(DataSourceType.HTTP);
 
 		servers.clear();
 		for (DataSource source : sources) {

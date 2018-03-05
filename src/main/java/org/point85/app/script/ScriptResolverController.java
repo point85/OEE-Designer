@@ -8,7 +8,7 @@ import org.point85.app.ImageManager;
 import org.point85.app.Images;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
-import org.point85.domain.persistence.PersistencyService;
+import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Equipment;
 import org.point85.domain.plant.EquipmentEventResolver;
 import org.point85.domain.plant.Material;
@@ -227,7 +227,7 @@ public class ScriptResolverController extends DesignerDialogController {
 				// reason must exist
 				Reason reason = null;
 				try {
-					reason = PersistencyService.instance().fetchReasonByName(reasonCode);
+					reason = PersistenceService.instance().fetchReasonByName(reasonCode);
 				} catch (Exception e) {
 				}
 

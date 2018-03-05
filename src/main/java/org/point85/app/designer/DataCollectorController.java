@@ -9,7 +9,7 @@ import org.point85.app.ImageManager;
 import org.point85.app.Images;
 import org.point85.domain.collector.CollectorState;
 import org.point85.domain.collector.DataCollector;
-import org.point85.domain.persistence.PersistencyService;
+import org.point85.domain.persistence.PersistenceService;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -107,7 +107,7 @@ public class DataCollectorController extends DialogController {
 		// retrieve collector by name
 		DataCollector configuration = null;
 		try {
-			configuration = PersistencyService.instance().fetchCollectorByName(collector);
+			configuration = PersistenceService.instance().fetchCollectorByName(collector);
 			setCollectorDefinition(configuration);
 		} catch (Exception e) {
 			// not saved yet
@@ -142,7 +142,7 @@ public class DataCollectorController extends DialogController {
 			DataCollector definition = getCollectorDefinition();
 
 			if (definition != null) {
-				PersistencyService.instance().delete(definition);
+				PersistenceService.instance().delete(definition);
 				collectors.remove(definition.getName());
 
 				onNewCollector();
@@ -184,7 +184,7 @@ public class DataCollectorController extends DialogController {
 			configuration.setCollectorState(getCollectorState());
 
 			// save collector
-			DataCollector saved = (DataCollector) PersistencyService.instance().save(configuration);
+			DataCollector saved = (DataCollector) PersistenceService.instance().save(configuration);
 			setCollectorDefinition(saved);
 
 			// update list
@@ -197,7 +197,7 @@ public class DataCollectorController extends DialogController {
 
 	private void populateCollectors() {
 		// fetch the collectors
-		List<DataCollector> definitions = PersistencyService.instance().fetchAllDataCollectors();
+		List<DataCollector> definitions = PersistenceService.instance().fetchAllDataCollectors();
 
 		collectors.clear();
 		for (DataCollector definition : definitions) {

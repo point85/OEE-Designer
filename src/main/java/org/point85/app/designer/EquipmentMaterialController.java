@@ -7,7 +7,7 @@ import java.util.Set;
 import org.point85.app.AppUtils;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
-import org.point85.domain.persistence.PersistencyService;
+import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Equipment;
 import org.point85.domain.plant.EquipmentMaterial;
 import org.point85.domain.plant.Material;
@@ -301,7 +301,7 @@ public class EquipmentMaterialController extends DesignerController {
 			Material material = selectedEquipmentMaterial.getMaterial();
 
 			if (material == null) {
-				material = PersistencyService.instance().fetchMaterialByName(lbMatlId.getText());
+				material = PersistenceService.instance().fetchMaterialByName(lbMatlId.getText());
 				selectedEquipmentMaterial.setMaterial(material);
 			}
 
@@ -312,7 +312,7 @@ public class EquipmentMaterialController extends DesignerController {
 			// IRR
 			UnitOfMeasure uom = selectedEquipmentMaterial.getRunRateUOM();
 			if (uom == null) {
-				uom = PersistencyService.instance().fetchUOMBySymbol(this.lbIRRUnit.getText());
+				uom = PersistenceService.instance().fetchUOMBySymbol(this.lbIRRUnit.getText());
 				selectedEquipmentMaterial.setRunRateUOM(uom);
 			}
 
@@ -322,7 +322,7 @@ public class EquipmentMaterialController extends DesignerController {
 			// reject UOM
 			uom = selectedEquipmentMaterial.getRejectUOM();
 			if (uom == null) {
-				uom = PersistencyService.instance().fetchUOMBySymbol(this.lbRejectUnit.getText());
+				uom = PersistenceService.instance().fetchUOMBySymbol(this.lbRejectUnit.getText());
 				selectedEquipmentMaterial.setRejectUOM(uom);
 			}
 

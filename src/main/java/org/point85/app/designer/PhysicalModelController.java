@@ -10,7 +10,7 @@ import org.point85.app.AppUtils;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
 import org.point85.app.LoaderFactory;
-import org.point85.domain.persistence.PersistencyService;
+import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Area;
 import org.point85.domain.plant.Enterprise;
 import org.point85.domain.plant.EntityLevel;
@@ -323,7 +323,7 @@ public class PhysicalModelController extends DesignerController {
 
 	private List<PlantEntity> fetchTopEntities() {
 		//long before = System.currentTimeMillis();
-		List<PlantEntity> entities = PersistencyService.instance().fetchTopPlantEntities();
+		List<PlantEntity> entities = PersistenceService.instance().fetchTopPlantEntities();
 
 		//System.out.println("Time to fetch entities " + (System.currentTimeMillis() - before) + " msec.");
 
@@ -339,7 +339,7 @@ public class PhysicalModelController extends DesignerController {
 	void populateTopEntityNodes() throws Exception {		
 		// fetch the entities
 		//long before = System.currentTimeMillis();
-		List<PlantEntity> entities = PersistencyService.instance().fetchTopPlantEntities();
+		List<PlantEntity> entities = PersistenceService.instance().fetchTopPlantEntities();
 
 		//System.out.println("Time to fetch entities " + (System.currentTimeMillis() - before) + " msec.");
 
@@ -783,10 +783,10 @@ public class PhysicalModelController extends DesignerController {
 			if (parentEntity != null) {
 				// remove from parent with orphan removal
 				parentEntity.removeChild(selectedEntity);
-				PersistencyService.instance().save(parentEntity);
+				PersistenceService.instance().save(parentEntity);
 			} else {
 				// cascade delete
-				PersistencyService.instance().delete(selectedEntity);
+				PersistenceService.instance().delete(selectedEntity);
 			}
 
 			// remove this entity from the tree
@@ -816,7 +816,7 @@ public class PhysicalModelController extends DesignerController {
 
 			// save modified entity
 			PlantEntity entity = this.getSelectedEntity();
-			PlantEntity saved = (PlantEntity) PersistencyService.instance().save(entity);
+			PlantEntity saved = (PlantEntity) PersistenceService.instance().save(entity);
 
 			selectedEntityItem.getValue().setPlantEntity(saved);
 			setEntityGraphic(selectedEntityItem);
@@ -847,7 +847,7 @@ public class PhysicalModelController extends DesignerController {
 			for (TreeItem<EntityNode> editedEntityItem : editedEntityItems) {
 				EntityNode node = editedEntityItem.getValue();
 				PlantEntity entity = node.getPlantEntity();
-				PlantEntity saved = (PlantEntity) PersistencyService.instance().save(entity);
+				PlantEntity saved = (PlantEntity) PersistenceService.instance().save(entity);
 				node.setPlantEntity(saved);
 				setEntityGraphic(editedEntityItem);
 			}

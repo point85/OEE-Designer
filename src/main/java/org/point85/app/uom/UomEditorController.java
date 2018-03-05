@@ -34,7 +34,7 @@ import org.point85.app.Images;
 import org.point85.app.LoaderFactory;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
-import org.point85.domain.persistence.PersistencyService;
+import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.EquipmentMaterial;
 import org.point85.domain.uom.MeasurementSystem;
 import org.point85.domain.uom.Prefix;
@@ -329,9 +329,9 @@ public class UomEditorController extends DesignerDialogController {
 		UnitOfMeasure uom = uomImportController.getSelectedUom();
 
 		if (uom != null) {
-			PersistencyService.instance().fetchReferencedUnits(uom);
+			PersistenceService.instance().fetchReferencedUnits(uom);
 
-			PersistencyService.instance().save(uom);
+			PersistenceService.instance().save(uom);
 
 			onRefreshAllUoms();
 		}
@@ -355,7 +355,7 @@ public class UomEditorController extends DesignerDialogController {
 		}
 
 		// show the UOM children too
-		List<UnitOfMeasure> children = PersistencyService.instance().fetchUomsByCategory(item.getValue().getCategory());
+		List<UnitOfMeasure> children = PersistenceService.instance().fetchUomsByCategory(item.getValue().getCategory());
 		boolean hasTreeChildren = item.getChildren().size() > 0 ? true : false;
 
 		// check to see if the node's children have been previously shown
@@ -504,7 +504,7 @@ public class UomEditorController extends DesignerDialogController {
 		getRootUomItem().getChildren().clear();
 
 		// fetch the categories
-		List<String> categories = PersistencyService.instance().fetchCategories();
+		List<String> categories = PersistenceService.instance().fetchCategories();
 		Collections.sort(categories);
 
 		for (String category : categories) {
@@ -568,7 +568,7 @@ public class UomEditorController extends DesignerDialogController {
 			// save all modified UOMs
 			for (TreeItem<UomNode> modifiedItem : editedUomItems) {
 				UomNode node = modifiedItem.getValue();
-				UnitOfMeasure saved = (UnitOfMeasure) PersistencyService.instance().save(node.getUnitOfMeasure());
+				UnitOfMeasure saved = (UnitOfMeasure) PersistenceService.instance().save(node.getUnitOfMeasure());
 				node.setUnitOfMeasure(saved);
 				modifiedItem.setGraphic(ImageManager.instance().getImageView(Images.UOM));
 			}
@@ -632,7 +632,7 @@ public class UomEditorController extends DesignerDialogController {
 				uom = onAddUom();
 			}
 
-			UnitOfMeasure saved = (UnitOfMeasure) PersistencyService.instance().save(uom);
+			UnitOfMeasure saved = (UnitOfMeasure) PersistenceService.instance().save(uom);
 			selectedUomItem.getValue().setUnitOfMeasure(saved);
 			selectedUomItem.setGraphic(ImageManager.instance().getImageView(Images.UOM));
 
@@ -869,7 +869,7 @@ public class UomEditorController extends DesignerDialogController {
 			UnitOfMeasure toDelete = getSelectedUom();
 
 			// check for usage by equipment material
-			List<EquipmentMaterial> eqms = PersistencyService.instance().fetchEquipmentMaterials(toDelete);
+			List<EquipmentMaterial> eqms = PersistenceService.instance().fetchEquipmentMaterials(toDelete);
 
 			if (eqms.size() != 0) {
 				String value = "";
@@ -885,7 +885,7 @@ public class UomEditorController extends DesignerDialogController {
 			}
 
 			// check for internal usage
-			List<UnitOfMeasure> uoms = PersistencyService.instance().fetchUomCrossReferences(toDelete);
+			List<UnitOfMeasure> uoms = PersistenceService.instance().fetchUomCrossReferences(toDelete);
 
 			if (uoms.size() != 0) {
 				String value = "";
@@ -900,7 +900,7 @@ public class UomEditorController extends DesignerDialogController {
 						+ " cannot be deleted.  It is being referenced by these units of measure: " + value);
 			}
 
-			PersistencyService.instance().delete(toDelete);
+			PersistenceService.instance().delete(toDelete);
 
 			// remove this UOM from the tree
 			TreeItem<UomNode> childNode = tvUoms.getSelectionModel().getSelectedItem();
@@ -934,7 +934,7 @@ public class UomEditorController extends DesignerDialogController {
 
 			if (getSelectedUom().getKey() != null) {
 				// read from database
-				UnitOfMeasure uom = (UnitOfMeasure) PersistencyService.instance()
+				UnitOfMeasure uom = (UnitOfMeasure) PersistenceService.instance()
 						.fetchUomByKey(getSelectedUom().getKey());
 				selectedUomItem.getValue().setUnitOfMeasure(uom);
 				resetGraphic(selectedUomItem);

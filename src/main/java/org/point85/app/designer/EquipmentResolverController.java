@@ -20,7 +20,7 @@ import org.point85.domain.opc.da.OpcDaBrowserLeaf;
 import org.point85.domain.opc.da.OpcDaSource;
 import org.point85.domain.opc.da.OpcDaVariant;
 import org.point85.domain.opc.ua.OpcUaSource;
-import org.point85.domain.persistence.PersistencyService;
+import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Equipment;
 import org.point85.domain.plant.PlantEntity;
 import org.point85.domain.script.ResolverFunction;
@@ -130,7 +130,7 @@ public class EquipmentResolverController extends DesignerController {
 	}
 
 	private void setDataCollectors() {
-		List<DataCollector> collectors = PersistencyService.instance().fetchAllDataCollectors();
+		List<DataCollector> collectors = PersistenceService.instance().fetchAllDataCollectors();
 		cbCollectors.getItems().clear();
 		cbCollectors.getItems().addAll(collectors);
 	}
