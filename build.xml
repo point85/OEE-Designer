@@ -146,6 +146,8 @@
 		<fx:csstobin outdir="build/classes">
 			<fileset dir="build/classes" includes="**/*.css"/>
 		</fx:csstobin>
+		
+		<delete dir="build" />
 	
 	</target>
 </project>
