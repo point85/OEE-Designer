@@ -309,7 +309,7 @@ public class CircularProgressTileSkin extends TileSkin {
                 graphicContainer.setPrefSize(containerWidth, containerHeight);
                 graphicContainer.relocate((width - containerWidth) * 0.5, (height - containerHeight) * 0.35);
 
-                if (null != tile) {
+                //if (null != tile) {
                     Node graphic = tile.getGraphic();
                     if (tile.getGraphic() instanceof Shape) {
                         double graphicWidth  = graphic.getBoundsInLocal().getWidth();
@@ -330,7 +330,7 @@ public class CircularProgressTileSkin extends TileSkin {
                         ((ImageView) graphic).setFitWidth(containerWidth);
                         ((ImageView) graphic).setFitHeight(containerHeight);
                     }
-                }
+                //}
             }
             resizeStaticText();
             percentageFlow.setPrefWidth(width * 0.9);

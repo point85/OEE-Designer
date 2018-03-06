@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import eu.hansolo.tilesfx.Section;
 import eu.hansolo.tilesfx.Tile;
@@ -217,6 +218,11 @@ public class GaugeTileSkin extends TileSkin {
             sections.forEach(section -> sectionMap.get(section).setOpacity(section.contains(VALUE) ? 1.0 : 0.25));
         }
     }
+    
+	@Override
+	public int hashCode() {
+		return Objects.hash(titleText, valueText);
+	}
 
     private void drawSections() {
         sectionPane.getChildren().clear();

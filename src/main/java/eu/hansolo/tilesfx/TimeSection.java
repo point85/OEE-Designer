@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import javafx.beans.property.BooleanProperty;
@@ -345,8 +346,19 @@ public class TimeSection implements Comparable<TimeSection> {
     public void checkForTimeAndDate(final ZonedDateTime DATE_TIME) {
         if (days.contains(DATE_TIME.getDayOfWeek())) { checkForTime(DATE_TIME.toLocalTime()); }
     }
+    
+	@Override
+	public int hashCode() {
+		return Objects.hash(_text);
+	}
 
-    public boolean equals(final TimeSection SECTION) {
+	@Override
+	public boolean equals(Object other) {
+		if (other == null) {
+			return false;
+		}
+		
+		final TimeSection SECTION = (TimeSection)other;
         return (SECTION.getStart().equals(getStart()) &&
                 SECTION.getStop().equals(getStop()) &&
                 SECTION.getText().equals(getText()));

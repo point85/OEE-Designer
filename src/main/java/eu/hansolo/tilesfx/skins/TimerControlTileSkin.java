@@ -25,6 +25,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoField;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import eu.hansolo.tilesfx.Tile;
 import eu.hansolo.tilesfx.TimeSection;
@@ -281,6 +282,12 @@ public class TimerControlTileSkin extends TileSkin {
             }
         }
     }
+    
+	@Override
+	public int hashCode() {
+		return Objects.hash(titleText, amPmText);
+	}
+
 
     public void updateTime(final ZonedDateTime TIME) {
         if (tile.isDiscreteHours()) {

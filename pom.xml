@@ -32,14 +32,13 @@
     <groupId>org.point85</groupId>
     <artifactId>oee-domain</artifactId>
     <version>1.0.0</version>
-    <scope>runtime</scope>
 </dependency>
 
   </dependencies>
  
 <build>
 <plugins>
-<!-- javapackager plugin -->  
+<!-- javapackager plugin -->
 <plugin>
     <groupId>com.zenjava</groupId>
     <artifactId>javafx-maven-plugin</artifactId>
@@ -47,8 +46,44 @@
     <configuration>
         <mainClass>org.point85.app.designer.DesignerApplication</mainClass>
         <verbose>true</verbose>
-    </configuration>
-</plugin>
+        <vendor>Point85.org</vendor>
+		<title>Point85 OEE Designer</title>
+		<appName>${project.name}</appName>
+		<manifestAttributes>
+			<Implementation-Version>${project.version}</Implementation-Version>
+		</manifestAttributes>
+    </configuration>    
+</plugin> 
+
+
+<!-- Maven Shader  
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+                          <transformers>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                  <mainClass>org.point85.app.designer.DesignerApplication</mainClass>
+                </transformer>
+              </transformers>
+              <artifactSet>
+                <excludes>
+                  <exclude>config:*</exclude>
+                </excludes>
+              </artifactSet>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>   
+ -->    
+           
 </plugins>
 </build>
 

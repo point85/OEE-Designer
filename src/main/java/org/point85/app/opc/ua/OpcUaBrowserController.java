@@ -269,10 +269,12 @@ public class OpcUaBrowserController extends OpcUaController {
 				UInteger[] dims = getApp().getOpcUaClient().getArrayDimensions(nodeId);
 
 				// check for matrix
-				if (dims != null && dims.length == 1) {
-					typeText = "Array of " + javaType.getSimpleName() + " with dimension " + arrayToString(dims);
-				} else {
-					typeText = "Matrix of " + javaType.getSimpleName() + " with dimensions " + arrayToString(dims);
+				if (dims != null) {
+					if (dims.length == 1) {
+						typeText = "Array of " + javaType.getSimpleName() + " with dimension " + arrayToString(dims);
+					} else {
+						typeText = "Matrix of " + javaType.getSimpleName() + " with dimensions " + arrayToString(dims);
+					}
 				}
 				StringBuffer sb = new StringBuffer();
 				arrayToStringRecursive(value, sb);
@@ -565,7 +567,7 @@ public class OpcUaBrowserController extends OpcUaController {
 
 		servers.clear();
 		for (DataSource source : sources) {
-			servers.add(((OpcUaSource)source).getEndpointUrl());
+			servers.add(((OpcUaSource) source).getEndpointUrl());
 		}
 
 		if (servers.size() == 1) {

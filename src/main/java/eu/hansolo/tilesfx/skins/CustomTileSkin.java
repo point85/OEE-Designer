@@ -136,7 +136,7 @@ public class CustomTileSkin extends TileSkin {
                 graphicContainer.setPrefSize(containerWidth, containerHeight);
                 graphicContainer.relocate(contentBounds.getX(), contentBounds.getY());
 
-                if (null != tile) {
+                //if (null != tile) {
                     Node graphic = tile.getGraphic();
                     if (tile.getGraphic() instanceof Shape) {
                         double width   = graphic.getBoundsInLocal().getWidth();
@@ -155,7 +155,7 @@ public class CustomTileSkin extends TileSkin {
                         ((ImageView) graphic).setFitWidth(containerWidth);
                         ((ImageView) graphic).setFitHeight(containerHeight);
                     }
-                }
+                //}
             }
             resizeStaticText();
         }

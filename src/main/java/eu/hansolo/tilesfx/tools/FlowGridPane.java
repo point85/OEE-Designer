@@ -43,7 +43,7 @@ public class FlowGridPane extends GridPane {
 
     // ******************** Constructors **************************************
     public FlowGridPane(final @NamedArg("NO_OF_COLS")int NO_OF_COLS, final @NamedArg("NO_OF_ROWS")int NO_OF_ROWS) {
-        this(NO_OF_COLS, NO_OF_ROWS, null);
+        this(NO_OF_COLS, NO_OF_ROWS, (Node)null);
     }
     public FlowGridPane(final @NamedArg("NO_OF_COLS")int NO_OF_COLS, final @NamedArg("NO_OF_ROWS")int NO_OF_ROWS, final Node... NODES) {
         super();

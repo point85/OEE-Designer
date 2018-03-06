@@ -16,6 +16,8 @@
 
 package eu.hansolo.tilesfx;
 
+import java.util.Objects;
+
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.DoublePropertyBase;
 import javafx.beans.property.ObjectProperty;
@@ -344,8 +346,18 @@ public class Section implements Comparable<Section> {
         }
         checkedValue = VALUE;
     }
+    
+	@Override
+	public int hashCode() {
+		return Objects.hash(_text, styleClass);
+	}
 
-    public boolean equals(final Section SECTION) {
+	@Override
+	public boolean equals(Object other) {
+		if (other == null) {
+			return false;
+		}
+		final Section SECTION = (Section)other;
         return (Double.compare(SECTION.getStart(), getStart()) == 0 &&
                 Double.compare(SECTION.getStop(), getStop()) == 0 &&
                 SECTION.getText().equals(getText()));
