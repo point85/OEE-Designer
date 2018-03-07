@@ -65,14 +65,6 @@
       		<property name="hibernate.hikari.idleTimeout" value="30000" />
       		<property name="hibernate.connection.provider_class" value="org.hibernate.hikaricp.internal.HikariCPConnectionProvider" />
          	
-         	<!-- C3P0 Connection Pool 
-      		<property name="hibernate.c3p0.min_size" value="5" />
-      		<property name="hibernate.c3p0.max_size" value="20" />
-      		<property name="hibernate.c3p0.timeout" value="1000" />
-      		<property name="hibernate.c3p0.max_statements" value="50" />
-      		<property name="hibernate.c3p0.idle_test_period" value="2000" />
-      		-->
-         	
          	<!-- debugging -->
          	<!-- <property name="hibernate.generate_statistics" value="true" /> -->
          	<!-- <property name="show_sql" value="true"/> -->

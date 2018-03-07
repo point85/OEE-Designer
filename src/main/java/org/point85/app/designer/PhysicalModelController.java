@@ -338,10 +338,7 @@ public class PhysicalModelController extends DesignerController {
 	// display top-level entities
 	void populateTopEntityNodes() throws Exception {		
 		// fetch the entities
-		//long before = System.currentTimeMillis();
 		List<PlantEntity> entities = PersistenceService.instance().fetchTopPlantEntities();
-
-		//System.out.println("Time to fetch entities " + (System.currentTimeMillis() - before) + " msec.");
 
 		Collections.sort(entities);
 

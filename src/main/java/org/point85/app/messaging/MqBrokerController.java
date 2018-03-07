@@ -8,7 +8,7 @@ import org.point85.app.ImageManager;
 import org.point85.app.Images;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
-import org.point85.domain.collector.DataSource;
+import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.DataSourceType;
 import org.point85.domain.messaging.MessagingSource;
 import org.point85.domain.persistence.PersistenceService;
@@ -181,10 +181,10 @@ public class MqBrokerController extends DesignerDialogController {
 
 	private void populateDataSources() {
 		// fetch the server ids
-		List<DataSource> sources = PersistenceService.instance().fetchDataSources(DataSourceType.MESSAGING);
+		List<CollectorDataSource> sources = PersistenceService.instance().fetchDataSources(DataSourceType.MESSAGING);
 
 		brokers.clear();
-		for (DataSource source : sources) {
+		for (CollectorDataSource source : sources) {
 			brokers.add((MessagingSource)source);
 		}
 		cbDataSources.setItems(brokers);

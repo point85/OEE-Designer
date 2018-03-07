@@ -83,8 +83,6 @@
 	
 		<mkdir dir="dist" />
 		<mkdir dir="dist/libs" />
-		
-		
 	
 		<copy todir="dist/libs">
 			<fileset dir="${external.lib.dir}">
@@ -146,7 +144,7 @@
 		
 		<!-- folders from Maven build -->
 		<delete dir="target" />
-		<!-- <delete dir="deploy" /> -->
+		<delete dir="deploy" />
 		
 		<!-- folders from Ant build -->
 		<delete dir="build" />

@@ -1,5 +1,6 @@
 package org.point85.app.designer;
 
+import org.apache.log4j.PropertyConfigurator;
 import org.point85.app.AppUtils;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
@@ -31,6 +32,7 @@ import org.point85.domain.opc.da.OpcDaClient;
 import org.point85.domain.opc.ua.UaOpcClient;
 import org.point85.domain.performance.EquipmentLoss;
 import org.point85.domain.performance.EquipmentLossManager;
+import org.point85.domain.persistence.DatabaseType;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Equipment;
 import org.point85.domain.plant.Material;
@@ -41,6 +43,8 @@ import org.point85.domain.script.OeeContext;
 import org.point85.domain.script.ScriptResolver;
 import org.point85.domain.uom.UnitOfMeasure;
 import org.point85.domain.web.WebSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -53,6 +57,8 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 public class DesignerApplication extends Application {
+	private static Logger logger = LoggerFactory.getLogger(DesignerApplication.class);
+	
 	// physical model controller
 	private PhysicalModelController physicalModelController;
 
@@ -155,6 +161,9 @@ public class DesignerApplication extends Application {
 	@Override
 	public void stop() {
 		try {
+			// JPA service
+			PersistenceService.instance().close();
+			
 			// OPC DA
 			if (getOpcDaClient() != null) {
 				getOpcDaClient().disconnect();
@@ -757,9 +766,24 @@ public class DesignerApplication extends Application {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		// configure log4j
+		PropertyConfigurator.configure("config/log4j.properties");
+		
+		if (args == null || args.length != 3) {
+			logger.error("Invalid number of arguments.  JDBC URL, user name and password are required.");
+		}
+		
+		if (logger.isInfoEnabled()) {
+			logger.info("Initializing JPA persistence service with JCBC URL " + args[0] + ", user: " + args[1]);
+		}
+		
 		// create the EMF
-		PersistenceService.instance().initialize();
-
+		PersistenceService.instance().initialize(args[0], args[1], args[2]);
+		
+		if (logger.isInfoEnabled()) {
+			logger.info("Launching JavaFX GUI");
+		}
+		
 		// start GUI
 		launch(args);
 	}

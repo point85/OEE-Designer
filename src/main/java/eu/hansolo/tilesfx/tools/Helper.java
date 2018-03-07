@@ -427,8 +427,10 @@ public class Helper {
 		final double POSITION = clamp(0d, 1d, POSITION_OF_COLOR);
 		final Color COLOR;
 		if (STOPS.size() == 1) {
-			final Map<Double, Color> ONE_ENTRY = (Map<Double, Color>) STOPS.entrySet().iterator().next();
-			COLOR = STOPS.get(ONE_ENTRY.keySet().iterator().next()).getColor();
+			//final Map<Double, Color> ONE_ENTRY = (Map<Double, Color>) STOPS.entrySet().iterator().next();
+			final Map.Entry<Double, Stop> ONE_ENTRY = STOPS.entrySet().iterator().next();
+			//COLOR = STOPS.get(ONE_ENTRY.keySet().iterator().next()).getColor();
+			COLOR = ONE_ENTRY.getValue().getColor();
 		} else {
 			Stop lowerBound = STOPS.get(0.0);
 			Stop upperBound = STOPS.get(1.0);

@@ -8,7 +8,7 @@ import org.point85.app.DialogController;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
 import org.point85.app.designer.DesignerApplication;
-import org.point85.domain.collector.DataSource;
+import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.DataSourceType;
 import org.point85.domain.http.HttpSource;
 import org.point85.domain.persistence.PersistenceService;
@@ -181,10 +181,10 @@ public class HttpServerController extends DialogController {
 
 	private void populateDataSources() {
 		// fetch the server ids
-		List<DataSource> sources = PersistenceService.instance().fetchDataSources(DataSourceType.HTTP);
+		List<CollectorDataSource> sources = PersistenceService.instance().fetchDataSources(DataSourceType.HTTP);
 
 		servers.clear();
-		for (DataSource source : sources) {
+		for (CollectorDataSource source : sources) {
 			servers.add((HttpSource)source);
 		}
 		cbDataSources.setItems(servers);

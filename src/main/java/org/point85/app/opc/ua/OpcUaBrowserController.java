@@ -23,7 +23,7 @@ import org.point85.app.ImageManager;
 import org.point85.app.Images;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.domain.DomainUtils;
-import org.point85.domain.collector.DataSource;
+import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.DataSourceType;
 import org.point85.domain.opc.ua.OpcUaServerStatus;
 import org.point85.domain.opc.ua.OpcUaSource;
@@ -563,10 +563,10 @@ public class OpcUaBrowserController extends OpcUaController {
 
 	private void populateDataSources() {
 		// fetch the sources
-		List<DataSource> sources = PersistenceService.instance().fetchDataSources(DataSourceType.OPC_UA);
+		List<CollectorDataSource> sources = PersistenceService.instance().fetchDataSources(DataSourceType.OPC_UA);
 
 		servers.clear();
-		for (DataSource source : sources) {
+		for (CollectorDataSource source : sources) {
 			servers.add(((OpcUaSource) source).getEndpointUrl());
 		}
 

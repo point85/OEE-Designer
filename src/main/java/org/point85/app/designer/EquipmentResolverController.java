@@ -12,7 +12,7 @@ import org.point85.app.ImageManager;
 import org.point85.app.Images;
 import org.point85.app.opc.ua.OpcUaTreeNode;
 import org.point85.domain.collector.DataCollector;
-import org.point85.domain.collector.DataSource;
+import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.DataSourceType;
 import org.point85.domain.http.HttpSource;
 import org.point85.domain.messaging.MessagingSource;
@@ -196,7 +196,7 @@ public class EquipmentResolverController extends DesignerController {
 
 		// data source type column
 		tcDataSourceType.setCellValueFactory(cellDataFeatures -> {
-			DataSource dataSource = cellDataFeatures.getValue().getDataSource();
+			CollectorDataSource dataSource = cellDataFeatures.getValue().getDataSource();
 			SimpleStringProperty property = null;
 
 			if (dataSource != null && dataSource.getDataSourceType() != null) {
@@ -208,7 +208,7 @@ public class EquipmentResolverController extends DesignerController {
 
 		// server column
 		tcServer.setCellValueFactory(cellDataFeatures -> {
-			DataSource dataSource = cellDataFeatures.getValue().getDataSource();
+			CollectorDataSource dataSource = cellDataFeatures.getValue().getDataSource();
 			SimpleStringProperty property = null;
 
 			if (dataSource != null) {
@@ -263,7 +263,7 @@ public class EquipmentResolverController extends DesignerController {
 		// resolver type
 		cbResolverTypes.getSelectionModel().select(scriptResolver.getType());
 
-		DataSource source = scriptResolver.getDataSource();
+		CollectorDataSource source = scriptResolver.getDataSource();
 
 		// data source type
 		if (source != null) {
