@@ -53,36 +53,7 @@
 			<Implementation-Version>${project.version}</Implementation-Version>
 		</manifestAttributes>
     </configuration>    
-</plugin> 
-
-
-<!-- Maven Shader  
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-shade-plugin</artifactId>
-        <version>3.1.0</version>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>shade</goal>
-            </goals>
-            <configuration>
-                          <transformers>
-                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                  <mainClass>org.point85.app.designer.DesignerApplication</mainClass>
-                </transformer>
-              </transformers>
-              <artifactSet>
-                <excludes>
-                  <exclude>config:*</exclude>
-                </excludes>
-              </artifactSet>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>   
- -->    
+</plugin>    
            
 </plugins>
 </build>
