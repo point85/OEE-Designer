@@ -23,11 +23,8 @@
 		<!-- delete Maven artifact -->
 	  	<delete file="target/jfx/app/oee-designer-1.0.0-jfx.jar"/>
 	  
-		<!-- <delete dir="${external.lib.dir}" /> -->
 		<delete dir="project" />
 		<delete dir="projectRefs" />
-	
-		<!-- <mkdir dir="${external.lib.dir}" /> -->
 	
 		<mkdir dir="project" />
 		<copy todir="project">
@@ -53,8 +50,8 @@
 		</copy>
 		
 		<!-- Copy configuration files -->
-		<copy file="config/META-INF/persistence.xml" todir="dist/libs"/> 
-		<copy file="config/log4j.properties" todir="dist/libs"/>
+		<copy file="config/META-INF/persistence.xml" todir="dist"/> 
+		<copy file="config/log4j.properties" todir="dist"/>
 	
 		<!-- Copy project sources itself -->
 		<copy todir="build/src">
@@ -110,7 +107,7 @@
 		<mkdir dir="build/classes/META-INF" />
 	
 
-		<fx:jar destfile="dist/oee-designer.jar">
+		<fx:jar destfile="dist/oee-designer-1.0.0.jar">
 			<fx:application refid="fxApplication"/>
 			<fileset dir="build/classes">
 			</fileset>
@@ -147,7 +144,14 @@
 			<fileset dir="build/classes" includes="**/*.css"/>
 		</fx:csstobin>
 		
+		<!-- folders from Maven build -->
+		<delete dir="target" />
+		<!-- <delete dir="deploy" /> -->
+		
+		<!-- folders from Ant build -->
 		<delete dir="build" />
+		<delete dir="project" />
+		<delete dir="projectRefs" />
 	
 	</target>
 </project>
