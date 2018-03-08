@@ -5,7 +5,7 @@
 	<property name="staging.dir" value="staging"/>
 	<property name="dist.dir" value="dist"/>
 	
-	<!--					 Stage files for zip 								-->
+	<!--					 Stage files for zip 					-->
 	<target name="stage">
 		<delete dir="${staging.dir}"/>	
 		<mkdir dir="${staging.dir}" />
@@ -17,6 +17,7 @@
 		</copy>
 		<copy file="${basedir}/log4j.properties" todir="${staging.dir}"/>
 		<copy file="${basedir}/run-designer-app.bat" todir="${staging.dir}"/>
+		<copy file="${basedir}/run-monitor-app.bat" todir="${staging.dir}"/>
 	</target>
 	
 	<!--					 Zip files								-->
@@ -24,7 +25,7 @@
 		<delete dir="${dist.dir}"/>	
 		<mkdir dir="${dist.dir}"/>
 		
-		<zip destfile="${dist.dir}/oee-designer.zip" basedir="${staging.dir}/"/>
+		<zip destfile="${dist.dir}/oee-apps.zip" basedir="${staging.dir}/"/>
 		
 		<delete dir="${target.dir}"/>
 		<delete dir="${staging.dir}"/>

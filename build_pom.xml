@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.point85</groupId>
-  <artifactId>oee-designer</artifactId>
+  <artifactId>oee-apps</artifactId>
   <version>1.0.0</version>
   <packaging>jar</packaging>
   
-  <name>Point85 OEE Designer Application</name>
+  <name>Point85 OEE JavaFX Applications</name>
   <url>https://github.com/point85</url>
 
   <properties>
@@ -116,7 +116,6 @@
     <version>6.2.2.jre8</version>
 </dependency>
 
-
 <!-- OEE Domain jar -->
 <dependency>
     <groupId>org.point85</groupId>
@@ -134,12 +133,11 @@
     <artifactId>javafx-maven-plugin</artifactId>
     <version>8.8.3</version>
     <configuration>
-        <mainClass>org.point85.app.designer.DesignerApplication</mainClass>
-        <!-- <verbose>true</verbose> -->
+        <mainClass>org.point85.app.OeeApplication</mainClass>
     </configuration>
 </plugin>
 
-
+<!--  ***************************
         <plugin>
         	<groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-resources-plugin</artifactId>
@@ -178,7 +176,7 @@
                 </execution>
            </executions>
         </plugin>
-        
+-->        
 </plugins>
 </build>
 
