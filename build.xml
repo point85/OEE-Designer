@@ -18,6 +18,7 @@
 		<copy file="${basedir}/log4j.properties" todir="${staging.dir}"/>
 		<copy file="${basedir}/run-designer-app.bat" todir="${staging.dir}"/>
 		<copy file="${basedir}/run-monitor-app.bat" todir="${staging.dir}"/>
+		<copy file="${basedir}/run-collector-app.bat" todir="${staging.dir}"/>
 	</target>
 	
 	<!--					 Zip files								-->

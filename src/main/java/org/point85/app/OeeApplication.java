@@ -1,6 +1,7 @@
 package org.point85.app;
 
 import org.apache.log4j.PropertyConfigurator;
+import org.point85.app.collector.CollectorApplication;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.monitor.MonitorApplication;
 import org.point85.domain.persistence.PersistenceService;
@@ -11,6 +12,7 @@ import javafx.stage.Stage;
 public class OeeApplication extends Application {
 	private static final String DESIGNER_APP = "DESIGNER";
 	private static final String MONITOR_APP = "MONITOR";
+	private static final String COLLECTOR_APP = "COLLECTOR";
 
 	private static final int IDX_APP = 0;
 	private static final int IDX_JDBC = 1;
@@ -22,6 +24,9 @@ public class OeeApplication extends Application {
 
 	// Monitor application
 	private MonitorApplication monitorApp;
+
+	// collector application
+	private CollectorApplication collectorApp;
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -35,6 +40,9 @@ public class OeeApplication extends Application {
 		} else if (appId.equals(MONITOR_APP)) {
 			monitorApp = new MonitorApplication();
 			monitorApp.start(primaryStage);
+		} else if (appId.equals(COLLECTOR_APP)) {
+			collectorApp = new CollectorApplication();
+			collectorApp.start(primaryStage);
 		} else {
 			throw new Exception("Unknown application id " + appId);
 		}
@@ -42,10 +50,16 @@ public class OeeApplication extends Application {
 
 	@Override
 	public void stop() {
-		if (designerApp != null) {
-			designerApp.stop();
-		} else if (monitorApp != null) {
-			monitorApp.stop();
+		try {
+			if (designerApp != null) {
+				designerApp.stop();
+			} else if (monitorApp != null) {
+				monitorApp.stop();
+			} else if (collectorApp != null) {
+				collectorApp.stop();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		System.exit(0);
 	}
@@ -56,9 +70,10 @@ public class OeeApplication extends Application {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// DESIGNER jdbc:sqlserver://localhost:1433;databaseName=OEE Point85 Point85 
+		// DESIGNER jdbc:sqlserver://localhost:1433;databaseName=OEE Point85 Point85
 		// MONITOR jdbc:sqlserver://localhost:1433;databaseName=OEE Point85 Point85
-		
+		// COLLECTOR jdbc:sqlserver://localhost:1433;databaseName=OEE Point85 Point85
+
 		// configure log4j
 		PropertyConfigurator.configure("log4j.properties");
 

@@ -27,7 +27,6 @@ import com.google.gson.Gson;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Envelope;
 
-import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -49,12 +48,12 @@ public class MonitorApplication implements MessageListener {
 
 	// status monitor
 	private MonitorController monitorController;
-	
+
 	public MonitorApplication() {
-		
+
 	}
 
-	//@Override
+	// @Override
 	public void start(Stage primaryStage) {
 		try {
 			primaryStage.setTitle("OEE Monitor");
@@ -82,12 +81,12 @@ public class MonitorApplication implements MessageListener {
 		}
 	}
 
-	//@Override
+	// @Override
 	public void stop() {
 		try {
 			// JPA service
 			PersistenceService.instance().close();
-			
+
 			// disconnect from notification pubsubs
 			for (PublisherSubscriber pubSub : this.notificationPubSubs) {
 				pubSub.disconnect();
@@ -219,15 +218,6 @@ public class MonitorApplication implements MessageListener {
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}
-	}
-
-	/**
-	 * Main entry point
-	 * 
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		//launch(args);
 	}
 
 }

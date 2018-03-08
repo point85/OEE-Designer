@@ -1,6 +1,5 @@
 package org.point85.app.designer;
 
-import org.apache.log4j.PropertyConfigurator;
 import org.point85.app.AppUtils;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
@@ -42,10 +41,7 @@ import org.point85.domain.script.OeeContext;
 import org.point85.domain.script.ScriptResolver;
 import org.point85.domain.uom.UnitOfMeasure;
 import org.point85.domain.web.WebSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -56,8 +52,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 public class DesignerApplication {
-	private static Logger logger = LoggerFactory.getLogger(DesignerApplication.class);
-
 	// physical model controller
 	private PhysicalModelController physicalModelController;
 
@@ -760,33 +754,4 @@ public class DesignerApplication {
 		}
 		return client;
 	}
-
-	/**
-	 * Main entry point
-	 * 
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// configure log4j
-		PropertyConfigurator.configure("log4j.properties");
-
-		if (args == null || args.length != 3) {
-			logger.error("Invalid number of arguments.  JDBC URL, user name and password are required.");
-		}
-
-		if (logger.isInfoEnabled()) {
-			logger.info("Initializing JPA persistence service with JCBC URL " + args[0] + ", user: " + args[1]);
-		}
-
-		// create the EMF
-		PersistenceService.instance().initialize(args[0], args[1], args[2]);
-
-		if (logger.isInfoEnabled()) {
-			logger.info("Launching JavaFX GUI");
-		}
-
-		// start GUI
-		// launch(args);
-	}
-
 }
