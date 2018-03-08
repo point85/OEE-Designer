@@ -59,8 +59,8 @@ import javafx.util.Pair;
  */
 public class Helper {
 	private static final double EPSILON = 1E-6;
-	private static final String HIRES_COUNTRY_PROPERTIES = "eu/hansolo/tilesfx/highres.properties";
-	private static final String LORES_COUNTRY_PROPERTIES = "eu/hansolo/tilesfx/lowres.properties";
+	private static final String HIRES_COUNTRY_PROPERTIES = "org/point85/tilesfx/highres.properties";
+	private static final String LORES_COUNTRY_PROPERTIES = "org/point85/tilesfx/lowres.properties";
 	private static volatile Properties hiresCountryProperties;
 	private static volatile Map<String, List<CountryPath>> hiresCountryPaths;
 	private static volatile Properties loresCountryProperties;

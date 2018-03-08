@@ -32,11 +32,11 @@ public class Fonts {
 
 	static {
 		try {
-			latoLightName = Font.loadFont(Fonts.class.getResourceAsStream("/eu/hansolo/tilesfx/fonts/Lato-Lig.otf"), 10)
+			latoLightName = Font.loadFont(Fonts.class.getResourceAsStream("/org/point85/tilesfx/fonts/Lato-Lig.otf"), 10)
 					.getName();
 			latoRegularName = Font
-					.loadFont(Fonts.class.getResourceAsStream("/eu/hansolo/tilesfx/fonts/Lato-Reg.otf"), 10).getName();
-			latoBoldName = Font.loadFont(Fonts.class.getResourceAsStream("/eu/hansolo/tilesfx/fonts/Lato-Bol.otf"), 10)
+					.loadFont(Fonts.class.getResourceAsStream("/org/point85/tilesfx/fonts/Lato-Reg.otf"), 10).getName();
+			latoBoldName = Font.loadFont(Fonts.class.getResourceAsStream("/org/point85/tilesfx/fonts/Lato-Bol.otf"), 10)
 					.getName();
 		} catch (Exception exception) {
 			exception.printStackTrace();

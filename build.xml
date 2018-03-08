@@ -26,8 +26,5 @@
 		<mkdir dir="${dist.dir}"/>
 		
 		<zip destfile="${dist.dir}/oee-apps.zip" basedir="${staging.dir}/"/>
-		
-		<delete dir="${target.dir}"/>
-		<delete dir="${staging.dir}"/>
 	</target>
 </project>
