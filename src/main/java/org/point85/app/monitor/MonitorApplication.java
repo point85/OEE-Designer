@@ -34,7 +34,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-public class MonitorApplication extends Application implements MessageListener {
+public class MonitorApplication implements MessageListener {
 	// data collectors being monitored
 	private List<DataCollector> collectors;
 
@@ -49,8 +49,12 @@ public class MonitorApplication extends Application implements MessageListener {
 
 	// status monitor
 	private MonitorController monitorController;
+	
+	public MonitorApplication() {
+		
+	}
 
-	@Override
+	//@Override
 	public void start(Stage primaryStage) {
 		try {
 			primaryStage.setTitle("OEE Monitor");
@@ -78,14 +82,16 @@ public class MonitorApplication extends Application implements MessageListener {
 		}
 	}
 
-	@Override
+	//@Override
 	public void stop() {
 		try {
+			// JPA service
+			PersistenceService.instance().close();
+			
 			// disconnect from notification pubsubs
 			for (PublisherSubscriber pubSub : this.notificationPubSubs) {
 				pubSub.disconnect();
 			}
-			System.exit(0);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -221,7 +227,7 @@ public class MonitorApplication extends Application implements MessageListener {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		launch(args);
+		//launch(args);
 	}
 
 }

@@ -32,7 +32,6 @@ import org.point85.domain.opc.da.OpcDaClient;
 import org.point85.domain.opc.ua.UaOpcClient;
 import org.point85.domain.performance.EquipmentLoss;
 import org.point85.domain.performance.EquipmentLossManager;
-import org.point85.domain.persistence.DatabaseType;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Equipment;
 import org.point85.domain.plant.Material;
@@ -56,7 +55,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-public class DesignerApplication extends Application {
+public class DesignerApplication {
 	private static Logger logger = LoggerFactory.getLogger(DesignerApplication.class);
 	
 	// physical model controller
@@ -103,8 +102,12 @@ public class DesignerApplication extends Application {
 
 	// script execution context
 	private OeeContext appContext;
+	
+	public DesignerApplication() {
+		
+	}
 
-	@Override
+	//@Override
 	public void start(Stage primaryStage) {
 		try {
 			// Load root layout from fxml file.
@@ -158,7 +161,7 @@ public class DesignerApplication extends Application {
 		}
 	}
 
-	@Override
+	//@Override
 	public void stop() {
 		try {
 			// JPA service
@@ -173,8 +176,6 @@ public class DesignerApplication extends Application {
 			if (getOpcUaClient() != null) {
 				getOpcUaClient().disconnect();
 			}
-
-			System.exit(0);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -785,7 +786,7 @@ public class DesignerApplication extends Application {
 		}
 		
 		// start GUI
-		launch(args);
+		//launch(args);
 	}
 
 }
