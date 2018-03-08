@@ -767,7 +767,7 @@ public class DesignerApplication extends Application {
 	 */
 	public static void main(String[] args) {
 		// configure log4j
-		PropertyConfigurator.configure("config/log4j.properties");
+		PropertyConfigurator.configure("log4j.properties");
 		
 		if (args == null || args.length != 3) {
 			logger.error("Invalid number of arguments.  JDBC URL, user name and password are required.");

@@ -135,9 +135,50 @@
     <version>8.8.3</version>
     <configuration>
         <mainClass>org.point85.app.designer.DesignerApplication</mainClass>
-        <verbose>true</verbose>
+        <!-- <verbose>true</verbose> -->
     </configuration>
 </plugin>
+
+
+        <plugin>
+        	<groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-resources-plugin</artifactId>
+            <version>3.0.2</version>
+            <executions>
+                <execution>
+                    <id>copy-all-files</id>
+                    <phase>install</phase>
+                    <goals>
+                        <goal>copy-resources</goal>
+                    </goals>
+
+                    <configuration>
+        
+                    	<target>
+          					<delete  dir="${basedir}/distribution" includeemptydirs="true"/>
+        				</target>
+        
+                        <outputDirectory>${basedir}/distribution</outputDirectory>
+                        <resources>
+                            <resource>
+                                <directory>/target/jfx/app</directory>
+                                <includes>
+                                    <include>**/*.*</include>
+                                </includes>
+                            </resource>
+                            
+                            <resource>
+                                <directory>${basedir}</directory>
+                                <includes>
+                                    <include>log4j.properties</include>
+                                </includes>
+                            </resource>
+                        </resources>
+                    </configuration>
+                </execution>
+           </executions>
+        </plugin>
+        
 </plugins>
 </build>
 
