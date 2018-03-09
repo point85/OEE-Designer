@@ -1,5 +1,7 @@
 package org.point85.app.collector;
 
+import org.point85.app.ImageManager;
+import org.point85.app.Images;
 import org.point85.domain.collector.CollectorServer;
 
 import javafx.fxml.FXML;
@@ -40,8 +42,7 @@ public class CollectorApplication {
 		// Show the scene containing the root layout.
 		Scene scene = new Scene(mainLayout);
 		primaryStage.setScene(scene);
-
-		// show the converter
+		primaryStage.getIcons().add(ImageManager.instance().getImage(Images.POINT85));
 		primaryStage.show();
 	}
 
@@ -53,29 +54,35 @@ public class CollectorApplication {
 
 	@FXML
 	private void onStartup() {
-		Runnable launcher = () -> {
+		//Runnable launcher = () -> {
 			// create the collector
 			collector = new CollectorServer();
 
 			try {
 				// start collector
 				collector.startup();
+				
+				// enable buttons
+				btShutdown.setDisable(false);
+				btStartMonitoring.setDisable(false);
+				btStopMonitoring.setDisable(false);
+				btRestart.setDisable(false);
 
 			} catch (Exception any) {
 				any.printStackTrace();
 			} finally {
 				try {
 					// pause thread
-					Thread.sleep(Long.MAX_VALUE);
+					//Thread.sleep(Long.MAX_VALUE);
 				} catch (Exception e) {
-					e.printStackTrace();
+					//e.printStackTrace();
 				}
 			}
 		};
 
 		// start the thread
-		new Thread(launcher).start();
-	}
+		//new Thread(launcher).start();
+	//}
 
 	@FXML
 	private void onShutdown() throws Exception {

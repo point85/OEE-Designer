@@ -17,12 +17,17 @@ import org.point85.domain.plant.Reason;
 import org.point85.domain.script.ResolverFunction;
 import org.point85.domain.script.ScriptResolver;
 
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 
 public class ScriptResolverController extends DesignerDialogController {
 
@@ -96,6 +101,20 @@ public class ScriptResolverController extends DesignerDialogController {
 
 		// script resolver
 		setResolver(resolver);
+
+		// insert 4 spaces instead of a 8 char tab
+		taScript.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+			final KeyCombination combo = new KeyCodeCombination(KeyCode.TAB);
+
+			@Override
+			public void handle(KeyEvent event) {
+				// check for only tab key
+				if (combo.match(event)) {
+					taScript.insertText(taScript.getCaretPosition(), "    ");
+					event.consume();
+				}
+			}
+		});
 	}
 
 	public ScriptResolver getResolver() {
@@ -225,7 +244,7 @@ public class ScriptResolverController extends DesignerDialogController {
 				String reasonCode = (String) result;
 
 				// reason must exist
-				 Reason	reason = PersistenceService.instance().fetchReasonByName(reasonCode);
+				Reason reason = PersistenceService.instance().fetchReasonByName(reasonCode);
 
 				if (reason == null) {
 					String msg = "No reason found with code " + reasonCode;

@@ -11,10 +11,10 @@
       <FlowPane hgap="10.0" layoutX="193.0" layoutY="168.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
          <children>
             <Button fx:id="btStartup" defaultButton="true" mnemonicParsing="false" onAction="#onStartup" text="Startup" />
-          <Button fx:id="btShutdown" mnemonicParsing="false" onAction="#onShutdown" text="Shutdown" />
-            <Button fx:id="btStartMonitoring" mnemonicParsing="false" onAction="#onStartMonitoring" text="Start Monitoring" />
-            <Button fx:id="btStopMonitoring" mnemonicParsing="false" onAction="#onStopMonitoring" text="Stop Monitoring" />
-            <Button fx:id="btRestart" mnemonicParsing="false" onAction="#onRestart" text="Restart" />
+          <Button fx:id="btShutdown" disable="true" mnemonicParsing="false" onAction="#onShutdown" text="Shutdown" />
+            <Button fx:id="btStartMonitoring" disable="true" mnemonicParsing="false" onAction="#onStartMonitoring" text="Start Monitoring" />
+            <Button fx:id="btStopMonitoring" disable="true" mnemonicParsing="false" onAction="#onStopMonitoring" text="Stop Monitoring" />
+            <Button fx:id="btRestart" disable="true" mnemonicParsing="false" onAction="#onRestart" text="Restart" />
          </children>
       </FlowPane>
    </children>
