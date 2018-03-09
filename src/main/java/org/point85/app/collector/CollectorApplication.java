@@ -10,7 +10,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class CollectorApplication {
-
+	// the collector
 	private CollectorServer collector;
 
 	@FXML

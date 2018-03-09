@@ -20,7 +20,7 @@ import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.TextField;
 
 public class DataCollectorController extends DialogController {
-	private DataCollector collectorConfiguration;
+	private DataCollector dataCollector;
 
 	// list of collector names
 	private ObservableList<String> collectors = FXCollections.observableArrayList(new ArrayList<>());
@@ -56,9 +56,6 @@ public class DataCollectorController extends DialogController {
 	private ComboBox<CollectorState> cbCollectorStates;
 
 	public void initialize(DesignerApplication app) throws Exception {
-		// main app
-		// setApp(app);
-
 		// button images
 		setImages();
 
@@ -66,6 +63,8 @@ public class DataCollectorController extends DialogController {
 		for (CollectorState state : CollectorState.values()) {
 			cbCollectorStates.getItems().add(state);
 		}
+		
+		cbCollectors.setItems(collectors);
 
 		// retrieve the defined collectors
 		populateCollectors();
@@ -89,32 +88,32 @@ public class DataCollectorController extends DialogController {
 		btDelete.setContentDisplay(ContentDisplay.LEFT);
 	}
 
-	public DataCollector getCollectorDefinition() {
-		if (collectorConfiguration == null) {
-			collectorConfiguration = new DataCollector();
+	public DataCollector getCollector() {
+		if (dataCollector == null) {
+			dataCollector = new DataCollector();
 		}
-		return collectorConfiguration;
+		return dataCollector;
 	}
 
-	protected void setCollectorDefinition(DataCollector definition) {
-		this.collectorConfiguration = definition;
+	protected void setCollector(DataCollector definition) {
+		this.dataCollector = definition;
 	}
 
 	@FXML
 	private void onSelectCollector() {
-		String collector = cbCollectors.getSelectionModel().getSelectedItem();
-
-		// retrieve collector by name
-		DataCollector configuration = null;
 		try {
-			configuration = PersistenceService.instance().fetchCollectorByName(collector);
-			setCollectorDefinition(configuration);
-		} catch (Exception e) {
-			// not saved yet
-			return;
-		}
+			String collector = cbCollectors.getSelectionModel().getSelectedItem();
+			
+			// JFX fires this event with a null selected item!
+			if (collector == null) {
+				onNewCollector();
+				return;
+			}
 
-		if (configuration != null) {
+			// retrieve collector by name
+			DataCollector configuration = PersistenceService.instance().fetchCollectorByName(collector);
+			setCollector(configuration);
+
 			this.tfHost.setText(configuration.getHost());
 			this.tfName.setText(configuration.getName());
 			this.tfDescription.setText(configuration.getDescription());
@@ -132,6 +131,8 @@ public class DataCollectorController extends DialogController {
 			}
 
 			this.cbCollectorStates.getSelectionModel().select(configuration.getCollectorState());
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
 		}
 	}
 
@@ -139,7 +140,7 @@ public class DataCollectorController extends DialogController {
 	private void onDeleteCollector() {
 		try {
 			// delete
-			DataCollector definition = getCollectorDefinition();
+			DataCollector definition = getCollector();
 
 			if (definition != null) {
 				PersistenceService.instance().delete(definition);
@@ -162,9 +163,9 @@ public class DataCollectorController extends DialogController {
 			this.tfBrokerPort.clear();
 
 			this.cbCollectors.getSelectionModel().clearSelection();
-			this.cbCollectorStates.getSelectionModel().select(CollectorState.DEV);
+			this.cbCollectorStates.getSelectionModel().select(null);
 
-			this.setCollectorDefinition(null);
+			this.setCollector(null);
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}
@@ -174,7 +175,7 @@ public class DataCollectorController extends DialogController {
 	private void onSaveCollector() {
 		// set attributes
 		try {
-			DataCollector configuration = getCollectorDefinition();
+			DataCollector configuration = getCollector();
 
 			configuration.setHost(getHost());
 			configuration.setName(getName());
@@ -185,7 +186,7 @@ public class DataCollectorController extends DialogController {
 
 			// save collector
 			DataCollector saved = (DataCollector) PersistenceService.instance().save(configuration);
-			setCollectorDefinition(saved);
+			setCollector(saved);
 
 			// update list
 			populateCollectors();
@@ -203,7 +204,6 @@ public class DataCollectorController extends DialogController {
 		for (DataCollector definition : definitions) {
 			collectors.add(definition.getName());
 		}
-		cbCollectors.setItems(collectors);
 
 		if (collectors.size() == 1) {
 			this.cbCollectors.getSelectionModel().select(0);

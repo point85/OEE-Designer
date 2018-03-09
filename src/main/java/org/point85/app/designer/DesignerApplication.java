@@ -453,7 +453,7 @@ public class DesignerApplication {
 		// Show the dialog and wait until the user closes it
 		dataCollectorController.getDialogStage().showAndWait();
 
-		return dataCollectorController.getCollectorDefinition();
+		return dataCollectorController.getCollector();
 	}
 
 	void showUomConverter() throws Exception {

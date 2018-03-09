@@ -558,13 +558,6 @@ public class MonitorController {
 	private Node createMessagesPage(int pageIndex) {
 		int messagesPerPage = Integer.valueOf(tfMessagesPerPage.getText());
 
-		/*
-		 * int count = notifications.size() / messagesPerPage;
-		 * 
-		 * if (notifications.size() % messagesPerPage > 0) { count++; }
-		 * pgMessages.setMaxPageIndicatorCount(count);
-		 */
-
 		int fromIndex = pageIndex * messagesPerPage;
 		int toIndex = Math.min(fromIndex + messagesPerPage, notifications.size());
 

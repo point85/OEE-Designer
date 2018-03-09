@@ -70,8 +70,8 @@
             <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="or edit a collector configuration" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Label text="Current State" GridPane.halignment="RIGHT" GridPane.rowIndex="7" />
             <ComboBox fx:id="cbCollectorStates" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-            <Label text=" Broker Host/IP" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
-            <Label text="Broker Port" GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
+            <Label text=" RMQ Broker Host/IP" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
+            <Label text="RMQ Broker Port" GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
             <TextField fx:id="tfBrokerHost" promptText="Enter RMQ broker host name or IP address" GridPane.columnIndex="1" GridPane.rowIndex="5" />
             <TextField fx:id="tfBrokerPort" maxWidth="-Infinity" prefWidth="200.0" promptText="Enter RMQ broker port" GridPane.columnIndex="1" GridPane.rowIndex="6" />
          </children>

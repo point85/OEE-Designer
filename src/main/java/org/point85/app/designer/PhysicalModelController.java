@@ -223,7 +223,7 @@ public class PhysicalModelController extends DesignerController {
 			tvEntities.refresh();
 		} catch (Exception e) {
 			AppUtils.showErrorDialog("Unable to fetch plant entities.  Check database connection.  " + e.getMessage());
-		} 
+		}
 	}
 
 	// initialize app
@@ -322,21 +322,22 @@ public class PhysicalModelController extends DesignerController {
 	}
 
 	private List<PlantEntity> fetchTopEntities() {
-		//long before = System.currentTimeMillis();
+		// long before = System.currentTimeMillis();
 		List<PlantEntity> entities = PersistenceService.instance().fetchTopPlantEntities();
 
-		//System.out.println("Time to fetch entities " + (System.currentTimeMillis() - before) + " msec.");
+		// System.out.println("Time to fetch entities " + (System.currentTimeMillis() -
+		// before) + " msec.");
 
 		Collections.sort(entities);
 		return entities;
 	}
-	
+
 	void turnOffProgressIndictor() {
 		piEntities.setVisible(false);
 	}
 
 	// display top-level entities
-	void populateTopEntityNodes() throws Exception {		
+	void populateTopEntityNodes() throws Exception {
 		// fetch the entities
 		List<PlantEntity> entities = PersistenceService.instance().fetchTopPlantEntities();
 
@@ -586,6 +587,7 @@ public class PhysicalModelController extends DesignerController {
 		try {
 			selectedSchedule = null;
 
+			// main editing
 			tfEntityName.clear();
 			taEntityDescription.clear();
 			cbEntityTypes.getSelectionModel().clearSelection();
@@ -593,9 +595,15 @@ public class PhysicalModelController extends DesignerController {
 			cbEntityTypes.requestFocus();
 			lbSchedule.setText(null);
 
-			// no selection
+			// no entity selection
 			tvEntities.getSelectionModel().clearSelection();
 			selectedEntityItem = null;
+
+			// equipment materials
+			equipmentMaterialController.clear();
+
+			// data collection
+			getResolverController().clear();
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}
@@ -988,7 +996,7 @@ public class PhysicalModelController extends DesignerController {
 		}
 	}
 
-	private void onSelectEquipmentResolver() throws Exception {
+	private EquipmentResolverController getResolverController() throws Exception {
 		if (resolverController == null) {
 			// Load the fxml file and create the anchor pane
 			FXMLLoader loader = LoaderFactory.equipmentResolverLoader();
@@ -998,17 +1006,17 @@ public class PhysicalModelController extends DesignerController {
 			resolverController = loader.getController();
 			resolverController.initialize(getApp());
 		}
+		return resolverController;
+	}
+
+	private void onSelectEquipmentResolver() throws Exception {
 
 		// show entity resolvers
 		if (getSelectedEntity() instanceof Equipment) {
-			resolverController.showResolvers((Equipment) getSelectedEntity());
+			getResolverController().showResolvers((Equipment) getSelectedEntity());
 		} else {
-			resolverController.clearEditor();
+			getResolverController().clearEditor();
 		}
-	}
-
-	EquipmentResolverController getResolverController() {
-		return this.resolverController;
 	}
 
 	@FXML

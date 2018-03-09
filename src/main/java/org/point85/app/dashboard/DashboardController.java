@@ -819,7 +819,9 @@ public class DashboardController extends DialogController implements CategoryCli
 				}
 			}
 		};
-		timer.start();
+		
+		// TODO
+		//timer.start();
 	}
 
 	public void update(CollectorResolvedEventMessage message) {

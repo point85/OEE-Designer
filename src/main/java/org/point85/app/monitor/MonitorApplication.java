@@ -22,6 +22,8 @@ import org.point85.domain.messaging.NotificationSeverity;
 import org.point85.domain.messaging.PublisherSubscriber;
 import org.point85.domain.messaging.RoutingKey;
 import org.point85.domain.persistence.PersistenceService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.rabbitmq.client.Channel;
@@ -34,6 +36,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class MonitorApplication implements MessageListener {
+	// logger
+	private final Logger logger = LoggerFactory.getLogger(getClass());
+	
 	// data collectors being monitored
 	private List<DataCollector> collectors;
 
@@ -117,11 +122,13 @@ public class MonitorApplication implements MessageListener {
 					// new publisher
 					PublisherSubscriber pubsub = new PublisherSubscriber();
 
-					// connect to broker
+					// connect to broker and listen for messages
 					String queueName = getClass().getSimpleName() + "_" + queueCounter++;
+					
 					List<RoutingKey> routingKeys = new ArrayList<>();
 					routingKeys.add(RoutingKey.NOTIFICATION_MESSAGE);
 					routingKeys.add(RoutingKey.NOTIFICATION_STATUS);
+					routingKeys.add(RoutingKey.RESOLVED_EVENT);
 
 					pubsub.connectToBroker(brokerHostName, brokerPort, queueName, false, routingKeys, this);
 
@@ -146,6 +153,10 @@ public class MonitorApplication implements MessageListener {
 		}
 
 		MessageType type = message.getMessageType();
+		
+		if (logger.isInfoEnabled()) {
+			logger.info("Received message of type " + type);
+		}
 
 		if (type.equals(MessageType.NOTIFICATION)) {
 			Platform.runLater(() -> {

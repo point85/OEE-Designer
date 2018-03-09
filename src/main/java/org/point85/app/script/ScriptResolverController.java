@@ -225,11 +225,7 @@ public class ScriptResolverController extends DesignerDialogController {
 				String reasonCode = (String) result;
 
 				// reason must exist
-				Reason reason = null;
-				try {
-					reason = PersistenceService.instance().fetchReasonByName(reasonCode);
-				} catch (Exception e) {
-				}
+				 Reason	reason = PersistenceService.instance().fetchReasonByName(reasonCode);
 
 				if (reason == null) {
 					String msg = "No reason found with code " + reasonCode;

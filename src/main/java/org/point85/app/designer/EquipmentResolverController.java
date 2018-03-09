@@ -592,6 +592,13 @@ public class EquipmentResolverController extends DesignerController {
 			AppUtils.showErrorDialog(e);
 		}
 	}
+	
+	void clear() {
+		clearEditor();
+		
+		scriptResolvers.clear();
+		selectedScriptResolver = null;
+	}
 
 	void clearEditor() {
 		this.cbCollectors.getSelectionModel().clearSelection();
@@ -652,6 +659,9 @@ public class EquipmentResolverController extends DesignerController {
 	@FXML
 	private void onAddResolver() {
 		try {
+			if (selectedScriptResolver == null) {
+				return;
+			}
 			// collector
 			selectedScriptResolver.setCollector(cbCollectors.getSelectionModel().getSelectedItem());
 

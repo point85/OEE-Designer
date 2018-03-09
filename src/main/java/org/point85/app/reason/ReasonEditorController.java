@@ -573,15 +573,14 @@ public class ReasonEditorController extends DesignerDialogController {
 						parentName = values[3].trim();
 					}
 
-					Reason reason = null;
-					try {
-						reason = PersistenceService.instance().fetchReasonByName(name);
+					Reason reason = PersistenceService.instance().fetchReasonByName(name);
 
+					if (reason != null) {
 						// update
 						reason.setName(name);
 						reason.setDescription(description);
 						reason.setLossCategory(loss);
-					} catch (Exception e) {
+					} else {
 						// new reason
 						reason = new Reason(name, description);
 						reason.setLossCategory(loss);
