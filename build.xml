@@ -5,7 +5,12 @@
 	<property name="staging.dir" value="staging"/>
 	<property name="dist.dir" value="dist"/>
 	
-	<!--					 Stage files for zip 					-->
+	<!-- build in-process collector -->
+	<target name="build-collector">
+		<jar destfile="${staging.dir}/lib/oee-collector-1.0.0.jar" basedir="${target.dir}/classes" includes="**/InProcessCollector.class" />
+	</target>
+	
+	<!-- Stage files for zip -->
 	<target name="stage">
 		<delete dir="${staging.dir}"/>	
 		<mkdir dir="${staging.dir}" />
@@ -21,7 +26,7 @@
 		<copy file="${basedir}/run-collector-app.bat" todir="${staging.dir}"/>
 	</target>
 	
-	<!--					 Zip files								-->
+	<!-- Zip files -->
 	<target name="zip" depends = "stage">
 		<delete dir="${dist.dir}"/>	
 		<mkdir dir="${dist.dir}"/>
