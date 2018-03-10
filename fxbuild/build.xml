@@ -15,6 +15,7 @@
 			uri="javafx:com.sun.javafx.tools.ant"
 			classpathref="fxant"/>
 	</target>
+		
 	<target name="stage">
 		<delete dir="externalLibs" />
 		<delete dir="project" />
@@ -247,6 +248,7 @@
 	
 		<mkdir dir="projectRefs" />
 	</target>
+		
 	<target name="compile">
 		<delete dir="build" />
 		<mkdir dir="build/src" />
@@ -339,10 +341,9 @@
 			<exclude name="**/*.java"/>
 		</fileset>
 		</copy>
-	
-	
 	</target>
-	<target name="jfx-apps" depends="compile, stage, init-fx-tasks">
+		
+	<target name="jfx-apps">
 		<delete file="dist"/>
 		<delete file="deploy" />
 	
@@ -416,6 +417,9 @@
 		
 			<zip destfile="${archive.dir}/oee-apps.zip" basedir="${dist.dir}/"/>
 		</target>	
+		
+		<target name="build-all" depends="init-fx-tasks, stage, compile, jfx-apps, build-collector, copy-files, zip">
+		</target>
 
 	<target name="clean">
 		<delete dir="build" />
