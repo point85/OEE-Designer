@@ -5,6 +5,8 @@ import org.point85.app.collector.CollectorApplication;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.monitor.MonitorApplication;
 import org.point85.domain.persistence.PersistenceService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -18,6 +20,9 @@ public class OeeApplication extends Application {
 	private static final int IDX_JDBC = 1;
 	private static final int IDX_USER = 2;
 	private static final int IDX_PASSWORD = 3;
+
+	// logger
+	private static final Logger logger = LoggerFactory.getLogger(OeeApplication.class);
 
 	// Designer application
 	private DesignerApplication designerApp;
@@ -33,6 +38,10 @@ public class OeeApplication extends Application {
 		Parameters parameters = getParameters();
 
 		String appId = parameters.getRaw().get(IDX_APP);
+		
+		if (logger.isInfoEnabled()) {
+			logger.info("Starting application " + appId);
+		}
 
 		if (appId.equals(DESIGNER_APP)) {
 			designerApp = new DesignerApplication();
@@ -78,6 +87,9 @@ public class OeeApplication extends Application {
 		PropertyConfigurator.configure("log4j.properties");
 
 		// create the EMF
+		if (logger.isInfoEnabled()) {
+			logger.info("Initializing persistence service.");
+		}
 		PersistenceService.instance().initialize(args[IDX_JDBC], args[IDX_USER], args[IDX_PASSWORD]);
 
 		// start GUI

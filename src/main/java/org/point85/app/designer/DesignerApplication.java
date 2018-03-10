@@ -1,5 +1,7 @@
 package org.point85.app.designer;
 
+import java.net.URL;
+
 import org.point85.app.AppUtils;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
@@ -41,6 +43,8 @@ import org.point85.domain.script.OeeContext;
 import org.point85.domain.script.ScriptResolver;
 import org.point85.domain.uom.UnitOfMeasure;
 import org.point85.domain.web.WebSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -52,6 +56,9 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 public class DesignerApplication {
+	// logger
+	private final Logger logger = LoggerFactory.getLogger(getClass());
+	
 	// physical model controller
 	private PhysicalModelController physicalModelController;
 
@@ -106,7 +113,13 @@ public class DesignerApplication {
 		try {
 			// Load root layout from fxml file.
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(getClass().getResource("DesignerApplication.fxml"));
+			URL url = getClass().getResource("DesignerApplication.fxml");
+			loader.setLocation(url);
+			
+			if (logger.isInfoEnabled()) {
+				logger.info("Loading fxml at url " + url.toExternalForm());
+			}
+			
 			AnchorPane mainLayout = (AnchorPane) loader.load();
 
 			// Give the controller access to the main app.
@@ -124,6 +137,10 @@ public class DesignerApplication {
 			primaryStage.getIcons().add(ImageManager.instance().getImage(Images.POINT85));
 			primaryStage.setScene(scene);
 			primaryStage.show();
+			
+			if (logger.isInfoEnabled()) {
+				logger.info("Populating top entity nodes.");
+			}
 
 			int populate = 1;
 
@@ -661,6 +678,10 @@ public class DesignerApplication {
 	}
 
 	public OpcDaClient getOpcDaClient() {
+		if (appContext == null) {
+			return null;
+		}
+		
 		OpcDaClient client = appContext.getOpcDaClient();
 
 		if (client == null) {
@@ -746,6 +767,10 @@ public class DesignerApplication {
 	}
 
 	public UaOpcClient getOpcUaClient() {
+		if (appContext == null) {
+			return null;
+		}
+		
 		UaOpcClient client = appContext.getOpcUaClient();
 
 		if (client == null) {

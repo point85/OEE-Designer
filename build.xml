@@ -1,25 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
-	<project name="OEE-Designer" default="do-deploy" basedir="."  xmlns:fx="javafx:com.sun.javafx.tools.ant">
+	<project name="OEE-Designer" default="zip" basedir="."  xmlns:fx="javafx:com.sun.javafx.tools.ant">
 	
 	<property name="target.dir" value="target"/>
 	<property name="staging.dir" value="staging"/>
 	<property name="dist.dir" value="dist"/>
 	
+	<!-- clean target files -->
+	<target name="clean">
+		<delete dir="${target.dir}"/>
+	</target>
+	
 	<!-- build in-process collector -->
 	<target name="build-collector">
-		<jar destfile="${staging.dir}/lib/oee-collector-1.0.0.jar" basedir="${target.dir}/classes" includes="**/InProcessCollector.class" />
+		<jar destfile="${target.dir}/jfx/app/lib/oee-collector-1.0.0.jar" basedir="${target.dir}/classes" includes="**/InProcessCollector.class" />
 	</target>
 	
 	<!-- Stage files for zip -->
 	<target name="stage">
 		<delete dir="${staging.dir}"/>	
-		<mkdir dir="${staging.dir}" />
+		<mkdir dir="${staging.dir}"/>
 	
+		<!-- copy library jars -->
 		<copy todir="${staging.dir}">
 			<fileset dir="${basedir}/${target.dir}/jfx/app">
 				<include name="**/*" />
 			</fileset>
 		</copy>
+		
+		<!-- copy wrapper files -->
+		<copy todir="${staging.dir}">
+			<fileset dir="${basedir}/wrapper">
+				<include name="**/*" />
+			</fileset>
+		</copy>
+		
 		<copy file="${basedir}/log4j.properties" todir="${staging.dir}"/>
 		<copy file="${basedir}/run-designer-app.bat" todir="${staging.dir}"/>
 		<copy file="${basedir}/run-monitor-app.bat" todir="${staging.dir}"/>
