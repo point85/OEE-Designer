@@ -54,35 +54,30 @@ public class CollectorApplication {
 
 	@FXML
 	private void onStartup() {
-		//Runnable launcher = () -> {
-			// create the collector
-			collector = new CollectorServer();
+		// create the collector
+		collector = new CollectorServer();
 
+		try {
+			// start collector
+			collector.startup();
+
+			// enable buttons
+			btShutdown.setDisable(false);
+			btStartMonitoring.setDisable(false);
+			btStopMonitoring.setDisable(false);
+			btRestart.setDisable(false);
+
+		} catch (Exception any) {
+			any.printStackTrace();
+		} finally {
 			try {
-				// start collector
-				collector.startup();
-				
-				// enable buttons
-				btShutdown.setDisable(false);
-				btStartMonitoring.setDisable(false);
-				btStopMonitoring.setDisable(false);
-				btRestart.setDisable(false);
-
-			} catch (Exception any) {
-				any.printStackTrace();
-			} finally {
-				try {
-					// pause thread
-					//Thread.sleep(Long.MAX_VALUE);
-				} catch (Exception e) {
-					//e.printStackTrace();
-				}
+				// pause thread
+				// Thread.sleep(Long.MAX_VALUE);
+			} catch (Exception e) {
+				// e.printStackTrace();
 			}
-		};
-
-		// start the thread
-		//new Thread(launcher).start();
-	//}
+		}
+	};
 
 	@FXML
 	private void onShutdown() throws Exception {

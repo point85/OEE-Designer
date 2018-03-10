@@ -1,1 +1,1 @@
-start javaw.exe -jar oee-apps-1.0.0.jar DESIGNER jdbc:sqlserver://localhost:1433;databaseName=OEE Point85 Point85 
+start javaw.exe -Dlog4j=../conf/log4j.properties -jar ../oee-apps-1.0.0.jar DESIGNER jdbc:sqlserver://localhost:1433;databaseName=OEE Point85 Point85 

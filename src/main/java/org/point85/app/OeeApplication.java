@@ -12,6 +12,7 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 
 public class OeeApplication extends Application {
+	private static final String LOG4J_PROPS = "log4j";
 	private static final String DESIGNER_APP = "DESIGNER";
 	private static final String MONITOR_APP = "MONITOR";
 	private static final String COLLECTOR_APP = "COLLECTOR";
@@ -20,7 +21,7 @@ public class OeeApplication extends Application {
 	private static final int IDX_JDBC = 1;
 	private static final int IDX_USER = 2;
 	private static final int IDX_PASSWORD = 3;
-
+	
 	// logger
 	private static final Logger logger = LoggerFactory.getLogger(OeeApplication.class);
 
@@ -79,12 +80,13 @@ public class OeeApplication extends Application {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		// JVM arg: -Dlog4j=log4j.properties
 		// DESIGNER jdbc:sqlserver://localhost:1433;databaseName=OEE Point85 Point85
 		// MONITOR jdbc:sqlserver://localhost:1433;databaseName=OEE Point85 Point85
 		// COLLECTOR jdbc:sqlserver://localhost:1433;databaseName=OEE Point85 Point85
 
 		// configure log4j
-		PropertyConfigurator.configure("log4j.properties");
+		PropertyConfigurator.configure(System.getProperty(LOG4J_PROPS));
 
 		// create the EMF
 		if (logger.isInfoEnabled()) {
