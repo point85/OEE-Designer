@@ -414,8 +414,15 @@
 		
 		<!-- Zip files -->
 		<target name="zip" depends = "stage">
-
-			
 			<zip destfile="${archive.dir}/oee-apps.zip" basedir="${dist.dir}/"/>
-		</target>		
+		</target>	
+
+	<target name="clean">
+		<delete dir="build" />
+		<delete dir="dist" />
+		<delete dir="externalLibs" />
+		<delete dir="project" />
+		<delete dir="projectRefs" />
+		<delete dir="archive" />
+	</target>	
 </project>
