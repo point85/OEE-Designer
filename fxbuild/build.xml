@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-	<project name="oee-apps" default="jfx-apps" basedir="."  xmlns:fx="javafx:com.sun.javafx.tools.ant">
-		<property name="dist.dir" value="dist"/>
-		<property name="archive.dir" value="archive"/>
+	<project name="oee-apps" default="build-all" basedir="."  xmlns:fx="javafx:com.sun.javafx.tools.ant">
 		
-	<target name="init-fx-tasks">
+		<!-- folders -->
+		<property name="repo.dir" value="C:\Users\Kent\.m2\repository"/>
+		<property name="source.dir" value="C:\dev\OEE-Designer"/>
+		
+		<property name="dist.dir" value="dist"/>
+		<property name="archive.dir" value="archive"/>		
+		<property name="external.dir" value="externalLibs"/>
+		<property name="project.dir" value="project"/>
+		<property name="project.refs.dir" value="projectRefs"/>
+		<property name="build.dir" value="build"/>
+
+		
+	<!-- get ant's JavaFX jars -->	
+	<target name="init">
 		<path id="fxant">
 			<filelist>
 				<file name="${java.home}\..\lib\ant-javafx.jar"/>
@@ -16,248 +27,252 @@
 			classpathref="fxant"/>
 	</target>
 		
+	<!-- copy repo jars, source and resources -->	
 	<target name="stage">
-		<delete dir="externalLibs" />
-		<delete dir="project" />
-		<delete dir="projectRefs" />
+		<delete dir="${external.dir}" />
+		<delete dir="${project.dir}" />
+		<delete dir="${project.refs.dir}" />
 	
-		<mkdir dir="externalLibs" />
+		<mkdir dir="${external.dir}" />
 	
-		<copy todir="externalLibs">
-			<fileset dir="C:\Users\Kent\.m2\repository\com\google\code\findbugs\jsr305\3.0.1">
+		<copy todir="${external.dir}">
+			<fileset dir="${repo.dir}\com\google\code\findbugs\jsr305\3.0.1">
 				<filename name="jsr305-3.0.1.jar"/>
 			</fileset>
 		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="C:\Users\Kent\.m2\repository\org\jboss\spec\javax\transaction\jboss-transaction-api_1.2_spec\1.0.1.Final">
+		<copy todir="${external.dir}">
+			<fileset dir="${repo.dir}\org\jboss\spec\javax\transaction\jboss-transaction-api_1.2_spec\1.0.1.Final">
 				<filename name="jboss-transaction-api_1.2_spec-1.0.1.Final.jar"/>
 			</fileset>
 		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="C:\Users\Kent\.m2\repository\org\openscada\utgard\1.4">
+		<copy todir="${external.dir}">
+			<fileset dir="${repo.dir}\org\openscada\utgard\1.4">
 				<filename name="utgard-1.4.jar"/>
 			</fileset>
 		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="C:\Users\Kent\.m2\repository\org\point85\oee-domain\1.0.0">
+		<copy todir="${external.dir}">
+			<fileset dir="${repo.dir}\org\point85\oee-domain\1.0.0">
 				<filename name="oee-domain-1.0.0.jar"/>
 			</fileset>
 		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="C:\Users\Kent\.m2\repository\org\hibernate\hibernate-hikaricp\5.2.13.Final">
+		<copy todir="${external.dir}">
+			<fileset dir="${repo.dir}\org\hibernate\hibernate-hikaricp\5.2.13.Final">
 				<filename name="hibernate-hikaricp-5.2.13.Final.jar"/>
 			</fileset>
 		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="C:\Users\Kent\.m2\repository\javax\xml\bind\jaxb-api\2.2.7">
+		<copy todir="${external.dir}">
+			<fileset dir="${repo.dir}\javax\xml\bind\jaxb-api\2.2.7">
 				<filename name="jaxb-api-2.2.7.jar"/>
 			</fileset>
 		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="C:\Users\Kent\.m2\repository\org\openscada\jinterop-deps\1.1.0.v20130529">
+		<copy todir="${external.dir}">
+			<fileset dir="${repo.dir}\org\openscada\jinterop-deps\1.1.0.v20130529">
 				<filename name="jinterop-deps-1.1.0.v20130529.jar"/>
 			</fileset>
 		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="C:\Users\Kent\.m2\repository\org\slf4j\jul-to-slf4j\1.7.25">
+		<copy todir="${external.dir}">
+			<fileset dir="${repo.dir}\org\slf4j\jul-to-slf4j\1.7.25">
 				<filename name="jul-to-slf4j-1.7.25.jar"/>
 			</fileset>
 		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="C:\Users\Kent\.m2\repository\org\eclipse\milo\stack-client\0.2.1">
+		<copy todir="${external.dir}">
+			<fileset dir="${repo.dir}\org\eclipse\milo\stack-client\0.2.1">
 				<filename name="stack-client-0.2.1.jar"/>
 			</fileset>
 		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="C:\Users\Kent\.m2\repository\dom4j\dom4j\1.6.1">
+		<copy todir="${external.dir}">
+			<fileset dir="${repo.dir}\dom4j\dom4j\1.6.1">
 				<filename name="dom4j-1.6.1.jar"/>
 			</fileset>
 		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="C:\Users\Kent\.m2\repository\org\nanohttpd\nanohttpd\2.3.0">
+		<copy todir="${external.dir}">
+			<fileset dir="${repo.dir}\org\nanohttpd\nanohttpd\2.3.0">
 				<filename name="nanohttpd-2.3.0.jar"/>
 			</fileset>
 		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="C:\Users\Kent\.m2\repository\org\jboss\jandex\2.0.3.Final">
+		<copy todir="${external.dir}">
+			<fileset dir="${repo.dir}\org\jboss\jandex\2.0.3.Final">
 				<filename name="jandex-2.0.3.Final.jar"/>
 			</fileset>
 		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="C:\Users\Kent\.m2\repository\org\eclipse\milo\bsd-parser-core\0.2.1">
+		<copy todir="${external.dir}">
+			<fileset dir="${repo.dir}\org\eclipse\milo\bsd-parser-core\0.2.1">
 				<filename name="bsd-parser-core-0.2.1.jar"/>
 			</fileset>
 		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="C:\Users\Kent\.m2\repository\org\openscada\jinterop-core\1.1.0.v20130529">
+		<copy todir="${external.dir}">
+			<fileset dir="${repo.dir}\org\openscada\jinterop-core\1.1.0.v20130529">
 				<filename name="jinterop-core-1.1.0.v20130529.jar"/>
 			</fileset>
 		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="C:\Users\Kent\.m2\repository\io\netty\netty-codec\4.0.36.Final">
+		<copy todir="${external.dir}">
+			<fileset dir="${repo.dir}\io\netty\netty-codec\4.0.36.Final">
 				<filename name="netty-codec-4.0.36.Final.jar"/>
 			</fileset>
 		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="C:\Users\Kent\.m2\repository\com\microsoft\sqlserver\mssql-jdbc\6.2.2.jre8">
+		<copy todir="${external.dir}">
+			<fileset dir="${repo.dir}\com\microsoft\sqlserver\mssql-jdbc\6.2.2.jre8">
 				<filename name="mssql-jdbc-6.2.2.jre8.jar"/>
 			</fileset>
 		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="C:\Users\Kent\.m2\repository\io\netty\netty-common\4.0.36.Final">
+		<copy todir="${external.dir}">
+			<fileset dir="${repo.dir}\io\netty\netty-common\4.0.36.Final">
 				<filename name="netty-common-4.0.36.Final.jar"/>
 			</fileset>
 		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="C:\Users\Kent\.m2\repository\org\slf4j\slf4j-log4j12\1.7.25">
+		<copy todir="${external.dir}">
+			<fileset dir="${repo.dir}\org\slf4j\slf4j-log4j12\1.7.25">
 				<filename name="slf4j-log4j12-1.7.25.jar"/>
 			</fileset>
 		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="C:\Users\Kent\.m2\repository\org\javassist\javassist\3.22.0-GA">
+		<copy todir="${external.dir}">
+			<fileset dir="${repo.dir}\org\javassist\javassist\3.22.0-GA">
 				<filename name="javassist-3.22.0-GA.jar"/>
 			</fileset>
 		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="C:\Users\Kent\.m2\repository\org\hibernate\common\hibernate-commons-annotations\5.0.1.Final">
+		<copy todir="${external.dir}">
+			<fileset dir="${repo.dir}\org\hibernate\common\hibernate-commons-annotations\5.0.1.Final">
 				<filename name="hibernate-commons-annotations-5.0.1.Final.jar"/>
 			</fileset>
 		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="C:\Users\Kent\.m2\repository\log4j\log4j\1.2.17">
+		<copy todir="${external.dir}">
+			<fileset dir="${repo.dir}\log4j\log4j\1.2.17">
 				<filename name="log4j-1.2.17.jar"/>
 			</fileset>
 		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="C:\Users\Kent\.m2\repository\org\eclipse\milo\sdk-core\0.2.1">
+		<copy todir="${external.dir}">
+			<fileset dir="${repo.dir}\org\eclipse\milo\sdk-core\0.2.1">
 				<filename name="sdk-core-0.2.1.jar"/>
 			</fileset>
 		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="C:\Users\Kent\.m2\repository\com\fasterxml\classmate\1.3.0">
+		<copy todir="${external.dir}">
+			<fileset dir="${repo.dir}\com\fasterxml\classmate\1.3.0">
 				<filename name="classmate-1.3.0.jar"/>
 			</fileset>
 		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="C:\Users\Kent\.m2\repository\org\eclipse\milo\sdk-client\0.2.1">
+		<copy todir="${external.dir}">
+			<fileset dir="${repo.dir}\org\eclipse\milo\sdk-client\0.2.1">
 				<filename name="sdk-client-0.2.1.jar"/>
 			</fileset>
 		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="C:\Users\Kent\.m2\repository\org\eclipse\milo\stack-core\0.2.1">
+		<copy todir="${external.dir}">
+			<fileset dir="${repo.dir}\org\eclipse\milo\stack-core\0.2.1">
 				<filename name="stack-core-0.2.1.jar"/>
 			</fileset>
 		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="C:\Users\Kent\.m2\repository\com\codepoetics\protonpack\1.8">
+		<copy todir="${external.dir}">
+			<fileset dir="${repo.dir}\com\codepoetics\protonpack\1.8">
 				<filename name="protonpack-1.8.jar"/>
 			</fileset>
 		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="C:\Users\Kent\.m2\repository\com\zaxxer\HikariCP\2.5.1">
+		<copy todir="${external.dir}">
+			<fileset dir="${repo.dir}\com\zaxxer\HikariCP\2.5.1">
 				<filename name="HikariCP-2.5.1.jar"/>
 			</fileset>
 		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="C:\Users\Kent\.m2\repository\jcifs\jcifs\1.3.17">
+		<copy todir="${external.dir}">
+			<fileset dir="${repo.dir}\jcifs\jcifs\1.3.17">
 				<filename name="jcifs-1.3.17.jar"/>
 			</fileset>
 		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="C:\Users\Kent\.m2\repository\javax\servlet\servlet-api\2.4">
+		<copy todir="${external.dir}">
+			<fileset dir="${repo.dir}\javax\servlet\servlet-api\2.4">
 				<filename name="servlet-api-2.4.jar"/>
 			</fileset>
 		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="C:\Users\Kent\.m2\repository\io\netty\netty-transport\4.0.36.Final">
+		<copy todir="${external.dir}">
+			<fileset dir="${repo.dir}\io\netty\netty-transport\4.0.36.Final">
 				<filename name="netty-transport-4.0.36.Final.jar"/>
 			</fileset>
 		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="C:\Users\Kent\.m2\repository\com\rabbitmq\amqp-client\5.1.1">
+		<copy todir="${external.dir}">
+			<fileset dir="${repo.dir}\com\rabbitmq\amqp-client\5.1.1">
 				<filename name="amqp-client-5.1.1.jar"/>
 			</fileset>
 		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="C:\Users\Kent\.m2\repository\io\netty\netty-buffer\4.0.36.Final">
+		<copy todir="${external.dir}">
+			<fileset dir="${repo.dir}\io\netty\netty-buffer\4.0.36.Final">
 				<filename name="netty-buffer-4.0.36.Final.jar"/>
 			</fileset>
 		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="C:\Users\Kent\.m2\repository\antlr\antlr\2.7.7">
+		<copy todir="${external.dir}">
+			<fileset dir="${repo.dir}\antlr\antlr\2.7.7">
 				<filename name="antlr-2.7.7.jar"/>
 			</fileset>
 		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="C:\Users\Kent\.m2\repository\io\netty\netty-handler\4.0.36.Final">
+		<copy todir="${external.dir}">
+			<fileset dir="${repo.dir}\io\netty\netty-handler\4.0.36.Final">
 				<filename name="netty-handler-4.0.36.Final.jar"/>
 			</fileset>
 		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="C:\Users\Kent\.m2\repository\org\hibernate\javax\persistence\hibernate-jpa-2.1-api\1.0.0.Final">
+		<copy todir="${external.dir}">
+			<fileset dir="${repo.dir}\org\hibernate\javax\persistence\hibernate-jpa-2.1-api\1.0.0.Final">
 				<filename name="hibernate-jpa-2.1-api-1.0.0.Final.jar"/>
 			</fileset>
 		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="C:\Users\Kent\.m2\repository\org\hibernate\hibernate-core\5.2.13.Final">
+		<copy todir="${external.dir}">
+			<fileset dir="${repo.dir}\org\hibernate\hibernate-core\5.2.13.Final">
 				<filename name="hibernate-core-5.2.13.Final.jar"/>
 			</fileset>
 		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="C:\Users\Kent\.m2\repository\com\google\code\gson\gson\2.8.2">
+		<copy todir="${external.dir}">
+			<fileset dir="${repo.dir}\com\google\code\gson\gson\2.8.2">
 				<filename name="gson-2.8.2.jar"/>
 			</fileset>
 		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="C:\Users\Kent\.m2\repository\org\slf4j\slf4j-api\1.7.25">
+		<copy todir="${external.dir}">
+			<fileset dir="${repo.dir}\org\slf4j\slf4j-api\1.7.25">
 				<filename name="slf4j-api-1.7.25.jar"/>
 			</fileset>
 		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="C:\Users\Kent\.m2\repository\org\jboss\logging\jboss-logging\3.3.1.Final">
+		<copy todir="${external.dir}">
+			<fileset dir="${repo.dir}\org\jboss\logging\jboss-logging\3.3.1.Final">
 				<filename name="jboss-logging-3.3.1.Final.jar"/>
 			</fileset>
 		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="C:\Users\Kent\.m2\repository\com\google\guava\guava\19.0">
+		<copy todir="${external.dir}">
+			<fileset dir="${repo.dir}\com\google\guava\guava\19.0">
 				<filename name="guava-19.0.jar"/>
 			</fileset>
 		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="C:\Users\Kent\.m2\repository\org\jooq\jool\0.9.10">
+		<copy todir="${external.dir}">
+			<fileset dir="${repo.dir}\org\jooq\jool\0.9.10">
 				<filename name="jool-0.9.10.jar"/>
 			</fileset>
 		</copy>
 	
-		<mkdir dir="project" />
-		<copy todir="project">
-			<fileset dir="C:\dev\OEE-Designer">
+		<mkdir dir="${project.dir}" />
+		<copy todir="${project.dir}">
+			<fileset dir="${source.dir}">
 				<include name="src\main\resources/**" />
 			</fileset>
 		</copy>
-		<copy todir="project">
-			<fileset dir="C:\dev\OEE-Designer">
+		<copy todir="${project.dir}">
+			<fileset dir="${source.dir}">
 				<include name="src\test\java/**" />
 			</fileset>
 		</copy>
-		<copy todir="project">
-			<fileset dir="C:\dev\OEE-Designer">
+		<copy todir="${project.dir}">
+			<fileset dir="${source.dir}">
 				<include name="src\main\java/**" />
 			</fileset>
 		</copy>
 	
-		<mkdir dir="projectRefs" />
+		<mkdir dir="${project.refs.dir}" />
 	</target>
 		
+	<!-- compile -->
 	<target name="compile">
-		<delete dir="build" />
-		<mkdir dir="build/src" />
-		<mkdir dir="build/libs" />
-		<mkdir dir="build/classes" />
+		<delete dir="${build.dir}" />
+		<mkdir dir="${build.dir}/src" />
+		<mkdir dir="${build.dir}/lib" />
+		<mkdir dir="${build.dir}/classes" />
 	
-		<!-- Copy project-libs references -->
-		<copy todir="build/libs">
-			<fileset dir="externalLibs">
+		<!-- Copy project-libs jars -->
+		<copy todir="${build.dir}/lib">
+			<fileset dir="${external.dir}">
+				<include name="**/*"/>
+				<!--
 				<include name="HikariCP-2.5.1.jar"/>
 				<include name="jcifs-1.3.17.jar"/>
 				<include name="jool-0.9.10.jar"/>
@@ -299,99 +314,98 @@
 				<include name="hibernate-commons-annotations-5.0.1.Final.jar"/>
 				<include name="stack-client-0.2.1.jar"/>
 				<include name="jboss-logging-3.3.1.Final.jar"/>
+				-->
 			</fileset>
 		</copy>
 	
 		<!-- Copy project references -->
 	
-		<!-- Copy project sources itself -->
-		<copy todir="build/src">
-			<fileset dir="project/src/test/java">
+		<!-- Copy project sources  -->
+		<copy todir="${build.dir}/src">
+			<fileset dir="${project.dir}/src/test/java">
 				<include name="**/*"/>
 			</fileset>
 		</copy>
-		<copy todir="build/src">
-			<fileset dir="project/src/main/resources">
+		<copy todir="${build.dir}/src">
+			<fileset dir="${project.dir}/src/main/resources">
 				<include name="**/*"/>
 			</fileset>
 		</copy>
-		<copy todir="build/src">
-			<fileset dir="project/src/main/java">
+		<copy todir="${build.dir}/src">
+			<fileset dir="${project.dir}/src/main/java">
 				<include name="**/*"/>
 			</fileset>
 		</copy>
 	
-		<javac includeantruntime="false" source="1.8" target="1.8" srcdir="build/src" destdir="build/classes" encoding="UTF-8">
+		<!-- run java compiler -->
+		<javac includeantruntime="false" source="1.8" target="1.8" srcdir="${build.dir}/src" destdir="${build.dir}/classes" encoding="UTF-8">
 			<classpath>
-				<fileset dir="build/libs">
+				<fileset dir="${build.dir}/lib">
 					<include name="*"/>
 				</fileset>
 			</classpath>
 		</javac>
 	
-		<!-- Copy over none Java-Files -->
-		<copy todir="build/classes">
-		<fileset dir="project/src/test/java">
+		<!-- Copy over non Java-Files -->
+		<copy todir="${build.dir}/classes">
+		<fileset dir="${project.dir}/src/test/java">
 			<exclude name="**/*.java"/>
 		</fileset>
-		<fileset dir="project/src/main/resources">
+		<fileset dir="${project.dir}/src/main/resources">
 			<exclude name="**/*.java"/>
 		</fileset>
-		<fileset dir="project/src/main/java">
+		<fileset dir="${project.dir}/src/main/java">
 			<exclude name="**/*.java"/>
 		</fileset>
 		</copy>
 	</target>
 		
-	<target name="jfx-apps">
-		<delete file="dist"/>
-		<delete file="deploy" />
+	<!-- build JavaFX jar -->
+	<target name="jfx-apps" depends="init">
+		<delete dir="${dist.dir}"/>
 	
-		<mkdir dir="dist" />
-		<mkdir dir="dist/libs" />
+		<mkdir dir="${dist.dir}" />
+		<mkdir dir="${dist.dir}/lib" />
 	
-		<copy todir="dist/libs">
-			<fileset dir="externalLibs">
+		<copy todir="${dist.dir}/lib">
+			<fileset dir="${external.dir}">
 				<include name="*" />
 			</fileset>
 		</copy>
 	
-	
 		<fx:resources id="appRes">
-			<fx:fileset dir="dist" includes="OEE-Designer.jar"/>
-			<fx:fileset dir="dist" includes="libs/*"/>
+			<!-- <fx:fileset dir="${dist.dir}" includes="OEE-Designer.jar"/> -->
+			<fx:fileset dir="${dist.dir}" includes="lib/*"/>
 		</fx:resources>
 	
+		<!-- main class -->
 		<fx:application id="fxApplication"
 			name="OEE Apps"
 			mainClass="org.point85.app.OeeApplication"
 		/>
 	
-		<mkdir dir="build/classes/META-INF" />
+		<mkdir dir="${build.dir}/classes/META-INF" />
 		
-		<fx:jar destfile="dist/oee-apps-1.0.0.jar">
+		<!-- apps jar -->
+		<fx:jar destfile="${dist.dir}/lib/oee-apps-1.0.0.jar">
 			<fx:application refid="fxApplication"/>
-			<fileset dir="build/classes">
+			<fileset dir="${build.dir}/classes">
 			</fileset>
 			<fx:resources refid="appRes"/>
 	
 			<manifest>
-				<attribute name="Implementation-Vendor" value="Point85"/>
-				<attribute name="Implementation-Title" value="OEE Apps"/>
+				<attribute name="Implementation-Vendor" value="Point85.org"/>
+				<attribute name="Implementation-Title" value="OEE Applications"/>
 				<attribute name="Implementation-Version" value="1.0.0"/>
 				<attribute name="JavaFX-Feature-Proxy" value="None"/>
 			</manifest>
 		</fx:jar>
 		
-		<fx:csstobin outdir="build/classes">
-			<fileset dir="build/classes" includes="**/*.css"/>
+		<fx:csstobin outdir="${build.dir}/classes">
+			<fileset dir="${build.dir}/classes" includes="**/*.css"/>
 		</fx:csstobin>	
 	</target>
 		
-		<!-- build in-process collector -->
-		<target name="build-collector">
-			<jar destfile="${dist.dir}/libs/oee-collector-1.0.0.jar" basedir="build/classes" includes="**/InProcessCollector.class" />
-		</target>
 		
 		<!-- Stage files for zip -->
 		<target name="copy-files">	
@@ -418,15 +432,15 @@
 			<zip destfile="${archive.dir}/oee-apps.zip" basedir="${dist.dir}/"/>
 		</target>	
 		
-		<target name="build-all" depends="init-fx-tasks, stage, compile, jfx-apps, build-collector, copy-files, zip">
+		<target name="build-all" depends="init, stage, compile, jfx-apps, copy-files, zip">
 		</target>
 
 	<target name="clean">
-		<delete dir="build" />
-		<delete dir="dist" />
-		<delete dir="externalLibs" />
-		<delete dir="project" />
-		<delete dir="projectRefs" />
-		<delete dir="archive" />
+		<delete dir="${build.dir}" />
+		<delete dir="${dist.dir}" />
+		<delete dir="${external.dir}" />
+		<delete dir="${project.dir}" />
+		<delete dir="${project.refs.dir}" />
+		<delete dir="${archive.dir}" />
 	</target>	
 </project>
