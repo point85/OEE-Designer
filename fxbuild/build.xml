@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-	<project name="oee-apps" default="do-deploy" basedir="."  xmlns:fx="javafx:com.sun.javafx.tools.ant">
+	<project name="oee-apps" default="jfx-apps" basedir="."  xmlns:fx="javafx:com.sun.javafx.tools.ant">
 		<property name="dist.dir" value="dist"/>
 		<property name="archive.dir" value="archive"/>
 		
@@ -15,7 +15,7 @@
 			uri="javafx:com.sun.javafx.tools.ant"
 			classpathref="fxant"/>
 	</target>
-	<target name="setup-staging-area">
+	<target name="stage">
 		<delete dir="externalLibs" />
 		<delete dir="project" />
 		<delete dir="projectRefs" />
@@ -247,7 +247,7 @@
 	
 		<mkdir dir="projectRefs" />
 	</target>
-	<target name='do-compile'>
+	<target name="compile">
 		<delete dir="build" />
 		<mkdir dir="build/src" />
 		<mkdir dir="build/libs" />
@@ -342,7 +342,7 @@
 	
 	
 	</target>
-	<target name="do-deploy" depends="setup-staging-area, do-compile, init-fx-tasks">
+	<target name="jfx-apps" depends="compile, stage, init-fx-tasks">
 		<delete file="dist"/>
 		<delete file="deploy" />
 	
@@ -367,9 +367,7 @@
 		/>
 	
 		<mkdir dir="build/classes/META-INF" />
-	
-	
-	
+		
 		<fx:jar destfile="dist/oee-apps-1.0.0.jar">
 			<fx:application refid="fxApplication"/>
 			<fileset dir="build/classes">
@@ -383,13 +381,10 @@
 				<attribute name="JavaFX-Feature-Proxy" value="None"/>
 			</manifest>
 		</fx:jar>
-	
-	
-	
+		
 		<fx:csstobin outdir="build/classes">
 			<fileset dir="build/classes" includes="**/*.css"/>
-		</fx:csstobin>
-	
+		</fx:csstobin>	
 	</target>
 		
 		<!-- build in-process collector -->
@@ -398,22 +393,27 @@
 		</target>
 		
 		<!-- Stage files for zip -->
-		<target name="stage">			
+		<target name="copy-files">	
+			<mkdir dir="${dist.dir}/wrapper" />		
+			
 			<!-- copy wrapper files -->
-			<copy todir="${dist.dir}">
-				<fileset dir="${basedir}/wrapper">
+			<copy todir="${dist.dir}/wrapper">
+				<fileset dir="../wrapper">
 					<include name="**/*" />
 				</fileset>
 			</copy>
 			
-			<copy file="${basedir}/log4j.properties" todir="${dist.dir}"/>
-			<copy file="${basedir}/run-designer-app.bat" todir="${dist.dir}"/>
-			<copy file="${basedir}/run-monitor-app.bat" todir="${dist.dir}"/>
-			<copy file="${basedir}/run-collector-app.bat" todir="${dist.dir}"/>
+			<copy file="../log4j.properties" todir="${dist.dir}"/>
+			<copy file="../run-designer-app.bat" todir="${dist.dir}"/>
+			<copy file="../run-monitor-app.bat" todir="${dist.dir}"/>
+			<copy file="../run-collector-app.bat" todir="${dist.dir}"/>
 		</target>
 		
 		<!-- Zip files -->
-		<target name="zip" depends = "stage">
+		<target name="zip">
+			<delete dir="${archive.dir}" />	
+			<mkdir dir="${archive.dir}" />	
+		
 			<zip destfile="${archive.dir}/oee-apps.zip" basedir="${dist.dir}/"/>
 		</target>	
 
