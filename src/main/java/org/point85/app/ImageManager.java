@@ -30,6 +30,9 @@ public class ImageManager {
 	}
 
 	public Image getImage(Images id) throws Exception {
+		// TODO
+		System.out.println("Getting image " + id);
+		
 		Image image = imageCache.get(id);
 
 		if (image != null) {
@@ -165,7 +168,7 @@ public class ImageManager {
 			image = new Image(path + "Tag.png", DIM, DIM, true, true);
 			break;
 		case UOM:
-			image = new Image(path + "UOMs.png", DIM, DIM, true, true);
+			image = new Image(path + "UOM.png", DIM, DIM, true, true);
 			break;
 		case UPDATE:
 			image = new Image(path + "Update.png", DIM, DIM, true, true);

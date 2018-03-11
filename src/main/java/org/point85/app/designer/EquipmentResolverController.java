@@ -662,6 +662,11 @@ public class EquipmentResolverController extends DesignerController {
 			if (selectedScriptResolver == null) {
 				return;
 			}
+			
+			if (!(getApp().getPhysicalModelController().getSelectedEntity() instanceof Equipment)) {
+				throw new Exception("Equipment must be selected before adding a resolver.");
+			}
+			
 			// collector
 			selectedScriptResolver.setCollector(cbCollectors.getSelectionModel().getSelectedItem());
 
