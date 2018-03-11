@@ -1,0 +1,4 @@
+R1, Reason R1, ,
+R1.1, Reason R1.1, SETUP, R1
+R1.2, Reason R1.2, PLANNED_DOWNTIME, R1
+R2, Reason R2,UNPLANNED_DOWNTIME,

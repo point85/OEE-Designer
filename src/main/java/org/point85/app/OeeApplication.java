@@ -1,6 +1,7 @@
 package org.point85.app;
 
 import org.apache.log4j.PropertyConfigurator;
+import org.point85.app.collector.ClientTestApplication;
 import org.point85.app.collector.CollectorApplication;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.monitor.MonitorApplication;
@@ -13,15 +14,18 @@ import javafx.stage.Stage;
 
 public class OeeApplication extends Application {
 	private static final String LOG4J_PROPS = "log4j";
+
+	// JFX applications
 	private static final String DESIGNER_APP = "DESIGNER";
 	private static final String MONITOR_APP = "MONITOR";
 	private static final String COLLECTOR_APP = "COLLECTOR";
+	private static final String TESTER_APP = "TESTER";
 
 	private static final int IDX_APP = 0;
 	private static final int IDX_JDBC = 1;
 	private static final int IDX_USER = 2;
 	private static final int IDX_PASSWORD = 3;
-	
+
 	// logger
 	private static final Logger logger = LoggerFactory.getLogger(OeeApplication.class);
 
@@ -34,12 +38,15 @@ public class OeeApplication extends Application {
 	// collector application
 	private CollectorApplication collectorApp;
 
+	// client test application
+	private ClientTestApplication clientTestApp;
+
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		Parameters parameters = getParameters();
 
 		String appId = parameters.getRaw().get(IDX_APP);
-		
+
 		if (logger.isInfoEnabled()) {
 			logger.info("Starting application " + appId);
 		}
@@ -53,6 +60,9 @@ public class OeeApplication extends Application {
 		} else if (appId.equals(COLLECTOR_APP)) {
 			collectorApp = new CollectorApplication();
 			collectorApp.start(primaryStage);
+		} else if (appId.equals(TESTER_APP)) {
+			clientTestApp = new ClientTestApplication();
+			clientTestApp.start(primaryStage);
 		} else {
 			throw new Exception("Unknown application id " + appId);
 		}
@@ -67,6 +77,8 @@ public class OeeApplication extends Application {
 				monitorApp.stop();
 			} else if (collectorApp != null) {
 				collectorApp.stop();
+			} else if (clientTestApp != null) {
+				clientTestApp.stop();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
