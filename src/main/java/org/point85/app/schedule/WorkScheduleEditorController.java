@@ -1382,20 +1382,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 			}
 
 			// check for team reference
-			List<Team> referencingTeams = PersistenceService.instance().fetchTeamCrossReferences(rotation);
-
-			if (referencingTeams.size() != 0) {
-				String teamNames = "";
-
-				for (Team team : referencingTeams) {
-					if (teamNames.length() > 0) {
-						teamNames += ", ";
-					}
-					teamNames += team.getName();
-				}
-				throw new Exception("Rotation " + rotation.getName()
-						+ " cannot be deleted.  It is referenced by team(s) " + teamNames);
-			}
+			PersistenceService.instance().checkReferences(rotation);
 
 			rotationList.remove(rotation);
 			currentRotation = null;

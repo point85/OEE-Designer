@@ -35,7 +35,6 @@ import org.point85.app.LoaderFactory;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
 import org.point85.domain.persistence.PersistenceService;
-import org.point85.domain.plant.EquipmentMaterial;
 import org.point85.domain.uom.MeasurementSystem;
 import org.point85.domain.uom.Prefix;
 import org.point85.domain.uom.UnitOfMeasure;
@@ -867,38 +866,6 @@ public class UomEditorController extends DesignerDialogController {
 		try {
 			// delete
 			UnitOfMeasure toDelete = getSelectedUom();
-
-			// check for usage by equipment material
-			List<EquipmentMaterial> eqms = PersistenceService.instance().fetchEquipmentMaterials(toDelete);
-
-			if (eqms.size() != 0) {
-				String value = "";
-				for (int i = 0; i < eqms.size(); i++) {
-					if (i > 0) {
-						value += ", ";
-					}
-
-					value += eqms.get(i).getEquipment().getName();
-				}
-				throw new Exception("Unit of measure " + toDelete.getSymbol()
-						+ " cannot be deleted.  It is being referenced by this equipment: " + value);
-			}
-
-			// check for internal usage
-			List<UnitOfMeasure> uoms = PersistenceService.instance().fetchUomCrossReferences(toDelete);
-
-			if (uoms.size() != 0) {
-				String value = "";
-				for (int i = 0; i < uoms.size(); i++) {
-					if (i > 0) {
-						value += ", ";
-					}
-
-					value += uoms.get(i).getSymbol();
-				}
-				throw new Exception("Unit of measure " + toDelete.getSymbol()
-						+ " cannot be deleted.  It is being referenced by these units of measure: " + value);
-			}
 
 			PersistenceService.instance().delete(toDelete);
 

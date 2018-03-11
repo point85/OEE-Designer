@@ -32,13 +32,13 @@ public class ImageManager {
 	public Image getImage(Images id) throws Exception {
 		// TODO
 		System.out.println("Getting image " + id);
-		
+
 		Image image = imageCache.get(id);
 
 		if (image != null) {
 			return image;
 		}
-		
+
 		// create it
 		switch (id) {
 		case ADD:
@@ -161,8 +161,14 @@ public class ImageManager {
 		case START:
 			image = new Image(path + "Start.png", DIM, DIM, true, true);
 			break;
+		case STARTUP:
+			image = new Image(path + "Startup.png", DIM, DIM, true, true);
+			break;
 		case STOP:
 			image = new Image(path + "Stop.png", DIM, DIM, true, true);
+			break;
+		case SHUTDOWN:
+			image = new Image(path + "Shutdown.png", DIM, DIM, true, true);
 			break;
 		case TAG:
 			image = new Image(path + "Tag.png", DIM, DIM, true, true);
@@ -175,6 +181,9 @@ public class ImageManager {
 			break;
 		case VALUE:
 			image = new Image(path + "Value.png", DIM, DIM, true, true);
+			break;
+		case WATCH:
+			image = new Image(path + "Watch.png", DIM, DIM, true, true);
 			break;
 		case WEB:
 			image = new Image(path + "WebSource.png", DIM, DIM, true, true);

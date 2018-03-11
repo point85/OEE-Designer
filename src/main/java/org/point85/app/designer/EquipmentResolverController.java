@@ -11,8 +11,8 @@ import org.point85.app.AppUtils;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
 import org.point85.app.opc.ua.OpcUaTreeNode;
-import org.point85.domain.collector.DataCollector;
 import org.point85.domain.collector.CollectorDataSource;
+import org.point85.domain.collector.DataCollector;
 import org.point85.domain.collector.DataSourceType;
 import org.point85.domain.http.HttpSource;
 import org.point85.domain.messaging.MessagingSource;
@@ -346,31 +346,31 @@ public class EquipmentResolverController extends DesignerController {
 	protected void setImages() throws Exception {
 		// new resolver
 		btNewResolver.setGraphic(ImageManager.instance().getImageView(Images.NEW));
-		btNewResolver.setContentDisplay(ContentDisplay.RIGHT);
+		btNewResolver.setContentDisplay(ContentDisplay.LEFT);
 
 		// add resolver
 		btAddResolver.setGraphic(ImageManager.instance().getImageView(Images.ADD));
-		btAddResolver.setContentDisplay(ContentDisplay.RIGHT);
+		btAddResolver.setContentDisplay(ContentDisplay.LEFT);
 
 		// remove resolver
 		btRemoveResolver.setGraphic(ImageManager.instance().getImageView(Images.REMOVE));
-		btRemoveResolver.setContentDisplay(ContentDisplay.RIGHT);
+		btRemoveResolver.setContentDisplay(ContentDisplay.LEFT);
 
 		// script execution
-		btRun.setGraphic(ImageManager.instance().getImageView(Images.EXECUTE));
-		btRun.setContentDisplay(ContentDisplay.RIGHT);
+		btRun.setGraphic(ImageManager.instance().getImageView(Images.WATCH));
+		btRun.setContentDisplay(ContentDisplay.LEFT);
 
 		// browse to data source
 		btBrowseSource.setGraphic(ImageManager.instance().getImageView(Images.SOURCE));
-		btBrowseSource.setContentDisplay(ContentDisplay.CENTER);
+		btBrowseSource.setContentDisplay(ContentDisplay.LEFT);
 
 		// script editor
 		btEditScript.setGraphic(ImageManager.instance().getImageView(Images.SCRIPT));
-		btEditScript.setContentDisplay(ContentDisplay.CENTER);
+		btEditScript.setContentDisplay(ContentDisplay.LEFT);
 
 		// collector editor
 		btEditCollector.setGraphic(ImageManager.instance().getImageView(Images.COLLECTOR));
-		btEditCollector.setContentDisplay(ContentDisplay.CENTER);
+		btEditCollector.setContentDisplay(ContentDisplay.LEFT);
 	}
 
 	@FXML
@@ -382,6 +382,12 @@ public class EquipmentResolverController extends DesignerController {
 				getSelectedResolver().setType(type);
 			}
 		}
+	}
+	
+	@FXML
+	private void onSelectHostServer() {
+		// TODO enable buttons
+		cbCollectors.getSelectionModel().getSelectedItem();
 	}
 
 	@FXML
@@ -517,15 +523,18 @@ public class EquipmentResolverController extends DesignerController {
 	private void setDefaultSourceId() {
 		PlantEntity entity = getApp().getPhysicalModelController().getSelectedEntity();
 
+		String sourceId = "";
+
 		if (entity != null) {
 			ScriptResolverType resolverType = cbResolverTypes.getSelectionModel().getSelectedItem();
+			DataSourceType sourceType = cbDataSources.getSelectionModel().getSelectedItem();
 
 			if (resolverType != null) {
-				DataSourceType sourceType = cbDataSources.getSelectionModel().getSelectedItem();
-
-				String sourceId = entity.getName() + "." + sourceType + "." + resolverType;
-				tfSourceId.setText(sourceId);
+				sourceId = entity.getName() + "." + sourceType + "." + resolverType;
+			} else {
+				sourceId = entity.getName() + "." + sourceType;
 			}
+			tfSourceId.setText(sourceId);
 		}
 	}
 
@@ -592,10 +601,10 @@ public class EquipmentResolverController extends DesignerController {
 			AppUtils.showErrorDialog(e);
 		}
 	}
-	
+
 	void clear() {
 		clearEditor();
-		
+
 		scriptResolvers.clear();
 		selectedScriptResolver = null;
 	}
@@ -662,11 +671,11 @@ public class EquipmentResolverController extends DesignerController {
 			if (selectedScriptResolver == null) {
 				return;
 			}
-			
+
 			if (!(getApp().getPhysicalModelController().getSelectedEntity() instanceof Equipment)) {
 				throw new Exception("Equipment must be selected before adding a resolver.");
 			}
-			
+
 			// collector
 			selectedScriptResolver.setCollector(cbCollectors.getSelectionModel().getSelectedItem());
 

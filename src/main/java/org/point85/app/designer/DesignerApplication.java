@@ -456,7 +456,7 @@ public class DesignerApplication {
 
 			// Create the dialog Stage.
 			Stage dialogStage = new Stage(StageStyle.DECORATED);
-			dialogStage.setTitle("Edit Collector Definitions");
+			dialogStage.setTitle("Edit Collector Configurations");
 			dialogStage.initModality(Modality.WINDOW_MODAL);
 			Scene scene = new Scene(page);
 			dialogStage.setScene(scene);

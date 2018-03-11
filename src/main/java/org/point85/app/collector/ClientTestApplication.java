@@ -59,6 +59,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -150,10 +151,6 @@ public class ClientTestApplication implements MessageListener {
 	@FXML
 	private Button btHttpGetEntities;
 
-	// TO DO
-	@FXML
-	private Button btTestIt;
-
 	// JSON parser
 	private Gson gson = new Gson();
 
@@ -176,9 +173,31 @@ public class ClientTestApplication implements MessageListener {
 			stop();
 		}
 	}
+	private void setImages() throws Exception  {
+		// entity
+		btHttpGetEntities.setGraphic(ImageManager.instance().getImageView(Images.EQUIPMENT));
+		btHttpGetEntities.setContentDisplay(ContentDisplay.RIGHT);
+		
+		// materials
+		btHttpGetMaterials.setGraphic(ImageManager.instance().getImageView(Images.MATERIAL));
+		btHttpGetMaterials.setContentDisplay(ContentDisplay.RIGHT);
+		
+		// reasons
+		btHttpGetReasons.setGraphic(ImageManager.instance().getImageView(Images.REASON));
+		btHttpGetReasons.setContentDisplay(ContentDisplay.RIGHT);
+		
+		// post
+		btHttpPost.setGraphic(ImageManager.instance().getImageView(Images.HTTP));
+		btHttpPost.setContentDisplay(ContentDisplay.RIGHT);
+		
+		// send
+		btRmqSend.setGraphic(ImageManager.instance().getImageView(Images.RMQ));
+		btRmqSend.setContentDisplay(ContentDisplay.RIGHT);
+	}
 
-	// called by java FX
-	public void initialize() {
+	// called by Java FX
+	public void initialize() throws Exception  {
+		setImages();
 		initializeEntityTable();
 		initializeMaterialTable();
 		initializeReasonTable();
@@ -315,8 +334,8 @@ public class ClientTestApplication implements MessageListener {
 		try {
 			// refresh list of HTTP source Ids
 			String urlString = buildHttpUrl(OeeHttpServer.SOURCE_ID_EP);
-			addQueryParameter(urlString, OeeHttpServer.EQUIP_ATTRIB, entity.getName());
-			addQueryParameter(urlString, OeeHttpServer.DS_TYPE_ATTRIB, DataSourceType.HTTP.name());
+			urlString = addQueryParameter(urlString, OeeHttpServer.EQUIP_ATTRIB, entity.getName());
+			urlString = addQueryParameter(urlString, OeeHttpServer.DS_TYPE_ATTRIB, DataSourceType.HTTP.name());
 			URL url = new URL(urlString);
 
 			conn = (HttpURLConnection) url.openConnection();
@@ -356,8 +375,8 @@ public class ClientTestApplication implements MessageListener {
 		try {
 			// refresh list of RMQ source Ids
 			String urlString = buildHttpUrl(OeeHttpServer.SOURCE_ID_EP);
-			addQueryParameter(urlString, OeeHttpServer.EQUIP_ATTRIB, entity.getName());
-			addQueryParameter(urlString, OeeHttpServer.DS_TYPE_ATTRIB, DataSourceType.MESSAGING.name());
+			urlString = addQueryParameter(urlString, OeeHttpServer.EQUIP_ATTRIB, entity.getName());
+			urlString = addQueryParameter(urlString, OeeHttpServer.DS_TYPE_ATTRIB, DataSourceType.MESSAGING.name());
 
 			URL url = new URL(urlString);
 
@@ -773,29 +792,4 @@ public class ClientTestApplication implements MessageListener {
 			showErrorDialog(e);
 		}
 	}
-
-	@FXML
-	private void onTestIt() throws Exception {
-		FXMLLoader loader = LoaderFactory.dashboardLoader();
-		DashboardController dashboardController = loader.getController();
-		SplitPane sp = (SplitPane) loader.getRoot();
-
-		// Create the dialog Stage.
-		Stage dialogStage = new Stage(StageStyle.DECORATED);
-		dialogStage.setTitle("OEE Dashboard");
-		dialogStage.initModality(Modality.NONE);
-		Scene scene = new Scene(sp);
-		dialogStage.setScene(scene);
-
-		// get the controller
-		dashboardController.setDialogStage(dialogStage);
-		dashboardController.buildDashboardTiles();
-
-		dashboardController.setEquipmentLoss(EquipmentLossManager.getEquipmentLoss(null));
-		dashboardController.displayLosses();
-
-		// Show the dialog and wait until the user closes it
-		dashboardController.getDialogStage().showAndWait();
-	}
-
 }

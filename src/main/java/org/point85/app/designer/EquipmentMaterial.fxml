@@ -34,7 +34,7 @@
                   <Insets right="10.0" />
                </padding>
             </Label>
-            <Label text="Ideal Run Rate" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+            <Label text="Design Speed" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                <padding>
                   <Insets right="10.0" />
                </padding>
