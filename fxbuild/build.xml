@@ -373,6 +373,13 @@
 				<include name="**/*" />
 			</fileset>
 		</copy>
+		
+		<!-- copy database files -->
+		<copy todir="${dist.dir}">
+			<fileset dir="../database">
+				<include name="**/*" />
+			</fileset>
+		</copy>
 			
 		<copy file="../log4j.properties" todir="${dist.dir}/conf"/>
 		<copy file="../run-designer-app.bat" todir="${dist.dir}/bin"/>

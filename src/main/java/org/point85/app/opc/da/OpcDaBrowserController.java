@@ -14,7 +14,7 @@ import org.point85.app.ImageManager;
 import org.point85.app.Images;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.domain.opc.da.OpcDaBrowserLeaf;
-import org.point85.domain.opc.da.OpcDaClient;
+import org.point85.domain.opc.da.DaOpcClient;
 import org.point85.domain.opc.da.OpcDaMonitoredGroup;
 import org.point85.domain.opc.da.OpcDaServerStatus;
 import org.point85.domain.opc.da.OpcDaSource;
@@ -235,7 +235,7 @@ public class OpcDaBrowserController extends OpcDaController {
 			this.taTagValue.setText(value);
 
 			// timestamp
-			ZonedDateTime zdt = OpcDaClient.fromFiletime(itemStateEntry.getValue().getTimestamp());
+			ZonedDateTime zdt = DaOpcClient.fromFiletime(itemStateEntry.getValue().getTimestamp());
 			this.lbTagTimestamp.setText(zdt.toString());
 		}
 	}

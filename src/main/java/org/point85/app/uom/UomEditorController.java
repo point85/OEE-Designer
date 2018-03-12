@@ -34,6 +34,7 @@ import org.point85.app.Images;
 import org.point85.app.LoaderFactory;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
+import org.point85.domain.DomainUtils;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.uom.MeasurementSystem;
 import org.point85.domain.uom.Prefix;
@@ -785,7 +786,7 @@ public class UomEditorController extends DesignerDialogController {
 		if (prefix != null) {
 			scalingFactor = prefix.getFactor();
 		} else {
-			String factor = AppUtils.removeThousandsSeparator(cbScalingFactor.getValue());
+			String factor = DomainUtils.removeThousandsSeparator(cbScalingFactor.getValue());
 
 			if (factor != null && factor.length() > 0) {
 				try {
@@ -804,7 +805,7 @@ public class UomEditorController extends DesignerDialogController {
 		}
 
 		// conversion offset
-		String offsetValue = AppUtils.removeThousandsSeparator(tfOffset.getText());
+		String offsetValue = DomainUtils.removeThousandsSeparator(tfOffset.getText());
 		double offset = 0d;
 
 		if (offsetValue != null && offsetValue.length() > 0) {

@@ -21,6 +21,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -41,6 +42,9 @@ public class EquipmentMaterialController extends DesignerController {
 
 	@FXML
 	private Label lbMatlDescription;
+
+	@FXML
+	private CheckBox ckDefaultMaterial;
 
 	@FXML
 	private Button btFindMaterial;
@@ -89,6 +93,9 @@ public class EquipmentMaterialController extends DesignerController {
 
 	@FXML
 	private TableColumn<EquipmentMaterial, String> rejectUnitCol;
+
+	@FXML
+	private TableColumn<EquipmentMaterial, String> defaultCol;
 
 	void initialize(DesignerApplication app) throws Exception {
 		setApp(app);
@@ -156,6 +163,15 @@ public class EquipmentMaterialController extends DesignerController {
 			}
 			return property;
 		});
+
+		// default
+		defaultCol.setCellValueFactory(cellDataFeatures -> {
+			SimpleStringProperty property = null;
+			if (cellDataFeatures.getValue() != null) {
+				property = new SimpleStringProperty(cellDataFeatures.getValue().isDefault().toString());
+			}
+			return property;
+		});
 	}
 
 	void showMaterial(Equipment equipment) {
@@ -212,10 +228,10 @@ public class EquipmentMaterialController extends DesignerController {
 			if (material == null) {
 				return;
 			}
-			
+
 			// add material to text field
 			updateMaterialData(material);
-			
+
 			if (selectedEquipmentMaterial == null) {
 				selectedEquipmentMaterial = new EquipmentMaterial();
 			}
@@ -268,6 +284,7 @@ public class EquipmentMaterialController extends DesignerController {
 	void clearEditor() {
 		this.lbMatlId.setText("");
 		this.lbMatlDescription.setText("");
+		this.ckDefaultMaterial.setSelected(false);
 		this.tfTargetOEE.setText("");
 		this.tfIRR.setText("");
 		this.lbIRRUnit.setText("");
@@ -315,6 +332,7 @@ public class EquipmentMaterialController extends DesignerController {
 				material = PersistenceService.instance().fetchMaterialByName(lbMatlId.getText());
 				selectedEquipmentMaterial.setMaterial(material);
 			}
+			selectedEquipmentMaterial.setDefault(ckDefaultMaterial.isSelected());
 
 			// OEE target
 			String target = tfTargetOEE.getText();
@@ -342,10 +360,9 @@ public class EquipmentMaterialController extends DesignerController {
 
 			// mark dirty
 			getApp().getPhysicalModelController().markSelectedPlantEntity();
-			
 
-			//tvMaterial.refresh();
-			//selectedEquipmentMaterial = null;
+			// tvMaterial.refresh();
+			// selectedEquipmentMaterial = null;
 			showMaterial(equipment);
 
 		} catch (Exception e) {
@@ -406,26 +423,27 @@ public class EquipmentMaterialController extends DesignerController {
 
 		// material
 		updateMaterialData(material);
+		ckDefaultMaterial.setSelected(eqm.isDefault());
 
 		// target OEE
 		tfTargetOEE.setText(AppUtils.formatDouble(eqm.getOeeTarget()));
 
 		// design speed
 		tfIRR.setText(AppUtils.formatDouble(eqm.getRunRateAmount()));
-		lbIRRUnit.setText(eqm.getRunRateUOM().getSymbol());
+
+		if (eqm.getRunRateUOM() != null) {
+			lbIRRUnit.setText(eqm.getRunRateUOM().getSymbol());
+		}
 
 		// reject UOM
-		lbRejectUnit.setText(eqm.getRejectUOM().getSymbol());
+		if (eqm.getRejectUOM() != null) {
+			lbRejectUnit.setText(eqm.getRejectUOM().getSymbol());
+		}
 
 		btAddMaterial.setText("Update");
 	}
 
 	public EquipmentMaterial getSelectedEquipmentMaterial() {
-		/*
-		if (selectedEquipmentMaterial == null) {
-			selectedEquipmentMaterial = new EquipmentMaterial();
-		}
-		*/
 		return selectedEquipmentMaterial;
 	}
 

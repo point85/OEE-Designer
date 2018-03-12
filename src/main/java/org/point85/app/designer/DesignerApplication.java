@@ -29,7 +29,7 @@ import org.point85.domain.collector.DataCollector;
 import org.point85.domain.http.HttpSource;
 import org.point85.domain.messaging.MessagingSource;
 import org.point85.domain.opc.da.OpcDaBrowserLeaf;
-import org.point85.domain.opc.da.OpcDaClient;
+import org.point85.domain.opc.da.DaOpcClient;
 import org.point85.domain.opc.ua.UaOpcClient;
 import org.point85.domain.performance.EquipmentLoss;
 import org.point85.domain.performance.EquipmentLossManager;
@@ -677,15 +677,15 @@ public class DesignerApplication {
 		return this.physicalModelController;
 	}
 
-	public OpcDaClient getOpcDaClient() {
+	public DaOpcClient getOpcDaClient() {
 		if (appContext == null) {
 			return null;
 		}
 		
-		OpcDaClient client = appContext.getOpcDaClient();
+		DaOpcClient client = appContext.getOpcDaClient();
 
 		if (client == null) {
-			client = new OpcDaClient();
+			client = new DaOpcClient();
 			appContext.getOpcDaClients().add(client);
 		}
 		return client;

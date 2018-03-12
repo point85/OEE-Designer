@@ -31,6 +31,7 @@ import org.point85.app.ImageManager;
 import org.point85.app.Images;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
+import org.point85.domain.DomainUtils;
 import org.point85.domain.uom.MeasurementSystem;
 import org.point85.domain.uom.Prefix;
 import org.point85.domain.uom.Quantity;
@@ -179,7 +180,7 @@ public class UomConversionController extends DesignerDialogController {
 			tfToAmount.clear();
 
 			// from amount
-			String amount = AppUtils.removeThousandsSeparator(tfFromAmount.getText().trim());
+			String amount = DomainUtils.removeThousandsSeparator(tfFromAmount.getText().trim());
 
 			if (amount == null || amount.length() == 0) {
 				AppUtils.showErrorDialog("An amount to convert from is required.");
