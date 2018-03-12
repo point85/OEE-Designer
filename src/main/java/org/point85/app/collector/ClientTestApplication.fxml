@@ -46,6 +46,7 @@
                                       <columns>
                                         <TreeTableColumn fx:id="ttcReasonName" prefWidth="200.0" text="Name" />
                                         <TreeTableColumn fx:id="ttcReasonDescription" prefWidth="250.0" text="Description" />
+                                          <TreeTableColumn fx:id="ttcLossCategory" prefWidth="200.0" text="Loss" />
                                       </columns>
                                     </TreeTableView>
                                     <Button fx:id="btHttpGetReasons" layoutX="25.0" layoutY="8.0" mnemonicParsing="false" onAction="#onHttpGetReasons" text="HTTP Get Reasons" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />

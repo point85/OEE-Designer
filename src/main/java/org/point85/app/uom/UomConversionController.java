@@ -180,15 +180,15 @@ public class UomConversionController extends DesignerDialogController {
 			tfToAmount.clear();
 
 			// from amount
-			String amount = DomainUtils.removeThousandsSeparator(tfFromAmount.getText().trim());
-
-			if (amount == null || amount.length() == 0) {
+			String text = tfFromAmount.getText().trim();
+			
+			if (text.length() == 0) {
 				AppUtils.showErrorDialog("An amount to convert from is required.");
 				return;
 			}
 
 			// from amount
-			double fromAmount = Quantity.createAmount(amount);
+			double fromAmount = Quantity.createAmount(DomainUtils.removeThousandsSeparator(text));
 
 			// from prefix
 			Prefix fromPrefix = getPrefix(cbFromPrefixes.getSelectionModel().getSelectedItem());

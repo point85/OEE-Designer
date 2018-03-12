@@ -44,7 +44,7 @@
             <Separator orientation="VERTICAL" prefHeight="200.0" />
             <Label text="Loopback Test Value" />
             <TextField fx:id="tfLoopbackValue" promptText="Enter value" />
-            <Button fx:id="btLoopback" mnemonicParsing="false" onAction="#onLoopbackTest" text="Test" />
+            <Button fx:id="btLoopback" mnemonicParsing="false" onAction="#onLoopbackTest" prefWidth="75.0" text="Test" />
          </children>
       </HBox>
    </children>

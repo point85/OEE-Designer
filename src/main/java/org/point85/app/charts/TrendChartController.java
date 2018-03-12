@@ -293,7 +293,10 @@ public class TrendChartController extends DesignerController {
 		case AVAILABILITY:
 			// plot loss category
 			TimeLoss loss = resolvedItem.getReason().getLossCategory();
-			plotData(resolvedItem.getInputValue(), loss.toString());
+
+			if (loss != null) {
+				plotData(resolvedItem.getInputValue(), loss.toString());
+			}
 			break;
 		case JOB:
 			plotData(resolvedItem.getInputValue(), resolvedItem.getOutputValue());

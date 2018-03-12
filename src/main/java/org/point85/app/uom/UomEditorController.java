@@ -38,6 +38,7 @@ import org.point85.domain.DomainUtils;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.uom.MeasurementSystem;
 import org.point85.domain.uom.Prefix;
+import org.point85.domain.uom.Quantity;
 import org.point85.domain.uom.UnitOfMeasure;
 import org.point85.domain.uom.UnitOfMeasure.MeasurementType;
 import org.point85.domain.uom.UnitType;
@@ -786,14 +787,10 @@ public class UomEditorController extends DesignerDialogController {
 		if (prefix != null) {
 			scalingFactor = prefix.getFactor();
 		} else {
-			String factor = DomainUtils.removeThousandsSeparator(cbScalingFactor.getValue());
+			String factor = cbScalingFactor.getValue();
 
 			if (factor != null && factor.length() > 0) {
-				try {
-					scalingFactor = Double.valueOf(factor);
-				} catch (NumberFormatException e) {
-					throw new Exception(factor + " is not a valid number");
-				}
+				scalingFactor = Quantity.createAmount(DomainUtils.removeThousandsSeparator(factor));
 			}
 		}
 
@@ -805,15 +802,11 @@ public class UomEditorController extends DesignerDialogController {
 		}
 
 		// conversion offset
-		String offsetValue = DomainUtils.removeThousandsSeparator(tfOffset.getText());
+		String offsetValue = tfOffset.getText().trim();
 		double offset = 0d;
 
-		if (offsetValue != null && offsetValue.length() > 0) {
-			try {
-				offset = Double.valueOf(offsetValue);
-			} catch (NumberFormatException e) {
-				throw new Exception(offsetValue + " is not a valid number");
-			}
+		if (offsetValue.length() > 0) {
+			offset = Quantity.createAmount(DomainUtils.removeThousandsSeparator(offsetValue));
 		}
 
 		if (abscissaUnit != null) {

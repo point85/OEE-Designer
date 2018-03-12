@@ -393,6 +393,10 @@ public class EquipmentResolverController extends DesignerController {
 	@FXML
 	private void onSelectDataSource() throws Exception {
 		DataSourceType sourceType = this.cbDataSources.getSelectionModel().getSelectedItem();
+		
+		if (sourceType == null) {
+			return;
+		}
 
 		ImageView buttonImage = null;
 		switch (sourceType) {

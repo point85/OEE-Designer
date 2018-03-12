@@ -9,6 +9,8 @@ import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 
 import org.point85.app.AppUtils;
+import org.point85.app.ImageManager;
+import org.point85.app.Images;
 import org.point85.app.LoaderFactory;
 import org.point85.app.charts.DataSubscriber;
 import org.point85.app.charts.TrendChartController;
@@ -29,6 +31,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.SplitPane;
@@ -78,10 +81,13 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 		return spTrendChart;
 	}
 
-	// images for buttons
 	@Override
 	protected void setImages() throws Exception {
 		super.setImages();
+		
+		// loopback test
+		btLoopback.setGraphic(ImageManager.instance().getImageView(Images.EXECUTE));
+		btLoopback.setContentDisplay(ContentDisplay.RIGHT);
 	}
 
 	public void setScriptResolver(ScriptResolver scriptResolver) throws Exception {

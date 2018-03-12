@@ -17,8 +17,6 @@ import java.util.Optional;
 
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
-import org.point85.app.LoaderFactory;
-import org.point85.app.dashboard.DashboardController;
 import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.DataSourceType;
 import org.point85.domain.http.EquipmentEventRequestDto;
@@ -35,7 +33,7 @@ import org.point85.domain.messaging.EquipmentEventMessage;
 import org.point85.domain.messaging.MessageListener;
 import org.point85.domain.messaging.PublisherSubscriber;
 import org.point85.domain.messaging.RoutingKey;
-import org.point85.domain.performance.EquipmentLossManager;
+import org.point85.domain.performance.TimeLoss;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.EntityLevel;
 import org.point85.domain.plant.Material;
@@ -60,7 +58,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -68,9 +65,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 public class ClientTestApplication implements MessageListener {
 	// logger
@@ -101,6 +96,9 @@ public class ClientTestApplication implements MessageListener {
 
 	@FXML
 	private TreeTableColumn<Reason, String> ttcReasonName;
+
+	@FXML
+	private TreeTableColumn<Reason, String> ttcLossCategory;
 
 	@FXML
 	private TreeTableColumn<Reason, String> ttcReasonDescription;
@@ -160,7 +158,7 @@ public class ClientTestApplication implements MessageListener {
 
 	public void start(Stage primaryStage) {
 		try {
-			primaryStage.setTitle("HTTP Test Client");
+			primaryStage.setTitle("HTTP and Messaging Test Client");
 			primaryStage.getIcons().add(ImageManager.instance().getImage(Images.POINT85));
 
 			AnchorPane mainLayout = (AnchorPane) FXMLLoader.load(getClass().getResource("ClientTestApplication.fxml"));
@@ -173,30 +171,31 @@ public class ClientTestApplication implements MessageListener {
 			stop();
 		}
 	}
-	private void setImages() throws Exception  {
+
+	private void setImages() throws Exception {
 		// entity
 		btHttpGetEntities.setGraphic(ImageManager.instance().getImageView(Images.EQUIPMENT));
 		btHttpGetEntities.setContentDisplay(ContentDisplay.RIGHT);
-		
+
 		// materials
 		btHttpGetMaterials.setGraphic(ImageManager.instance().getImageView(Images.MATERIAL));
 		btHttpGetMaterials.setContentDisplay(ContentDisplay.RIGHT);
-		
+
 		// reasons
 		btHttpGetReasons.setGraphic(ImageManager.instance().getImageView(Images.REASON));
 		btHttpGetReasons.setContentDisplay(ContentDisplay.RIGHT);
-		
+
 		// post
 		btHttpPost.setGraphic(ImageManager.instance().getImageView(Images.HTTP));
 		btHttpPost.setContentDisplay(ContentDisplay.RIGHT);
-		
+
 		// send
 		btRmqSend.setGraphic(ImageManager.instance().getImageView(Images.RMQ));
 		btRmqSend.setContentDisplay(ContentDisplay.RIGHT);
 	}
 
 	// called by Java FX
-	public void initialize() throws Exception  {
+	public void initialize() throws Exception {
 		setImages();
 		initializeEntityTable();
 		initializeMaterialTable();
@@ -221,6 +220,9 @@ public class ClientTestApplication implements MessageListener {
 
 		// add the table view listener
 		ttvEntities.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
+			if (newValue == null) {
+				return;
+			}
 			try {
 				onSelectEntity(newValue.getValue());
 			} catch (Exception e) {
@@ -271,9 +273,24 @@ public class ClientTestApplication implements MessageListener {
 			return new SimpleStringProperty(cellDataFeatures.getValue().getValue().getDescription());
 		});
 
+		// reason loss category
+		ttcLossCategory.setCellValueFactory(cellDataFeatures -> {
+			SimpleStringProperty property = null;
+
+			Reason reason = cellDataFeatures.getValue().getValue();
+
+			if (reason != null) {
+				TimeLoss loss = reason.getLossCategory();
+
+				if (loss != null) {
+					property = new SimpleStringProperty(loss.name());
+				}
+			}
+			return property;
+		});
+
 		TreeItem<Reason> root = new TreeItem<>(new Reason("root", "root"));
 		ttvReasons.setShowRoot(false);
-
 		ttvReasons.setRoot(root);
 	}
 
@@ -478,8 +495,13 @@ public class ClientTestApplication implements MessageListener {
 	private void addChildReasonItems(List<ReasonDto> childDtos, TreeItem<Reason> parentItem) {
 
 		for (ReasonDto childDto : childDtos) {
+			// avoid a database query
 			Reason childReason = new Reason(childDto.getName(), childDto.getDescription());
 
+			if (childDto.getLossCategory() != null) {
+				TimeLoss timeLoss = TimeLoss.valueOf(childDto.getLossCategory());
+				childReason.setLossCategory(timeLoss);
+			}
 			TreeItem<Reason> childItem = new TreeItem<>(childReason);
 			parentItem.getChildren().add(childItem);
 
@@ -602,7 +624,13 @@ public class ClientTestApplication implements MessageListener {
 
 			// top-level reasons
 			for (ReasonDto dto : dtoList) {
+				// avoid database query
 				Reason reason = new Reason(dto.getName(), dto.getDescription());
+
+				if (dto.getLossCategory() != null) {
+					TimeLoss timeLoss = TimeLoss.valueOf(dto.getLossCategory());
+					reason.setLossCategory(timeLoss);
+				}
 
 				TreeItem<Reason> reasonItem = new TreeItem<>(reason);
 				addChildReasonItems(dto.getChildren(), reasonItem);
@@ -652,6 +680,7 @@ public class ClientTestApplication implements MessageListener {
 			materials.clear();
 
 			for (MaterialDto dto : dtoList) {
+				// avoid a database query
 				Material material = new Material(dto.getName(), dto.getDescription());
 				material.setCategory(dto.getCategory());
 				materials.add(material);
@@ -760,6 +789,9 @@ public class ClientTestApplication implements MessageListener {
 			cbHttpSourceId.getItems().clear();
 			tfHttpValue.clear();
 
+			if (items.size() == 1) {
+				cbHttpHostPort.getSelectionModel().select(0);
+			}
 		} catch (Exception e) {
 			showErrorDialog(e);
 		}
@@ -788,6 +820,9 @@ public class ClientTestApplication implements MessageListener {
 			cbRmqSourceId.getItems().clear();
 			tfRmqValue.clear();
 
+			if (items.size() == 1) {
+				cbRmqHostPort.getSelectionModel().select(0);
+			}
 		} catch (Exception e) {
 			showErrorDialog(e);
 		}

@@ -3,6 +3,8 @@ package org.point85.app.collector;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
 import org.point85.domain.collector.CollectorServer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,6 +15,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class CollectorApplication {
+	// logger
+	private final Logger logger = LoggerFactory.getLogger(getClass());
+
 	// the collector
 	private CollectorServer collector;
 
@@ -96,13 +101,13 @@ public class CollectorApplication {
 			btRestart.setDisable(false);
 
 		} catch (Exception any) {
+			logger.error(any.getMessage());
 			any.printStackTrace();
-		} finally {
 			try {
-				// pause thread
-				// Thread.sleep(Long.MAX_VALUE);
+				onShutdown();
 			} catch (Exception e) {
-				// e.printStackTrace();
+				logger.error(any.getMessage());
+				e.printStackTrace();
 			}
 		}
 	};
