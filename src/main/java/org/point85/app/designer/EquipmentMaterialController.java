@@ -289,6 +289,7 @@ public class EquipmentMaterialController extends DesignerController {
 		this.tfIRR.setText("");
 		this.lbIRRUnit.setText("");
 		this.lbRejectUnit.setText("");
+		this.btAddMaterial.setText(ADD);
 
 		this.tvMaterial.getSelectionModel().clearSelection();
 	}
@@ -298,7 +299,7 @@ public class EquipmentMaterialController extends DesignerController {
 		try {
 			clearEditor();
 
-			btAddMaterial.setText("Add");
+			btAddMaterial.setText(ADD);
 
 			selectedEquipmentMaterial = null;
 
@@ -440,7 +441,7 @@ public class EquipmentMaterialController extends DesignerController {
 			lbRejectUnit.setText(eqm.getRejectUOM().getSymbol());
 		}
 
-		btAddMaterial.setText("Update");
+		btAddMaterial.setText(UPDATE);
 	}
 
 	public EquipmentMaterial getSelectedEquipmentMaterial() {

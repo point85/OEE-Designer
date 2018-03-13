@@ -46,6 +46,10 @@ public class TrendChartController extends DesignerController {
 	// chart views
 	private static final int INPUT_VALUE_VIEW = 0;
 	private static final int OUTPUT_VALUE_VIEW = 1;
+	
+	// trend button text
+	private static final String START = "Start";
+	private static final String STOP = "Stop";
 
 	// the data provider
 	private DataSubscriber subscriber;
@@ -82,9 +86,6 @@ public class TrendChartController extends DesignerController {
 
 	@FXML
 	private TableView<ResolvedEvent> tvResolvedItems;
-
-	@FXML
-	private TableColumn<ResolvedEvent, Integer> tcNumber;
 
 	@FXML
 	private TableColumn<ResolvedEvent, String> tcItem;
@@ -143,11 +144,6 @@ public class TrendChartController extends DesignerController {
 		spUpdatePeriod.setValueFactory(periodValueFactory);
 	}
 
-	/*
-	 * public void initializeApp(DataSubscriber provider) throws Exception { // data
-	 * provider setProvider(provider); }
-	 */
-
 	private void initializeCharts() throws Exception {
 		// load first value chart controller
 		FXMLLoader loader = LoaderFactory.sampleChartLoader();
@@ -198,11 +194,6 @@ public class TrendChartController extends DesignerController {
 					}
 				});
 
-		// count
-		tcNumber.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleObjectProperty<Integer>(cellDataFeatures.getValue().getNumber());
-		});
-
 		// item id
 		tcItem.setCellValueFactory(cellDataFeatures -> {
 			return new SimpleStringProperty(cellDataFeatures.getValue().getItemId());
@@ -248,18 +239,19 @@ public class TrendChartController extends DesignerController {
 	private void toggleTrendButton() throws Exception {
 		if (subscriber.isSubscribed()) {
 			btToggleTrend.setGraphic(ImageManager.instance().getImageView(Images.STOP));
-			btToggleTrend.setText("Stop");
+			btToggleTrend.setText(STOP);
 		} else {
 			btToggleTrend.setGraphic(ImageManager.instance().getImageView(Images.START));
-			btToggleTrend.setText("Start");
+			btToggleTrend.setText(START);
 		}
 	}
 
 	// images for buttons
 	protected void setButtonImages() throws Exception {
-		// start trend
-		btToggleTrend.setGraphic(ImageManager.instance().getImageView(Images.START));
+		// trend auto starts
+		btToggleTrend.setGraphic(ImageManager.instance().getImageView(Images.STOP));
 		btToggleTrend.setContentDisplay(ContentDisplay.RIGHT);
+		btToggleTrend.setText(STOP);
 
 		// clear trend
 		btResetTrend.setGraphic(ImageManager.instance().getImageView(Images.CLEAR));
@@ -283,7 +275,7 @@ public class TrendChartController extends DesignerController {
 		this.scriptResolver = scriptResolver;
 	}
 
-	public Object invokeResolver(OeeContext context, Object sourceValue, OffsetDateTime dateTime) throws Exception {
+	public ResolvedEvent invokeResolver(OeeContext context, Object sourceValue, OffsetDateTime dateTime) throws Exception {
 		ResolvedEvent resolvedItem = this.equipmentResolver.invokeResolver(scriptResolver, context, sourceValue,
 				dateTime);
 
@@ -330,8 +322,8 @@ public class TrendChartController extends DesignerController {
 		resolvedItems.add(resolvedItem);
 		tvResolvedItems.setItems(resolvedItems);
 		tvResolvedItems.refresh();
-		// TODO
-		return null;
+
+		return resolvedItem;
 	}
 
 	private void plotData(final Object inputValue, final Object plottedValue) throws Exception {
@@ -373,8 +365,9 @@ public class TrendChartController extends DesignerController {
 			// number of points to display
 			dataCount = Integer.valueOf(tfPointCount.getText());
 
-			Integer period = this.spUpdatePeriod.getValue() * 1000;
-			this.scriptResolver.setUpdatePeriod(period);
+			// update period in msec
+			Integer period = spUpdatePeriod.getValue() * 1000;
+			scriptResolver.setUpdatePeriod(period);
 
 			// start plotting
 			onPlot();

@@ -168,10 +168,6 @@ public class ParetoChartController {
 
 	private void layerCharts(StackPane spPareto, BarChart<String, Number> barChart,
 			LineChart<String, Number> lineChart) {
-
-		// configure the overlay
-		//hideChart(barChart);
-		//spPareto.getChildren().addAll(lineChart, barChart);
 		
 		hideChart(lineChart);
 		spPareto.getChildren().addAll(barChart, lineChart);

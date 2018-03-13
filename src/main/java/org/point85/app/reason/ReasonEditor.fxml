@@ -105,11 +105,6 @@
                   <Insets />
                </HBox.margin>
             </Button>
-            <Button fx:id="btCancel" mnemonicParsing="false" onAction="#onCancel" text="Cancel" textAlignment="CENTER">
-               <HBox.margin>
-                  <Insets left="25.0" />
-               </HBox.margin>
-            </Button>
          </children>
       </HBox>
    </children>

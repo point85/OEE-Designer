@@ -13,7 +13,7 @@
 
 <AnchorPane prefHeight="250.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.uom.UomImporterController">
    <children>
-      <TitledPane collapsible="false" layoutX="5.0" layoutY="5.0" text="Choose Unit of Measure" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <TitledPane collapsible="false" layoutX="5.0" layoutY="5.0" text="Choose Unit of Measure to Import" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <content>
             <GridPane hgap="5.0" vgap="15.0">
               <columnConstraints>

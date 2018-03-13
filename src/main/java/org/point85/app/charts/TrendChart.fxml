@@ -21,8 +21,8 @@
          <children>
             <TableView fx:id="tvResolvedItems" layoutX="71.0" layoutY="-11.0" prefHeight="70.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="50.0">
                <columns>
-                  <TableColumn fx:id="tcNumber" prefWidth="75.0" text="Number" />
-                  <TableColumn fx:id="tcItem" prefWidth="150.0" text="Item" />
+                  <TableColumn fx:id="tcNumber" prefWidth="50.0" text="No." />
+                  <TableColumn fx:id="tcItem" prefWidth="200.0" text="Item" />
                   <TableColumn fx:id="tcInputValue" prefWidth="150.0" text="Input Value" />
                   <TableColumn fx:id="tcTimestamp" prefWidth="225.0" text="Timestamp" />
                   <TableColumn fx:id="tcOutputValue" prefWidth="150.0" text="Output Value" />

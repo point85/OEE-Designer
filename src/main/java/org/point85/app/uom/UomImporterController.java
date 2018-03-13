@@ -77,7 +77,7 @@ public class UomImporterController extends DialogController {
 
 		@Override
 		public String toString() {
-			return uom.getSymbol() + " (" + uom.getName() + " )";
+			return uom.getSymbol() + " (" + uom.getName() + ")";
 		}
 	}
 }

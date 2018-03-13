@@ -18,18 +18,13 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.opc.ua.OpcUaBrowserController">
+<AnchorPane prefHeight="800.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.opc.ua.OpcUaBrowserController">
    <children>
       <HBox alignment="CENTER" prefHeight="50.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
             <Button fx:id="btOK" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onOK" text="OK" textAlignment="CENTER">
                <HBox.margin>
                   <Insets right="25.0" />
-               </HBox.margin>
-            </Button>
-            <Button fx:id="btCancel" mnemonicParsing="false" onAction="#onCancel" text="Cancel" textAlignment="CENTER">
-               <HBox.margin>
-                  <Insets left="25.0" />
                </HBox.margin>
             </Button>
          </children>

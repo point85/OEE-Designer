@@ -454,6 +454,8 @@ public class DashboardController extends DialogController implements CategoryCli
 
 		XYChart.Data<Number, String> minorStoppagesData = new XYChart.Data<Number, String>(minorStoppagesLoss,
 				category);
+		
+		/*
 		minorStoppagesData.nodeProperty().addListener(new ChangeListener<Node>() {
 			@Override
 			public void changed(ObservableValue<? extends Node> ov, Node oldNode, final Node node) {
@@ -462,6 +464,7 @@ public class DashboardController extends DialogController implements CategoryCli
 				}
 			}
 		});
+		*/
 
 		minorStoppagePoints.add(minorStoppagesData);
 
@@ -645,6 +648,7 @@ public class DashboardController extends DialogController implements CategoryCli
 	 * places a text label with a bar's value above a bar node for a given
 	 * XYChart.Data
 	 */
+	/*
 	private void displayLabelForData(XYChart.Data<Number, String> data) {
 		final Node node = data.getNode();
 		final Text dataText = new Text(data.getXValue() + "");
@@ -659,6 +663,7 @@ public class DashboardController extends DialogController implements CategoryCli
 			dataText.setLayoutY(Math.round(bounds.getMinY() - dataText.prefHeight(-1) * 0.5));
 		});
 	}
+	*/
 
 	@FXML
 	public void initialize() {
@@ -830,7 +835,7 @@ public class DashboardController extends DialogController implements CategoryCli
 		switch (resolverType) {
 		case AVAILABILITY: {
 			// availability reason
-			tiAvailability.setText(message.getReasonName() + "(" + message.getReasonDescription() + ")");
+			tiAvailability.setText(message.getReasonName() + " (" + message.getReasonDescription() + ")");
 
 			// loss category
 			TimeLoss loss = message.getLoss();

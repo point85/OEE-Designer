@@ -329,13 +329,18 @@ public class UomEditorController extends DesignerDialogController {
 
 		UnitOfMeasure uom = uomImportController.getSelectedUom();
 
-		if (uom != null) {
-			PersistenceService.instance().fetchReferencedUnits(uom);
-
-			PersistenceService.instance().save(uom);
-
-			onRefreshAllUoms();
+		if (uom == null) {
+			return;
 		}
+		
+		// make sure that there is a non-null category
+		uom.getCategory();
+		
+		PersistenceService.instance().fetchReferencedUnits(uom);
+
+		PersistenceService.instance().save(uom);
+
+		onRefreshAllUoms();
 	}
 
 	// update the editor upon selection of a UOM node

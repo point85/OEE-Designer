@@ -19,11 +19,6 @@
                   <Insets right="25.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="btCancel" mnemonicParsing="false" onAction="#onCancel" text="Cancel" textAlignment="CENTER">
-               <HBox.margin>
-                  <Insets left="25.0" />
-               </HBox.margin>
-            </Button>
          </children>
       </HBox>
       <HBox alignment="CENTER_LEFT" layoutX="103.0" layoutY="14.0" prefHeight="50.0" spacing="20.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">

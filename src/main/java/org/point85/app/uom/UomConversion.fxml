@@ -56,7 +56,6 @@
       <HBox alignment="CENTER" layoutX="210.0" layoutY="223.0" prefHeight="50.0" spacing="25.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
             <Button fx:id="btOK" mnemonicParsing="false" onAction="#onOK" text="OK" />
-            <Button fx:id="btCancel" mnemonicParsing="false" onAction="#onCancel" text="Cancel" />
          </children>
       </HBox>
    </children>

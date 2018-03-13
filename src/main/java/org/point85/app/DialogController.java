@@ -48,6 +48,9 @@ public abstract class DialogController {
 		if (btCancel != null) {
 			btCancel.setGraphic(ImageManager.instance().getImageView(Images.CANCEL));
 			btCancel.setContentDisplay(ContentDisplay.LEFT);
+		} else {
+			// just one button
+			btOK.setText("Done");
 		}
 	}
 }

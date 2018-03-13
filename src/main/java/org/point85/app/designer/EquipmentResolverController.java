@@ -292,7 +292,7 @@ public class EquipmentResolverController extends DesignerController {
 		// update period
 		this.tfUpdatePeriod.setText(String.valueOf(scriptResolver.getUpdatePeriod()));
 
-		btAddResolver.setText("Update");
+		btAddResolver.setText(UPDATE);
 	}
 
 	void showResolvers(Equipment equipment) throws Exception {
@@ -629,6 +629,8 @@ public class EquipmentResolverController extends DesignerController {
 		this.lbScript.setText(null);
 
 		this.tfUpdatePeriod.setText(null);
+		
+		this.btAddResolver.setText(ADD);
 	}
 
 	@FXML
@@ -638,7 +640,7 @@ public class EquipmentResolverController extends DesignerController {
 
 			selectedScriptResolver = null;
 
-			this.btAddResolver.setText("Add");
+			this.btAddResolver.setText(ADD);
 
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
