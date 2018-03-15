@@ -24,8 +24,8 @@ import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Equipment;
 import org.point85.domain.plant.PlantEntity;
 import org.point85.domain.script.ResolverFunction;
-import org.point85.domain.script.ScriptResolver;
-import org.point85.domain.script.ScriptResolverType;
+import org.point85.domain.script.EventResolver;
+import org.point85.domain.script.EventResolverType;
 import org.point85.domain.web.WebSource;
 
 import javafx.beans.property.SimpleObjectProperty;
@@ -44,13 +44,13 @@ import javafx.scene.image.ImageView;
 
 public class EquipmentResolverController extends DesignerController {
 	// availability reason resolvers
-	private ObservableList<ScriptResolver> scriptResolvers = FXCollections.observableArrayList(new ArrayList<>());
+	private ObservableList<EventResolver> scriptResolvers = FXCollections.observableArrayList(new ArrayList<>());
 
 	// reason resolver being edited
-	private ScriptResolver selectedScriptResolver;
+	private EventResolver selectedScriptResolver;
 
 	@FXML
-	private ComboBox<ScriptResolverType> cbResolverTypes;
+	private ComboBox<EventResolverType> cbResolverTypes;
 
 	@FXML
 	private ComboBox<DataSourceType> cbDataSources;
@@ -92,39 +92,39 @@ public class EquipmentResolverController extends DesignerController {
 	private Button btRemoveResolver;
 
 	@FXML
-	private TableView<ScriptResolver> tvResolvers;
+	private TableView<EventResolver> tvResolvers;
 
 	@FXML
-	private TableColumn<ScriptResolver, String> tcCollector;
+	private TableColumn<EventResolver, String> tcCollector;
 
 	@FXML
-	private TableColumn<ScriptResolver, String> tcResolverType;
+	private TableColumn<EventResolver, String> tcResolverType;
 
 	@FXML
-	private TableColumn<ScriptResolver, String> tcDataSourceType;
+	private TableColumn<EventResolver, String> tcDataSourceType;
 
 	@FXML
-	private TableColumn<ScriptResolver, String> tcServer;
+	private TableColumn<EventResolver, String> tcServer;
 
 	@FXML
-	private TableColumn<ScriptResolver, String> tcSourceId;
+	private TableColumn<EventResolver, String> tcSourceId;
 
 	@FXML
-	private TableColumn<ScriptResolver, String> tcScript;
+	private TableColumn<EventResolver, String> tcScript;
 
 	@FXML
-	private TableColumn<ScriptResolver, Integer> tcUpdatePeriod;
+	private TableColumn<EventResolver, Integer> tcUpdatePeriod;
 
 	@FXML
-	private TableColumn<ScriptResolver, String> tcDataType;
+	private TableColumn<EventResolver, String> tcDataType;
 
 	@FXML
 	private Button btRun;
 
-	public ScriptResolver getSelectedResolver() {
+	public EventResolver getSelectedResolver() {
 		if (selectedScriptResolver == null) {
 			// new resolver
-			selectedScriptResolver = new ScriptResolver();
+			selectedScriptResolver = new EventResolver();
 		}
 		return selectedScriptResolver;
 	}
@@ -145,7 +145,7 @@ public class EquipmentResolverController extends DesignerController {
 		cbDataSources.getItems().addAll(DataSourceType.values());
 
 		// resolver types
-		cbResolverTypes.getItems().addAll(ScriptResolverType.values());
+		cbResolverTypes.getItems().addAll(EventResolverType.values());
 
 		// images
 		setImages();
@@ -184,7 +184,7 @@ public class EquipmentResolverController extends DesignerController {
 
 		// resolver type column
 		tcResolverType.setCellValueFactory(cellDataFeatures -> {
-			ScriptResolverType type = cellDataFeatures.getValue().getType();
+			EventResolverType type = cellDataFeatures.getValue().getType();
 			SimpleStringProperty property = null;
 
 			if (type != null) {
@@ -251,7 +251,7 @@ public class EquipmentResolverController extends DesignerController {
 		});
 	}
 
-	private void onSelectScriptResolver(ScriptResolver scriptResolver) {
+	private void onSelectScriptResolver(EventResolver scriptResolver) {
 		if (scriptResolver == null) {
 			return;
 		}
@@ -303,14 +303,14 @@ public class EquipmentResolverController extends DesignerController {
 		clearEditor();
 
 		scriptResolvers.clear();
-		for (ScriptResolver resolver : equipment.getScriptResolvers()) {
+		for (EventResolver resolver : equipment.getScriptResolvers()) {
 			scriptResolvers.add(resolver);
 		}
 		tvResolvers.refresh();
 	}
 
 	void setResolvers(Equipment equipment) {
-		Set<ScriptResolver> resolvers = new HashSet<>();
+		Set<EventResolver> resolvers = new HashSet<>();
 		resolvers.clear();
 		resolvers.addAll(scriptResolvers);
 		equipment.setScriptResolvers(resolvers);
@@ -376,7 +376,7 @@ public class EquipmentResolverController extends DesignerController {
 	@FXML
 	private void onSelectResolverType() {
 		if (getSelectedResolver() != null) {
-			ScriptResolverType type = this.cbResolverTypes.getSelectionModel().getSelectedItem();
+			EventResolverType type = this.cbResolverTypes.getSelectionModel().getSelectedItem();
 
 			if (type != null) {
 				getSelectedResolver().setType(type);
@@ -530,7 +530,7 @@ public class EquipmentResolverController extends DesignerController {
 		String sourceId = "";
 
 		if (entity != null) {
-			ScriptResolverType resolverType = cbResolverTypes.getSelectionModel().getSelectedItem();
+			EventResolverType resolverType = cbResolverTypes.getSelectionModel().getSelectedItem();
 			DataSourceType sourceType = cbDataSources.getSelectionModel().getSelectedItem();
 
 			if (resolverType != null) {
@@ -564,26 +564,26 @@ public class EquipmentResolverController extends DesignerController {
 			}
 
 			// resolver type
-			ScriptResolverType resolverType = cbResolverTypes.getSelectionModel().getSelectedItem();
+			EventResolverType resolverType = cbResolverTypes.getSelectionModel().getSelectedItem();
 
 			if (resolverType == null) {
 				throw new Exception("The script resolver type must be selected.");
 			}
 
-			ScriptResolver scriptResolver = getSelectedResolver();
+			EventResolver scriptResolver = getSelectedResolver();
 
 			scriptResolver.setType(resolverType);
 			scriptResolver.setDataType(lbDataType.getText());
 
 			if (scriptResolver.getScript() == null || scriptResolver.getScript().length() == 0) {
 				if (resolverType.isAvailability()) {
-					scriptResolver.setScript(ScriptResolver.getPassthroughScript());
+					scriptResolver.setScript(EventResolver.getPassthroughScript());
 				} else if (resolverType.isProduction()) {
-					scriptResolver.setScript(ScriptResolver.getDefaultProductionScript());
+					scriptResolver.setScript(EventResolver.getDefaultProductionScript());
 				} else if (resolverType.isMaterial()) {
-					scriptResolver.setScript(ScriptResolver.getDefaultMaterialScript());
+					scriptResolver.setScript(EventResolver.getDefaultMaterialScript());
 				} else if (resolverType.isJob()) {
-					scriptResolver.setScript(ScriptResolver.getDefaultJobScript());
+					scriptResolver.setScript(EventResolver.getDefaultJobScript());
 				}
 			}
 

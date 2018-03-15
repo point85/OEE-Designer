@@ -47,15 +47,15 @@
             </Label>
             <Label fx:id="lbScript" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="5" />
             <Button fx:id="btEditScript" mnemonicParsing="false" onAction="#onEditScript" prefHeight="16.0" prefWidth="16.0" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
-            <Label text="Source Type" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+            <Label text="Source Type" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin>
             </Label>
-            <ComboBox fx:id="cbDataSources" maxWidth="1.7976931348623157E308" onAction="#onSelectDataSource" promptText="Data source type" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <ComboBox fx:id="cbDataSources" maxWidth="1.7976931348623157E308" onAction="#onSelectDataSource" promptText="Data source type" GridPane.columnIndex="2" GridPane.rowIndex="2" />
             <TextField fx:id="tfSourceId" promptText="Unique identifier of data value" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-            <Label text="Resolver For" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-            <ComboBox fx:id="cbResolverTypes" maxWidth="1.7976931348623157E308" onAction="#onSelectResolverType" promptText="Type of resolver" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            <Label text="Resolver For" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+            <ComboBox fx:id="cbResolverTypes" maxWidth="1.7976931348623157E308" onAction="#onSelectResolverType" promptText="Type of resolver" GridPane.columnIndex="2" GridPane.rowIndex="1" />
             <Label text="Data Type" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
             <Label fx:id="lbDataType" GridPane.columnIndex="2" GridPane.rowIndex="4" />
             <Label text="Collector Host" GridPane.columnIndex="1" GridPane.halignment="RIGHT" />

@@ -15,7 +15,7 @@ import org.point85.domain.plant.Material;
 import org.point85.domain.plant.PlantEntity;
 import org.point85.domain.plant.Reason;
 import org.point85.domain.script.ResolverFunction;
-import org.point85.domain.script.ScriptResolver;
+import org.point85.domain.script.EventResolver;
 
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -29,11 +29,11 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 
-public class ScriptResolverController extends DesignerDialogController {
+public class EventResolverController extends DesignerDialogController {
 
 	private ScriptEngine scriptEngine;
 
-	private ScriptResolver scriptResolver;
+	private EventResolver scriptResolver;
 
 	// test value
 	private Object value;
@@ -89,7 +89,7 @@ public class ScriptResolverController extends DesignerDialogController {
 	@FXML
 	private Label lbDataType;
 
-	public void initialize(DesignerApplication app, ScriptResolver resolver) throws Exception {
+	public void initialize(DesignerApplication app, EventResolver resolver) throws Exception {
 		// script engine
 		scriptEngine = new ScriptEngineManager().getEngineByName(EquipmentEventResolver.SCRIPT_ENGINE_NAME);
 
@@ -117,11 +117,11 @@ public class ScriptResolverController extends DesignerDialogController {
 		});
 	}
 
-	public ScriptResolver getResolver() {
+	public EventResolver getResolver() {
 		return scriptResolver;
 	}
 
-	private void setResolver(ScriptResolver resolver) {
+	private void setResolver(EventResolver resolver) {
 		this.scriptResolver = resolver;
 		lbDataType.setText(resolver.getDataType());
 	}
@@ -202,7 +202,7 @@ public class ScriptResolverController extends DesignerDialogController {
 		this.lastValue = value;
 	}
 
-	public void showFunctionScript(ScriptResolver scriptResolver) throws Exception {
+	public void showFunctionScript(EventResolver scriptResolver) throws Exception {
 		if (scriptResolver == null) {
 			return;
 		}

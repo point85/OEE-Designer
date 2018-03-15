@@ -17,7 +17,7 @@ import org.point85.domain.messaging.MessageType;
 import org.point85.domain.messaging.MessagingSource;
 import org.point85.domain.messaging.PublisherSubscriber;
 import org.point85.domain.messaging.RoutingKey;
-import org.point85.domain.script.ScriptResolver;
+import org.point85.domain.script.EventResolver;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Envelope;
@@ -82,7 +82,7 @@ public class MessagingTrendController extends DesignerDialogController implement
 		super.setImages();
 	}
 
-	public void setScriptResolver(ScriptResolver scriptResolver) throws Exception {
+	public void setScriptResolver(EventResolver scriptResolver) throws Exception {
 		trendChartController.setScriptResolver(scriptResolver);
 
 		lbSourceId.setText("Equipment: " + scriptResolver.getEquipment().getName() + ", Source Id: "
@@ -220,7 +220,7 @@ public class MessagingTrendController extends DesignerDialogController implement
 				throw new Exception("The trend is not connected to an RMQ broker.");
 			}
 
-			ScriptResolver scriptResolver = trendChartController.getScriptResolver();
+			EventResolver scriptResolver = trendChartController.getScriptResolver();
 			// MessagingSource dataSource = (MessagingSource)
 			// scriptResolver.getDataSource();
 

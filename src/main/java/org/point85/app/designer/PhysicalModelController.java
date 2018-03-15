@@ -20,8 +20,8 @@ import org.point85.domain.plant.ProductionLine;
 import org.point85.domain.plant.Site;
 import org.point85.domain.plant.WorkCell;
 import org.point85.domain.schedule.WorkSchedule;
-import org.point85.domain.script.ScriptResolver;
-import org.point85.domain.script.ScriptResolverType;
+import org.point85.domain.script.EventResolver;
+import org.point85.domain.script.EventResolverType;
 
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
@@ -536,8 +536,8 @@ public class PhysicalModelController extends DesignerController {
 	@FXML
 	private void onShowScriptEditor() {
 		try {
-			ScriptResolver scriptResolver = new ScriptResolver();
-			scriptResolver.setType(ScriptResolverType.OTHER);
+			EventResolver scriptResolver = new EventResolver();
+			scriptResolver.setType(EventResolverType.OTHER);
 			// scriptResolver.setDataType(lbDataType.getText());
 
 			this.getApp().showScriptEditor(scriptResolver);

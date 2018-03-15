@@ -20,7 +20,7 @@ import org.point85.domain.DomainUtils;
 import org.point85.domain.opc.ua.OpcUaAsynchListener;
 import org.point85.domain.opc.ua.OpcUaServerStatus;
 import org.point85.domain.opc.ua.OpcUaSource;
-import org.point85.domain.script.ScriptResolver;
+import org.point85.domain.script.EventResolver;
 
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -140,7 +140,7 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 		this.monitoredNodeId = nodeId;
 	}
 
-	public void setScriptResolver(ScriptResolver scriptResolver) throws Exception {
+	public void setScriptResolver(EventResolver scriptResolver) throws Exception {
 		trendChartController.setScriptResolver(scriptResolver);
 
 		OpcUaSource dataSource = (OpcUaSource) scriptResolver.getDataSource();

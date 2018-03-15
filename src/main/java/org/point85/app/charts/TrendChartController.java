@@ -17,8 +17,8 @@ import org.point85.domain.plant.EquipmentEventResolver;
 import org.point85.domain.plant.Reason;
 import org.point85.domain.script.OeeContext;
 import org.point85.domain.script.ResolvedEvent;
-import org.point85.domain.script.ScriptResolver;
-import org.point85.domain.script.ScriptResolverType;
+import org.point85.domain.script.EventResolver;
+import org.point85.domain.script.EventResolverType;
 
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
@@ -57,7 +57,7 @@ public class TrendChartController extends DesignerController {
 	private EquipmentEventResolver equipmentResolver = new EquipmentEventResolver();
 
 	// script resolver for input value
-	private ScriptResolver scriptResolver;
+	private EventResolver scriptResolver;
 
 	// data for table view
 	private ObservableList<ResolvedEvent> resolvedItems = FXCollections.observableArrayList(new ArrayList<>());
@@ -267,11 +267,11 @@ public class TrendChartController extends DesignerController {
 		this.subscriber = provider;
 	}
 
-	public ScriptResolver getScriptResolver() {
+	public EventResolver getScriptResolver() {
 		return this.scriptResolver;
 	}
 
-	public void setScriptResolver(ScriptResolver scriptResolver) throws Exception {
+	public void setScriptResolver(EventResolver scriptResolver) throws Exception {
 		this.scriptResolver = scriptResolver;
 	}
 
@@ -279,7 +279,7 @@ public class TrendChartController extends DesignerController {
 		ResolvedEvent resolvedItem = this.equipmentResolver.invokeResolver(scriptResolver, context, sourceValue,
 				dateTime);
 
-		ScriptResolverType type = scriptResolver.getType();
+		EventResolverType type = scriptResolver.getType();
 
 		switch (type) {
 		case AVAILABILITY:

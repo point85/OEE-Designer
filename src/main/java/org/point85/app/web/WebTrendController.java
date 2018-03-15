@@ -7,7 +7,7 @@ import org.point85.app.LoaderFactory;
 import org.point85.app.charts.DataSubscriber;
 import org.point85.app.charts.TrendChartController;
 import org.point85.app.designer.DesignerDialogController;
-import org.point85.domain.script.ScriptResolver;
+import org.point85.domain.script.EventResolver;
 import org.point85.domain.web.WebSource;
 
 import javafx.application.Platform;
@@ -71,7 +71,7 @@ public class WebTrendController extends DesignerDialogController implements Data
 		return spTrendChart;
 	}
 
-	public void setScriptResolver(ScriptResolver scriptResolver) throws Exception {
+	public void setScriptResolver(EventResolver scriptResolver) throws Exception {
 		trendChartController.setScriptResolver(scriptResolver);
 
 		lbSourceId.setText("Equipment: " + scriptResolver.getEquipment().getName() + ", Source Id: "
@@ -81,42 +81,14 @@ public class WebTrendController extends DesignerDialogController implements Data
 	@Override
 	@FXML
 	protected void onOK() {
-		// onStopServer();
 		super.onOK();
 	}
 
 	@Override
 	@FXML
 	protected void onCancel() {
-		// onStopServer();
 		super.onCancel();
 	}
-
-	/*
-	 * public void onStartServer() { try { if (httpServer == null) {
-	 * piConnection.setVisible(true);
-	 * 
-	 * HttpSource dataSource = (HttpSource)
-	 * trendChartController.getScriptResolver().getDataSource();
-	 * 
-	 * int port = dataSource.getPort();
-	 * 
-	 * httpServer = new OeeHttpServer(port); httpServer.setDataChangeListener(this);
-	 * httpServer.startup(); lbState.setText(httpServer.getState().toString());
-	 * lbState.setTextFill(STARTED_COLOR);
-	 * 
-	 * // start the trend trendChartController.onStartTrending(); } } catch
-	 * (Exception e) { AppUtils.showErrorDialog(e); } finally {
-	 * piConnection.setVisible(false); } }
-	 */
-
-	/*
-	 * private void onStopServer() { if (httpServer != null) { // stop the trend
-	 * trendChartController.onStopTrending();
-	 * 
-	 * httpServer.shutdown(); lbState.setText(httpServer.getState().toString());
-	 * lbState.setTextFill(STOPPED_COLOR); httpServer = null; } }
-	 */
 
 	@Override
 	public boolean isSubscribed() {
@@ -136,7 +108,7 @@ public class WebTrendController extends DesignerDialogController implements Data
 	@FXML
 	private void onTest() {
 		try {
-			ScriptResolver scriptResolver = trendChartController.getScriptResolver();
+			EventResolver scriptResolver = trendChartController.getScriptResolver();
 			WebSource dataSource = (WebSource) scriptResolver.getDataSource();
 
 			String dataValue = tfValue.getText();

@@ -19,7 +19,7 @@ import org.point85.domain.http.EquipmentEventRequestDto;
 import org.point85.domain.http.HttpEventListener;
 import org.point85.domain.http.HttpSource;
 import org.point85.domain.http.OeeHttpServer;
-import org.point85.domain.script.ScriptResolver;
+import org.point85.domain.script.EventResolver;
 
 import com.google.gson.Gson;
 
@@ -90,7 +90,7 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 		btLoopback.setContentDisplay(ContentDisplay.RIGHT);
 	}
 
-	public void setScriptResolver(ScriptResolver scriptResolver) throws Exception {
+	public void setScriptResolver(EventResolver scriptResolver) throws Exception {
 		trendChartController.setScriptResolver(scriptResolver);
 
 		lbSourceId.setText("Equipment: " + scriptResolver.getEquipment().getName() + ", Source Id: "
@@ -189,7 +189,7 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 	private void onLoopbackTest() {
 		try {
 			// POST event
-			ScriptResolver scriptResolver = trendChartController.getScriptResolver();
+			EventResolver scriptResolver = trendChartController.getScriptResolver();
 			HttpSource dataSource = (HttpSource) scriptResolver.getDataSource();
 
 			URL url = new URL(

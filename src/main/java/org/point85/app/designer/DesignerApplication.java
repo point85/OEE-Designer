@@ -20,7 +20,7 @@ import org.point85.app.opc.ua.OpcUaTreeNode;
 import org.point85.app.opc.ua.OpcUaTrendController;
 import org.point85.app.reason.ReasonEditorController;
 import org.point85.app.schedule.WorkScheduleEditorController;
-import org.point85.app.script.ScriptResolverController;
+import org.point85.app.script.EventResolverController;
 import org.point85.app.uom.UomConversionController;
 import org.point85.app.uom.UomEditorController;
 import org.point85.app.web.WebServerController;
@@ -28,8 +28,8 @@ import org.point85.app.web.WebTrendController;
 import org.point85.domain.collector.DataCollector;
 import org.point85.domain.http.HttpSource;
 import org.point85.domain.messaging.MessagingSource;
-import org.point85.domain.opc.da.OpcDaBrowserLeaf;
 import org.point85.domain.opc.da.DaOpcClient;
+import org.point85.domain.opc.da.OpcDaBrowserLeaf;
 import org.point85.domain.opc.ua.UaOpcClient;
 import org.point85.domain.performance.EquipmentLoss;
 import org.point85.domain.performance.EquipmentLossManager;
@@ -39,8 +39,8 @@ import org.point85.domain.plant.Material;
 import org.point85.domain.plant.PlantEntity;
 import org.point85.domain.plant.Reason;
 import org.point85.domain.schedule.WorkSchedule;
+import org.point85.domain.script.EventResolver;
 import org.point85.domain.script.OeeContext;
-import org.point85.domain.script.ScriptResolver;
 import org.point85.domain.uom.UnitOfMeasure;
 import org.point85.domain.web.WebSource;
 import org.slf4j.Logger;
@@ -93,7 +93,7 @@ public class DesignerApplication {
 	private DataCollectorController dataCollectorController;
 
 	// script resolver controller
-	private ScriptResolverController scriptController;
+	private EventResolverController scriptController;
 
 	// UOM conversion controller
 	private UomConversionController uomConversionController;
@@ -227,7 +227,9 @@ public class DesignerApplication {
 		}
 
 		// Show the dialog and wait until the user closes it
-		reasonController.getDialogStage().showAndWait();
+		if (!reasonController.getDialogStage().isShowing()) {
+			reasonController.getDialogStage().showAndWait();
+		}
 
 		return reasonController.getSelectedReason();
 	}
@@ -253,7 +255,9 @@ public class DesignerApplication {
 		}
 
 		// Show the dialog and wait until the user closes it
-		materialController.getDialogStage().showAndWait();
+		if (!materialController.getDialogStage().isShowing()) {
+			materialController.getDialogStage().showAndWait();
+		}
 
 		return materialController.getSelectedMaterial();
 	}
@@ -310,7 +314,9 @@ public class DesignerApplication {
 		}
 
 		// Show the dialog and wait until the user closes it
-		scheduleController.getDialogStage().showAndWait();
+		if (!scheduleController.getDialogStage().isShowing()) {
+			scheduleController.getDialogStage().showAndWait();
+		}
 
 		return scheduleController.getSelectedSchedule();
 	}
@@ -336,7 +342,9 @@ public class DesignerApplication {
 		}
 
 		// Show the dialog and wait until the user closes it
-		opcDaBrowserController.getDialogStage().showAndWait();
+		if (!opcDaBrowserController.getDialogStage().isShowing()) {
+			opcDaBrowserController.getDialogStage().showAndWait();
+		}
 
 		return opcDaBrowserController.getSelectedTag();
 	}
@@ -362,12 +370,14 @@ public class DesignerApplication {
 		}
 
 		// Show the dialog and wait until the user closes it
-		opcUaBrowserController.getDialogStage().showAndWait();
+		if (!opcUaBrowserController.getDialogStage().isShowing()) {
+			opcUaBrowserController.getDialogStage().showAndWait();
+		}
 
 		return opcUaBrowserController.getSelectedNodeId();
 	}
 
-	String showScriptEditor(ScriptResolver scriptResolver) throws Exception {
+	String showScriptEditor(EventResolver scriptResolver) throws Exception {
 		// Load the fxml file and create a new stage for the pop-up dialog.
 		if (scriptController == null) {
 			FXMLLoader loader = LoaderFactory.scriptResolverLoader();
@@ -387,11 +397,13 @@ public class DesignerApplication {
 			scriptController.initialize(this, scriptResolver);
 		}
 
-		// display old script
+		// display current script
 		scriptController.showFunctionScript(scriptResolver);
 
 		// Show the dialog and wait until the user closes it
-		scriptController.getDialogStage().showAndWait();
+		if (!scriptController.getDialogStage().isShowing()) {
+			scriptController.getDialogStage().showAndWait();
+		}
 
 		return scriptController.getResolver().getScript();
 	}
@@ -439,7 +451,9 @@ public class DesignerApplication {
 		}
 
 		// Show the dialog and wait until the user closes it
-		mqBrokerController.getDialogStage().showAndWait();
+		if (!mqBrokerController.getDialogStage().isShowing()) {
+			mqBrokerController.getDialogStage().showAndWait();
+		}
 
 		return mqBrokerController.getSource();
 	}
@@ -463,7 +477,9 @@ public class DesignerApplication {
 		}
 
 		// Show the dialog and wait until the user closes it
-		webServerController.getDialogStage().showAndWait();
+		if (!webServerController.getDialogStage().isShowing()) {
+			webServerController.getDialogStage().showAndWait();
+		}
 
 		return webServerController.getSource();
 	}
@@ -487,7 +503,9 @@ public class DesignerApplication {
 		}
 
 		// Show the dialog and wait until the user closes it
-		dataCollectorController.getDialogStage().showAndWait();
+		if (!dataCollectorController.getDialogStage().isShowing()) {
+			dataCollectorController.getDialogStage().showAndWait();
+		}
 
 		return dataCollectorController.getCollector();
 	}
@@ -511,10 +529,12 @@ public class DesignerApplication {
 		}
 
 		// Show the dialog and wait until the user closes it
-		uomConversionController.getDialogStage().showAndWait();
+		if (!uomConversionController.getDialogStage().isShowing()) {
+			uomConversionController.getDialogStage().showAndWait();
+		}
 	}
 
-	void showOpcDaTrendDialog(ScriptResolver scriptResolver) throws Exception {
+	void showOpcDaTrendDialog(EventResolver scriptResolver) throws Exception {
 		if (opcDaTrendController == null) {
 			// Load the fxml file and create a new stage for the pop-up dialog.
 			FXMLLoader loader = LoaderFactory.opcDaTrendLoader();
@@ -547,10 +567,12 @@ public class DesignerApplication {
 		opcDaTrendController.setScriptResolver(scriptResolver);
 
 		// show the window
-		opcDaTrendController.getDialogStage().show();
+		if (!opcDaTrendController.getDialogStage().isShowing()) {
+			opcDaTrendController.getDialogStage().show();
+		}
 	}
 
-	void showOpcUaTrendDialog(ScriptResolver scriptResolver) throws Exception {
+	void showOpcUaTrendDialog(EventResolver scriptResolver) throws Exception {
 		if (opcUaTrendController == null) {
 			// Load the fxml file and create a new stage for the pop-up dialog.
 			FXMLLoader loader = LoaderFactory.opcUaTrendLoader();
@@ -584,10 +606,12 @@ public class DesignerApplication {
 		opcUaTrendController.setScriptResolver(scriptResolver);
 
 		// show the window
-		opcUaTrendController.getDialogStage().show();
+		if (!opcUaTrendController.getDialogStage().isShowing()) {
+			opcUaTrendController.getDialogStage().show();
+		}
 	}
 
-	void showHttpTrendDialog(ScriptResolver scriptResolver) throws Exception {
+	void showHttpTrendDialog(EventResolver scriptResolver) throws Exception {
 		if (httpTrendController == null) {
 			// Load the fxml file and create a new stage for the pop-up dialog.
 			FXMLLoader loader = LoaderFactory.httpTrendLoader();
@@ -622,11 +646,13 @@ public class DesignerApplication {
 		// start HTTP server
 		httpTrendController.onStartServer();
 
-		// show the window
-		httpTrendController.getDialogStage().show();
+		// show the trend
+		if (!httpTrendController.getDialogStage().isShowing()) {
+			httpTrendController.getDialogStage().show();
+		}
 	}
 
-	void showWebTrendDialog(ScriptResolver scriptResolver) throws Exception {
+	void showWebTrendDialog(EventResolver scriptResolver) throws Exception {
 		if (webTrendController == null) {
 			// Load the fxml file and create a new stage for the pop-up dialog.
 			FXMLLoader loader = LoaderFactory.webTrendLoader();
@@ -658,11 +684,13 @@ public class DesignerApplication {
 		// set the script resolver
 		webTrendController.setScriptResolver(scriptResolver);
 
-		// show the window
-		webTrendController.getDialogStage().show();
+		// show the trend
+		if (!webTrendController.getDialogStage().isShowing()) {
+			webTrendController.getDialogStage().show();
+		}
 	}
 
-	void showMessagingTrendDialog(ScriptResolver scriptResolver) throws Exception {
+	void showMessagingTrendDialog(EventResolver scriptResolver) throws Exception {
 		if (messagingTrendController == null) {
 			// Load the fxml file and create a new stage for the pop-up dialog.
 			FXMLLoader loader = LoaderFactory.messagingTrendLoader();
@@ -698,7 +726,9 @@ public class DesignerApplication {
 		messagingTrendController.subscribeToDataSource();
 
 		// show the window
-		messagingTrendController.getDialogStage().show();
+		if (!messagingTrendController.getDialogStage().isShowing()) {
+			messagingTrendController.getDialogStage().show();
+		}
 	}
 
 	public PhysicalModelController getPhysicalModelController() {
@@ -774,7 +804,9 @@ public class DesignerApplication {
 		dashboardDialogController.getDashboardController().displayLosses();
 
 		// Show the dialog and wait until the user closes it
-		dashboardDialogController.getDialogStage().showAndWait();
+		if (!dashboardDialogController.getDialogStage().isShowing()) {
+			dashboardDialogController.getDialogStage().showAndWait();
+		}
 	}
 
 	public UaOpcClient getOpcUaClient() {

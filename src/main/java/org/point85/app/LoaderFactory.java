@@ -19,7 +19,7 @@ import org.point85.app.opc.ua.OpcUaTrendController;
 import org.point85.app.reason.ReasonEditorController;
 import org.point85.app.schedule.TemplateScheduleDialogController;
 import org.point85.app.schedule.WorkScheduleEditorController;
-import org.point85.app.script.ScriptResolverController;
+import org.point85.app.script.EventResolverController;
 import org.point85.app.uom.UomConversionController;
 import org.point85.app.uom.UomEditorController;
 import org.point85.app.uom.UomImporterController;
@@ -84,7 +84,7 @@ public class LoaderFactory {
 	}
 
 	public static FXMLLoader scriptResolverLoader() throws Exception {
-		FXMLLoader fxmlLoader = new FXMLLoader(ScriptResolverController.class.getResource("ScriptResolver.fxml"));
+		FXMLLoader fxmlLoader = new FXMLLoader(EventResolverController.class.getResource("ScriptResolver.fxml"));
 		fxmlLoader.load();
 		return fxmlLoader;
 	}

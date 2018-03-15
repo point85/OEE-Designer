@@ -14,7 +14,7 @@ import org.point85.domain.performance.EquipmentLoss;
 import org.point85.domain.performance.ParetoItem;
 import org.point85.domain.performance.TimeCategory;
 import org.point85.domain.performance.TimeLoss;
-import org.point85.domain.script.ScriptResolverType;
+import org.point85.domain.script.EventResolverType;
 import org.point85.domain.uom.Unit;
 import org.point85.tilesfx.Tile;
 import org.point85.tilesfx.TileBuilder;
@@ -830,7 +830,7 @@ public class DashboardController extends DialogController implements CategoryCli
 	}
 
 	public void update(CollectorResolvedEventMessage message) {
-		ScriptResolverType resolverType = message.getResolverType();
+		EventResolverType resolverType = message.getResolverType();
 
 		switch (resolverType) {
 		case AVAILABILITY: {

@@ -17,7 +17,7 @@ import org.point85.domain.opc.da.OpcDaVariantType;
 import org.point85.domain.opc.da.TagGroupInfo;
 import org.point85.domain.opc.da.TagItemInfo;
 import org.point85.domain.plant.Equipment;
-import org.point85.domain.script.ScriptResolver;
+import org.point85.domain.script.EventResolver;
 
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -104,7 +104,7 @@ public class OpcDaTrendController extends OpcDaController implements OpcDaDataCh
 		btCancelConnect.setContentDisplay(ContentDisplay.RIGHT);
 	}
 
-	public void setScriptResolver(ScriptResolver scriptResolver) throws Exception {
+	public void setScriptResolver(EventResolver scriptResolver) throws Exception {
 		trendChartController.setScriptResolver(scriptResolver);
 
 		OpcDaSource dataSource = (OpcDaSource) scriptResolver.getDataSource();
