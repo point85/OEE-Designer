@@ -24,7 +24,6 @@ import org.point85.app.script.EventResolverController;
 import org.point85.app.uom.UomConversionController;
 import org.point85.app.uom.UomEditorController;
 import org.point85.app.web.WebServerController;
-import org.point85.app.web.WebTrendController;
 import org.point85.domain.collector.DataCollector;
 import org.point85.domain.http.HttpSource;
 import org.point85.domain.messaging.MessagingSource;
@@ -109,9 +108,6 @@ public class DesignerApplication {
 
 	// HTTP trend
 	private HttpTrendController httpTrendController;
-
-	// Web trend
-	private WebTrendController webTrendController;
 
 	// RMA messaging trend
 	private MessagingTrendController messagingTrendController;
@@ -377,10 +373,10 @@ public class DesignerApplication {
 		return opcUaBrowserController.getSelectedNodeId();
 	}
 
-	String showScriptEditor(EventResolver scriptResolver) throws Exception {
+	String showScriptEditor(EventResolver eventResolver) throws Exception {
 		// Load the fxml file and create a new stage for the pop-up dialog.
 		if (scriptController == null) {
-			FXMLLoader loader = LoaderFactory.scriptResolverLoader();
+			FXMLLoader loader = LoaderFactory.eventResolverLoader();
 			AnchorPane page = (AnchorPane) loader.getRoot();
 
 			// Create the dialog Stage.
@@ -394,11 +390,11 @@ public class DesignerApplication {
 			// get the controller
 			scriptController = loader.getController();
 			scriptController.setDialogStage(dialogStage);
-			scriptController.initialize(this, scriptResolver);
+			scriptController.initialize(this, eventResolver);
 		}
 
 		// display current script
-		scriptController.showFunctionScript(scriptResolver);
+		scriptController.showFunctionScript(eventResolver);
 
 		// Show the dialog and wait until the user closes it
 		if (!scriptController.getDialogStage().isShowing()) {
@@ -534,7 +530,7 @@ public class DesignerApplication {
 		}
 	}
 
-	void showOpcDaTrendDialog(EventResolver scriptResolver) throws Exception {
+	void showOpcDaTrendDialog(EventResolver eventResolver) throws Exception {
 		if (opcDaTrendController == null) {
 			// Load the fxml file and create a new stage for the pop-up dialog.
 			FXMLLoader loader = LoaderFactory.opcDaTrendLoader();
@@ -564,7 +560,7 @@ public class DesignerApplication {
 		}
 
 		// set the script resolver
-		opcDaTrendController.setScriptResolver(scriptResolver);
+		opcDaTrendController.setScriptResolver(eventResolver);
 
 		// show the window
 		if (!opcDaTrendController.getDialogStage().isShowing()) {
@@ -572,7 +568,7 @@ public class DesignerApplication {
 		}
 	}
 
-	void showOpcUaTrendDialog(EventResolver scriptResolver) throws Exception {
+	void showOpcUaTrendDialog(EventResolver eventResolver) throws Exception {
 		if (opcUaTrendController == null) {
 			// Load the fxml file and create a new stage for the pop-up dialog.
 			FXMLLoader loader = LoaderFactory.opcUaTrendLoader();
@@ -603,7 +599,7 @@ public class DesignerApplication {
 		}
 
 		// set the script resolver
-		opcUaTrendController.setScriptResolver(scriptResolver);
+		opcUaTrendController.setScriptResolver(eventResolver);
 
 		// show the window
 		if (!opcUaTrendController.getDialogStage().isShowing()) {
@@ -611,7 +607,7 @@ public class DesignerApplication {
 		}
 	}
 
-	void showHttpTrendDialog(EventResolver scriptResolver) throws Exception {
+	void showHttpTrendDialog(EventResolver eventResolver) throws Exception {
 		if (httpTrendController == null) {
 			// Load the fxml file and create a new stage for the pop-up dialog.
 			FXMLLoader loader = LoaderFactory.httpTrendLoader();
@@ -641,7 +637,7 @@ public class DesignerApplication {
 		}
 
 		// set the script resolver
-		httpTrendController.setScriptResolver(scriptResolver);
+		httpTrendController.setScriptResolver(eventResolver);
 
 		// start HTTP server
 		httpTrendController.onStartServer();
@@ -652,45 +648,7 @@ public class DesignerApplication {
 		}
 	}
 
-	void showWebTrendDialog(EventResolver scriptResolver) throws Exception {
-		if (webTrendController == null) {
-			// Load the fxml file and create a new stage for the pop-up dialog.
-			FXMLLoader loader = LoaderFactory.webTrendLoader();
-			AnchorPane page = (AnchorPane) loader.getRoot();
-
-			// Create the dialog Stage.
-			Stage dialogStage = new Stage(StageStyle.DECORATED);
-			dialogStage.setTitle("Web Event Trend");
-			dialogStage.initModality(Modality.NONE);
-			Scene scene = new Scene(page);
-			dialogStage.setScene(scene);
-
-			// get the controller
-			webTrendController = loader.getController();
-			webTrendController.setDialogStage(dialogStage);
-			webTrendController.setApp(this);
-
-			// add the trend chart
-			SplitPane chartPane = webTrendController.initializeTrend();
-
-			AnchorPane.setBottomAnchor(chartPane, 50.0);
-			AnchorPane.setLeftAnchor(chartPane, 5.0);
-			AnchorPane.setRightAnchor(chartPane, 5.0);
-			AnchorPane.setTopAnchor(chartPane, 50.0);
-
-			page.getChildren().add(0, chartPane);
-		}
-
-		// set the script resolver
-		webTrendController.setScriptResolver(scriptResolver);
-
-		// show the trend
-		if (!webTrendController.getDialogStage().isShowing()) {
-			webTrendController.getDialogStage().show();
-		}
-	}
-
-	void showMessagingTrendDialog(EventResolver scriptResolver) throws Exception {
+	void showMessagingTrendDialog(EventResolver eventResolver) throws Exception {
 		if (messagingTrendController == null) {
 			// Load the fxml file and create a new stage for the pop-up dialog.
 			FXMLLoader loader = LoaderFactory.messagingTrendLoader();
@@ -720,7 +678,7 @@ public class DesignerApplication {
 		}
 
 		// set the script resolver
-		messagingTrendController.setScriptResolver(scriptResolver);
+		messagingTrendController.setEventResolver(eventResolver);
 
 		// subscribe to broker
 		messagingTrendController.subscribeToDataSource();

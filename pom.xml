@@ -124,20 +124,6 @@
 </dependency>
 
   </dependencies>
- 
-<build>
-<plugins>
-<!-- javapackager plugin 
-<plugin>
-    <groupId>com.zenjava</groupId>
-    <artifactId>javafx-maven-plugin</artifactId>
-    <version>8.8.3</version>
-    <configuration>
-        <mainClass>org.point85.app.OeeApplication</mainClass>
-    </configuration>
-</plugin>
--->        
-</plugins>
-</build>
+
 
 </project>

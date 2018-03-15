@@ -57,7 +57,7 @@ public class TrendChartController extends DesignerController {
 	private EquipmentEventResolver equipmentResolver = new EquipmentEventResolver();
 
 	// script resolver for input value
-	private EventResolver scriptResolver;
+	private EventResolver eventResolver;
 
 	// data for table view
 	private ObservableList<ResolvedEvent> resolvedItems = FXCollections.observableArrayList(new ArrayList<>());
@@ -267,19 +267,19 @@ public class TrendChartController extends DesignerController {
 		this.subscriber = provider;
 	}
 
-	public EventResolver getScriptResolver() {
-		return this.scriptResolver;
+	public EventResolver getEventResolver() {
+		return this.eventResolver;
 	}
 
 	public void setScriptResolver(EventResolver scriptResolver) throws Exception {
-		this.scriptResolver = scriptResolver;
+		this.eventResolver = scriptResolver;
 	}
 
 	public ResolvedEvent invokeResolver(OeeContext context, Object sourceValue, OffsetDateTime dateTime) throws Exception {
-		ResolvedEvent resolvedItem = this.equipmentResolver.invokeResolver(scriptResolver, context, sourceValue,
+		ResolvedEvent resolvedItem = this.equipmentResolver.invokeResolver(eventResolver, context, sourceValue,
 				dateTime);
 
-		EventResolverType type = scriptResolver.getType();
+		EventResolverType type = eventResolver.getType();
 
 		switch (type) {
 		case AVAILABILITY:
@@ -367,7 +367,7 @@ public class TrendChartController extends DesignerController {
 
 			// update period in msec
 			Integer period = spUpdatePeriod.getValue() * 1000;
-			scriptResolver.setUpdatePeriod(period);
+			eventResolver.setUpdatePeriod(period);
 
 			// start plotting
 			onPlot();

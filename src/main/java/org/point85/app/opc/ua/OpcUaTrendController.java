@@ -129,7 +129,7 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 		NodeId nodeId = monitoredNodeId;
 		
 		if (nodeId == null) {
-			String nodeName = trendChartController.getScriptResolver().getSourceId();
+			String nodeName = trendChartController.getEventResolver().getSourceId();
 			nodeId = NodeId.parse(nodeName);
 			setMonitoredNode(nodeId);
 		}
@@ -140,13 +140,13 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 		this.monitoredNodeId = nodeId;
 	}
 
-	public void setScriptResolver(EventResolver scriptResolver) throws Exception {
-		trendChartController.setScriptResolver(scriptResolver);
+	public void setScriptResolver(EventResolver eventResolver) throws Exception {
+		trendChartController.setScriptResolver(eventResolver);
 
-		OpcUaSource dataSource = (OpcUaSource) scriptResolver.getDataSource();
+		OpcUaSource dataSource = (OpcUaSource) eventResolver.getDataSource();
 		setSource(dataSource);
 
-		String nodeName = scriptResolver.getSourceId();
+		String nodeName = eventResolver.getSourceId();
 		NodeId nodeId = NodeId.parse(nodeName);
 		setMonitoredNode(nodeId);
 

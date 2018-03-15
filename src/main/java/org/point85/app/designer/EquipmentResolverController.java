@@ -44,10 +44,10 @@ import javafx.scene.image.ImageView;
 
 public class EquipmentResolverController extends DesignerController {
 	// availability reason resolvers
-	private ObservableList<EventResolver> scriptResolvers = FXCollections.observableArrayList(new ArrayList<>());
+	private ObservableList<EventResolver> eventResolvers = FXCollections.observableArrayList(new ArrayList<>());
 
 	// reason resolver being edited
-	private EventResolver selectedScriptResolver;
+	private EventResolver selectedEventResolver;
 
 	@FXML
 	private ComboBox<EventResolverType> cbResolverTypes;
@@ -122,11 +122,11 @@ public class EquipmentResolverController extends DesignerController {
 	private Button btRun;
 
 	public EventResolver getSelectedResolver() {
-		if (selectedScriptResolver == null) {
+		if (selectedEventResolver == null) {
 			// new resolver
-			selectedScriptResolver = new EventResolver();
+			selectedEventResolver = new EventResolver();
 		}
-		return selectedScriptResolver;
+		return selectedEventResolver;
 	}
 
 	private void setDataCollectors() {
@@ -160,7 +160,7 @@ public class EquipmentResolverController extends DesignerController {
 
 	private void initializeResolverTable() throws Exception {
 		// bind to list of reason resolvers
-		tvResolvers.setItems(scriptResolvers);
+		tvResolvers.setItems(eventResolvers);
 
 		// add the table view listener for reason resolver selection
 		tvResolvers.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
@@ -251,19 +251,19 @@ public class EquipmentResolverController extends DesignerController {
 		});
 	}
 
-	private void onSelectScriptResolver(EventResolver scriptResolver) {
-		if (scriptResolver == null) {
+	private void onSelectScriptResolver(EventResolver eventResolver) {
+		if (eventResolver == null) {
 			return;
 		}
-		selectedScriptResolver = scriptResolver;
+		selectedEventResolver = eventResolver;
 
 		// collector
-		cbCollectors.getSelectionModel().select(scriptResolver.getCollector());
+		cbCollectors.getSelectionModel().select(eventResolver.getCollector());
 
 		// resolver type
-		cbResolverTypes.getSelectionModel().select(scriptResolver.getType());
+		cbResolverTypes.getSelectionModel().select(eventResolver.getType());
 
-		CollectorDataSource source = scriptResolver.getDataSource();
+		CollectorDataSource source = eventResolver.getDataSource();
 
 		// data source type
 		if (source != null) {
@@ -272,13 +272,13 @@ public class EquipmentResolverController extends DesignerController {
 		}
 
 		// source id
-		this.tfSourceId.setText(scriptResolver.getSourceId());
+		this.tfSourceId.setText(eventResolver.getSourceId());
 
 		// data type
-		this.lbDataType.setText(scriptResolver.getDataType());
+		this.lbDataType.setText(eventResolver.getDataType());
 
 		// script
-		String functionScript = scriptResolver.getScript();
+		String functionScript = eventResolver.getScript();
 		lbScript.setText(null);
 		if (functionScript != null) {
 			try {
@@ -290,9 +290,18 @@ public class EquipmentResolverController extends DesignerController {
 		}
 
 		// update period
-		this.tfUpdatePeriod.setText(String.valueOf(scriptResolver.getUpdatePeriod()));
+		this.tfUpdatePeriod.setText(String.valueOf(eventResolver.getUpdatePeriod()));
 
 		btAddResolver.setText(UPDATE);
+		
+		// web does not have a trend
+		DataSourceType type = selectedEventResolver.getDataSource().getDataSourceType();
+		
+		if (type.equals(DataSourceType.WEB)) {
+			btRun.setDisable(true);
+		} else {
+			btRun.setDisable(false);
+		}
 	}
 
 	void showResolvers(Equipment equipment) throws Exception {
@@ -302,9 +311,9 @@ public class EquipmentResolverController extends DesignerController {
 
 		clearEditor();
 
-		scriptResolvers.clear();
+		eventResolvers.clear();
 		for (EventResolver resolver : equipment.getScriptResolvers()) {
-			scriptResolvers.add(resolver);
+			eventResolvers.add(resolver);
 		}
 		tvResolvers.refresh();
 	}
@@ -312,7 +321,7 @@ public class EquipmentResolverController extends DesignerController {
 	void setResolvers(Equipment equipment) {
 		Set<EventResolver> resolvers = new HashSet<>();
 		resolvers.clear();
-		resolvers.addAll(scriptResolvers);
+		resolvers.addAll(eventResolvers);
 		equipment.setScriptResolvers(resolvers);
 	}
 
@@ -320,18 +329,18 @@ public class EquipmentResolverController extends DesignerController {
 	@FXML
 	private void onRemoveResolver() {
 		try {
-			if (selectedScriptResolver == null) {
+			if (selectedEventResolver == null) {
 				AppUtils.showErrorDialog("No reason resolver has been selected for deletion.");
 				return;
 			}
 
 			// remove from entity
 			PlantEntity selectedEntity = getApp().getPhysicalModelController().getSelectedEntity();
-			((Equipment) selectedEntity).removeScriptResolver(selectedScriptResolver);
+			((Equipment) selectedEntity).removeScriptResolver(selectedEventResolver);
 
 			// remove from list
-			scriptResolvers.remove(selectedScriptResolver);
-			selectedScriptResolver = null;
+			eventResolvers.remove(selectedEventResolver);
+			selectedEventResolver = null;
 			tvResolvers.refresh();
 			tvResolvers.getSelectionModel().clearSelection();
 
@@ -570,31 +579,31 @@ public class EquipmentResolverController extends DesignerController {
 				throw new Exception("The script resolver type must be selected.");
 			}
 
-			EventResolver scriptResolver = getSelectedResolver();
+			EventResolver eventResolver = getSelectedResolver();
 
-			scriptResolver.setType(resolverType);
-			scriptResolver.setDataType(lbDataType.getText());
+			eventResolver.setType(resolverType);
+			eventResolver.setDataType(lbDataType.getText());
 
-			if (scriptResolver.getScript() == null || scriptResolver.getScript().length() == 0) {
+			if (eventResolver.getScript() == null || eventResolver.getScript().length() == 0) {
 				if (resolverType.isAvailability()) {
-					scriptResolver.setScript(EventResolver.getPassthroughScript());
+					eventResolver.setScript(EventResolver.getPassthroughScript());
 				} else if (resolverType.isProduction()) {
-					scriptResolver.setScript(EventResolver.getDefaultProductionScript());
+					eventResolver.setScript(EventResolver.getDefaultProductionScript());
 				} else if (resolverType.isMaterial()) {
-					scriptResolver.setScript(EventResolver.getDefaultMaterialScript());
+					eventResolver.setScript(EventResolver.getDefaultMaterialScript());
 				} else if (resolverType.isJob()) {
-					scriptResolver.setScript(EventResolver.getDefaultJobScript());
+					eventResolver.setScript(EventResolver.getDefaultJobScript());
 				}
 			}
 
 			// display the editor
-			String scriptFunction = getApp().showScriptEditor(scriptResolver);
+			String scriptFunction = getApp().showScriptEditor(eventResolver);
 
 			if (scriptFunction == null) {
 				return;
 			}
 
-			scriptResolver.setScript(scriptFunction);
+			eventResolver.setScript(scriptFunction);
 
 			ResolverFunction resolverFunction = new ResolverFunction(scriptFunction);
 
@@ -609,8 +618,8 @@ public class EquipmentResolverController extends DesignerController {
 	void clear() {
 		clearEditor();
 
-		scriptResolvers.clear();
-		selectedScriptResolver = null;
+		eventResolvers.clear();
+		selectedEventResolver = null;
 	}
 
 	void clearEditor() {
@@ -638,7 +647,7 @@ public class EquipmentResolverController extends DesignerController {
 		try {
 			clearEditor();
 
-			selectedScriptResolver = null;
+			selectedEventResolver = null;
 
 			this.btAddResolver.setText(ADD);
 
@@ -648,7 +657,7 @@ public class EquipmentResolverController extends DesignerController {
 	}
 
 	private void addScriptResolver() throws Exception {
-		if (selectedScriptResolver.getKey() != null) {
+		if (selectedEventResolver.getKey() != null) {
 			// already added
 			return;
 		}
@@ -663,10 +672,10 @@ public class EquipmentResolverController extends DesignerController {
 		Equipment equipment = ((Equipment) selectedEntity);
 
 		// new resolver for equipment
-		if (!equipment.hasResolver(selectedScriptResolver)) {
-			scriptResolvers.add(selectedScriptResolver);
+		if (!equipment.hasResolver(selectedEventResolver)) {
+			eventResolvers.add(selectedEventResolver);
 
-			equipment.addScriptResolver(selectedScriptResolver);
+			equipment.addScriptResolver(selectedEventResolver);
 		}
 	}
 
@@ -674,7 +683,7 @@ public class EquipmentResolverController extends DesignerController {
 	@FXML
 	private void onAddResolver() {
 		try {
-			if (selectedScriptResolver == null) {
+			if (selectedEventResolver == null) {
 				return;
 			}
 
@@ -683,22 +692,22 @@ public class EquipmentResolverController extends DesignerController {
 			}
 
 			// collector
-			selectedScriptResolver.setCollector(cbCollectors.getSelectionModel().getSelectedItem());
+			selectedEventResolver.setCollector(cbCollectors.getSelectionModel().getSelectedItem());
 
 			// resolver type
-			selectedScriptResolver.setType(cbResolverTypes.getSelectionModel().getSelectedItem());
+			selectedEventResolver.setType(cbResolverTypes.getSelectionModel().getSelectedItem());
 
 			// source id
-			selectedScriptResolver.setSourceId(tfSourceId.getText());
+			selectedEventResolver.setSourceId(tfSourceId.getText());
 
 			// data type
-			selectedScriptResolver.setDataType(lbDataType.getText());
+			selectedEventResolver.setDataType(lbDataType.getText());
 
 			// update period
 			String updateText = tfUpdatePeriod.getText();
 
 			if (updateText != null && updateText.trim().length() > 0) {
-				selectedScriptResolver.setUpdatePeriod(Integer.valueOf(updateText));
+				selectedEventResolver.setUpdatePeriod(Integer.valueOf(updateText));
 			}
 
 			// add to equipment if necessary
@@ -709,7 +718,7 @@ public class EquipmentResolverController extends DesignerController {
 
 			tvResolvers.refresh();
 
-			selectedScriptResolver = null;
+			selectedEventResolver = null;
 
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
@@ -719,26 +728,24 @@ public class EquipmentResolverController extends DesignerController {
 	@FXML
 	private void onRun() {
 		try {
-			if (selectedScriptResolver == null) {
+			if (selectedEventResolver == null) {
 				throw new Exception("A resolver must be selected");
 			}
 
-			DataSourceType type = selectedScriptResolver.getDataSource().getDataSourceType();
+			DataSourceType type = selectedEventResolver.getDataSource().getDataSourceType();
 
 			if (type == null) {
 				throw new Exception("A data source type must be specified.");
 			}
 
 			if (type.equals(DataSourceType.OPC_DA)) {
-				getApp().showOpcDaTrendDialog(selectedScriptResolver);
+				getApp().showOpcDaTrendDialog(selectedEventResolver);
 			} else if (type.equals(DataSourceType.OPC_UA)) {
-				getApp().showOpcUaTrendDialog(selectedScriptResolver);
+				getApp().showOpcUaTrendDialog(selectedEventResolver);
 			} else if (type.equals(DataSourceType.HTTP)) {
-				getApp().showHttpTrendDialog(selectedScriptResolver);
+				getApp().showHttpTrendDialog(selectedEventResolver);
 			} else if (type.equals(DataSourceType.MESSAGING)) {
-				getApp().showMessagingTrendDialog(selectedScriptResolver);
-			} else if (type.equals(DataSourceType.WEB)) {
-				getApp().showWebTrendDialog(selectedScriptResolver);
+				getApp().showMessagingTrendDialog(selectedEventResolver);
 			}
 
 		} catch (Exception e) {

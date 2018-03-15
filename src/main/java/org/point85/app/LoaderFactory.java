@@ -24,7 +24,6 @@ import org.point85.app.uom.UomConversionController;
 import org.point85.app.uom.UomEditorController;
 import org.point85.app.uom.UomImporterController;
 import org.point85.app.web.WebServerController;
-import org.point85.app.web.WebTrendController;
 
 import javafx.fxml.FXMLLoader;
 
@@ -83,8 +82,8 @@ public class LoaderFactory {
 		return fxmlLoader;
 	}
 
-	public static FXMLLoader scriptResolverLoader() throws Exception {
-		FXMLLoader fxmlLoader = new FXMLLoader(EventResolverController.class.getResource("ScriptResolver.fxml"));
+	public static FXMLLoader eventResolverLoader() throws Exception {
+		FXMLLoader fxmlLoader = new FXMLLoader(EventResolverController.class.getResource("EventResolver.fxml"));
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
@@ -133,12 +132,6 @@ public class LoaderFactory {
 	
 	public static FXMLLoader httpTrendLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(HttpTrendController.class.getResource("HttpTrend.fxml"));
-		fxmlLoader.load();
-		return fxmlLoader;
-	}
-	
-	public static FXMLLoader webTrendLoader() throws Exception {
-		FXMLLoader fxmlLoader = new FXMLLoader(WebTrendController.class.getResource("WebTrend.fxml"));
 		fxmlLoader.load();
 		return fxmlLoader;
 	}

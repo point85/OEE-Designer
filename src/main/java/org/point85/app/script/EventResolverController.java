@@ -33,7 +33,7 @@ public class EventResolverController extends DesignerDialogController {
 
 	private ScriptEngine scriptEngine;
 
-	private EventResolver scriptResolver;
+	private EventResolver eventResolver;
 
 	// test value
 	private Object value;
@@ -118,11 +118,11 @@ public class EventResolverController extends DesignerDialogController {
 	}
 
 	public EventResolver getResolver() {
-		return scriptResolver;
+		return eventResolver;
 	}
 
 	private void setResolver(EventResolver resolver) {
-		this.scriptResolver = resolver;
+		this.eventResolver = resolver;
 		lbDataType.setText(resolver.getDataType());
 	}
 
@@ -220,7 +220,7 @@ public class EventResolverController extends DesignerDialogController {
 	@Override
 	protected void onOK() {
 		String functionScript = ResolverFunction.functionFromBody(taScript.getText());
-		this.scriptResolver.setScript(functionScript);
+		this.eventResolver.setScript(functionScript);
 		super.onOK();
 
 	}
@@ -228,7 +228,7 @@ public class EventResolverController extends DesignerDialogController {
 	@FXML
 	private void onExecute() {
 		try {
-			if (scriptResolver.getType() == null) {
+			if (eventResolver.getType() == null) {
 				throw new Exception("The script resolver type is null");
 			}
 
@@ -238,7 +238,7 @@ public class EventResolverController extends DesignerDialogController {
 				return;
 			}
 
-			switch (scriptResolver.getType()) {
+			switch (eventResolver.getType()) {
 			case AVAILABILITY:
 				// must be a reason
 				String reasonCode = (String) result;

@@ -82,12 +82,12 @@ public class MessagingTrendController extends DesignerDialogController implement
 		super.setImages();
 	}
 
-	public void setScriptResolver(EventResolver scriptResolver) throws Exception {
-		trendChartController.setScriptResolver(scriptResolver);
+	public void setEventResolver(EventResolver eventResolver) throws Exception {
+		trendChartController.setScriptResolver(eventResolver);
 
-		lbSourceId.setText("Equipment: " + scriptResolver.getEquipment().getName() + ", Source Id: "
-				+ scriptResolver.getSourceId());
-		lbBroker.setText(scriptResolver.getDataSource().getId());
+		lbSourceId.setText("Equipment: " + eventResolver.getEquipment().getName() + ", Source Id: "
+				+ eventResolver.getSourceId());
+		lbBroker.setText(eventResolver.getDataSource().getId());
 	}
 
 	@Override
@@ -144,7 +144,7 @@ public class MessagingTrendController extends DesignerDialogController implement
 		if (pubsub == null) {
 			pubsub = new PublisherSubscriber();
 
-			MessagingSource source = (MessagingSource) trendChartController.getScriptResolver().getDataSource();
+			MessagingSource source = (MessagingSource) trendChartController.getEventResolver().getDataSource();
 
 			List<RoutingKey> keys = new ArrayList<>();
 			keys.add(RoutingKey.EQUIPMENT_SOURCE_EVENT);
@@ -220,27 +220,9 @@ public class MessagingTrendController extends DesignerDialogController implement
 				throw new Exception("The trend is not connected to an RMQ broker.");
 			}
 
-			EventResolver scriptResolver = trendChartController.getScriptResolver();
-			// MessagingSource dataSource = (MessagingSource)
-			// scriptResolver.getDataSource();
+			EventResolver eventResolver = trendChartController.getEventResolver();
 
-			/*
-			 * Integer port = dataSource.getPort();
-			 * 
-			 * if (port == null) { throw new Exception("A host and port must be specified");
-			 * }
-			 * 
-			 * PublisherSubscriber pubsub = pubsubs.get(hostPort);
-			 * 
-			 * if (pubsub == null) { pubsub = new PublisherSubscriber();
-			 * pubsubs.put(hostPort, pubsub);
-			 * 
-			 * String[] tokens = hostPort.split(":");
-			 * 
-			 * pubsub.connect(tokens[0], Integer.valueOf(tokens[1])); }
-			 */
-
-			String sourceId = scriptResolver.getSourceId();
+			String sourceId = eventResolver.getSourceId();
 			String value = tfLoopbackValue.getText();
 
 			// OffsetDateTime odt = OffsetDateTime.now();

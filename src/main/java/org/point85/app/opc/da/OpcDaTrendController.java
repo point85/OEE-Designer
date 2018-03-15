@@ -104,13 +104,13 @@ public class OpcDaTrendController extends OpcDaController implements OpcDaDataCh
 		btCancelConnect.setContentDisplay(ContentDisplay.RIGHT);
 	}
 
-	public void setScriptResolver(EventResolver scriptResolver) throws Exception {
-		trendChartController.setScriptResolver(scriptResolver);
+	public void setScriptResolver(EventResolver eventResolver) throws Exception {
+		trendChartController.setScriptResolver(eventResolver);
 
-		OpcDaSource dataSource = (OpcDaSource) scriptResolver.getDataSource();
+		OpcDaSource dataSource = (OpcDaSource) eventResolver.getDataSource();
 		setSource(dataSource);
 
-		String pathName = scriptResolver.getSourceId();
+		String pathName = eventResolver.getSourceId();
 		TagItemInfo tagItem = new TagItemInfo(pathName);
 		setMonitoredTag(tagItem);
 
@@ -232,7 +232,7 @@ public class OpcDaTrendController extends OpcDaController implements OpcDaDataCh
 
 	private String createGroupName() throws Exception {
 		Equipment equipment = (Equipment) getApp().getPhysicalModelController().getSelectedEntity();
-		String name = equipment.getName() + '.' + trendChartController.getScriptResolver().getSourceId();
+		String name = equipment.getName() + '.' + trendChartController.getEventResolver().getSourceId();
 		return name;
 	}
 
@@ -245,7 +245,7 @@ public class OpcDaTrendController extends OpcDaController implements OpcDaDataCh
 	public void subscribeToDataSource() throws Exception {
 		if (opcDaGroup == null) {
 			// new group using equipment name
-			int updatePeriod = trendChartController.getScriptResolver().getUpdatePeriod();
+			int updatePeriod = trendChartController.getEventResolver().getUpdatePeriod();
 			TagGroupInfo tagGroup = new TagGroupInfo(createGroupName());
 			tagGroup.setUpdatePeriod(updatePeriod);
 			tagGroup.addTagItem(monitoredTag);

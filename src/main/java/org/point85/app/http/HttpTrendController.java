@@ -84,17 +84,17 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 	@Override
 	protected void setImages() throws Exception {
 		super.setImages();
-		
+
 		// loopback test
 		btLoopback.setGraphic(ImageManager.instance().getImageView(Images.EXECUTE));
 		btLoopback.setContentDisplay(ContentDisplay.RIGHT);
 	}
 
-	public void setScriptResolver(EventResolver scriptResolver) throws Exception {
-		trendChartController.setScriptResolver(scriptResolver);
+	public void setScriptResolver(EventResolver eventResolver) throws Exception {
+		trendChartController.setScriptResolver(eventResolver);
 
-		lbSourceId.setText("Equipment: " + scriptResolver.getEquipment().getName() + ", Source Id: "
-				+ scriptResolver.getSourceId());
+		lbSourceId.setText(
+				"Equipment: " + eventResolver.getEquipment().getName() + ", Source Id: " + eventResolver.getSourceId());
 	}
 
 	@Override
@@ -116,7 +116,7 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 			if (httpServer == null) {
 				piConnection.setVisible(true);
 
-				HttpSource dataSource = (HttpSource) trendChartController.getScriptResolver().getDataSource();
+				HttpSource dataSource = (HttpSource) trendChartController.getEventResolver().getDataSource();
 
 				int port = dataSource.getPort();
 
@@ -189,8 +189,8 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 	private void onLoopbackTest() {
 		try {
 			// POST event
-			EventResolver scriptResolver = trendChartController.getScriptResolver();
-			HttpSource dataSource = (HttpSource) scriptResolver.getDataSource();
+			EventResolver eventResolver = trendChartController.getEventResolver();
+			HttpSource dataSource = (HttpSource) eventResolver.getDataSource();
 
 			URL url = new URL(
 					"http://" + dataSource.getHost() + ":" + dataSource.getPort() + '/' + OeeHttpServer.EVENT_EP);
@@ -204,7 +204,7 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 			OffsetDateTime odt = OffsetDateTime.now();
 			String timestamp = odt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 
-			EquipmentEventRequestDto dto = new EquipmentEventRequestDto(scriptResolver.getSourceId(), value, timestamp);
+			EquipmentEventRequestDto dto = new EquipmentEventRequestDto(eventResolver.getSourceId(), value, timestamp);
 			Gson gson = new Gson();
 			String payload = gson.toJson(dto);
 
@@ -217,7 +217,7 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 			if (codeGroup != 2) {
 				String msg = "Failed : error code : " + conn.getResponseCode();
 				msg += "\nEquipment event response ...";
-				
+
 				BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
 				String output;
 
