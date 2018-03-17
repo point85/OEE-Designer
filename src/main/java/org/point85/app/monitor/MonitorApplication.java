@@ -1,6 +1,8 @@
 package org.point85.app.monitor;
 
+import java.net.InetAddress;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,7 +40,7 @@ import javafx.stage.Stage;
 public class MonitorApplication implements MessageListener {
 	// logger
 	private final Logger logger = LoggerFactory.getLogger(getClass());
-	
+
 	// data collectors being monitored
 	private List<DataCollector> collectors;
 
@@ -58,7 +60,6 @@ public class MonitorApplication implements MessageListener {
 
 	}
 
-	// @Override
 	public void start(Stage primaryStage) {
 		try {
 			primaryStage.setTitle("OEE Monitor");
@@ -81,12 +82,14 @@ public class MonitorApplication implements MessageListener {
 			connectToNotificationBrokers();
 
 			primaryStage.show();
+
+			// send a loopback message
+			sendStartupNotification();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	// @Override
 	public void stop() {
 		try {
 			// JPA service
@@ -124,7 +127,7 @@ public class MonitorApplication implements MessageListener {
 
 					// connect to broker and listen for messages
 					String queueName = getClass().getSimpleName() + "_" + queueCounter++;
-					
+
 					List<RoutingKey> routingKeys = new ArrayList<>();
 					routingKeys.add(RoutingKey.NOTIFICATION_MESSAGE);
 					routingKeys.add(RoutingKey.NOTIFICATION_STATUS);
@@ -153,7 +156,7 @@ public class MonitorApplication implements MessageListener {
 		}
 
 		MessageType type = message.getMessageType();
-		
+
 		if (logger.isInfoEnabled()) {
 			logger.info("Received message of type " + type);
 		}
@@ -186,49 +189,27 @@ public class MonitorApplication implements MessageListener {
 		}
 	}
 
-	// TODO
-	void generateData() {
-		int num = 1;
+	void sendStartupNotification() throws UnknownHostException {
+		// our host
+		InetAddress address = InetAddress.getLocalHost();
+
 		OffsetDateTime odt = OffsetDateTime.now();
 
-		for (int i = 0; i < num; i++) {
-			CollectorNotificationMessage msg = new CollectorNotificationMessage("LenovoE555", "192.168.9.0");
+		CollectorNotificationMessage msg = new CollectorNotificationMessage(address.getHostName(),
+				address.getHostAddress());
 
-			double r = Math.random();
-			if (r > 0.33d) {
-				msg.setSeverity(NotificationSeverity.ERROR);
-			} else {
-				msg.setSeverity(NotificationSeverity.WARNING);
-			}
-
-			msg.setText("This is a notification");
-			msg.setTimestamp(odt.plusHours(i));
-
-			// Platform.runLater(() -> {
-			try {
-				if (this.notificationPubSubs.size() > 0) {
-					PublisherSubscriber pubSub = notificationPubSubs.get(0);
-
-					pubSub.publish(msg, RoutingKey.NOTIFICATION_MESSAGE);
-				}
-			} catch (Exception e) {
-				AppUtils.showErrorDialog(e);
-			}
-			// });
-		}
-
-		// status msg
-		CollectorServerStatusMessage msg = new CollectorServerStatusMessage("LenovoE555", "192.168.9.0");
+		msg.setSeverity(NotificationSeverity.INFO);
+		msg.setText("Monitor startup");
+		msg.setTimestamp(odt);
 
 		try {
-			if (this.notificationPubSubs.size() > 0) {
+			if (notificationPubSubs.size() > 0) {
 				PublisherSubscriber pubSub = notificationPubSubs.get(0);
 
-				pubSub.publish(msg, RoutingKey.NOTIFICATION_STATUS);
+				pubSub.publish(msg, RoutingKey.NOTIFICATION_MESSAGE);
 			}
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}
 	}
-
 }

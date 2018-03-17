@@ -57,8 +57,6 @@
                               <Label text="Messages per Page" />
                               <TextField fx:id="tfMessagesPerPage" prefWidth="50.0" />
                               <Button fx:id="btClearMessages" mnemonicParsing="false" onAction="#onClearMessages" text="Clear Messages" />
-                              <Button fx:id="btGenerateData" mnemonicParsing="false" onAction="#onGenerateData" text="Generate Data" />
-                              <TextField fx:id="tfMessageCount" prefWidth="75.0" text="1" />
                            </children>
                         </HBox>
                      </children></AnchorPane>

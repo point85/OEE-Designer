@@ -89,15 +89,9 @@ public class MonitorController {
 
 	@FXML
 	private Pagination pgMessages;
-	// TODO
-	@FXML
-	private Button btGenerateData;
 
 	@FXML
 	private Button btClearMessages;
-
-	@FXML
-	private TextField tfMessageCount;
 
 	@FXML
 	private AnchorPane apMessageTable;
@@ -497,10 +491,10 @@ public class MonitorController {
 
 	@FXML
 	private void onClearMessages() {
-		this.notifications.clear();
+		notifications.clear();
 		tvNotifications.setItems(notifications);
 		this.tvNotifications.refresh();
-		this.pgMessages.setPageCount(0);
+		pgMessages.setPageCount(0);
 		pgMessages.setCurrentPageIndex(0);
 	}
 
@@ -605,12 +599,6 @@ public class MonitorController {
 		equipmentLoss.setLoss(TimeLoss.REJECT_REWORK, Duration.ofSeconds(2 * 60));
 
 		return equipmentLoss;
-	}
-
-	// TODO
-	@FXML
-	void onGenerateData() {
-		app.generateData();
 	}
 
 	// the wrapped PlantEntity
