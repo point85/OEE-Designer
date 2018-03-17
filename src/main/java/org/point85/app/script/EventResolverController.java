@@ -252,31 +252,43 @@ public class EventResolverController extends DesignerDialogController {
 				}
 				taResult.appendText(reason.toString() + '\n');
 				break;
+				
 			case PROD_GOOD:
 				if (result != null) {
 					taResult.appendText("Good Production: " + result.toString() + '\n');
 				}
 				break;
+				
 			case PROD_REJECT:
 				if (result != null) {
-					taResult.appendText("Reject Production: " + result.toString() + '\n');
+					taResult.appendText("Reject and rework Production: " + result.toString() + '\n');
 				}
 				break;
+				
+			case PROD_STARTUP:
+				if (result != null) {
+					taResult.appendText("Startup and yield Production: " + result.toString() + '\n');
+				}
+				break;
+				
 			case JOB:
 				if (result != null) {
 					taResult.appendText("Job " + result.toString() + '\n');
 				}
 				break;
+				
 			case MATERIAL:
 				if (result != null) {
 					taResult.appendText("Material: " + result.toString() + '\n');
 				}
 				break;
+				
 			case OTHER:
 				if (result != null) {
 					taResult.appendText("Result: " + result.toString() + '\n');
 				}
 				break;
+				
 			default:
 				taResult.appendText(result.toString() + '\n');
 				break;

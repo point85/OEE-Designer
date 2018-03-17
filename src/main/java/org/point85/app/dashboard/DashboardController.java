@@ -17,23 +17,19 @@ import org.point85.domain.performance.TimeLoss;
 import org.point85.domain.script.EventResolverType;
 import org.point85.domain.uom.Unit;
 import org.point85.tilesfx.Tile;
-import org.point85.tilesfx.TileBuilder;
 import org.point85.tilesfx.Tile.SkinType;
+import org.point85.tilesfx.TileBuilder;
 import org.point85.tilesfx.skins.BarChartItem;
 import org.point85.tilesfx.skins.LeaderBoardItem;
 import org.point85.tilesfx.tools.FlowGridPane;
 
 import javafx.animation.AnimationTimer;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
-import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.StackedBarChart;
@@ -49,7 +45,6 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 
 public class DashboardController extends DialogController implements CategoryClickListener {
 	private static final String LOSS_CHART_TITLE = "Equipment Times";
@@ -91,6 +86,7 @@ public class DashboardController extends DialogController implements CategoryCli
 	private Tile tiProduction;
 	private LeaderBoardItem lbiGoodProduction;
 	private LeaderBoardItem lbiRejectProduction;
+	private LeaderBoardItem lbiStartupProduction;
 
 	// OEE tile
 	private Tile tiOee;
@@ -454,17 +450,14 @@ public class DashboardController extends DialogController implements CategoryCli
 
 		XYChart.Data<Number, String> minorStoppagesData = new XYChart.Data<Number, String>(minorStoppagesLoss,
 				category);
-		
+
 		/*
-		minorStoppagesData.nodeProperty().addListener(new ChangeListener<Node>() {
-			@Override
-			public void changed(ObservableValue<? extends Node> ov, Node oldNode, final Node node) {
-				if (node != null) {
-					displayLabelForData(minorStoppagesData);
-				}
-			}
-		});
-		*/
+		 * minorStoppagesData.nodeProperty().addListener(new ChangeListener<Node>() {
+		 * 
+		 * @Override public void changed(ObservableValue<? extends Node> ov, Node
+		 * oldNode, final Node node) { if (node != null) {
+		 * displayLabelForData(minorStoppagesData); } } });
+		 */
 
 		minorStoppagePoints.add(minorStoppagesData);
 
@@ -649,21 +642,18 @@ public class DashboardController extends DialogController implements CategoryCli
 	 * XYChart.Data
 	 */
 	/*
-	private void displayLabelForData(XYChart.Data<Number, String> data) {
-		final Node node = data.getNode();
-		final Text dataText = new Text(data.getXValue() + "");
-
-		node.parentProperty().addListener((observable, oldParent, parent) -> {
-			Group parentGroup = (Group) parent;
-			parentGroup.getChildren().add(dataText);
-		});
-
-		node.boundsInParentProperty().addListener((observable, oldBounds, bounds) -> {
-			dataText.setLayoutX(Math.round(bounds.getMinX() + bounds.getWidth() / 2 - dataText.prefWidth(-1) / 2));
-			dataText.setLayoutY(Math.round(bounds.getMinY() - dataText.prefHeight(-1) * 0.5));
-		});
-	}
-	*/
+	 * private void displayLabelForData(XYChart.Data<Number, String> data) { final
+	 * Node node = data.getNode(); final Text dataText = new Text(data.getXValue() +
+	 * "");
+	 * 
+	 * node.parentProperty().addListener((observable, oldParent, parent) -> { Group
+	 * parentGroup = (Group) parent; parentGroup.getChildren().add(dataText); });
+	 * 
+	 * node.boundsInParentProperty().addListener((observable, oldBounds, bounds) ->
+	 * { dataText.setLayoutX(Math.round(bounds.getMinX() + bounds.getWidth() / 2 -
+	 * dataText.prefWidth(-1) / 2)); dataText.setLayoutY(Math.round(bounds.getMinY()
+	 * - dataText.prefHeight(-1) * 0.5)); }); }
+	 */
 
 	@FXML
 	public void initialize() {
@@ -735,6 +725,7 @@ public class DashboardController extends DialogController implements CategoryCli
 		// production tile
 		lbiGoodProduction = new LeaderBoardItem("Good", 0);
 		lbiRejectProduction = new LeaderBoardItem("Reject", 0);
+		lbiStartupProduction = new LeaderBoardItem("Startup", 0);
 
 		String productionText = "Cumulative Quantity";
 
@@ -744,7 +735,8 @@ public class DashboardController extends DialogController implements CategoryCli
 
 		tiProduction = TileBuilder.create().skinType(SkinType.LEADER_BOARD).prefSize(TILE_WIDTH, TILE_HEIGHT)
 				.title("Current Production").text(productionText)
-				.leaderBoardItems(lbiGoodProduction, lbiRejectProduction).sortedData(true).build();
+				.leaderBoardItems(lbiGoodProduction, lbiRejectProduction, lbiStartupProduction).sortedData(true)
+				.build();
 
 		// availability tile
 		tiAvailability = TileBuilder.create().skinType(SkinType.TEXT).prefSize(TILE_WIDTH, TILE_HEIGHT)
@@ -794,6 +786,11 @@ public class DashboardController extends DialogController implements CategoryCli
 						lbiRejectProduction.setFormatString("%.1f kg");
 						lbiRejectProduction
 								.setValue(showCumulative ? incrementTotalProduction(totalReject) : totalReject);
+
+						double totalStartup = RND.nextDouble() * 100;
+						lbiStartupProduction.setFormatString("%.1f kg");
+						lbiStartupProduction
+								.setValue(showCumulative ? incrementTotalProduction(totalStartup) : totalStartup);
 					} else {
 
 						tiProduction.getLeaderBoardItems().get(RND.nextInt(2)).setValue(RND.nextDouble() * 80);
@@ -824,9 +821,9 @@ public class DashboardController extends DialogController implements CategoryCli
 				}
 			}
 		};
-		
+
 		// TODO
-		//timer.start();
+		// timer.start();
 	}
 
 	public void update(CollectorResolvedEventMessage message) {
@@ -868,6 +865,13 @@ public class DashboardController extends DialogController implements CategoryCli
 			// reject and rework
 			lbiRejectProduction.setFormatString(PROD_FORMAT + " " + message.getUom());
 			lbiRejectProduction.setValue(message.getAmount());
+			break;
+		}
+
+		case PROD_STARTUP: {
+			// startup and yield
+			lbiStartupProduction.setFormatString(PROD_FORMAT + " " + message.getUom());
+			lbiStartupProduction.setValue(message.getAmount());
 			break;
 		}
 

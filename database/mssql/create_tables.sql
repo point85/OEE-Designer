@@ -386,7 +386,6 @@ CREATE TABLE [dbo].[PROD_SUMMARY](
 	[ENT_KEY] [bigint] NOT NULL,
 	[START_TIME] [datetimeoffset](3) NULL,
 	[END_TIME] [datetimeoffset](3) NULL,
-	[DURATION] [bigint] NULL,
 	[TYPE] [nvarchar](16) NULL,
 	[AMOUNT] [float] NULL,
 	[UOM_KEY] [bigint] NULL

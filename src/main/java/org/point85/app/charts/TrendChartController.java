@@ -301,6 +301,7 @@ public class TrendChartController extends DesignerController {
 			break;
 		case PROD_GOOD:
 		case PROD_REJECT:
+		case PROD_STARTUP:
 			Object plottedValue = resolvedItem.getInputValue();
 
 			// convert from String
