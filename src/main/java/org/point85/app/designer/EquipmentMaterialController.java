@@ -14,6 +14,8 @@ import org.point85.domain.plant.Material;
 import org.point85.domain.plant.PlantEntity;
 import org.point85.domain.uom.Quantity;
 import org.point85.domain.uom.UnitOfMeasure;
+import org.point85.domain.uom.UnitOfMeasure.MeasurementType;
+import org.point85.domain.uom.UnitType;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -263,6 +265,14 @@ public class EquipmentMaterialController extends DesignerController {
 			String symbol = uom.getSymbol();
 
 			if (source.equals(btFindIRRUnit)) {
+				if (!uom.getMeasurementType().equals(MeasurementType.QUOTIENT)) {
+					throw new Exception("Unit of measure " + symbol + " is not a quotient.");
+				} else {
+					if (!uom.getDivisor().getUnitType().equals(UnitType.TIME) ) {
+						throw new Exception("Unit of measure " + symbol + " is not a rate.");
+					}
+				}
+				
 				lbIRRUnit.setText(symbol);
 				getSelectedEquipmentMaterial().setRunRateUOM(uom);
 			} else if (source.equals(btFindRejectUnit)) {
