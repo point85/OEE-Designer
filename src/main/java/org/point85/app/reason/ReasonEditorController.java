@@ -153,6 +153,8 @@ public class ReasonEditorController extends DesignerDialogController {
 
 		// check for previous edit
 		if (oldItem != null) {
+			// TODO
+			/*
 			boolean isChanged = setAttributes(oldItem);
 
 			if (isChanged) {
@@ -160,6 +162,7 @@ public class ReasonEditorController extends DesignerDialogController {
 				addEditedReason(oldItem);
 				tvReasons.refresh();
 			}
+			*/
 		}
 
 		// new attributes

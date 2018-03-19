@@ -232,7 +232,7 @@ public class MessagingTrendController extends DesignerDialogController implement
 			msg.setSourceId(sourceId);
 			msg.setValue(value);
 
-			pubsub.publish(msg, RoutingKey.EQUIPMENT_SOURCE_EVENT);
+			pubsub.publish(msg, RoutingKey.EQUIPMENT_SOURCE_EVENT.ALL, 3600);
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}

@@ -352,7 +352,7 @@ public class EquipmentMaterialController extends DesignerController {
 			// IRR
 			UnitOfMeasure uom = selectedEquipmentMaterial.getRunRateUOM();
 			if (uom == null && lbIRRUnit.getText().length() > 0) {
-				uom = PersistenceService.instance().fetchUOMBySymbol(lbIRRUnit.getText());
+				uom = PersistenceService.instance().fetchUomBySymbol(lbIRRUnit.getText());
 				selectedEquipmentMaterial.setRunRateUOM(uom);
 			}
 
@@ -362,7 +362,7 @@ public class EquipmentMaterialController extends DesignerController {
 			// reject UOM
 			uom = selectedEquipmentMaterial.getRejectUOM();
 			if (uom == null && lbRejectUnit.getText().length() > 0) {
-				uom = PersistenceService.instance().fetchUOMBySymbol(lbRejectUnit.getText());
+				uom = PersistenceService.instance().fetchUomBySymbol(lbRejectUnit.getText());
 				selectedEquipmentMaterial.setRejectUOM(uom);
 			}
 

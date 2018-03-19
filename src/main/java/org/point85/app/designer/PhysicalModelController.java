@@ -160,13 +160,6 @@ public class PhysicalModelController extends DesignerController {
 	@FXML
 	private Tab tbAvailability;
 
-	// performance and quality tab
-	@FXML
-	private AnchorPane apPerfQuality;
-
-	@FXML
-	private Tab tbPerfQuality;
-
 	// class reasons tab
 	@FXML
 	private AnchorPane apClassReasons;
@@ -318,15 +311,16 @@ public class PhysicalModelController extends DesignerController {
 		});
 
 		// select equipment material
-		onSelectEquipmentMaterial();
+		// onSelectEquipmentMaterial();
+
+		// disable tabs
+		tbEquipMaterials.setDisable(true);
+		tbAvailability.setDisable(true);
 	}
 
 	private List<PlantEntity> fetchTopEntities() {
 		// long before = System.currentTimeMillis();
 		List<PlantEntity> entities = PersistenceService.instance().fetchTopPlantEntities();
-
-		// System.out.println("Time to fetch entities " + (System.currentTimeMillis() -
-		// before) + " msec.");
 
 		Collections.sort(entities);
 		return entities;
@@ -366,6 +360,8 @@ public class PhysicalModelController extends DesignerController {
 
 		// check for previous edit
 		if (oldItem != null) {
+			// TODO
+			/*
 			boolean isChanged = setAttributes(oldItem);
 
 			if (isChanged) {
@@ -373,12 +369,16 @@ public class PhysicalModelController extends DesignerController {
 				this.addEditedPlantEntity(oldItem);
 				tvEntities.refresh();
 			}
+			*/
 		}
 
 		// new attributes
 		selectedEntityItem = newItem;
 		PlantEntity selectedEntity = newItem.getValue().getPlantEntity();
 		displayAttributes(selectedEntity);
+		
+		// TODO
+		WorkSchedule schedule = selectedEntity.findWorkSchedule();
 
 		// show the children too
 		Set<PlantEntity> children = selectedEntity.getChildren();
@@ -397,6 +397,16 @@ public class PhysicalModelController extends DesignerController {
 			}
 		}
 		newItem.setExpanded(true);
+
+		if (selectedEntity instanceof Equipment) {
+			tbAvailability.setDisable(false);
+			tbEquipMaterials.setDisable(false);
+
+			onSelectEquipmentMaterial();
+		} else {
+			tbAvailability.setDisable(true);
+			tbEquipMaterials.setDisable(true);
+		}
 	}
 
 	private void initializeToolbar() throws Exception {
@@ -595,12 +605,14 @@ public class PhysicalModelController extends DesignerController {
 			cbEntityTypes.requestFocus();
 			lbSchedule.setText(null);
 
-			// no entity selection
-			tvEntities.getSelectionModel().clearSelection();
+			// no entity item selection
+			// tvEntities.getSelectionModel().clearSelection();
 			selectedEntityItem = null;
 
 			// equipment materials
-			equipmentMaterialController.clear();
+			if (equipmentMaterialController != null) {
+				equipmentMaterialController.clear();
+			}
 
 			// data collection
 			getResolverController().clear();
@@ -609,7 +621,7 @@ public class PhysicalModelController extends DesignerController {
 		}
 	}
 
-	private void createEntity() {
+	private boolean createEntity() {
 		try {
 			// chosen level of child
 			EntityLevel childLevel = this.cbEntityTypes.getSelectionModel().getSelectedItem();
@@ -618,12 +630,29 @@ public class PhysicalModelController extends DesignerController {
 			TreeItem<EntityNode> parentItem = this.tvEntities.getSelectionModel().getSelectedItem();
 
 			if (parentItem == null) {
+				// confirm
+				String msg = "Do you want to add a new entity at level " + childLevel + "?";
+				ButtonType type = AppUtils.showConfirmationDialog(msg);
+
+				if (type.equals(ButtonType.CANCEL)) {
+					return false;
+				}
+
 				// add to all entities
 				parentItem = tvEntities.getRoot();
-			}
 
-			if (parentItem == null) {
-				throw new Exception("Unable to create plant entity.  Check database coonnection.");
+				if (parentItem == null) {
+					throw new Exception("Unable to create plant entity.  Check database coonnection.");
+				}
+			} else {
+				// confirm
+				String msg = "Do you want to add a new child entity for parent "
+						+ parentItem.getValue().getPlantEntity().getName() + "?";
+				ButtonType type = AppUtils.showConfirmationDialog(msg);
+
+				if (type.equals(ButtonType.CANCEL)) {
+					return false;
+				}
 			}
 
 			PlantEntity parentEntity = parentItem.getValue().getPlantEntity();
@@ -650,7 +679,7 @@ public class PhysicalModelController extends DesignerController {
 					childLevel = EntityLevel.EQUIPMENT;
 					break;
 				default:
-					return;
+					return false;
 				}
 			}
 
@@ -678,7 +707,7 @@ public class PhysicalModelController extends DesignerController {
 				newEntity = new Equipment();
 				break;
 			default:
-				return;
+				return false;
 			}
 
 			// set the new entity's attributes
@@ -700,6 +729,7 @@ public class PhysicalModelController extends DesignerController {
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}
+		return true;
 	}
 
 	private void setEntityGraphic(TreeItem<EntityNode> item) throws Exception {
@@ -743,7 +773,8 @@ public class PhysicalModelController extends DesignerController {
 
 	@FXML
 	private void onClearSelection() {
-		this.tvEntities.getSelectionModel().clearSelection();
+		tvEntities.getSelectionModel().clearSelection();
+		selectedEntityItem = null;
 	}
 
 	@FXML
@@ -813,14 +844,16 @@ public class PhysicalModelController extends DesignerController {
 		try {
 			if (selectedEntityItem == null) {
 				// create
-				createEntity();
+				if (!createEntity()) {
+					return;
+				}
 			} else {
 				// update
 				setAttributes(selectedEntityItem);
 			}
 
 			// save modified entity
-			PlantEntity entity = this.getSelectedEntity();
+			PlantEntity entity = getSelectedEntity();
 			PlantEntity saved = (PlantEntity) PersistenceService.instance().save(entity);
 
 			selectedEntityItem.getValue().setPlantEntity(saved);
@@ -884,6 +917,8 @@ public class PhysicalModelController extends DesignerController {
 		// work schedule
 		if (entity.getWorkSchedule() != null) {
 			this.lbSchedule.setText(entity.getWorkSchedule().getName());
+		} else {
+			this.lbSchedule.setText("");
 		}
 
 		if (entity instanceof Equipment) {
@@ -924,12 +959,6 @@ public class PhysicalModelController extends DesignerController {
 			entity.setDescription(description);
 			isDirty = true;
 		}
-
-		/*
-		 * // work schedule if (selectedSchedule != null &&
-		 * !entity.getWorkSchedule().equals(selectedSchedule)) {
-		 * entity.setWorkSchedule(selectedSchedule); isDirty = true; }
-		 */
 
 		if (isDirty) {
 			addEditedPlantEntity(entityItem);

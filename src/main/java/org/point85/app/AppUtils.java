@@ -207,7 +207,7 @@ public abstract class AppUtils {
 
 		if (uom == null) {
 			// database next
-			uom = PersistenceService.instance().fetchUOMBySymbol(symbol);
+			uom = PersistenceService.instance().fetchUomBySymbol(symbol);
 
 			if (uom != null) {
 				// cache it
@@ -231,7 +231,7 @@ public abstract class AppUtils {
 		}
 
 		// look in database first
-		uom = PersistenceService.instance().fetchUOMBySymbol(symbol);
+		uom = PersistenceService.instance().fetchUomBySymbol(symbol);
 
 		if (uom != null) {
 			// cache it

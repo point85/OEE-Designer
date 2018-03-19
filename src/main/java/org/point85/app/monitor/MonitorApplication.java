@@ -206,7 +206,7 @@ public class MonitorApplication implements MessageListener {
 			if (notificationPubSubs.size() > 0) {
 				PublisherSubscriber pubSub = notificationPubSubs.get(0);
 
-				pubSub.publish(msg, RoutingKey.NOTIFICATION_MESSAGE);
+				pubSub.publish(msg, RoutingKey.NOTIFICATION_MESSAGE, 3600);
 			}
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);

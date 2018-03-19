@@ -510,7 +510,7 @@ public class UomEditorController extends DesignerDialogController {
 		getRootUomItem().getChildren().clear();
 
 		// fetch the categories
-		List<String> categories = PersistenceService.instance().fetchCategories();
+		List<String> categories = PersistenceService.instance().fetchUomCategories();
 		Collections.sort(categories);
 
 		for (String category : categories) {
