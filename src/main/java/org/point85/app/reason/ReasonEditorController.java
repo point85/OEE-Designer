@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -118,8 +119,20 @@ public class ReasonEditorController extends DesignerDialogController {
 		// fill in the top-level reason nodes
 		populateTopReasonNodes();
 
-		// availability loss categories
-		cbLosses.getItems().addAll(TimeLoss.getAvailabilityLosses());
+		// availability and performance loss categories
+		List<TimeLoss> losses = new ArrayList<>();
+		losses.addAll(TimeLoss.getAvailabilityLosses());
+		losses.addAll(TimeLoss.getPerformanceLosses());
+		losses.add(TimeLoss.UNSCHEDULED);
+
+		Collections.sort(losses, new Comparator<TimeLoss>() {
+			@Override
+			public int compare(TimeLoss o1, TimeLoss o2) {
+				return o1.name().compareTo(o2.name());
+			}
+		});
+
+		cbLosses.getItems().addAll(losses);
 	}
 
 	private void addEditedReason(TreeItem<ReasonNode> item) {
