@@ -16,6 +16,7 @@ import org.point85.app.charts.CategoryClickListener;
 import org.point85.app.charts.ParetoChartController;
 import org.point85.domain.DomainUtils;
 import org.point85.domain.collector.AvailabilitySummary;
+import org.point85.domain.collector.BaseSummary;
 import org.point85.domain.collector.ProductionSummary;
 import org.point85.domain.collector.SetupHistory;
 import org.point85.domain.messaging.CollectorResolvedEventMessage;
@@ -31,6 +32,7 @@ import org.point85.domain.schedule.WorkSchedule;
 import org.point85.domain.script.EventResolverType;
 import org.point85.domain.uom.Quantity;
 import org.point85.domain.uom.Unit;
+import org.point85.domain.uom.UnitOfMeasure;
 import org.point85.tilesfx.Tile;
 import org.point85.tilesfx.Tile.SkinType;
 import org.point85.tilesfx.TileBuilder;
@@ -129,11 +131,11 @@ public class DashboardController extends DialogController implements CategoryCli
 	private ObservableList<Data<Number, String>> netTimeList = FXCollections.observableArrayList(new ArrayList<>());
 
 	// no demand loss
-	private ObservableList<Data<Number, String>> noDemandList = FXCollections.observableArrayList(new ArrayList<>());
+	private ObservableList<Data<Number, String>> notScheduledList = FXCollections
+			.observableArrayList(new ArrayList<>());
 
 	// special events loss
-	private ObservableList<Data<Number, String>> specialEventList = FXCollections
-			.observableArrayList(new ArrayList<>());
+	private ObservableList<Data<Number, String>> unscheduledList = FXCollections.observableArrayList(new ArrayList<>());
 
 	// planned downtime
 	private ObservableList<Data<Number, String>> plannedDowntimeList = FXCollections
@@ -164,10 +166,10 @@ public class DashboardController extends DialogController implements CategoryCli
 	private XYChart.Series<Number, String> netTimeSeries = new XYChart.Series<>();
 
 	// no demand series
-	private XYChart.Series<Number, String> noDemandSeries = new XYChart.Series<>();
+	private XYChart.Series<Number, String> notScheduledSeries = new XYChart.Series<>();
 
 	// special events series
-	private XYChart.Series<Number, String> specialEventSeries = new XYChart.Series<>();
+	private XYChart.Series<Number, String> unscheduledSeries = new XYChart.Series<>();
 
 	// planned downtime series
 	private XYChart.Series<Number, String> plannedDowntimeSeries = new XYChart.Series<>();
@@ -411,9 +413,20 @@ public class DashboardController extends DialogController implements CategoryCli
 
 	private void createLossChart() {
 		// build data series
+		netTimeList.clear();
+		notScheduledList.clear();
+		unscheduledList.clear();
+		plannedDowntimeList.clear();
+		setupList.clear();
+		unplannedDowntimeList.clear();
+		minorStoppageList.clear();
+		reducedSpeedList.clear();
+		rejectList.clear();
+		yieldList.clear();
+
 		netTimeSeries.setData(netTimeList);
-		noDemandSeries.setData(noDemandList);
-		specialEventSeries.setData(specialEventList);
+		notScheduledSeries.setData(notScheduledList);
+		unscheduledSeries.setData(unscheduledList);
 		plannedDowntimeSeries.setData(plannedDowntimeList);
 		setupSeries.setData(setupList);
 		unplannedDowntimeSeries.setData(unplannedDowntimeList);
@@ -423,8 +436,8 @@ public class DashboardController extends DialogController implements CategoryCli
 		yieldSeries.setData(yieldList);
 
 		List<XYChart.Data<Number, String>> netTimePoints = new ArrayList<>();
-		List<XYChart.Data<Number, String>> noDemandPoints = new ArrayList<>();
-		List<XYChart.Data<Number, String>> specialEventPoints = new ArrayList<>();
+		List<XYChart.Data<Number, String>> notScheduledPoints = new ArrayList<>();
+		List<XYChart.Data<Number, String>> unscheduledPoints = new ArrayList<>();
 		List<XYChart.Data<Number, String>> plannedDowntimePoints = new ArrayList<>();
 		List<XYChart.Data<Number, String>> setupPoints = new ArrayList<>();
 		List<XYChart.Data<Number, String>> unplannedDowntimePoints = new ArrayList<>();
@@ -434,7 +447,7 @@ public class DashboardController extends DialogController implements CategoryCli
 		List<XYChart.Data<Number, String>> yieldPoints = new ArrayList<>();
 
 		// x-axis time units
-		determineTimeUnits(equipmentLoss.getTotalTime());
+		determineTimeUnits(equipmentLoss.getDuration());
 
 		// value adding
 		String category = TimeCategory.VALUE_ADDING.toString();
@@ -502,7 +515,7 @@ public class DashboardController extends DialogController implements CategoryCli
 		Number specialEventsLosses = convertDuration(equipmentLoss.getLoss(TimeLoss.UNSCHEDULED));
 
 		netTimePoints.add(new XYChart.Data<Number, String>(netTime, category));
-		specialEventPoints.add(new XYChart.Data<Number, String>(specialEventsLosses, category));
+		unscheduledPoints.add(new XYChart.Data<Number, String>(specialEventsLosses, category));
 
 		// operations time
 		category = TimeCategory.REQUIRED_OPERATIONS.toString();
@@ -510,12 +523,12 @@ public class DashboardController extends DialogController implements CategoryCli
 		Number noDemand = convertDuration(equipmentLoss.getLoss(TimeLoss.NOT_SCHEDULED));
 
 		netTimePoints.add(new XYChart.Data<Number, String>(netTime, category));
-		noDemandPoints.add(new XYChart.Data<Number, String>(noDemand, category));
+		notScheduledPoints.add(new XYChart.Data<Number, String>(noDemand, category));
 
 		// add the data to each series
 		netTimeList.addAll(netTimePoints);
-		noDemandList.addAll(noDemandPoints);
-		specialEventList.addAll(specialEventPoints);
+		notScheduledList.addAll(notScheduledPoints);
+		unscheduledList.addAll(unscheduledPoints);
 		plannedDowntimeList.addAll(plannedDowntimePoints);
 		setupList.addAll(setupPoints);
 		unplannedDowntimeList.addAll(unplannedDowntimePoints);
@@ -533,20 +546,24 @@ public class DashboardController extends DialogController implements CategoryCli
 		timeAxis.setAutoRanging(true);
 		timeAxis.setSide(Side.TOP);
 
-		bcLosses.setTitle(chartTitle);
+		bcLosses.setTitle(chartTitle + " (" + timeUnit + ")");
 		bcLosses.setAnimated(false);
+
+		if (bcLosses.getData() != null) {
+			bcLosses.getData().clear();
+		}
 
 		// net times
 		netTimeSeries.setName(NET_TIME_SERIES);
 		bcLosses.getData().add(netTimeSeries);
 
 		// no demand
-		noDemandSeries.setName(TimeLoss.NOT_SCHEDULED.toString());
-		bcLosses.getData().add(noDemandSeries);
+		notScheduledSeries.setName(TimeLoss.NOT_SCHEDULED.toString());
+		bcLosses.getData().add(notScheduledSeries);
 
 		// special events
-		specialEventSeries.setName(TimeLoss.UNSCHEDULED.toString());
-		bcLosses.getData().add(specialEventSeries);
+		unscheduledSeries.setName(TimeLoss.UNSCHEDULED.toString());
+		bcLosses.getData().add(unscheduledSeries);
 
 		// planned downtime
 		plannedDowntimeSeries.setName(TimeLoss.PLANNED_DOWNTIME.toString());
@@ -591,7 +608,7 @@ public class DashboardController extends DialogController implements CategoryCli
 	}
 
 	private void showStatistics() throws Exception {
-		float oee = equipmentLoss.calculateOEEPercentage();
+		float oee = equipmentLoss.calculateOeePercentage();
 		bciOee.setValue(oee);
 
 		float availability = equipmentLoss.calculateAvailabilityPercentage();
@@ -793,22 +810,27 @@ public class DashboardController extends DialogController implements CategoryCli
 
 		case PROD_GOOD: {
 			// good production
-			lbiGoodProduction.setFormatString(PROD_FORMAT + " " + message.getUom());
-			lbiGoodProduction.setValue(message.getAmount());
+			Quantity good = equipmentLoss.incrementGoodQuantity(message.getAmount());
+
+			// lbiGoodProduction.setFormatString(PROD_FORMAT + " " + good);
+
+			lbiGoodProduction.setValue(good.getAmount());
 			break;
 		}
 
 		case PROD_REJECT: {
 			// reject and rework
-			lbiRejectProduction.setFormatString(PROD_FORMAT + " " + message.getUom());
-			lbiRejectProduction.setValue(message.getAmount());
+			// lbiRejectProduction.setFormatString(PROD_FORMAT + " " + message.getUom());
+			Quantity reject = equipmentLoss.incrementRejectQuantity(message.getAmount());
+			lbiRejectProduction.setValue(reject.getAmount());
 			break;
 		}
 
 		case PROD_STARTUP: {
 			// startup and yield
-			lbiStartupProduction.setFormatString(PROD_FORMAT + " " + message.getUom());
-			lbiStartupProduction.setValue(message.getAmount());
+			// lbiStartupProduction.setFormatString(PROD_FORMAT + " " + message.getUom());
+			Quantity startup = equipmentLoss.incrementStartupQuantity(message.getAmount());
+			lbiStartupProduction.setValue(startup.getAmount());
 			break;
 		}
 
@@ -830,14 +852,12 @@ public class DashboardController extends DialogController implements CategoryCli
 			OffsetDateTime odtFrom = DomainUtils.fromLocalDateTime(ldtFrom);
 			OffsetDateTime odtTo = DomainUtils.fromLocalDateTime(ldtTo);
 
-			Duration totalTime = Duration.between(ldtFrom, ldtTo);
-
 			// equipment
 			Equipment equipment = getEquipment();
 
 			// material and job
 			SetupHistory last = PersistenceService.instance().fetchLastSetupHistory(equipment);
-			
+
 			if (last == null || last.getMaterial() == null) {
 				throw new Exception("The material being produced must be specified for this equipment.");
 			}
@@ -849,17 +869,17 @@ public class DashboardController extends DialogController implements CategoryCli
 			tiJobMaterial.setText(last.getJob());
 
 			// losses
-			equipmentLoss = new EquipmentLoss(ldtFrom, totalTime);
+			equipmentLoss = new EquipmentLoss();
 
 			// from the work schedule
 			WorkSchedule schedule = equipment.findWorkSchedule();
 			if (schedule == null) {
 				throw new Exception("A work schedule must be defined for this equipment.");
 			}
-			
+
 			Duration notScheduled = schedule.calculateNonWorkingTime(ldtFrom, ldtTo);
 
-			equipmentLoss.setTotalTime(totalTime);
+			// equipmentLoss.setTotalTime(totalTime);
 			equipmentLoss.setLoss(TimeLoss.NOT_SCHEDULED, notScheduled);
 
 			// from measured availability losses
@@ -867,59 +887,77 @@ public class DashboardController extends DialogController implements CategoryCli
 					odtFrom, odtTo);
 
 			for (AvailabilitySummary summary : availabilities) {
+				checkTimePeriod(summary, equipmentLoss);
+
 				TimeLoss loss = summary.getReason().getLossCategory();
 				equipmentLoss.setLoss(loss, summary.getDuration());
 			}
-			
-			System.out.println(equipmentLoss.toString());
 
 			// from measured production
 			EquipmentMaterial eqm = equipment.getEquipmentMaterial(material);
-			
+
 			if (eqm == null || eqm.getRunRate() == null) {
-				throw new Exception("The design speed must be defined for this equipment and material " + displayString);
+				throw new Exception(
+						"The design speed must be defined for this equipment and material " + displayString);
 			}
-			Quantity irr = eqm.getRunRate();
+			equipmentLoss.setDesignSpeedQuantity(eqm.getRunRate());
 
 			List<ProductionSummary> productions = PersistenceService.instance().fetchProductionSummary(equipment,
 					odtFrom, odtTo);
 
 			for (ProductionSummary summary : productions) {
+				checkTimePeriod(summary, equipmentLoss);
+
 				Quantity quantity = summary.getQuantity();
-				Quantity timeQty = quantity.divide(irr).convert(Unit.SECOND);
-				long seconds = Double.valueOf(timeQty.getAmount()).longValue();
-				Duration duration = Duration.ofSeconds(seconds);
+				UnitOfMeasure uom = quantity.getUOM();
 
-				EventResolverType type = summary.getType();
-				TimeLoss timeLoss = null;
-
-				switch (type) {
+				switch (summary.getType()) {
 				case PROD_GOOD:
-					timeLoss = TimeLoss.NO_LOSS;
+					lbiGoodProduction.setFormatString(PROD_FORMAT + " " + uom.getSymbol());
+					lbiGoodProduction.setValue(quantity.getAmount());
+					equipmentLoss.setGoodQuantity(quantity);
 					break;
 
 				case PROD_REJECT:
-					timeLoss = TimeLoss.REJECT_REWORK;
+					lbiRejectProduction.setFormatString(PROD_FORMAT + " " + uom.getSymbol());
+					lbiRejectProduction.setValue(quantity.getAmount());
+					equipmentLoss.setRejectQuantity(quantity);
 					break;
 
 				case PROD_STARTUP:
-					timeLoss = TimeLoss.STARTUP_YIELD;
+					lbiStartupProduction.setFormatString(PROD_FORMAT + " " + uom.getSymbol());
+					lbiStartupProduction.setValue(quantity.getAmount());
+					equipmentLoss.setStartupQuantity(quantity);
 					break;
 
 				default:
-					return;
+					break;
 				}
-				equipmentLoss.setLoss(timeLoss, duration);
 			}
 
 			// compute reduced speed from the other losses
 			equipmentLoss.setReducedSpeedLoss();
-			
+
 			System.out.println(equipmentLoss.toString());
 
 			displayLosses();
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
+		}
+	}
+
+	private void checkTimePeriod(BaseSummary summary, EquipmentLoss equipmentLoss) {
+		// beginning time
+		OffsetDateTime start = summary.getStartTime();
+		OffsetDateTime end = summary.getEndTime();
+
+		if (equipmentLoss.getStartDateTime() == null || start.compareTo(equipmentLoss.getStartDateTime()) == -1) {
+			equipmentLoss.setStartDateTime(start);
+		}
+
+		// ending time
+		if (equipmentLoss.getEndDateTime() == null || end.compareTo(equipmentLoss.getEndDateTime()) == 1) {
+			equipmentLoss.setEndDateTime(end);
 		}
 	}
 

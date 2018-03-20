@@ -332,10 +332,10 @@ public class UomEditorController extends DesignerDialogController {
 		if (uom == null) {
 			return;
 		}
-		
+
 		// make sure that there is a non-null category
 		uom.getCategory();
-		
+
 		PersistenceService.instance().fetchReferencedUnits(uom);
 
 		PersistenceService.instance().save(uom);
@@ -358,7 +358,7 @@ public class UomEditorController extends DesignerDialogController {
 		} else {
 			// category selected
 			selectedUomItem = null;
-			
+
 			cbCategories.getSelectionModel().select(item.getValue().getCategory());
 		}
 
@@ -589,14 +589,14 @@ public class UomEditorController extends DesignerDialogController {
 		}
 	}
 
-	private UnitOfMeasure onAddUom() {
+	private UnitOfMeasure createUom() {
 		UnitOfMeasure uom = null;
 		try {
 			// new child
 			uom = new UnitOfMeasure();
 			selectedUomItem = new TreeItem<>(new UomNode(uom));
 			selectedUomItem.setGraphic(ImageManager.instance().getImageView(Images.UOM));
-			setUomAttributes(selectedUomItem);
+			setAttributes(selectedUomItem);
 			editedUomItems.add(selectedUomItem);
 
 			// category
@@ -621,7 +621,6 @@ public class UomEditorController extends DesignerDialogController {
 
 			parentCategoryItem.getChildren().add(selectedUomItem);
 			parentCategoryItem.setExpanded(true);
-			// tvUoms.refresh();
 
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
@@ -632,14 +631,15 @@ public class UomEditorController extends DesignerDialogController {
 	@FXML
 	private void onSaveUom() {
 		try {
-			// save the selected UOM
-			UnitOfMeasure uom = getSelectedUom();
-
-			if (uom == null) {
-				// new UOM
-				uom = onAddUom();
+			if (selectedUomItem == null) {
+				// create
+				createUom();
+			} else {
+				// update
+				setAttributes(selectedUomItem);
 			}
 
+			UnitOfMeasure uom = getSelectedUom();
 			UnitOfMeasure saved = (UnitOfMeasure) PersistenceService.instance().save(uom);
 			selectedUomItem.getValue().setUnitOfMeasure(saved);
 			selectedUomItem.setGraphic(ImageManager.instance().getImageView(Images.UOM));
@@ -653,24 +653,8 @@ public class UomEditorController extends DesignerDialogController {
 		}
 	}
 
-	@FXML
-	private void onUpdateUom() {
-		try {
-			if (selectedUomItem == null) {
-				throw new Exception("No unit of measure selected");
-			}
-
-			setUomAttributes(selectedUomItem);
-
-			selectedUomItem.setGraphic(ImageManager.instance().getImageView(Images.CHANGED));
-			tvUoms.refresh();
-		} catch (Exception e) {
-			AppUtils.showErrorDialog(e);
-		}
-	}
-
 	// set the UOM attributes from the UI
-	private void setUomAttributes(TreeItem<UomNode> uomItem) throws Exception {
+	private void setAttributes(TreeItem<UomNode> uomItem) throws Exception {
 		if (uomItem == null || !uomItem.getValue().isUnitOfMeasure()) {
 			return;
 		}
@@ -678,12 +662,12 @@ public class UomEditorController extends DesignerDialogController {
 
 		// unit attributes
 		String name = this.tfName.getText().trim();
-		
+
 		if (name.length() == 0) {
 			AppUtils.showErrorDialog("The unit name is required.");
 			return;
 		}
-		
+
 		String symbol = this.tfSymbol.getText().trim();
 		String category = this.cbCategories.getSelectionModel().getSelectedItem();
 		String type = this.cbUnitTypes.getSelectionModel().getSelectedItem();
@@ -852,6 +836,9 @@ public class UomEditorController extends DesignerDialogController {
 		if (!contains) {
 			editedUomItems.add(uomItem);
 		}
+
+		selectedUomItem.setGraphic(ImageManager.instance().getImageView(Images.CHANGED));
+		tvUoms.refresh();
 	}
 
 	// Delete button clicked

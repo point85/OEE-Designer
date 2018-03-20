@@ -589,7 +589,7 @@ public class MonitorController {
 	// TODO remove
 	private EquipmentLoss getEquipmentLoss(Equipment equipment) {
 		EquipmentLoss equipmentLoss = null;
-		equipmentLoss.setTotalTime(Duration.ofSeconds(240 * 60));
+		//equipmentLoss.setTotalTime(Duration.ofSeconds(240 * 60));
 		equipmentLoss.setLoss(TimeLoss.UNSCHEDULED, Duration.ofSeconds(40 * 60));
 		equipmentLoss.setLoss(TimeLoss.MINOR_STOPPAGES, Duration.ofSeconds(40 * 60));
 		equipmentLoss.setLoss(TimeLoss.PLANNED_DOWNTIME, Duration.ofSeconds(10 * 60));
