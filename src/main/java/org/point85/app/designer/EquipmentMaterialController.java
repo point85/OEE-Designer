@@ -268,16 +268,25 @@ public class EquipmentMaterialController extends DesignerController {
 				if (!uom.getMeasurementType().equals(MeasurementType.QUOTIENT)) {
 					throw new Exception("Unit of measure " + symbol + " is not a quotient.");
 				} else {
-					if (!uom.getDivisor().getUnitType().equals(UnitType.TIME) ) {
+					if (!uom.getDivisor().getUnitType().equals(UnitType.TIME)) {
 						throw new Exception("Unit of measure " + symbol + " is not a rate.");
 					}
 				}
-				
+
 				lbIRRUnit.setText(symbol);
-				getSelectedEquipmentMaterial().setRunRateUOM(uom);
+
+				if (getSelectedEquipmentMaterial() != null) {
+					getSelectedEquipmentMaterial().setRunRateUOM(uom);
+				}
 			} else if (source.equals(btFindRejectUnit)) {
+				if (!uom.getMeasurementType().equals(MeasurementType.SCALAR)) {
+					throw new Exception("Unit of measure " + symbol + " is not a scalar.");
+				}
+				
 				lbRejectUnit.setText(symbol);
-				getSelectedEquipmentMaterial().setRejectUOM(uom);
+				if (getSelectedEquipmentMaterial() != null) {
+					getSelectedEquipmentMaterial().setRejectUOM(uom);
+				}
 			}
 
 		} catch (Exception e) {

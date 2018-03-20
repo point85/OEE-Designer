@@ -358,6 +358,8 @@ public class UomEditorController extends DesignerDialogController {
 		} else {
 			// category selected
 			selectedUomItem = null;
+			
+			cbCategories.getSelectionModel().select(item.getValue().getCategory());
 		}
 
 		// show the UOM children too
@@ -676,6 +678,12 @@ public class UomEditorController extends DesignerDialogController {
 
 		// unit attributes
 		String name = this.tfName.getText().trim();
+		
+		if (name.length() == 0) {
+			AppUtils.showErrorDialog("The unit name is required.");
+			return;
+		}
+		
 		String symbol = this.tfSymbol.getText().trim();
 		String category = this.cbCategories.getSelectionModel().getSelectedItem();
 		String type = this.cbUnitTypes.getSelectionModel().getSelectedItem();

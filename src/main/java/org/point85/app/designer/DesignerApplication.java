@@ -721,7 +721,7 @@ public class DesignerApplication {
 
 	// display the OEE dashboard as a dialog
 	void showOeeDashboard() throws Exception {
-		if (dashboardDialogController == null) {
+		//if (dashboardDialogController == null) {
 			FXMLLoader dialogLoader = LoaderFactory.dashboardDialogLoader();
 			AnchorPane pane = (AnchorPane) dialogLoader.getRoot();
 
@@ -748,10 +748,11 @@ public class DesignerApplication {
 			AnchorPane.setRightAnchor(spDashboard, 0.0);
 
 			DashboardController dashboardController = dashboardLoader.getController();
+			dashboardController.setApp(this);
 			dashboardDialogController.setDashboardController(dashboardController);
-		}
+		//}
 
-		PlantEntity entity = this.getPhysicalModelController().getSelectedEntity();
+		PlantEntity entity = getPhysicalModelController().getSelectedEntity();
 
 		if (!(entity instanceof Equipment)) {
 			throw new Exception("Equipment must be selected first.");

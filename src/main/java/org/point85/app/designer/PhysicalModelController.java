@@ -82,6 +82,9 @@ public class PhysicalModelController extends DesignerController {
 	private Button btScheduleEditor;
 
 	@FXML
+	private Button btClearSchedule;
+
+	@FXML
 	private Button btUomEditor;
 
 	@FXML
@@ -362,21 +365,19 @@ public class PhysicalModelController extends DesignerController {
 		if (oldItem != null) {
 			// TODO
 			/*
-			boolean isChanged = setAttributes(oldItem);
-
-			if (isChanged) {
-				oldItem.setGraphic(ImageManager.instance().getImageView(Images.CHANGED));
-				this.addEditedPlantEntity(oldItem);
-				tvEntities.refresh();
-			}
-			*/
+			 * boolean isChanged = setAttributes(oldItem);
+			 * 
+			 * if (isChanged) {
+			 * oldItem.setGraphic(ImageManager.instance().getImageView(Images.CHANGED));
+			 * this.addEditedPlantEntity(oldItem); tvEntities.refresh(); }
+			 */
 		}
 
 		// new attributes
 		selectedEntityItem = newItem;
 		PlantEntity selectedEntity = newItem.getValue().getPlantEntity();
 		displayAttributes(selectedEntity);
-		
+
 		// TODO
 		WorkSchedule schedule = selectedEntity.findWorkSchedule();
 
@@ -469,6 +470,10 @@ public class PhysicalModelController extends DesignerController {
 		// work schedule
 		btWorkSchedule.setGraphic(ImageManager.instance().getImageView(Images.SCHEDULE));
 		btWorkSchedule.setContentDisplay(ContentDisplay.LEFT);
+
+		// clear work schedule
+		btClearSchedule.setGraphic(ImageManager.instance().getImageView(Images.CLEAR));
+		btClearSchedule.setContentDisplay(ContentDisplay.LEFT);
 
 		// dashboard
 		btDashboard.setGraphic(ImageManager.instance().getImageView(Images.DASHBOARD));
@@ -1052,6 +1057,23 @@ public class PhysicalModelController extends DesignerController {
 	private void onShowDashboard() {
 		try {
 			getApp().showOeeDashboard();
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+			return;
+		}
+	}
+
+	@FXML
+	private void onClearSchedule() {
+		try {
+			if (getSelectedEntity() == null || getSelectedEntity().getWorkSchedule() == null) {
+				return;
+			}
+
+			getSelectedEntity().setWorkSchedule(null);
+			selectedSchedule = null;
+			lbSchedule.setText("");
+			markSelectedPlantEntity();
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 			return;

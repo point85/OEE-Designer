@@ -1,19 +1,27 @@
 package org.point85.app.dashboard;
 
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import org.point85.app.AppUtils;
-import org.point85.app.DialogController;
 import org.point85.app.charts.CategoryClickListener;
 import org.point85.app.charts.ParetoChartController;
+import org.point85.app.designer.DesignerDialogController;
+import org.point85.domain.DomainUtils;
+import org.point85.domain.collector.AvailabilitySummary;
 import org.point85.domain.messaging.CollectorResolvedEventMessage;
 import org.point85.domain.performance.EquipmentLoss;
 import org.point85.domain.performance.ParetoItem;
 import org.point85.domain.performance.TimeCategory;
 import org.point85.domain.performance.TimeLoss;
+import org.point85.domain.persistence.PersistenceService;
+import org.point85.domain.plant.Equipment;
 import org.point85.domain.script.EventResolverType;
 import org.point85.domain.uom.Unit;
 import org.point85.tilesfx.Tile;
@@ -36,6 +44,8 @@ import javafx.scene.chart.StackedBarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Data;
 import javafx.scene.chart.XYChart.Series;
+import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseEvent;
@@ -46,7 +56,7 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
-public class DashboardController extends DialogController implements CategoryClickListener {
+public class DashboardController extends DesignerDialogController implements CategoryClickListener {
 	private static final String LOSS_CHART_TITLE = "Equipment Times";
 	private static final String TIME_CATEGORY_LABEL = "Time Categories";
 	private static final String NET_TIME_SERIES = "Time in Category";
@@ -77,6 +87,16 @@ public class DashboardController extends DialogController implements CategoryCli
 	private double cumulativeTotal = 0.0d;
 	private double cumulativeGood = 0.0d;
 	private double cumulativeReject = 0.0d;
+	
+	// selection criteria
+	@FXML
+	private DatePicker dpFromDate;
+	
+	@FXML
+	private DatePicker dpToDate;
+	
+	@FXML
+	private Button btReset;
 
 	// container for dashboard tiles
 	@FXML
@@ -877,6 +897,26 @@ public class DashboardController extends DialogController implements CategoryCli
 
 		default:
 			break;
+		}
+	}
+	
+	@FXML
+	private void onReset() {
+		Equipment equipment = (Equipment) getApp().getPhysicalModelController().getSelectedEntity();
+		
+		LocalDate from = this.dpFromDate.getValue();
+		LocalDateTime ldtFrom = LocalDateTime.of(from, LocalTime.MIN);
+		
+		LocalDate to = this.dpToDate.getValue();
+		LocalDateTime ldtTo = LocalDateTime.of(to, LocalTime.MAX);
+		
+		OffsetDateTime odtFrom = DomainUtils.fromLocalDateTime(ldtFrom);
+		OffsetDateTime odtTo = DomainUtils.fromLocalDateTime(ldtTo);
+		
+		List<AvailabilitySummary> availabilities = PersistenceService.instance().fetchAvailabilitySummary(equipment, odtFrom, odtTo);
+		
+		for (AvailabilitySummary summary : availabilities) {
+			System.out.println(summary.getDuration());
 		}
 	}
 }

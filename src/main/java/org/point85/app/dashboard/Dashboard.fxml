@@ -3,15 +3,49 @@
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.chart.StackedBarChart?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 
-<SplitPane fx:id="stRootPane" dividerPositions="0.3" orientation="VERTICAL" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.dashboard.DashboardController">
+<SplitPane fx:id="stRootPane" dividerPositions="0.45" orientation="VERTICAL" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.dashboard.DashboardController">
   <items>
-    <AnchorPane fx:id="apTileLayout" minHeight="0.0" minWidth="0.0" />
+      <VBox>
+         <children>
+            <AnchorPane>
+               <children>
+                  <GridPane hgap="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Label text="From" GridPane.halignment="RIGHT" />
+                        <DatePicker fx:id="dpFromDate" maxWidth="1.7976931348623157E308" promptText="Choose starting date" GridPane.columnIndex="1" />
+                        <Label text="To" GridPane.columnIndex="2" GridPane.halignment="RIGHT" />
+                        <DatePicker fx:id="dpToDate" maxWidth="1.7976931348623157E308" promptText="Choose ending date" GridPane.columnIndex="3" />
+                        <Button fx:id="btReset" mnemonicParsing="false" onAction="#onReset" text="Reset" GridPane.columnIndex="4" GridPane.halignment="CENTER" />
+                     </children>
+                  </GridPane>
+                  <AnchorPane fx:id="apTileLayout" layoutY="30.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0" />
+               </children>
+            </AnchorPane>
+         </children>
+      </VBox>
     <AnchorPane minHeight="0.0" minWidth="0.0">
          <children>
             <TabPane fx:id="tpParetoCharts" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0">
