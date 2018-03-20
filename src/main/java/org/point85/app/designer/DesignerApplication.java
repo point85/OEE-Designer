@@ -30,8 +30,6 @@ import org.point85.domain.messaging.MessagingSource;
 import org.point85.domain.opc.da.DaOpcClient;
 import org.point85.domain.opc.da.OpcDaBrowserLeaf;
 import org.point85.domain.opc.ua.UaOpcClient;
-import org.point85.domain.performance.EquipmentLoss;
-import org.point85.domain.performance.EquipmentLossManager;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Equipment;
 import org.point85.domain.plant.Material;
@@ -720,47 +718,44 @@ public class DesignerApplication {
 	}
 
 	// display the OEE dashboard as a dialog
-	void showOeeDashboard() throws Exception {
-		//if (dashboardDialogController == null) {
-			FXMLLoader dialogLoader = LoaderFactory.dashboardDialogLoader();
-			AnchorPane pane = (AnchorPane) dialogLoader.getRoot();
-
-			// Create the dialog Stage.
-			Stage dialogStage = new Stage(StageStyle.DECORATED);
-			dialogStage.setTitle("OEE Dashboard");
-			dialogStage.initModality(Modality.NONE);
-			Scene scene = new Scene(pane);
-			dialogStage.setScene(scene);
-
-			// get the controller
-			dashboardDialogController = dialogLoader.getController();
-			dashboardDialogController.setDialogStage(dialogStage);
-
-			// load the content
-			FXMLLoader dashboardLoader = LoaderFactory.dashboardLoader();
-			SplitPane spDashboard = (SplitPane) dashboardLoader.getRoot();
-
-			pane.getChildren().add(0, spDashboard);
-
-			AnchorPane.setTopAnchor(spDashboard, 0.0);
-			AnchorPane.setBottomAnchor(spDashboard, 50.0);
-			AnchorPane.setLeftAnchor(spDashboard, 0.0);
-			AnchorPane.setRightAnchor(spDashboard, 0.0);
-
-			DashboardController dashboardController = dashboardLoader.getController();
-			dashboardController.setApp(this);
-			dashboardDialogController.setDashboardController(dashboardController);
-		//}
-
+	void showDashboard() throws Exception {
 		PlantEntity entity = getPhysicalModelController().getSelectedEntity();
 
 		if (!(entity instanceof Equipment)) {
 			throw new Exception("Equipment must be selected first.");
 		}
 
-		EquipmentLoss equipmentLoss = EquipmentLossManager.getEquipmentLoss((Equipment) entity);
-		dashboardDialogController.getDashboardController().setEquipmentLoss(equipmentLoss);
-		dashboardDialogController.getDashboardController().displayLosses();
+		// if (dashboardDialogController == null) {
+		FXMLLoader dialogLoader = LoaderFactory.dashboardDialogLoader();
+		AnchorPane pane = (AnchorPane) dialogLoader.getRoot();
+
+		// Create the dialog Stage.
+		Stage dialogStage = new Stage(StageStyle.DECORATED);
+		dialogStage.setTitle("OEE Dashboard");
+		dialogStage.initModality(Modality.NONE);
+		Scene scene = new Scene(pane);
+		dialogStage.setScene(scene);
+
+		// get the controller
+		dashboardDialogController = dialogLoader.getController();
+		dashboardDialogController.setDialogStage(dialogStage);
+
+		// load the content
+		FXMLLoader dashboardLoader = LoaderFactory.dashboardLoader();
+		SplitPane spDashboard = (SplitPane) dashboardLoader.getRoot();
+
+		pane.getChildren().add(0, spDashboard);
+
+		AnchorPane.setTopAnchor(spDashboard, 0.0);
+		AnchorPane.setBottomAnchor(spDashboard, 50.0);
+		AnchorPane.setLeftAnchor(spDashboard, 0.0);
+		AnchorPane.setRightAnchor(spDashboard, 0.0);
+
+		DashboardController dashboardController = dashboardLoader.getController();
+		dashboardDialogController.setDashboardController(dashboardController);
+		// }
+
+		dashboardDialogController.getDashboardController().setEquipment((Equipment) entity);
 
 		// Show the dialog and wait until the user closes it
 		if (!dashboardDialogController.getDialogStage().isShowing()) {

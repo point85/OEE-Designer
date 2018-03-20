@@ -1056,7 +1056,7 @@ public class PhysicalModelController extends DesignerController {
 	@FXML
 	private void onShowDashboard() {
 		try {
-			getApp().showOeeDashboard();
+			getApp().showDashboard();
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 			return;

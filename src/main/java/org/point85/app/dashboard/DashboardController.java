@@ -7,14 +7,17 @@ import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import org.point85.app.AppUtils;
+import org.point85.app.DialogController;
+import org.point85.app.ImageManager;
+import org.point85.app.Images;
 import org.point85.app.charts.CategoryClickListener;
 import org.point85.app.charts.ParetoChartController;
-import org.point85.app.designer.DesignerDialogController;
 import org.point85.domain.DomainUtils;
 import org.point85.domain.collector.AvailabilitySummary;
+import org.point85.domain.collector.ProductionSummary;
+import org.point85.domain.collector.SetupHistory;
 import org.point85.domain.messaging.CollectorResolvedEventMessage;
 import org.point85.domain.performance.EquipmentLoss;
 import org.point85.domain.performance.ParetoItem;
@@ -22,7 +25,11 @@ import org.point85.domain.performance.TimeCategory;
 import org.point85.domain.performance.TimeLoss;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Equipment;
+import org.point85.domain.plant.EquipmentMaterial;
+import org.point85.domain.plant.Material;
+import org.point85.domain.schedule.WorkSchedule;
 import org.point85.domain.script.EventResolverType;
+import org.point85.domain.uom.Quantity;
 import org.point85.domain.uom.Unit;
 import org.point85.tilesfx.Tile;
 import org.point85.tilesfx.Tile.SkinType;
@@ -31,7 +38,6 @@ import org.point85.tilesfx.skins.BarChartItem;
 import org.point85.tilesfx.skins.LeaderBoardItem;
 import org.point85.tilesfx.tools.FlowGridPane;
 
-import javafx.animation.AnimationTimer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -45,6 +51,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Data;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -56,7 +63,7 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
-public class DashboardController extends DesignerDialogController implements CategoryClickListener {
+public class DashboardController extends DialogController implements CategoryClickListener {
 	private static final String LOSS_CHART_TITLE = "Equipment Times";
 	private static final String TIME_CATEGORY_LABEL = "Time Categories";
 	private static final String NET_TIME_SERIES = "Time in Category";
@@ -68,11 +75,6 @@ public class DashboardController extends DesignerDialogController implements Cat
 	private static final long DAYS_AMOUNT = 30 * 3600;
 	private static final long HOURS_AMOUNT = 24 * 3600;
 	private static final long MINS_AMOUNT = 3600;
-
-	// TODO remove simulated data
-	private static final Random RND = new Random();
-	private long lastTimerCall;
-	private AnimationTimer timer;
 
 	private static final double TILE_WIDTH = 300;
 	private static final double TILE_HEIGHT = TILE_WIDTH;
@@ -87,16 +89,18 @@ public class DashboardController extends DesignerDialogController implements Cat
 	private double cumulativeTotal = 0.0d;
 	private double cumulativeGood = 0.0d;
 	private double cumulativeReject = 0.0d;
-	
+
+	private Equipment equipment;
+
 	// selection criteria
 	@FXML
 	private DatePicker dpFromDate;
-	
+
 	@FXML
 	private DatePicker dpToDate;
-	
+
 	@FXML
-	private Button btReset;
+	private Button btRefresh;
 
 	// container for dashboard tiles
 	@FXML
@@ -285,11 +289,6 @@ public class DashboardController extends DesignerDialogController implements Cat
 
 	private List<ParetoItem> fetchParetoData() throws Exception {
 		// TODO: query database for the records of interest from equipment
-		// loss start time to end time
-		// select REASON, START_TIME, END_TIME from EVENT_HISTORY where
-		// LOSS_CATEGORY = 'MINOR_STOPPAGE' and
-		// START_TIME > '2017-01-01 00:00:00' and END_TIME < '2017-12-31
-		// 00:00:00'
 
 		List<ParetoItem> items = new ArrayList<>();
 
@@ -471,14 +470,6 @@ public class DashboardController extends DesignerDialogController implements Cat
 		XYChart.Data<Number, String> minorStoppagesData = new XYChart.Data<Number, String>(minorStoppagesLoss,
 				category);
 
-		/*
-		 * minorStoppagesData.nodeProperty().addListener(new ChangeListener<Node>() {
-		 * 
-		 * @Override public void changed(ObservableValue<? extends Node> ov, Node
-		 * oldNode, final Node node) { if (node != null) {
-		 * displayLabelForData(minorStoppagesData); } } });
-		 */
-
 		minorStoppagePoints.add(minorStoppagesData);
 
 		// reported production time
@@ -657,26 +648,16 @@ public class DashboardController extends DesignerDialogController implements Cat
 		showParetoTab(lossCategory);
 	}
 
-	/**
-	 * places a text label with a bar's value above a bar node for a given
-	 * XYChart.Data
-	 */
-	/*
-	 * private void displayLabelForData(XYChart.Data<Number, String> data) { final
-	 * Node node = data.getNode(); final Text dataText = new Text(data.getXValue() +
-	 * "");
-	 * 
-	 * node.parentProperty().addListener((observable, oldParent, parent) -> { Group
-	 * parentGroup = (Group) parent; parentGroup.getChildren().add(dataText); });
-	 * 
-	 * node.boundsInParentProperty().addListener((observable, oldBounds, bounds) ->
-	 * { dataText.setLayoutX(Math.round(bounds.getMinX() + bounds.getWidth() / 2 -
-	 * dataText.prefWidth(-1) / 2)); dataText.setLayoutY(Math.round(bounds.getMinY()
-	 * - dataText.prefHeight(-1) * 0.5)); }); }
-	 */
+	@Override
+	protected void setImages() throws Exception {
+		btRefresh.setGraphic(ImageManager.instance().getImageView(Images.REFRESH));
+		btRefresh.setContentDisplay(ContentDisplay.LEFT);
+	}
 
 	@FXML
-	public void initialize() {
+	public void initialize() throws Exception {
+		setImages();
+
 		tpParetoCharts.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
 
 			if (newValue == null || equipmentLoss == null) {
@@ -780,70 +761,6 @@ public class DashboardController extends DesignerDialogController implements Cat
 		AnchorPane.setBottomAnchor(pane, 0.0);
 		AnchorPane.setLeftAnchor(pane, 0.0);
 		AnchorPane.setRightAnchor(pane, 0.0);
-
-		// TODO remove simulation
-		lastTimerCall = System.nanoTime();
-		timer = new AnimationTimer() {
-			@Override
-			public void handle(long now) {
-				long delta = 3_500_000_000L;
-				if (now > lastTimerCall + delta) {
-					// OEE
-					bciOee.setValue(RND.nextDouble() * 100);
-					bciAvailability.setValue(RND.nextDouble() * 100);
-					bciPerformance.setValue(RND.nextDouble() * 100);
-					bciQuality.setValue(RND.nextDouble() * 100);
-
-					// production
-					boolean sim1 = false;
-
-					if (sim1) {
-						double totalGood = RND.nextDouble() * 100;
-						lbiGoodProduction.setFormatString("%.1f kg");
-						lbiGoodProduction.setValue(showCumulative ? incrementTotalProduction(totalGood) : totalGood);
-
-						double totalReject = RND.nextDouble() * 100;
-						lbiRejectProduction.setFormatString("%.1f kg");
-						lbiRejectProduction
-								.setValue(showCumulative ? incrementTotalProduction(totalReject) : totalReject);
-
-						double totalStartup = RND.nextDouble() * 100;
-						lbiStartupProduction.setFormatString("%.1f kg");
-						lbiStartupProduction
-								.setValue(showCumulative ? incrementTotalProduction(totalStartup) : totalStartup);
-					} else {
-
-						tiProduction.getLeaderBoardItems().get(RND.nextInt(2)).setValue(RND.nextDouble() * 80);
-					}
-
-					// material
-					tiJobMaterial.setDescription(
-							"M123456789 (and description could get long)" + (long) (RND.nextDouble() * 10000));
-
-					// job
-					tiJobMaterial.setText("Job " + (long) (RND.nextDouble() * 10000));
-
-					// availability
-					TimeLoss loss = null;
-
-					if (RND.nextDouble() > 0.5) {
-						loss = TimeLoss.UNPLANNED_DOWNTIME;
-					} else {
-						loss = TimeLoss.AVAILABLE;
-					}
-					tiAvailability.setTextColor(loss.getColor());
-					tiAvailability.setDescription(loss.getDisplayString());
-
-					tiAvailability
-							.setText("Reason" + (long) (RND.nextDouble() * 1000) + " (description of the reason)");
-
-					lastTimerCall = now;
-				}
-			}
-		};
-
-		// TODO
-		// timer.start();
 	}
 
 	public void update(CollectorResolvedEventMessage message) {
@@ -899,24 +816,118 @@ public class DashboardController extends DesignerDialogController implements Cat
 			break;
 		}
 	}
-	
+
 	@FXML
-	private void onReset() {
-		Equipment equipment = (Equipment) getApp().getPhysicalModelController().getSelectedEntity();
-		
-		LocalDate from = this.dpFromDate.getValue();
-		LocalDateTime ldtFrom = LocalDateTime.of(from, LocalTime.MIN);
-		
-		LocalDate to = this.dpToDate.getValue();
-		LocalDateTime ldtTo = LocalDateTime.of(to, LocalTime.MAX);
-		
-		OffsetDateTime odtFrom = DomainUtils.fromLocalDateTime(ldtFrom);
-		OffsetDateTime odtTo = DomainUtils.fromLocalDateTime(ldtTo);
-		
-		List<AvailabilitySummary> availabilities = PersistenceService.instance().fetchAvailabilitySummary(equipment, odtFrom, odtTo);
-		
-		for (AvailabilitySummary summary : availabilities) {
-			System.out.println(summary.getDuration());
+	private void onRefresh() {
+		try {
+			// time period
+			LocalDate from = dpFromDate.getValue();
+			LocalDateTime ldtFrom = LocalDateTime.of(from, LocalTime.MIN);
+
+			LocalDate to = dpToDate.getValue();
+			LocalDateTime ldtTo = LocalDateTime.of(to, LocalTime.MAX);
+
+			OffsetDateTime odtFrom = DomainUtils.fromLocalDateTime(ldtFrom);
+			OffsetDateTime odtTo = DomainUtils.fromLocalDateTime(ldtTo);
+
+			Duration totalTime = Duration.between(ldtFrom, ldtTo);
+
+			// equipment
+			Equipment equipment = getEquipment();
+
+			// material and job
+			SetupHistory last = PersistenceService.instance().fetchLastSetupHistory(equipment);
+			
+			if (last == null || last.getMaterial() == null) {
+				throw new Exception("The material being produced must be specified for this equipment.");
+			}
+			Material material = last.getMaterial();
+
+			String displayString = material.getName() + " (" + material.getDescription() + ")";
+			tiJobMaterial.setDescription(displayString);
+
+			tiJobMaterial.setText(last.getJob());
+
+			// losses
+			equipmentLoss = new EquipmentLoss(ldtFrom, totalTime);
+
+			// from the work schedule
+			WorkSchedule schedule = equipment.findWorkSchedule();
+			if (schedule == null) {
+				throw new Exception("A work schedule must be defined for this equipment.");
+			}
+			
+			Duration notScheduled = schedule.calculateNonWorkingTime(ldtFrom, ldtTo);
+
+			equipmentLoss.setTotalTime(totalTime);
+			equipmentLoss.setLoss(TimeLoss.NOT_SCHEDULED, notScheduled);
+
+			// from measured availability losses
+			List<AvailabilitySummary> availabilities = PersistenceService.instance().fetchAvailabilitySummary(equipment,
+					odtFrom, odtTo);
+
+			for (AvailabilitySummary summary : availabilities) {
+				TimeLoss loss = summary.getReason().getLossCategory();
+				equipmentLoss.setLoss(loss, summary.getDuration());
+			}
+			
+			System.out.println(equipmentLoss.toString());
+
+			// from measured production
+			EquipmentMaterial eqm = equipment.getEquipmentMaterial(material);
+			
+			if (eqm == null || eqm.getRunRate() == null) {
+				throw new Exception("The design speed must be defined for this equipment and material " + displayString);
+			}
+			Quantity irr = eqm.getRunRate();
+
+			List<ProductionSummary> productions = PersistenceService.instance().fetchProductionSummary(equipment,
+					odtFrom, odtTo);
+
+			for (ProductionSummary summary : productions) {
+				Quantity quantity = summary.getQuantity();
+				Quantity timeQty = quantity.divide(irr).convert(Unit.SECOND);
+				long seconds = Double.valueOf(timeQty.getAmount()).longValue();
+				Duration duration = Duration.ofSeconds(seconds);
+
+				EventResolverType type = summary.getType();
+				TimeLoss timeLoss = null;
+
+				switch (type) {
+				case PROD_GOOD:
+					timeLoss = TimeLoss.NO_LOSS;
+					break;
+
+				case PROD_REJECT:
+					timeLoss = TimeLoss.REJECT_REWORK;
+					break;
+
+				case PROD_STARTUP:
+					timeLoss = TimeLoss.STARTUP_YIELD;
+					break;
+
+				default:
+					return;
+				}
+				equipmentLoss.setLoss(timeLoss, duration);
+			}
+
+			// compute reduced speed from the other losses
+			equipmentLoss.setReducedSpeedLoss();
+			
+			System.out.println(equipmentLoss.toString());
+
+			displayLosses();
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
 		}
+	}
+
+	public Equipment getEquipment() {
+		return equipment;
+	}
+
+	public void setEquipment(Equipment equipment) {
+		this.equipment = equipment;
 	}
 }
