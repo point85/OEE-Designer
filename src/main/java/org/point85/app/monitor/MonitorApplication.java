@@ -76,7 +76,7 @@ public class MonitorApplication implements MessageListener {
 			primaryStage.setScene(scene);
 
 			monitorController = loader.getController();
-			monitorController.initializeApplication(this);
+			monitorController.initializeApplication();
 
 			// connect to RMA brokers
 			connectToNotificationBrokers();

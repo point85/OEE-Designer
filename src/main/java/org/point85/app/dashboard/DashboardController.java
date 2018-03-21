@@ -16,21 +16,17 @@ import org.point85.app.charts.CategoryClickListener;
 import org.point85.app.charts.ParetoChartController;
 import org.point85.domain.DomainUtils;
 import org.point85.domain.collector.AvailabilityHistory;
-import org.point85.domain.collector.AvailabilitySummary;
-import org.point85.domain.collector.BaseSummary;
-import org.point85.domain.collector.ProductionSummary;
 import org.point85.domain.collector.SetupHistory;
 import org.point85.domain.messaging.CollectorResolvedEventMessage;
 import org.point85.domain.performance.EquipmentLoss;
+import org.point85.domain.performance.EquipmentLossManager;
 import org.point85.domain.performance.ParetoItem;
 import org.point85.domain.performance.TimeCategory;
 import org.point85.domain.performance.TimeLoss;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Equipment;
-import org.point85.domain.plant.EquipmentMaterial;
 import org.point85.domain.plant.Material;
 import org.point85.domain.plant.Reason;
-import org.point85.domain.schedule.WorkSchedule;
 import org.point85.domain.script.EventResolverType;
 import org.point85.domain.uom.MeasurementSystem;
 import org.point85.domain.uom.Quantity;
@@ -729,7 +725,7 @@ public class DashboardController extends DialogController implements CategoryCli
 		tiOee = TileBuilder.create().skinType(SkinType.BAR_CHART).prefSize(TILE_WIDTH, TILE_HEIGHT)
 				.title("Overall Equipment Effectiveness").text("Current OEE")
 				.barChartItems(bciOee, bciAvailability, bciPerformance, bciQuality).decimals(0).sortedData(false)
-				.build();
+				.animated(true).build();
 
 		// production tile
 		lbiGoodProduction = new LeaderBoardItem("Good", 0);
@@ -744,8 +740,9 @@ public class DashboardController extends DialogController implements CategoryCli
 
 		tiProduction = TileBuilder.create().skinType(SkinType.LEADER_BOARD).prefSize(TILE_WIDTH, TILE_HEIGHT)
 				.title("Current Production").text(productionText)
-				.leaderBoardItems(lbiGoodProduction, lbiRejectProduction, lbiStartupProduction).sortedData(true)
-				.build();
+				.leaderBoardItems(lbiGoodProduction, lbiRejectProduction, lbiStartupProduction).sortedData(false)
+				.animated(false).build();
+		tiProduction.setAnimated(false);
 
 		// availability tile
 		tiAvailability = TileBuilder.create().skinType(SkinType.TEXT).prefSize(TILE_WIDTH, TILE_HEIGHT)
@@ -807,7 +804,7 @@ public class DashboardController extends DialogController implements CategoryCli
 			UnitOfMeasure uom = MeasurementSystem.instance().getUOM(message.getUom());
 			Quantity delta = new Quantity(message.getAmount(), uom);
 			Quantity good = equipmentLoss.incrementGoodQuantity(delta);
-			lbiGoodProduction.setValue(good.getAmount());
+			lbiGoodProduction.setValue(good.getAmount(), false);
 			break;
 		}
 
@@ -816,7 +813,7 @@ public class DashboardController extends DialogController implements CategoryCli
 			UnitOfMeasure uom = MeasurementSystem.instance().getUOM(message.getUom());
 			Quantity delta = new Quantity(message.getAmount(), uom);
 			Quantity reject = equipmentLoss.incrementRejectQuantity(delta);
-			lbiRejectProduction.setValue(reject.getAmount());
+			lbiRejectProduction.setValue(reject.getAmount(), true);
 			break;
 		}
 
@@ -825,7 +822,7 @@ public class DashboardController extends DialogController implements CategoryCli
 			UnitOfMeasure uom = MeasurementSystem.instance().getUOM(message.getUom());
 			Quantity delta = new Quantity(message.getAmount(), uom);
 			Quantity startup = equipmentLoss.incrementStartupQuantity(delta);
-			lbiStartupProduction.setValue(startup.getAmount());
+			lbiStartupProduction.setValue(startup.getAmount(), true);
 			break;
 		}
 
@@ -851,113 +848,74 @@ public class DashboardController extends DialogController implements CategoryCli
 			}
 			LocalDateTime ldtTo = LocalDateTime.of(to, LocalTime.MAX);
 
+			if (ldtTo.isBefore(ldtFrom)) {
+				throw new Exception("The starting time " + ldtFrom + " must be before the ending time " + ldtTo);
+			}
+
 			OffsetDateTime odtFrom = DomainUtils.fromLocalDateTime(ldtFrom);
 			OffsetDateTime odtTo = DomainUtils.fromLocalDateTime(ldtTo);
 
 			// equipment
 			Equipment equipment = getEquipment();
 
+			if (equipment == null) {
+				throw new Exception("Equipment must be selected.");
+			}
+
 			// material and job
 			SetupHistory last = PersistenceService.instance().fetchLastSetupHistory(equipment);
 
 			if (last == null || last.getMaterial() == null) {
-				throw new Exception("The material being produced must be specified for this equipment.");
+				throw new Exception(
+						"The material being produced must be specified for equipment " + equipment.getName());
 			}
 			Material material = last.getMaterial();
 
-			String displayString = material.getName() + " (" + material.getDescription() + ")";
-			tiJobMaterial.setDescription(displayString);
+			tiJobMaterial.setDescription(material.getDisplayString());
 
 			tiJobMaterial.setText(last.getJob());
 
-			// losses
-			equipmentLoss = new EquipmentLoss();
+			// calculate the time losses over this period
+			equipmentLoss = EquipmentLossManager.calculateEquipmentLoss(equipment, material, odtFrom, odtTo);
 
-			// from the work schedule
-			WorkSchedule schedule = equipment.findWorkSchedule();
-			if (schedule == null) {
-				throw new Exception("A work schedule must be defined for this equipment.");
-			}
-
-			// from measured availability losses
-			List<AvailabilitySummary> availabilities = PersistenceService.instance().fetchAvailabilitySummary(equipment,
-					odtFrom, odtTo);
-
-			for (AvailabilitySummary summary : availabilities) {
-				checkTimePeriod(summary, equipmentLoss);
-
-				TimeLoss loss = summary.getReason().getLossCategory();
-				equipmentLoss.incrementLoss(loss, summary.getDuration());
-			}
-
-			// System.out.println(this.equipmentLoss.toString());
-
-			// from measured production
-			EquipmentMaterial eqm = equipment.getEquipmentMaterial(material);
-
-			if (eqm == null || eqm.getRunRate() == null) {
-				throw new Exception(
-						"The design speed must be defined for this equipment and material " + displayString);
-			}
-			equipmentLoss.setDesignSpeed(eqm.getRunRate());
-
-			List<ProductionSummary> productions = PersistenceService.instance().fetchProductionSummary(equipment,
-					odtFrom, odtTo);
-
-			for (ProductionSummary summary : productions) {
-				checkTimePeriod(summary, equipmentLoss);
-
-				Quantity quantity = summary.getQuantity();
-				UnitOfMeasure uom = quantity.getUOM();
-
-				switch (summary.getType()) {
-				case PROD_GOOD:
-					equipmentLoss.incrementGoodQuantity(quantity);
-					break;
-
-				case PROD_REJECT:
-					equipmentLoss.incrementRejectQuantity(quantity);
-					break;
-
-				case PROD_STARTUP:
-					equipmentLoss.incrementStartupQuantity(quantity);
-					break;
-
-				default:
-					break;
-				}
-			}
+			String symbol = null;
+			double amount = 0.0d;
 
 			Quantity goodQty = equipmentLoss.getGoodQuantity();
 
 			if (goodQty != null) {
-				lbiGoodProduction.setFormatString(PROD_FORMAT + " " + goodQty.getUOM().getSymbol());
-				lbiGoodProduction.setValue(goodQty.getAmount());
+				symbol = goodQty.getUOM().getSymbol();
+				amount = goodQty.getAmount();
+			} else {
+				symbol = "";
+				amount = 0.0d;
 			}
+			lbiGoodProduction.setFormatString(PROD_FORMAT + " " + symbol);
+			lbiGoodProduction.setValue(amount, false);
 
 			Quantity rejectQty = equipmentLoss.getRejectQuantity();
 
 			if (rejectQty != null) {
-				lbiRejectProduction.setFormatString(PROD_FORMAT + " " + rejectQty.getUOM().getSymbol());
-				lbiRejectProduction.setValue(rejectQty.getAmount());
+				symbol = rejectQty.getUOM().getSymbol();
+				amount = rejectQty.getAmount();
+			} else {
+				symbol = "";
+				amount = 0.0d;
 			}
+			lbiRejectProduction.setFormatString(PROD_FORMAT + " " + symbol);
+			lbiRejectProduction.setValue(amount, true);
 
 			Quantity startupQty = equipmentLoss.getStartupQuantity();
 
 			if (startupQty != null) {
-				lbiStartupProduction.setFormatString(PROD_FORMAT + " " + startupQty.getUOM().getSymbol());
-				lbiStartupProduction.setValue(startupQty.getAmount());
+				symbol = startupQty.getUOM().getSymbol();
+				amount = startupQty.getAmount();
+			} else {
+				symbol = "";
+				amount = 0.0d;
 			}
-
-			// compute reduced speed from the other losses
-			equipmentLoss.setReducedSpeedLoss();
-
-			OffsetDateTime odtStart = equipmentLoss.getStartDateTime();
-			OffsetDateTime odtEnd = equipmentLoss.getEndDateTime();
-
-			Duration notScheduled = schedule.calculateNonWorkingTime(odtStart.toLocalDateTime(),
-					odtEnd.toLocalDateTime());
-			equipmentLoss.setLoss(TimeLoss.NOT_SCHEDULED, notScheduled);
+			lbiStartupProduction.setFormatString(PROD_FORMAT + " " + symbol);
+			lbiStartupProduction.setValue(amount, true);
 
 			System.out.println(this.equipmentLoss.toString());
 
@@ -982,21 +940,6 @@ public class DashboardController extends DialogController implements CategoryCli
 			displayLosses();
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
-		}
-	}
-
-	private void checkTimePeriod(BaseSummary summary, EquipmentLoss equipmentLoss) {
-		// beginning time
-		OffsetDateTime start = summary.getStartTime();
-		OffsetDateTime end = summary.getEndTime();
-
-		if (equipmentLoss.getStartDateTime() == null || start.compareTo(equipmentLoss.getStartDateTime()) == -1) {
-			equipmentLoss.setStartDateTime(start);
-		}
-
-		// ending time
-		if (equipmentLoss.getEndDateTime() == null || end.compareTo(equipmentLoss.getEndDateTime()) == 1) {
-			equipmentLoss.setEndDateTime(end);
 		}
 	}
 

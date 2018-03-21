@@ -21,8 +21,8 @@ import java.util.Locale;
 import org.point85.tilesfx.Tile;
 import org.point85.tilesfx.chart.ChartData;
 import org.point85.tilesfx.events.ChartDataEvent;
-import org.point85.tilesfx.events.ChartDataEventListener;
 import org.point85.tilesfx.events.ChartDataEvent.EventType;
+import org.point85.tilesfx.events.ChartDataEventListener;
 import org.point85.tilesfx.fonts.Fonts;
 
 import javafx.beans.DefaultProperty;
@@ -51,7 +51,8 @@ import javafx.scene.text.Text;
 @DefaultProperty("children")
 public class LeaderBoardItem extends Region implements Comparable<LeaderBoardItem> {
 	public enum State {
-		RISE(Tile.GREEN, 0), FALL(Tile.RED, 180), CONSTANT(Color.TRANSPARENT, 90);
+		RISE(Tile.GREEN, 0), RISE_INVERSE(Tile.RED, 0), FALL(Tile.RED, 180), FALL_INVERSE(Tile.GREEN,
+				180), CONSTANT(Color.TRANSPARENT, 90);
 
 		public final Color color;
 		public final double angle;
@@ -89,7 +90,7 @@ public class LeaderBoardItem extends Region implements Comparable<LeaderBoardIte
 	private int index;
 	private int lastIndex;
 	private double lastValue;
-	
+	private State goodState;
 
 	// ******************** Constructors **************************************
 	public LeaderBoardItem() {
@@ -246,29 +247,28 @@ public class LeaderBoardItem extends Region implements Comparable<LeaderBoardIte
 	public double getValue() {
 		return chartData.getValue();
 	}
-	
-	public void setTrendIndicator(double value) {
+
+	public void setValue(final double VALUE, boolean invert) {
 		lastValue = chartData.getOldValue();
 
-		if (value > lastValue) {
-			state = State.RISE;
-		} else if (value < lastValue) {
-			state = State.FALL;
+		if (VALUE > lastValue) {
+			state = invert ? State.RISE_INVERSE : State.RISE;
+		} else if (VALUE < lastValue) {
+			state = invert ? State.FALL_INVERSE : State.FALL;
 		} else {
 			state = State.CONSTANT;
 		}
 		triangle.setFill(state.color);
 		triangle.setRotate(state.angle);
-		
+
 		drawTriangle();
 
-		valueText.setText(String.format(locale, formatString, getValue()));
-		valueText.setX((width - size * 0.05) - valueText.getLayoutBounds().getWidth());
-	}
-
-	public void setValue(final double VALUE) {
-		setTrendIndicator(VALUE);
+		double val1 = getValue();
 		chartData.setValue(VALUE);
+		val1 = getValue();
+		
+		valueText.setText(String.format(locale, formatString, VALUE));
+		valueText.setX((width - size * 0.05) - valueText.getLayoutBounds().getWidth());
 	}
 
 	public Color getNameColor() {
@@ -439,5 +439,13 @@ public class LeaderBoardItem extends Region implements Comparable<LeaderBoardIte
 	@Override
 	public String toString() {
 		return new StringBuilder(getName()).append(",").append(getValue()).append(",").toString();
+	}
+
+	public State getGoodState() {
+		return goodState;
+	}
+
+	public void setGoodState(State goodState) {
+		this.goodState = goodState;
 	}
 }

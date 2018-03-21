@@ -1,6 +1,5 @@
 package org.point85.app.monitor;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -17,8 +16,6 @@ import org.point85.domain.messaging.CollectorNotificationMessage;
 import org.point85.domain.messaging.CollectorResolvedEventMessage;
 import org.point85.domain.messaging.CollectorServerStatusMessage;
 import org.point85.domain.messaging.NotificationSeverity;
-import org.point85.domain.performance.EquipmentLoss;
-import org.point85.domain.performance.TimeLoss;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.EntityLevel;
 import org.point85.domain.plant.Equipment;
@@ -48,8 +45,6 @@ import javafx.scene.layout.BorderPane;
 public class MonitorController {
 	private static final int DEFAULT_MSG_LIMIT = 200;
 	private static final int DEFAULT_MSGS_PER_PAGE = 20;
-
-	private MonitorApplication app;
 
 	// list of notifications
 	private ObservableList<CollectorNotification> notifications = FXCollections.observableArrayList(new ArrayList<>());
@@ -148,8 +143,7 @@ public class MonitorController {
 	}
 
 	// initialize app
-	void initializeApplication(MonitorApplication app) throws Exception {
-		this.app = app;
+	void initializeApplication() throws Exception {
 
 		// images
 		setImages();
@@ -482,10 +476,9 @@ public class MonitorController {
 			}
 		}
 		newItem.setExpanded(true);
-
+		
 		if (selectedEntity instanceof Equipment) {
-			dashboardController.setEquipmentLoss(getEquipmentLoss((Equipment) selectedEntity));
-			dashboardController.displayLosses();
+			this.dashboardController.setEquipment((Equipment)selectedEntity);
 		}
 	}
 
@@ -584,21 +577,6 @@ public class MonitorController {
 
 		serverCollectors.clear();
 		tvCollectorStatus.refresh();
-	}
-
-	// TODO remove
-	private EquipmentLoss getEquipmentLoss(Equipment equipment) {
-		EquipmentLoss equipmentLoss = null;
-		//equipmentLoss.setTotalTime(Duration.ofSeconds(240 * 60));
-		equipmentLoss.setLoss(TimeLoss.UNSCHEDULED, Duration.ofSeconds(40 * 60));
-		equipmentLoss.setLoss(TimeLoss.MINOR_STOPPAGES, Duration.ofSeconds(40 * 60));
-		equipmentLoss.setLoss(TimeLoss.PLANNED_DOWNTIME, Duration.ofSeconds(10 * 60));
-		equipmentLoss.setLoss(TimeLoss.SETUP, Duration.ofSeconds(16 * 60));
-		equipmentLoss.setLoss(TimeLoss.UNPLANNED_DOWNTIME, Duration.ofSeconds(24 * 60));
-		equipmentLoss.setLoss(TimeLoss.REDUCED_SPEED, Duration.ofSeconds(8 * 60));
-		equipmentLoss.setLoss(TimeLoss.REJECT_REWORK, Duration.ofSeconds(2 * 60));
-
-		return equipmentLoss;
 	}
 
 	// the wrapped PlantEntity

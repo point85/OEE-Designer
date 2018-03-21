@@ -1,9 +1,9 @@
-// net time after loss (palegreen, lightgreen)
-.series0.chart-bar { -fx-bar-fill: oldlace;}
+// net time after loss (palegreen, lightgreen, oldlace)
+.series0.chart-bar { -fx-bar-fill: gainsboro;}
 // not scheduled
 .series1.chart-bar { -fx-bar-fill: violet; }
 // unscheduled
-.series2.chart-bar { -fx-bar-fill: gainsboro; }
+.series2.chart-bar { -fx-bar-fill: darkblue; }
 // planned downtime
 .series3.chart-bar { -fx-bar-fill: deepskyblue; }
 // waiting
