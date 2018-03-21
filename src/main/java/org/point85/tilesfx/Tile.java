@@ -343,6 +343,8 @@ public class Tile extends Control {
     private              SkinType                                      skinType;
     private              TextSize                                      _textSize;
     private              ObjectProperty<TextSize>                      textSize;
+    private              TextSize                                      _descriptionTextSize;
+    private              ObjectProperty<TextSize>                      descriptionTextSize;
     private              boolean                                       _roundedCorners;
     private              BooleanProperty                               roundedCorners;
     private              boolean                                       _startFromZero;
@@ -1760,6 +1762,18 @@ public class Tile extends Control {
             textSize.set(SIZE);
         }
     }
+    
+    public TextSize getDescriptionTextSize() { return null == descriptionTextSize ? _descriptionTextSize : descriptionTextSize.get(); }
+    
+    public void setDescriptionTextSize(final TextSize SIZE) {
+        if (null == descriptionTextSize) {
+            _descriptionTextSize = SIZE;
+            fireTileEvent(REDRAW_EVENT);
+        } else {
+        	descriptionTextSize.set(SIZE);
+        }
+    }
+    
     public ObjectProperty<TextSize> textSizeProperty() {
         if (null == textSize) {
             textSize = new ObjectPropertyBase<TextSize>(_textSize) {

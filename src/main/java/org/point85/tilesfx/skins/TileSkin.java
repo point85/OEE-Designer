@@ -80,6 +80,7 @@ public class TileSkin extends SkinBase<Tile> implements Skin<Tile> {
     protected              List<Section>            sections;
     protected              boolean                  sectionsVisible;
     protected              TextSize                 textSize;
+    protected              TextSize                 descriptionTextSize;
     protected              DropShadow               shadow;
     protected              InvalidationListener     sizeListener;
     protected              TileEventListener        tileEventListener;
@@ -107,6 +108,7 @@ public class TileSkin extends SkinBase<Tile> implements Skin<Tile> {
         sectionsVisible      = TILE.getSectionsVisible();
         highlightSections    = tile.isHighlightSections();
         textSize             = tile.getTextSize();
+        descriptionTextSize  = tile.getDescriptionTextSize();
         sizeListener         = o -> handleEvents("RESIZE");
         tileEventListener    = e -> handleEvents(e.getEventType().name());
         currentValueListener = o -> handleCurrentValue(tile.getCurrentValue());

@@ -64,7 +64,7 @@ public class LeaderBoardTileSkin extends TileSkin {
 				updateChart();
 				break;
 			case FINISHED:
-				sortItems();
+				// KWR sortItems();
 				break;
 			}
 		};

@@ -15,6 +15,7 @@ import org.point85.app.Images;
 import org.point85.app.charts.CategoryClickListener;
 import org.point85.app.charts.ParetoChartController;
 import org.point85.domain.DomainUtils;
+import org.point85.domain.collector.AvailabilityHistory;
 import org.point85.domain.collector.AvailabilitySummary;
 import org.point85.domain.collector.BaseSummary;
 import org.point85.domain.collector.ProductionSummary;
@@ -28,6 +29,7 @@ import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Equipment;
 import org.point85.domain.plant.EquipmentMaterial;
 import org.point85.domain.plant.Material;
+import org.point85.domain.plant.Reason;
 import org.point85.domain.schedule.WorkSchedule;
 import org.point85.domain.script.EventResolverType;
 import org.point85.domain.uom.Quantity;
@@ -35,6 +37,7 @@ import org.point85.domain.uom.Unit;
 import org.point85.domain.uom.UnitOfMeasure;
 import org.point85.tilesfx.Tile;
 import org.point85.tilesfx.Tile.SkinType;
+import org.point85.tilesfx.Tile.TextSize;
 import org.point85.tilesfx.TileBuilder;
 import org.point85.tilesfx.skins.BarChartItem;
 import org.point85.tilesfx.skins.LeaderBoardItem;
@@ -88,9 +91,6 @@ public class DashboardController extends DialogController implements CategoryCli
 
 	// cumulative production
 	private boolean showCumulative = true;
-	private double cumulativeTotal = 0.0d;
-	private double cumulativeGood = 0.0d;
-	private double cumulativeReject = 0.0d;
 
 	private Equipment equipment;
 
@@ -711,17 +711,7 @@ public class DashboardController extends DialogController implements CategoryCli
 		buildDashboardTiles();
 	}
 
-	private double incrementTotalProduction(double delta) {
-		cumulativeTotal += delta;
-		return cumulativeTotal;
-	}
-
 	public void buildDashboardTiles() {
-		// reset cumulative production
-		cumulativeTotal = 0.0d;
-		cumulativeGood = 0.0d;
-		cumulativeReject = 0.0d;
-
 		// OEE tile
 		bciOee = new BarChartItem("OEE", 0, Tile.BLUE);
 		bciOee.setFormatString(OEE_FORMAT);
@@ -759,10 +749,13 @@ public class DashboardController extends DialogController implements CategoryCli
 		// availability tile
 		tiAvailability = TileBuilder.create().skinType(SkinType.TEXT).prefSize(TILE_WIDTH, TILE_HEIGHT)
 				.title("Availability").textVisible(true).descriptionAlignment(Pos.CENTER).build();
+		tiAvailability.setDescriptionTextSize(TextSize.BIGGER);
 
 		// material and job
 		tiJobMaterial = TileBuilder.create().skinType(SkinType.TEXT).prefSize(TILE_WIDTH, TILE_HEIGHT)
 				.title("Material and Job").textVisible(true).descriptionAlignment(Pos.CENTER).build();
+		tiJobMaterial.setDescriptionTextSize(TextSize.NORMAL);
+		tiJobMaterial.setDescriptionColor(Color.WHITE);
 
 		FlowGridPane pane = new FlowGridPane(4, 1, tiOee, tiProduction, tiAvailability, tiJobMaterial);
 		pane.setHgap(TILE_VGAP);
@@ -938,8 +931,24 @@ public class DashboardController extends DialogController implements CategoryCli
 			// compute reduced speed from the other losses
 			equipmentLoss.setReducedSpeedLoss();
 
-			System.out.println(equipmentLoss.toString());
+			// show last availability
+			AvailabilityHistory history = PersistenceService.instance().fetchLastAvailabilityHistory(equipment);
 
+			if (history != null) {
+				// availability reason
+				Reason reason = history.getReason();
+
+				tiAvailability.setText(reason.getName() + " (" + reason.getDescription() + ")");
+
+				// loss category
+				TimeLoss loss = reason.getLossCategory();
+				if (loss != null) {
+					tiAvailability.setDescription(loss.toString());
+					tiAvailability.setDescriptionColor(loss.getColor());
+				}
+			}
+
+			// display the losses
 			displayLosses();
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);

@@ -17,6 +17,7 @@
 package org.point85.tilesfx.skins;
 
 import org.point85.tilesfx.Tile;
+import org.point85.tilesfx.Tile.TextSize;
 import org.point85.tilesfx.fonts.Fonts;
 import org.point85.tilesfx.tools.Helper;
 
@@ -54,7 +55,7 @@ public class TextTileSkin extends TileSkin {
         description.setTextAlignment(TextAlignment.RIGHT);
         description.setWrapText(true);
         description.setTextOverrun(OverrunStyle.WORD_ELLIPSIS);
-        description.setTextFill(tile.getTextColor());
+        description.setTextFill(tile.getDescriptionColor());
         description.setPrefSize(PREFERRED_WIDTH * 0.9, PREFERRED_HEIGHT * 0.795);
         Helper.enableNode(description, tile.isTextVisible());
 
@@ -81,10 +82,16 @@ public class TextTileSkin extends TileSkin {
         }
     }
 
-
     // ******************** Resizing ******************************************
     @Override protected void resizeDynamicText() {
-        double fontSize = size * 0.1;
+        //double fontSize = size * 0.1;
+        //description.setFont(Fonts.latoRegular(fontSize));
+    	
+    	if (descriptionTextSize == null) {
+    		descriptionTextSize = TextSize.NORMAL;
+    	}
+    	
+    	double fontSize = size * descriptionTextSize.factor;
         description.setFont(Fonts.latoRegular(fontSize));
     }
     @Override protected void resizeStaticText() {
@@ -132,6 +139,6 @@ public class TextTileSkin extends TileSkin {
 
         titleText.setFill(tile.getTitleColor());
         text.setFill(tile.getTextColor());
-        description.setTextFill(tile.getTextColor());
+        description.setTextFill(tile.getDescriptionColor());
     }
 }
