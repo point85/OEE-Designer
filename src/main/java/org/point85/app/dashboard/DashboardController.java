@@ -32,6 +32,7 @@ import org.point85.domain.plant.Material;
 import org.point85.domain.plant.Reason;
 import org.point85.domain.schedule.WorkSchedule;
 import org.point85.domain.script.EventResolverType;
+import org.point85.domain.uom.MeasurementSystem;
 import org.point85.domain.uom.Quantity;
 import org.point85.domain.uom.Unit;
 import org.point85.domain.uom.UnitOfMeasure;
@@ -773,7 +774,7 @@ public class DashboardController extends DialogController implements CategoryCli
 		AnchorPane.setRightAnchor(pane, 0.0);
 	}
 
-	public void update(CollectorResolvedEventMessage message) {
+	public void update(CollectorResolvedEventMessage message) throws Exception {
 		EventResolverType resolverType = message.getResolverType();
 
 		switch (resolverType) {
@@ -803,26 +804,27 @@ public class DashboardController extends DialogController implements CategoryCli
 
 		case PROD_GOOD: {
 			// good production
-			Quantity good = equipmentLoss.incrementGoodQuantity(message.getAmount());
-
-			// lbiGoodProduction.setFormatString(PROD_FORMAT + " " + good);
-
+			UnitOfMeasure uom = MeasurementSystem.instance().getUOM(message.getUom());
+			Quantity delta = new Quantity(message.getAmount(), uom);
+			Quantity good = equipmentLoss.incrementGoodQuantity(delta);
 			lbiGoodProduction.setValue(good.getAmount());
 			break;
 		}
 
 		case PROD_REJECT: {
 			// reject and rework
-			// lbiRejectProduction.setFormatString(PROD_FORMAT + " " + message.getUom());
-			Quantity reject = equipmentLoss.incrementRejectQuantity(message.getAmount());
+			UnitOfMeasure uom = MeasurementSystem.instance().getUOM(message.getUom());
+			Quantity delta = new Quantity(message.getAmount(), uom);
+			Quantity reject = equipmentLoss.incrementRejectQuantity(delta);
 			lbiRejectProduction.setValue(reject.getAmount());
 			break;
 		}
 
 		case PROD_STARTUP: {
 			// startup and yield
-			// lbiStartupProduction.setFormatString(PROD_FORMAT + " " + message.getUom());
-			Quantity startup = equipmentLoss.incrementStartupQuantity(message.getAmount());
+			UnitOfMeasure uom = MeasurementSystem.instance().getUOM(message.getUom());
+			Quantity delta = new Quantity(message.getAmount(), uom);
+			Quantity startup = equipmentLoss.incrementStartupQuantity(delta);
 			lbiStartupProduction.setValue(startup.getAmount());
 			break;
 		}
@@ -837,9 +839,16 @@ public class DashboardController extends DialogController implements CategoryCli
 		try {
 			// time period
 			LocalDate from = dpFromDate.getValue();
+
+			if (from == null) {
+				from = LocalDate.now();
+			}
 			LocalDateTime ldtFrom = LocalDateTime.of(from, LocalTime.MIN);
 
 			LocalDate to = dpToDate.getValue();
+			if (to == null) {
+				to = LocalDate.now();
+			}
 			LocalDateTime ldtTo = LocalDateTime.of(to, LocalTime.MAX);
 
 			OffsetDateTime odtFrom = DomainUtils.fromLocalDateTime(ldtFrom);
@@ -870,11 +879,6 @@ public class DashboardController extends DialogController implements CategoryCli
 				throw new Exception("A work schedule must be defined for this equipment.");
 			}
 
-			Duration notScheduled = schedule.calculateNonWorkingTime(ldtFrom, ldtTo);
-
-			// equipmentLoss.setTotalTime(totalTime);
-			equipmentLoss.setLoss(TimeLoss.NOT_SCHEDULED, notScheduled);
-
 			// from measured availability losses
 			List<AvailabilitySummary> availabilities = PersistenceService.instance().fetchAvailabilitySummary(equipment,
 					odtFrom, odtTo);
@@ -883,8 +887,10 @@ public class DashboardController extends DialogController implements CategoryCli
 				checkTimePeriod(summary, equipmentLoss);
 
 				TimeLoss loss = summary.getReason().getLossCategory();
-				equipmentLoss.setLoss(loss, summary.getDuration());
+				equipmentLoss.incrementLoss(loss, summary.getDuration());
 			}
+
+			// System.out.println(this.equipmentLoss.toString());
 
 			// from measured production
 			EquipmentMaterial eqm = equipment.getEquipmentMaterial(material);
@@ -893,7 +899,7 @@ public class DashboardController extends DialogController implements CategoryCli
 				throw new Exception(
 						"The design speed must be defined for this equipment and material " + displayString);
 			}
-			equipmentLoss.setDesignSpeedQuantity(eqm.getRunRate());
+			equipmentLoss.setDesignSpeed(eqm.getRunRate());
 
 			List<ProductionSummary> productions = PersistenceService.instance().fetchProductionSummary(equipment,
 					odtFrom, odtTo);
@@ -906,21 +912,15 @@ public class DashboardController extends DialogController implements CategoryCli
 
 				switch (summary.getType()) {
 				case PROD_GOOD:
-					lbiGoodProduction.setFormatString(PROD_FORMAT + " " + uom.getSymbol());
-					lbiGoodProduction.setValue(quantity.getAmount());
-					equipmentLoss.setGoodQuantity(quantity);
+					equipmentLoss.incrementGoodQuantity(quantity);
 					break;
 
 				case PROD_REJECT:
-					lbiRejectProduction.setFormatString(PROD_FORMAT + " " + uom.getSymbol());
-					lbiRejectProduction.setValue(quantity.getAmount());
-					equipmentLoss.setRejectQuantity(quantity);
+					equipmentLoss.incrementRejectQuantity(quantity);
 					break;
 
 				case PROD_STARTUP:
-					lbiStartupProduction.setFormatString(PROD_FORMAT + " " + uom.getSymbol());
-					lbiStartupProduction.setValue(quantity.getAmount());
-					equipmentLoss.setStartupQuantity(quantity);
+					equipmentLoss.incrementStartupQuantity(quantity);
 					break;
 
 				default:
@@ -928,8 +928,38 @@ public class DashboardController extends DialogController implements CategoryCli
 				}
 			}
 
+			Quantity goodQty = equipmentLoss.getGoodQuantity();
+
+			if (goodQty != null) {
+				lbiGoodProduction.setFormatString(PROD_FORMAT + " " + goodQty.getUOM().getSymbol());
+				lbiGoodProduction.setValue(goodQty.getAmount());
+			}
+
+			Quantity rejectQty = equipmentLoss.getRejectQuantity();
+
+			if (rejectQty != null) {
+				lbiRejectProduction.setFormatString(PROD_FORMAT + " " + rejectQty.getUOM().getSymbol());
+				lbiRejectProduction.setValue(rejectQty.getAmount());
+			}
+
+			Quantity startupQty = equipmentLoss.getStartupQuantity();
+
+			if (startupQty != null) {
+				lbiStartupProduction.setFormatString(PROD_FORMAT + " " + startupQty.getUOM().getSymbol());
+				lbiStartupProduction.setValue(startupQty.getAmount());
+			}
+
 			// compute reduced speed from the other losses
 			equipmentLoss.setReducedSpeedLoss();
+
+			OffsetDateTime odtStart = equipmentLoss.getStartDateTime();
+			OffsetDateTime odtEnd = equipmentLoss.getEndDateTime();
+
+			Duration notScheduled = schedule.calculateNonWorkingTime(odtStart.toLocalDateTime(),
+					odtEnd.toLocalDateTime());
+			equipmentLoss.setLoss(TimeLoss.NOT_SCHEDULED, notScheduled);
+
+			System.out.println(this.equipmentLoss.toString());
 
 			// show last availability
 			AvailabilityHistory history = PersistenceService.instance().fetchLastAvailabilityHistory(equipment);

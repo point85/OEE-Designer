@@ -1,5 +1,5 @@
-// net time
-.series0.chart-bar { -fx-bar-fill: lightgreen;}
+// net time after loss (palegreen, lightgreen)
+.series0.chart-bar { -fx-bar-fill: oldlace;}
 // not scheduled
 .series1.chart-bar { -fx-bar-fill: violet; }
 // unscheduled

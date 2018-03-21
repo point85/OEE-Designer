@@ -562,7 +562,7 @@ public class MonitorController {
 		return new BorderPane(tvNotifications);
 	}
 
-	void updateDashboard(CollectorResolvedEventMessage message) {
+	void updateDashboard(CollectorResolvedEventMessage message) throws Exception {
 		dashboardController.update((CollectorResolvedEventMessage) message);
 	}
 

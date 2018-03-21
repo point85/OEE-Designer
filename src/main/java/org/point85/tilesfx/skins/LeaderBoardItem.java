@@ -260,10 +260,7 @@ public class LeaderBoardItem extends Region implements Comparable<LeaderBoardIte
 		triangle.setFill(state.color);
 		triangle.setRotate(state.angle);
 		
-		//triangle.setVisible(true);
-		
 		drawTriangle();
-		System.out.println(lastValue + ", " + value + ", State is " + state);
 
 		valueText.setText(String.format(locale, formatString, getValue()));
 		valueText.setX((width - size * 0.05) - valueText.getLayoutBounds().getWidth());
