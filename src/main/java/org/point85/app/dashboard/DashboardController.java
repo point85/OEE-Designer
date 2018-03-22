@@ -7,6 +7,7 @@ import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.point85.app.AppUtils;
 import org.point85.app.DialogController;
@@ -193,7 +194,7 @@ public class DashboardController extends DialogController implements CategoryCli
 	private String chartTitle = LOSS_CHART_TITLE;
 
 	// x-axis time unit
-	private Unit timeUnit;
+	private Unit timeUnit = Unit.MINUTE;
 
 	private float divisor = 1.0f;
 
@@ -212,7 +213,7 @@ public class DashboardController extends DialogController implements CategoryCli
 	private Tab tbTimeLosses;
 
 	@FXML
-	private Tab tbLevel1Pareto;
+	private Tab tbFirstLevelPareto;
 
 	@FXML
 	private Tab tbYieldPareto;
@@ -397,7 +398,7 @@ public class DashboardController extends DialogController implements CategoryCli
 		}
 	}
 
-	public void displayLosses() throws Exception {
+	private void displayLosses() throws Exception {
 		// loss chart
 		createLossChart();
 
@@ -405,7 +406,7 @@ public class DashboardController extends DialogController implements CategoryCli
 		showStatistics();
 
 		// pareto of losses
-		showFirstLevelPareto();
+		onSelectFirstLevelPareto();
 	}
 
 	private void createLossChart() {
@@ -605,20 +606,20 @@ public class DashboardController extends DialogController implements CategoryCli
 	}
 
 	private void showStatistics() throws Exception {
-		float oee = equipmentLoss.calculateOeePercentage();
-		bciOee.setValue(oee);
-
-		float availability = equipmentLoss.calculateAvailabilityPercentage();
-		bciAvailability.setValue(availability);
+		float quality = equipmentLoss.calculateQualityPercentage();
+		bciQuality.setValue(quality);
 
 		float performance = equipmentLoss.calculatePerformancePercentage();
 		bciPerformance.setValue(performance);
 
-		float quality = equipmentLoss.calculateQualityPercentage();
-		bciQuality.setValue(quality);
+		float availability = equipmentLoss.calculateAvailabilityPercentage();
+		bciAvailability.setValue(availability);
+
+		float oee = equipmentLoss.calculateOeePercentage();
+		bciOee.setValue(oee);
 	}
 
-	private void showFirstLevelPareto() throws Exception {
+	private void onSelectFirstLevelPareto() throws Exception {
 		Duration availableTime = equipmentLoss.getAvailableTime();
 		Number divisor = equipmentLoss.convertSeconds(availableTime.getSeconds(), timeUnit);
 
@@ -672,40 +673,45 @@ public class DashboardController extends DialogController implements CategoryCli
 	public void initialize() throws Exception {
 		setImages();
 
+		// listen to tab selections
 		tpParetoCharts.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
 
 			if (newValue == null || equipmentLoss == null) {
 				return;
 			}
 
-			String id = newValue.getId();
 			try {
-				if (id.equals(tbTimeLosses.getId())) {
-					onSelectTimeLosses();
-				} else if (id.equals(tbLevel1Pareto.getId())) {
-					showFirstLevelPareto();
-				} else if (id.equals(tbYieldPareto.getId())) {
-					onSelectYieldPareto();
-				} else if (id.equals(tbRejectsPareto.getId())) {
-					onSelectRejectsPareto();
-				} else if (id.equals(tbReducedSpeedPareto.getId())) {
-					onSelectReducedSpeedPareto();
-				} else if (id.equals(tbMinorStoppagesPareto.getId())) {
-					onSelectMinorStoppagesPareto();
-				} else if (id.equals(tbUnplannedDowntimePareto.getId())) {
-					onSelectUnplannedDowntimePareto();
-				} else if (id.equals(tbSetupPareto.getId())) {
-					onSelectSetupPareto();
-				} else if (id.equals(tbPlannedDowntimePareto.getId())) {
-					onSelectPlannedDowntimePareto();
-				}
-
+				refreshCharts(newValue);
 			} catch (Exception e) {
 				AppUtils.showErrorDialog(e);
 			}
 		});
 
 		buildDashboardTiles();
+	}
+
+	private void refreshCharts(Tab newValue) throws Exception {
+		String id = newValue.getId();
+
+		if (id.equals(tbTimeLosses.getId())) {
+			onSelectTimeLosses();
+		} else if (id.equals(tbFirstLevelPareto.getId())) {
+			onSelectFirstLevelPareto();
+		} else if (id.equals(tbYieldPareto.getId())) {
+			onSelectYieldPareto();
+		} else if (id.equals(tbRejectsPareto.getId())) {
+			onSelectRejectsPareto();
+		} else if (id.equals(tbReducedSpeedPareto.getId())) {
+			onSelectReducedSpeedPareto();
+		} else if (id.equals(tbMinorStoppagesPareto.getId())) {
+			onSelectMinorStoppagesPareto();
+		} else if (id.equals(tbUnplannedDowntimePareto.getId())) {
+			onSelectUnplannedDowntimePareto();
+		} else if (id.equals(tbSetupPareto.getId())) {
+			onSelectSetupPareto();
+		} else if (id.equals(tbPlannedDowntimePareto.getId())) {
+			onSelectPlannedDowntimePareto();
+		}
 	}
 
 	public void buildDashboardTiles() {
@@ -725,7 +731,7 @@ public class DashboardController extends DialogController implements CategoryCli
 		tiOee = TileBuilder.create().skinType(SkinType.BAR_CHART).prefSize(TILE_WIDTH, TILE_HEIGHT)
 				.title("Overall Equipment Effectiveness").text("Current OEE")
 				.barChartItems(bciOee, bciAvailability, bciPerformance, bciQuality).decimals(0).sortedData(false)
-				.animated(true).build();
+				.animated(false).build();
 
 		// production tile
 		lbiGoodProduction = new LeaderBoardItem("Good", 0);
@@ -742,7 +748,6 @@ public class DashboardController extends DialogController implements CategoryCli
 				.title("Current Production").text(productionText)
 				.leaderBoardItems(lbiGoodProduction, lbiRejectProduction, lbiStartupProduction).sortedData(false)
 				.animated(false).build();
-		tiProduction.setAnimated(false);
 
 		// availability tile
 		tiAvailability = TileBuilder.create().skinType(SkinType.TEXT).prefSize(TILE_WIDTH, TILE_HEIGHT)
@@ -919,7 +924,7 @@ public class DashboardController extends DialogController implements CategoryCli
 
 			System.out.println(this.equipmentLoss.toString());
 
-			// show last availability
+			// show last availability record
 			AvailabilityHistory history = PersistenceService.instance().fetchLastAvailabilityHistory(equipment);
 
 			if (history != null) {
@@ -937,7 +942,18 @@ public class DashboardController extends DialogController implements CategoryCli
 			}
 
 			// display the losses
-			displayLosses();
+			// displayLosses();
+
+			// loss chart
+			// createLossChart();
+
+			// display the selected tab
+			// Tab tab = tpParetoCharts.getSelectionModel().getSelectedItem();
+			// refreshCharts(tab);
+
+			// show stats
+			showStatistics();
+
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}

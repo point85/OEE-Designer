@@ -18,10 +18,10 @@ import javafx.scene.layout.StackPane;
 
 public class ParetoChartController {
 	// bar chart data series, X = reason and Y = % in sample
-	private XYChart.Series<String, Number> barChartSeries = new XYChart.Series<>();
+	private XYChart.Series<String, Number> barChartSeries;
 
 	// line chart data series, X = reason and Y = cumulative % in sample
-	private XYChart.Series<String, Number> lineChartSeries = new XYChart.Series<>();
+	private XYChart.Series<String, Number> lineChartSeries;
 
 	// total data count
 	private Number totalCount;
@@ -36,6 +36,9 @@ public class ParetoChartController {
 	private CategoryClickListener clickListener;
 
 	public void createParetoChart(String title, StackPane spPareto, List<ParetoItem> items, Number totalCount, String categoryLabel) {
+		barChartSeries = new XYChart.Series<>();
+		lineChartSeries = new XYChart.Series<>();
+		
 		this.chartTitle = title;
 		this.totalCount = totalCount;
 

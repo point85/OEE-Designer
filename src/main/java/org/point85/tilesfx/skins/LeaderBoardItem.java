@@ -263,9 +263,7 @@ public class LeaderBoardItem extends Region implements Comparable<LeaderBoardIte
 
 		drawTriangle();
 
-		double val1 = getValue();
 		chartData.setValue(VALUE);
-		val1 = getValue();
 		
 		valueText.setText(String.format(locale, formatString, VALUE));
 		valueText.setX((width - size * 0.05) - valueText.getLayoutBounds().getWidth());
