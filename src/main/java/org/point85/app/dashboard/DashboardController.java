@@ -940,6 +940,9 @@ public class DashboardController extends DialogController implements CategoryCli
 					tiAvailability.setDescriptionColor(loss.getColor());
 				}
 			}
+			
+			// show stats in tiles
+			showStatistics();
 
 			// display the losses
 			// displayLosses();
@@ -948,11 +951,8 @@ public class DashboardController extends DialogController implements CategoryCli
 			// createLossChart();
 
 			// display the selected tab
-			// Tab tab = tpParetoCharts.getSelectionModel().getSelectedItem();
-			// refreshCharts(tab);
-
-			// show stats
-			showStatistics();
+			Tab tab = tpParetoCharts.getSelectionModel().getSelectedItem();
+			refreshCharts(tab);
 
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);

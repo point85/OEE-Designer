@@ -308,39 +308,43 @@ public class UomEditorController extends DesignerDialogController {
 
 	@FXML
 	private void onImportUom() throws Exception {
-		if (uomImportController == null) {
-			FXMLLoader loader = LoaderFactory.uomImporterLoader();
-			AnchorPane pane = (AnchorPane) loader.getRoot();
+		try {
+			if (uomImportController == null) {
+				FXMLLoader loader = LoaderFactory.uomImporterLoader();
+				AnchorPane pane = (AnchorPane) loader.getRoot();
 
-			// Create the dialog Stage.
-			Stage dialogStage = new Stage(StageStyle.DECORATED);
-			dialogStage.setTitle("Import Unit of Measure");
-			dialogStage.initModality(Modality.NONE);
-			Scene scene = new Scene(pane);
-			dialogStage.setScene(scene);
+				// Create the dialog Stage.
+				Stage dialogStage = new Stage(StageStyle.DECORATED);
+				dialogStage.setTitle("Import Unit of Measure");
+				dialogStage.initModality(Modality.NONE);
+				Scene scene = new Scene(pane);
+				dialogStage.setScene(scene);
 
-			// get the controller
-			uomImportController = loader.getController();
-			uomImportController.setDialogStage(dialogStage);
+				// get the controller
+				uomImportController = loader.getController();
+				uomImportController.setDialogStage(dialogStage);
+			}
+
+			// Show the dialog and wait until the user closes it
+			uomImportController.getDialogStage().showAndWait();
+
+			UnitOfMeasure uom = uomImportController.getSelectedUom();
+
+			if (uom == null) {
+				return;
+			}
+
+			// make sure that there is a non-null category
+			uom.getCategory();
+
+			PersistenceService.instance().fetchReferencedUnits(uom);
+
+			PersistenceService.instance().save(uom);
+
+			onRefreshAllUoms();
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
 		}
-
-		// Show the dialog and wait until the user closes it
-		uomImportController.getDialogStage().showAndWait();
-
-		UnitOfMeasure uom = uomImportController.getSelectedUom();
-
-		if (uom == null) {
-			return;
-		}
-
-		// make sure that there is a non-null category
-		uom.getCategory();
-
-		PersistenceService.instance().fetchReferencedUnits(uom);
-
-		PersistenceService.instance().save(uom);
-
-		onRefreshAllUoms();
 	}
 
 	// update the editor upon selection of a UOM node
@@ -596,6 +600,8 @@ public class UomEditorController extends DesignerDialogController {
 			uom = new UnitOfMeasure();
 			selectedUomItem = new TreeItem<>(new UomNode(uom));
 			selectedUomItem.setGraphic(ImageManager.instance().getImageView(Images.UOM));
+
+			// set the attributes
 			setAttributes(selectedUomItem);
 			editedUomItems.add(selectedUomItem);
 
@@ -796,6 +802,8 @@ public class UomEditorController extends DesignerDialogController {
 		String abscissaSymbol = AppUtils.parseSymbol(cbAbscissaUnits.getSelectionModel().getSelectedItem());
 		if (abscissaSymbol != null) {
 			abscissaUnit = AppUtils.getUOMForEditing(abscissaSymbol);
+		} else {
+			uom.setAbscissaUnit(uom);
 		}
 
 		// conversion offset
@@ -839,6 +847,12 @@ public class UomEditorController extends DesignerDialogController {
 
 		selectedUomItem.setGraphic(ImageManager.instance().getImageView(Images.CHANGED));
 		tvUoms.refresh();
+
+		// update categories
+		if (!cbCategories.getItems().contains(category)) {
+			cbCategories.getItems().add(category);
+			Collections.sort(cbCategories.getItems());
+		}
 	}
 
 	// Delete button clicked
@@ -1014,9 +1028,13 @@ public class UomEditorController extends DesignerDialogController {
 	@Override
 	@FXML
 	protected void onCancel() {
-		// close dialog with selected UOM set to null
-		this.selectedUomItem = null;
-		super.onCancel();
+		try {
+			// close dialog with selected UOM set to null
+			this.selectedUomItem = null;
+			super.onCancel();
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
 	}
 
 	// class for holding attributes of UOM in a tree view leaf node
