@@ -12,7 +12,7 @@ import org.point85.app.LoaderFactory;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerController;
 import org.point85.domain.DomainUtils;
-import org.point85.domain.performance.TimeLoss;
+import org.point85.domain.oee.TimeLoss;
 import org.point85.domain.plant.EquipmentEventResolver;
 import org.point85.domain.plant.Reason;
 import org.point85.domain.script.OeeContext;

@@ -16,7 +16,7 @@ import org.point85.app.Images;
 import org.point85.app.LoaderFactory;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
-import org.point85.domain.performance.TimeLoss;
+import org.point85.domain.oee.TimeLoss;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.schedule.NonWorkingPeriod;
 import org.point85.domain.schedule.Rotation;

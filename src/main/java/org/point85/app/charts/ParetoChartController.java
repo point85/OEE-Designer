@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 
-import org.point85.domain.performance.ParetoItem;
+import org.point85.domain.oee.ParetoItem;
 
 import javafx.geometry.Side;
 import javafx.scene.chart.BarChart;
@@ -90,6 +90,7 @@ public class ParetoChartController {
 		NumberAxis yAxis = new NumberAxis(0, 100, 10);
 		yAxis.setLabel("Percent");
 		yAxis.setAutoRanging(true);
+		yAxis.setUpperBound(100.0d);
 
 		// create bar chart
 		BarChart<String, Number> chBarChart = new BarChart<>(xAxis, yAxis);

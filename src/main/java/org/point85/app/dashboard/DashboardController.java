@@ -15,14 +15,14 @@ import org.point85.app.Images;
 import org.point85.app.charts.CategoryClickListener;
 import org.point85.app.charts.ParetoChartController;
 import org.point85.domain.DomainUtils;
-import org.point85.domain.collector.AvailabilityHistory;
-import org.point85.domain.collector.SetupHistory;
+import org.point85.domain.collector.AvailabilityRecord;
+import org.point85.domain.collector.SetupRecord;
 import org.point85.domain.messaging.CollectorResolvedEventMessage;
-import org.point85.domain.performance.EquipmentLoss;
-import org.point85.domain.performance.EquipmentLossManager;
-import org.point85.domain.performance.ParetoItem;
-import org.point85.domain.performance.TimeCategory;
-import org.point85.domain.performance.TimeLoss;
+import org.point85.domain.oee.EquipmentLoss;
+import org.point85.domain.oee.EquipmentLossManager;
+import org.point85.domain.oee.ParetoItem;
+import org.point85.domain.oee.TimeCategory;
+import org.point85.domain.oee.TimeLoss;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Equipment;
 import org.point85.domain.plant.Material;
@@ -906,7 +906,7 @@ public class DashboardController extends DialogController implements CategoryCli
 			}
 
 			// material and job
-			SetupHistory last = PersistenceService.instance().fetchLastSetupHistory(equipment);
+			SetupRecord last = PersistenceService.instance().fetchLastSetupRecord(equipment);
 
 			if (last == null || last.getMaterial() == null) {
 				throw new Exception(
@@ -964,7 +964,7 @@ public class DashboardController extends DialogController implements CategoryCli
 			System.out.println(this.equipmentLoss.toString());
 
 			// show last availability record
-			AvailabilityHistory history = PersistenceService.instance().fetchLastAvailabilityHistory(equipment);
+			AvailabilityRecord history = PersistenceService.instance().fetchLastAvailabilityRecord(equipment);
 
 			if (history != null) {
 				// availability reason
