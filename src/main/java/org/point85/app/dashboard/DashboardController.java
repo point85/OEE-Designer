@@ -7,7 +7,6 @@ import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import org.point85.app.AppUtils;
 import org.point85.app.DialogController;
@@ -71,6 +70,8 @@ public class DashboardController extends DialogController implements CategoryCli
 	private static final String TIME_CATEGORY_LABEL = "Time Categories";
 	private static final String NET_TIME_SERIES = "Time in Category";
 
+	private static final String TIME_BY_REASON = "Percent Time by Reason";
+
 	private static final float SEC_PER_DAY = 86400.0f;
 	private static final float SEC_PER_HOUR = 3600.0f;
 	private static final float SEC_PER_MIN = 60.0f;
@@ -90,7 +91,8 @@ public class DashboardController extends DialogController implements CategoryCli
 	// cumulative production
 	private boolean showCumulative = true;
 
-	private Equipment equipment;
+	// the loss data
+	private EquipmentLoss equipmentLoss;
 
 	// selection criteria
 	@FXML
@@ -196,10 +198,7 @@ public class DashboardController extends DialogController implements CategoryCli
 	// x-axis time unit
 	private Unit timeUnit = Unit.MINUTE;
 
-	private float divisor = 1.0f;
-
-	// the loss data
-	private EquipmentLoss equipmentLoss;
+	//private float divisor = 1.0f;
 
 	// loss chart
 	@FXML
@@ -236,36 +235,44 @@ public class DashboardController extends DialogController implements CategoryCli
 	@FXML
 	private Tab tbPlannedDowntimePareto;
 
-	// level 1 Pareto chart
 	@FXML
-	private StackPane spLevel1ParetoChart;
+	private AnchorPane apLevel1Pareto;
+	private StackPane spLevel1Pareto;
 
 	@FXML
-	private StackPane spYieldParetoChart;
+	private AnchorPane apYieldPareto;
+	private StackPane spYieldPareto;
 
 	@FXML
-	private StackPane spRejectsParetoChart;
+	private AnchorPane apRejectsPareto;
+	private StackPane spRejectsPareto;
 
 	@FXML
-	private StackPane spSpeedParetoChart;
+	private AnchorPane apSpeedPareto;
+	private StackPane spSpeedPareto;
 
 	@FXML
-	private StackPane spMinorStoppagesParetoChart;
+	private AnchorPane apMinorStoppagesPareto;
+	private StackPane spMinorStoppagesPareto;
 
 	@FXML
-	private StackPane spUnplannedDowntimeParetoChart;
+	private AnchorPane apUnplannedDowntimePareto;
+	private StackPane spUnplannedDowntimePareto;
 
 	@FXML
-	private StackPane spSetupParetoChart;
+	private AnchorPane apSetupPareto;
+	private StackPane spSetupPareto;
 
 	@FXML
-	private StackPane spPlannedDowntimeParetoChart;
+	private AnchorPane apPlannedDowntimePareto;
+	private StackPane spPlannedDowntimePareto;
 
 	public void setEquipmentLoss(EquipmentLoss equipmentLoss) {
 		this.equipmentLoss = equipmentLoss;
 	}
 
 	private float determineTimeUnits(Duration duration) {
+		float divisor = 1.0f;
 		float seconds = duration.getSeconds();
 		timeUnit = Unit.SECOND;
 
@@ -283,22 +290,9 @@ public class DashboardController extends DialogController implements CategoryCli
 	}
 
 	private Float convertDuration(Duration duration) {
+		float divisor = this.determineTimeUnits(duration);
 		float time = ((float) duration.getSeconds()) / divisor;
 		return new Float(time);
-	}
-
-	private List<ParetoItem> fetchParetoData() throws Exception {
-		// TODO: query database for the records of interest from equipment
-
-		List<ParetoItem> items = new ArrayList<>();
-
-		items.add(new ParetoItem("Jams", equipmentLoss.convertSeconds(960, timeUnit)));
-		items.add(new ParetoItem("No part", equipmentLoss.convertSeconds(96, timeUnit)));
-		items.add(new ParetoItem("No operator", equipmentLoss.convertSeconds(528, timeUnit)));
-		items.add(new ParetoItem("Sensor", equipmentLoss.convertSeconds(240, timeUnit)));
-		items.add(new ParetoItem("Mis-align", equipmentLoss.convertSeconds(384, timeUnit)));
-		items.add(new ParetoItem("Other", equipmentLoss.convertSeconds(192, timeUnit)));
-		return items;
 	}
 
 	private void onSelectTimeLosses() {
@@ -308,105 +302,138 @@ public class DashboardController extends DialogController implements CategoryCli
 	}
 
 	private void onSelectMinorStoppagesPareto() throws Exception {
-		if (spMinorStoppagesParetoChart.getChildren().size() == 0) {
-			List<ParetoItem> items = fetchParetoData();
+		List<ParetoItem> items = EquipmentLossManager.fetchParetoData(equipmentLoss, TimeLoss.MINOR_STOPPAGES);
 
-			ParetoChartController controller = new ParetoChartController();
-			Duration availableTime = equipmentLoss.getAvailableTime();
-			Number divisor = equipmentLoss.convertSeconds(availableTime.getSeconds(), timeUnit);
+		Number divisor = equipmentLoss.getAvailableTime().getSeconds();
 
-			controller.createParetoChart("Minor Stoppages Pareto", spMinorStoppagesParetoChart, items, divisor,
-					"Percent Time by Reason");
-		}
+		spMinorStoppagesPareto = new StackPane();
+
+		AnchorPane.setBottomAnchor(spMinorStoppagesPareto, 0.0);
+		AnchorPane.setLeftAnchor(spMinorStoppagesPareto, 0.0);
+		AnchorPane.setRightAnchor(spMinorStoppagesPareto, 0.0);
+		AnchorPane.setTopAnchor(spMinorStoppagesPareto, 0.0);
+
+		apMinorStoppagesPareto.getChildren().clear();
+		apMinorStoppagesPareto.getChildren().add(0, spMinorStoppagesPareto);
+
+		ParetoChartController controller = new ParetoChartController();
+		controller.createParetoChart("Minor Stoppages Pareto", spMinorStoppagesPareto, items, divisor, TIME_BY_REASON);
 	}
 
 	private void onSelectRejectsPareto() throws Exception {
-		if (spRejectsParetoChart.getChildren().size() == 0) {
-			List<ParetoItem> items = fetchParetoData();
+		List<ParetoItem> items = EquipmentLossManager.fetchParetoData(equipmentLoss, TimeLoss.REJECT_REWORK);
 
-			ParetoChartController controller = new ParetoChartController();
-			Duration availableTime = equipmentLoss.getAvailableTime();
-			Number divisor = equipmentLoss.convertSeconds(availableTime.getSeconds(), timeUnit);
+		Number divisor = equipmentLoss.getAvailableTime().getSeconds();
 
-			controller.createParetoChart("Rejects and Rework Pareto", spRejectsParetoChart, items, divisor,
-					"Percent Time by Reason");
-		}
+		spRejectsPareto = new StackPane();
+
+		AnchorPane.setBottomAnchor(spRejectsPareto, 0.0);
+		AnchorPane.setLeftAnchor(spRejectsPareto, 0.0);
+		AnchorPane.setRightAnchor(spRejectsPareto, 0.0);
+		AnchorPane.setTopAnchor(spRejectsPareto, 0.0);
+
+		apRejectsPareto.getChildren().clear();
+		apRejectsPareto.getChildren().add(0, spRejectsPareto);
+
+		ParetoChartController controller = new ParetoChartController();
+		controller.createParetoChart("Rejects and Rework Pareto", spRejectsPareto, items, divisor, TIME_BY_REASON);
 	}
 
 	private void onSelectReducedSpeedPareto() throws Exception {
-		if (spSpeedParetoChart.getChildren().size() == 0) {
-			List<ParetoItem> items = fetchParetoData();
+		List<ParetoItem> items = EquipmentLossManager.fetchParetoData(equipmentLoss, TimeLoss.REDUCED_SPEED);
 
-			ParetoChartController controller = new ParetoChartController();
-			Duration availableTime = equipmentLoss.getAvailableTime();
-			Number divisor = equipmentLoss.convertSeconds(availableTime.getSeconds(), timeUnit);
+		Number divisor = equipmentLoss.getAvailableTime().getSeconds();
 
-			controller.createParetoChart("Reduced Speed Pareto", spSpeedParetoChart, items, divisor,
-					"Percent Time by Reason");
-		}
+		spSpeedPareto = new StackPane();
+
+		AnchorPane.setBottomAnchor(spSpeedPareto, 0.0);
+		AnchorPane.setLeftAnchor(spSpeedPareto, 0.0);
+		AnchorPane.setRightAnchor(spSpeedPareto, 0.0);
+		AnchorPane.setTopAnchor(spSpeedPareto, 0.0);
+
+		apSpeedPareto.getChildren().clear();
+		apSpeedPareto.getChildren().add(0, spSpeedPareto);
+
+		ParetoChartController controller = new ParetoChartController();
+		controller.createParetoChart("Reduced Speed Pareto", spSpeedPareto, items, divisor, TIME_BY_REASON);
 	}
 
-	private void onSelectYieldPareto() throws Exception {
-		if (spYieldParetoChart.getChildren().size() == 0) {
-			List<ParetoItem> items = fetchParetoData();
+	private void onSelectStartupAndYieldPareto() throws Exception {
+		List<ParetoItem> items = EquipmentLossManager.fetchParetoData(equipmentLoss, TimeLoss.STARTUP_YIELD);
 
-			ParetoChartController controller = new ParetoChartController();
-			Duration availableTime = equipmentLoss.getAvailableTime();
-			Number divisor = equipmentLoss.convertSeconds(availableTime.getSeconds(), timeUnit);
+		Number divisor = equipmentLoss.getAvailableTime().getSeconds();
 
-			controller.createParetoChart("Startup And Yield Pareto", spYieldParetoChart, items, divisor,
-					"Percent Time by Reason");
-		}
+		spYieldPareto = new StackPane();
+
+		AnchorPane.setBottomAnchor(spYieldPareto, 0.0);
+		AnchorPane.setLeftAnchor(spYieldPareto, 0.0);
+		AnchorPane.setRightAnchor(spYieldPareto, 0.0);
+		AnchorPane.setTopAnchor(spYieldPareto, 0.0);
+
+		apYieldPareto.getChildren().clear();
+		apYieldPareto.getChildren().add(0, spYieldPareto);
+
+		ParetoChartController controller = new ParetoChartController();
+		controller.createParetoChart("Startup And Yield Pareto", spYieldPareto, items, divisor, TIME_BY_REASON);
 	}
 
 	private void onSelectUnplannedDowntimePareto() throws Exception {
-		if (spUnplannedDowntimeParetoChart.getChildren().size() == 0) {
-			List<ParetoItem> items = fetchParetoData();
+		List<ParetoItem> items = EquipmentLossManager.fetchParetoData(equipmentLoss, TimeLoss.UNPLANNED_DOWNTIME);
 
-			ParetoChartController controller = new ParetoChartController();
-			Duration availableTime = equipmentLoss.getAvailableTime();
-			Number divisor = equipmentLoss.convertSeconds(availableTime.getSeconds(), timeUnit);
+		Number divisor = equipmentLoss.getAvailableTime().getSeconds();
 
-			controller.createParetoChart("Unplanned Downtime Pareto", spUnplannedDowntimeParetoChart, items, divisor,
-					"Percent Time by Reason");
-		}
+		spUnplannedDowntimePareto = new StackPane();
+
+		AnchorPane.setBottomAnchor(spUnplannedDowntimePareto, 0.0);
+		AnchorPane.setLeftAnchor(spUnplannedDowntimePareto, 0.0);
+		AnchorPane.setRightAnchor(spUnplannedDowntimePareto, 0.0);
+		AnchorPane.setTopAnchor(spUnplannedDowntimePareto, 0.0);
+
+		apUnplannedDowntimePareto.getChildren().clear();
+		apUnplannedDowntimePareto.getChildren().add(0, spUnplannedDowntimePareto);
+
+		ParetoChartController controller = new ParetoChartController();
+		controller.createParetoChart("Unplanned Downtime Pareto", spUnplannedDowntimePareto, items, divisor,
+				TIME_BY_REASON);
 	}
 
 	private void onSelectSetupPareto() throws Exception {
-		if (spSetupParetoChart.getChildren().size() == 0) {
-			List<ParetoItem> items = fetchParetoData();
+		List<ParetoItem> items = EquipmentLossManager.fetchParetoData(equipmentLoss, TimeLoss.SETUP);
 
-			ParetoChartController controller = new ParetoChartController();
-			Duration availableTime = equipmentLoss.getAvailableTime();
-			Number divisor = equipmentLoss.convertSeconds(availableTime.getSeconds(), timeUnit);
+		Number divisor = equipmentLoss.getAvailableTime().getSeconds();
 
-			controller.createParetoChart("Setup and Yield Pareto", spSetupParetoChart, items, divisor,
-					"Percent Time by Reason");
-		}
+		spSetupPareto = new StackPane();
+
+		AnchorPane.setBottomAnchor(spSetupPareto, 0.0);
+		AnchorPane.setLeftAnchor(spSetupPareto, 0.0);
+		AnchorPane.setRightAnchor(spSetupPareto, 0.0);
+		AnchorPane.setTopAnchor(spSetupPareto, 0.0);
+
+		apSetupPareto.getChildren().clear();
+		apSetupPareto.getChildren().add(0, spSetupPareto);
+
+		ParetoChartController controller = new ParetoChartController();
+		controller.createParetoChart("Setup and Yield Pareto", spSetupPareto, items, divisor, TIME_BY_REASON);
 	}
 
 	private void onSelectPlannedDowntimePareto() throws Exception {
-		if (spPlannedDowntimeParetoChart.getChildren().size() == 0) {
-			List<ParetoItem> items = fetchParetoData();
+		List<ParetoItem> items = EquipmentLossManager.fetchParetoData(equipmentLoss, TimeLoss.PLANNED_DOWNTIME);
 
-			ParetoChartController controller = new ParetoChartController();
-			Duration availableTime = equipmentLoss.getAvailableTime();
-			Number divisor = equipmentLoss.convertSeconds(availableTime.getSeconds(), timeUnit);
+		Number divisor = equipmentLoss.getAvailableTime().getSeconds();
 
-			controller.createParetoChart("Planned Downtime Pareto", spPlannedDowntimeParetoChart, items, divisor,
-					"Percent Time by Reason");
-		}
-	}
+		spPlannedDowntimePareto = new StackPane();
 
-	private void displayLosses() throws Exception {
-		// loss chart
-		createLossChart();
+		AnchorPane.setBottomAnchor(spPlannedDowntimePareto, 0.0);
+		AnchorPane.setLeftAnchor(spPlannedDowntimePareto, 0.0);
+		AnchorPane.setRightAnchor(spPlannedDowntimePareto, 0.0);
+		AnchorPane.setTopAnchor(spPlannedDowntimePareto, 0.0);
 
-		// show stats
-		showStatistics();
+		apPlannedDowntimePareto.getChildren().clear();
+		apPlannedDowntimePareto.getChildren().add(0, spPlannedDowntimePareto);
 
-		// pareto of losses
-		onSelectFirstLevelPareto();
+		ParetoChartController controller = new ParetoChartController();
+		controller.createParetoChart("Planned Downtime Pareto", spPlannedDowntimePareto, items, divisor,
+				TIME_BY_REASON);
 	}
 
 	private void createLossChart() {
@@ -623,12 +650,21 @@ public class DashboardController extends DialogController implements CategoryCli
 		Duration availableTime = equipmentLoss.getAvailableTime();
 		Number divisor = equipmentLoss.convertSeconds(availableTime.getSeconds(), timeUnit);
 
+		spLevel1Pareto = new StackPane();
+
+		AnchorPane.setBottomAnchor(spLevel1Pareto, 0.0);
+		AnchorPane.setLeftAnchor(spLevel1Pareto, 0.0);
+		AnchorPane.setRightAnchor(spLevel1Pareto, 0.0);
+		AnchorPane.setTopAnchor(spLevel1Pareto, 0.0);
+
+		apLevel1Pareto.getChildren().clear();
+		apLevel1Pareto.getChildren().add(0, spLevel1Pareto);
+
 		List<ParetoItem> paretoItems = equipmentLoss.getLossItems(timeUnit);
 
 		ParetoChartController level1Controller = new ParetoChartController();
 		level1Controller.setCategoryClickListener(this);
-		level1Controller.createParetoChart("First-Level Pareto", spLevel1ParetoChart, paretoItems, divisor,
-				"Loss Category");
+		level1Controller.createParetoChart("First-Level Pareto", spLevel1Pareto, paretoItems, divisor, "Loss Category");
 	}
 
 	private void onClickLossCategory(Series<Number, String> series, XYChart.Data<Number, String> lossCategory) {
@@ -698,7 +734,7 @@ public class DashboardController extends DialogController implements CategoryCli
 		} else if (id.equals(tbFirstLevelPareto.getId())) {
 			onSelectFirstLevelPareto();
 		} else if (id.equals(tbYieldPareto.getId())) {
-			onSelectYieldPareto();
+			onSelectStartupAndYieldPareto();
 		} else if (id.equals(tbRejectsPareto.getId())) {
 			onSelectRejectsPareto();
 		} else if (id.equals(tbReducedSpeedPareto.getId())) {
@@ -858,10 +894,12 @@ public class DashboardController extends DialogController implements CategoryCli
 			}
 
 			OffsetDateTime odtFrom = DomainUtils.fromLocalDateTime(ldtFrom);
+			equipmentLoss.setStartDateTime(odtFrom);
 			OffsetDateTime odtTo = DomainUtils.fromLocalDateTime(ldtTo);
+			equipmentLoss.setEndDateTime(odtTo);
 
 			// equipment
-			Equipment equipment = getEquipment();
+			Equipment equipment = equipmentLoss.getEquipment();
 
 			if (equipment == null) {
 				throw new Exception("Equipment must be selected.");
@@ -875,13 +913,14 @@ public class DashboardController extends DialogController implements CategoryCli
 						"The material being produced must be specified for equipment " + equipment.getName());
 			}
 			Material material = last.getMaterial();
+			equipmentLoss.setMaterial(material);
 
 			tiJobMaterial.setDescription(material.getDisplayString());
 
 			tiJobMaterial.setText(last.getJob());
 
 			// calculate the time losses over this period
-			equipmentLoss = EquipmentLossManager.calculateEquipmentLoss(equipment, material, odtFrom, odtTo);
+			EquipmentLossManager.calculateEquipmentLoss(equipmentLoss);
 
 			String symbol = null;
 			double amount = 0.0d;
@@ -940,30 +979,19 @@ public class DashboardController extends DialogController implements CategoryCli
 					tiAvailability.setDescriptionColor(loss.getColor());
 				}
 			}
-			
+
 			// show stats in tiles
 			showStatistics();
 
-			// display the losses
-			// displayLosses();
-
-			// loss chart
-			// createLossChart();
-
 			// display the selected tab
-			Tab tab = tpParetoCharts.getSelectionModel().getSelectedItem();
-			refreshCharts(tab);
+			refreshCharts(tpParetoCharts.getSelectionModel().getSelectedItem());
 
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}
 	}
 
-	public Equipment getEquipment() {
-		return equipment;
-	}
-
 	public void setEquipment(Equipment equipment) {
-		this.equipment = equipment;
+		equipmentLoss = new EquipmentLoss(equipment);
 	}
 }

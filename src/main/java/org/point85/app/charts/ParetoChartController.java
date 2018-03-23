@@ -134,7 +134,7 @@ public class ParetoChartController {
 
 		// Y-Axis (%)
 		NumberAxis yAxis = new NumberAxis(0, 100, 10);
-		yAxis.setLabel("Percent");
+		yAxis.setLabel("Cumulative Percent");
 		yAxis.setSide(Side.RIGHT);
 		yAxis.setAutoRanging(false);
 
