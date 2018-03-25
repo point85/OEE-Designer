@@ -178,7 +178,7 @@ public class Tile extends Control {
         SMALL(0.04),
         SMALLER(0.05),
         NORMAL(0.06),
-        BIGGER(0.08);
+        BIGGER(0.07);
 
         public final double factor;
 

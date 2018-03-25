@@ -33,9 +33,9 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Label text="From" GridPane.halignment="RIGHT" />
+                        <Label text="From midnight" GridPane.halignment="RIGHT" />
                         <DatePicker fx:id="dpFromDate" maxWidth="1.7976931348623157E308" promptText="Choose starting date" GridPane.columnIndex="1" />
-                        <Label text="To" GridPane.columnIndex="2" GridPane.halignment="RIGHT" />
+                        <Label text="To end of" GridPane.columnIndex="2" GridPane.halignment="RIGHT" />
                         <DatePicker fx:id="dpToDate" maxWidth="1.7976931348623157E308" promptText="Choose ending date" GridPane.columnIndex="3" />
                         <Button fx:id="btRefresh" mnemonicParsing="false" onAction="#onRefresh" text="Refresh" GridPane.columnIndex="4" GridPane.halignment="CENTER" />
                      </children>

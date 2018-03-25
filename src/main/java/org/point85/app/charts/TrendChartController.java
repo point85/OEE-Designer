@@ -46,7 +46,7 @@ public class TrendChartController extends DesignerController {
 	// chart views
 	private static final int INPUT_VALUE_VIEW = 0;
 	private static final int OUTPUT_VALUE_VIEW = 1;
-	
+
 	// trend button text
 	private static final String START = "Start";
 	private static final String STOP = "Stop";
@@ -275,9 +275,9 @@ public class TrendChartController extends DesignerController {
 		this.eventResolver = scriptResolver;
 	}
 
-	public ResolvedEvent invokeResolver(OeeContext context, Object sourceValue, OffsetDateTime dateTime) throws Exception {
-		ResolvedEvent resolvedItem = this.equipmentResolver.invokeResolver(eventResolver, context, sourceValue,
-				dateTime);
+	public ResolvedEvent invokeResolver(OeeContext context, Object sourceValue, OffsetDateTime dateTime)
+			throws Exception {
+		ResolvedEvent resolvedItem = equipmentResolver.invokeResolver(eventResolver, context, sourceValue, dateTime);
 
 		EventResolverType type = eventResolver.getType();
 

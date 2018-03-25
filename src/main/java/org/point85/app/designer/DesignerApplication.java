@@ -27,6 +27,7 @@ import org.point85.app.web.WebServerController;
 import org.point85.domain.collector.DataCollector;
 import org.point85.domain.http.HttpSource;
 import org.point85.domain.messaging.MessagingSource;
+import org.point85.domain.oee.EquipmentLoss;
 import org.point85.domain.opc.da.DaOpcClient;
 import org.point85.domain.opc.da.OpcDaBrowserLeaf;
 import org.point85.domain.opc.ua.UaOpcClient;
@@ -755,7 +756,8 @@ public class DesignerApplication {
 		dashboardDialogController.setDashboardController(dashboardController);
 		// }
 
-		dashboardDialogController.getDashboardController().setEquipment((Equipment) entity);
+		EquipmentLoss loss = new EquipmentLoss((Equipment) entity);
+		dashboardDialogController.getDashboardController().setEquipmentLoss(loss);
 
 		// Show the dialog and wait until the user closes it
 		if (!dashboardDialogController.getDialogStage().isShowing()) {

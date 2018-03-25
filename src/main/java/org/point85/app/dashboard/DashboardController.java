@@ -76,9 +76,14 @@ public class DashboardController extends DialogController implements CategoryCli
 	private static final float SEC_PER_HOUR = 3600.0f;
 	private static final float SEC_PER_MIN = 60.0f;
 
-	private static final long DAYS_AMOUNT = 30 * 3600;
-	private static final long HOURS_AMOUNT = 24 * 3600;
+	// 1 hour = 3600 sec
 	private static final long MINS_AMOUNT = 3600;
+	
+	// 24 hours
+	private static final long HOURS_AMOUNT = 24 * MINS_AMOUNT;
+	
+	// 1 30-day month
+	private static final long DAYS_AMOUNT = 30 * HOURS_AMOUNT;
 
 	private static final double TILE_WIDTH = 300;
 	private static final double TILE_HEIGHT = TILE_WIDTH;
@@ -198,7 +203,7 @@ public class DashboardController extends DialogController implements CategoryCli
 	// x-axis time unit
 	private Unit timeUnit = Unit.MINUTE;
 
-	//private float divisor = 1.0f;
+	// private float divisor = 1.0f;
 
 	// loss chart
 	@FXML
@@ -276,13 +281,16 @@ public class DashboardController extends DialogController implements CategoryCli
 		float seconds = duration.getSeconds();
 		timeUnit = Unit.SECOND;
 
+		// if more than 30 days, use days
 		if (seconds > DAYS_AMOUNT) {
 			divisor = SEC_PER_DAY;
 			timeUnit = Unit.DAY;
 		} else if (seconds > HOURS_AMOUNT) {
+			// if more than 24 hours, use hours
 			divisor = SEC_PER_HOUR;
 			timeUnit = Unit.HOUR;
 		} else if (seconds > MINS_AMOUNT) {
+			// if more than 1 hour, use minutes
 			divisor = SEC_PER_MIN;
 			timeUnit = Unit.MINUTE;
 		}
@@ -875,6 +883,8 @@ public class DashboardController extends DialogController implements CategoryCli
 	@FXML
 	private void onRefresh() {
 		try {
+			equipmentLoss.reset();
+
 			// time period
 			LocalDate from = dpFromDate.getValue();
 
@@ -894,9 +904,9 @@ public class DashboardController extends DialogController implements CategoryCli
 			}
 
 			OffsetDateTime odtFrom = DomainUtils.fromLocalDateTime(ldtFrom);
-			equipmentLoss.setStartDateTime(odtFrom);
+			//equipmentLoss.setStartDateTime(odtFrom);
 			OffsetDateTime odtTo = DomainUtils.fromLocalDateTime(ldtTo);
-			equipmentLoss.setEndDateTime(odtTo);
+			//equipmentLoss.setEndDateTime(odtTo);
 
 			// equipment
 			Equipment equipment = equipmentLoss.getEquipment();
@@ -905,22 +915,28 @@ public class DashboardController extends DialogController implements CategoryCli
 				throw new Exception("Equipment must be selected.");
 			}
 
-			// material and job
-			SetupRecord last = PersistenceService.instance().fetchLastSetupRecord(equipment);
+			// material and job during this period
+			List<SetupRecord> setups = PersistenceService.instance().fetchSetupForPeriod(equipment, odtFrom, odtTo);
 
-			if (last == null || last.getMaterial() == null) {
+			if (setups.size() != 1) {
+				throw new Exception("Setup record not found for equipment " + equipment.getName() + " for the period "
+						+ odtFrom + " to " + odtTo);
+			}
+
+			if (setups.get(0).getMaterial() == null) {
 				throw new Exception(
 						"The material being produced must be specified for equipment " + equipment.getName());
 			}
-			Material material = last.getMaterial();
+
+			Material material = setups.get(0).getMaterial();
 			equipmentLoss.setMaterial(material);
 
 			tiJobMaterial.setDescription(material.getDisplayString());
 
-			tiJobMaterial.setText(last.getJob());
+			tiJobMaterial.setText(setups.get(0).getJob());
 
 			// calculate the time losses over this period
-			EquipmentLossManager.calculateEquipmentLoss(equipmentLoss);
+			EquipmentLossManager.calculateEquipmentLoss(equipmentLoss, odtFrom, odtTo);
 
 			String symbol = null;
 			double amount = 0.0d;
@@ -964,7 +980,7 @@ public class DashboardController extends DialogController implements CategoryCli
 			System.out.println(this.equipmentLoss.toString());
 
 			// show last availability record
-			AvailabilityRecord history = PersistenceService.instance().fetchLastAvailabilityRecord(equipment);
+			AvailabilityRecord history = PersistenceService.instance().fetchLastAvailability(equipment);
 
 			if (history != null) {
 				// availability reason
@@ -989,9 +1005,5 @@ public class DashboardController extends DialogController implements CategoryCli
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}
-	}
-
-	public void setEquipment(Equipment equipment) {
-		equipmentLoss = new EquipmentLoss(equipment);
 	}
 }

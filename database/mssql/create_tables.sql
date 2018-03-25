@@ -314,81 +314,56 @@ CREATE UNIQUE NONCLUSTERED INDEX [IDX_NAME] ON [dbo].[COLLECTOR]
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 
-/****** AVAIL_HISTORY table ******/
-IF OBJECT_ID('dbo.AVAIL_HISTORY', 'U') IS NOT NULL 
-  DROP TABLE dbo.AVAIL_HISTORY 
+/****** AVAILABILITY table ******/
+IF OBJECT_ID('dbo.AVAILABILITY', 'U') IS NOT NULL 
+  DROP TABLE dbo.AVAILABILITY 
 GO
 
-CREATE TABLE [dbo].[AVAIL_HISTORY](
-	[EVENT_KEY] [bigint] IDENTITY(1,1) NOT NULL,
+CREATE TABLE [dbo].[AVAILABILITY](
+	[AVAIL_KEY] [bigint] IDENTITY(1,1) NOT NULL,
 	[ENT_KEY] [bigint] NOT NULL,
 	[MATL_KEY] [bigint] NULL,
 	[JOB] [nvarchar](64) NULL,
-	[EVENT_TIME] [datetimeoffset](3) NULL,
-	[REASON_KEY] [bigint] NULL
-) ON [PRIMARY]
-GO
-
-/****** PROD_HISTORY table ******/
-IF OBJECT_ID('dbo.PROD_HISTORY', 'U') IS NOT NULL 
-  DROP TABLE dbo.PROD_HISTORY
-GO
-
-CREATE TABLE [dbo].[PROD_HISTORY](
-	[EVENT_KEY] [bigint] IDENTITY(1,1) NOT NULL,
-	[ENT_KEY] [bigint] NULL,
-	[MATL_KEY] [bigint] NULL,
-	[JOB] [nvarchar](64) NULL,
-	[EVENT_TIME] [datetimeoffset](3) NULL,
-	[TYPE] [nvarchar](16) NULL,
-	[AMOUNT] [float] NULL,
-	[UOM_KEY] [bigint] NULL
-) ON [PRIMARY]
-GO
-
-/****** SETUP_HISTORY table ******/
-IF OBJECT_ID('dbo.SETUP_HISTORY', 'U') IS NOT NULL 
-  DROP TABLE dbo.SETUP_HISTORY
-GO
-
-CREATE TABLE [dbo].[SETUP_HISTORY](
-	[EVENT_KEY] [bigint] IDENTITY(1,1) NOT NULL,
-	[ENT_KEY] [bigint] NULL,
-	[MATL_KEY] [bigint] NULL,
-	[JOB] [nvarchar](64) NULL,
-	[EVENT_TIME] [datetimeoffset](3) NULL,
-	[TYPE] [nchar](16) NULL
-) ON [PRIMARY]
-GO
-
-/****** AVAIL_SUMMARY table ******/
-IF OBJECT_ID('dbo.AVAIL_SUMMARY', 'U') IS NOT NULL 
-  DROP TABLE dbo.AVAIL_SUMMARY 
-GO
-
-CREATE TABLE [dbo].[AVAIL_SUMMARY](
-	[EVENT_KEY] [bigint] IDENTITY(1,1) NOT NULL,
-	[ENT_KEY] [bigint] NOT NULL,
 	[START_TIME] [datetimeoffset](3) NULL,
 	[END_TIME] [datetimeoffset](3) NULL,
+	[REASON_KEY] [bigint] NULL,
 	[DURATION] [bigint] NULL,
-	[REASON_KEY] [bigint] NULL
+	[EVENT_TYPE] [nvarchar](16) NULL
 ) ON [PRIMARY]
 GO
 
-/****** PROD_SUMMARY table ******/
-IF OBJECT_ID('dbo.PROD_SUMMARY', 'U') IS NOT NULL 
-  DROP TABLE dbo.PROD_SUMMARY
+/****** PRODUCTION table ******/
+IF OBJECT_ID('dbo.PRODUCTION', 'U') IS NOT NULL 
+  DROP TABLE dbo.PRODUCTION
 GO
 
-CREATE TABLE [dbo].[PROD_SUMMARY](
-	[EVENT_KEY] [bigint] IDENTITY(1,1) NOT NULL,
+CREATE TABLE [dbo].[PRODUCTION](
+	[PROD_KEY] [bigint] IDENTITY(1,1) NOT NULL,
 	[ENT_KEY] [bigint] NOT NULL,
+	[MATL_KEY] [bigint] NULL,
+	[JOB] [nvarchar](64) NULL,
 	[START_TIME] [datetimeoffset](3) NULL,
 	[END_TIME] [datetimeoffset](3) NULL,
-	[TYPE] [nvarchar](16) NULL,
+	[PROD_TYPE] [nvarchar](16) NULL,
 	[AMOUNT] [float] NULL,
-	[UOM_KEY] [bigint] NULL
+	[UOM_KEY] [bigint] NULL,
+	[EVENT_TYPE] [nvarchar](16) NULL
+) ON [PRIMARY]
+GO
+
+/****** SETUP table ******/
+IF OBJECT_ID('dbo.SETUP', 'U') IS NOT NULL 
+  DROP TABLE dbo.SETUP
+GO
+
+CREATE TABLE [dbo].[SETUP](
+	[SETUP_KEY] [bigint] IDENTITY(1,1) NOT NULL,
+	[ENT_KEY] [bigint] NOT NULL,
+	[MATL_KEY] [bigint] NULL,
+	[JOB] [nvarchar](64) NULL,
+	[START_TIME] [datetimeoffset](3) NULL,
+	[END_TIME] [datetimeoffset](3) NULL,
+	[EVENT_TYPE] [nvarchar](16) NULL
 ) ON [PRIMARY]
 GO
 

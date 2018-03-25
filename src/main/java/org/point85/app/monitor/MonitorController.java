@@ -16,6 +16,7 @@ import org.point85.domain.messaging.CollectorNotificationMessage;
 import org.point85.domain.messaging.CollectorResolvedEventMessage;
 import org.point85.domain.messaging.CollectorServerStatusMessage;
 import org.point85.domain.messaging.NotificationSeverity;
+import org.point85.domain.oee.EquipmentLoss;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.EntityLevel;
 import org.point85.domain.plant.Equipment;
@@ -478,7 +479,8 @@ public class MonitorController {
 		newItem.setExpanded(true);
 		
 		if (selectedEntity instanceof Equipment) {
-			this.dashboardController.setEquipment((Equipment)selectedEntity);
+			EquipmentLoss loss = new EquipmentLoss((Equipment) selectedEntity);
+			dashboardController.setEquipmentLoss(loss);
 		}
 	}
 
