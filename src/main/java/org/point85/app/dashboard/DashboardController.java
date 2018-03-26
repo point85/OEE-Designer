@@ -310,9 +310,9 @@ public class DashboardController extends DialogController implements CategoryCli
 	}
 
 	private void onSelectMinorStoppagesPareto() throws Exception {
-		List<ParetoItem> items = EquipmentLossManager.fetchParetoData(equipmentLoss, TimeLoss.MINOR_STOPPAGES);
+		List<ParetoItem> items = EquipmentLossManager.getParetoData(equipmentLoss, TimeLoss.MINOR_STOPPAGES);
 
-		Number divisor = equipmentLoss.getAvailableTime().getSeconds();
+		Number divisor = equipmentLoss.getLoss(TimeLoss.MINOR_STOPPAGES).getSeconds();
 
 		spMinorStoppagesPareto = new StackPane();
 
@@ -329,9 +329,9 @@ public class DashboardController extends DialogController implements CategoryCli
 	}
 
 	private void onSelectRejectsPareto() throws Exception {
-		List<ParetoItem> items = EquipmentLossManager.fetchParetoData(equipmentLoss, TimeLoss.REJECT_REWORK);
+		List<ParetoItem> items = EquipmentLossManager.getParetoData(equipmentLoss, TimeLoss.REJECT_REWORK);
 
-		Number divisor = equipmentLoss.getAvailableTime().getSeconds();
+		Number divisor = equipmentLoss.getLoss(TimeLoss.REJECT_REWORK).getSeconds();
 
 		spRejectsPareto = new StackPane();
 
@@ -348,9 +348,9 @@ public class DashboardController extends DialogController implements CategoryCli
 	}
 
 	private void onSelectReducedSpeedPareto() throws Exception {
-		List<ParetoItem> items = EquipmentLossManager.fetchParetoData(equipmentLoss, TimeLoss.REDUCED_SPEED);
+		List<ParetoItem> items = EquipmentLossManager.getParetoData(equipmentLoss, TimeLoss.REDUCED_SPEED);
 
-		Number divisor = equipmentLoss.getAvailableTime().getSeconds();
+		Number divisor = equipmentLoss.getLoss(TimeLoss.REDUCED_SPEED).getSeconds();
 
 		spSpeedPareto = new StackPane();
 
@@ -367,9 +367,9 @@ public class DashboardController extends DialogController implements CategoryCli
 	}
 
 	private void onSelectStartupAndYieldPareto() throws Exception {
-		List<ParetoItem> items = EquipmentLossManager.fetchParetoData(equipmentLoss, TimeLoss.STARTUP_YIELD);
+		List<ParetoItem> items = EquipmentLossManager.getParetoData(equipmentLoss, TimeLoss.STARTUP_YIELD);
 
-		Number divisor = equipmentLoss.getAvailableTime().getSeconds();
+		Number divisor = equipmentLoss.getLoss(TimeLoss.STARTUP_YIELD).getSeconds();
 
 		spYieldPareto = new StackPane();
 
@@ -386,9 +386,9 @@ public class DashboardController extends DialogController implements CategoryCli
 	}
 
 	private void onSelectUnplannedDowntimePareto() throws Exception {
-		List<ParetoItem> items = EquipmentLossManager.fetchParetoData(equipmentLoss, TimeLoss.UNPLANNED_DOWNTIME);
+		List<ParetoItem> items = EquipmentLossManager.getParetoData(equipmentLoss, TimeLoss.UNPLANNED_DOWNTIME);
 
-		Number divisor = equipmentLoss.getAvailableTime().getSeconds();
+		Number divisor = equipmentLoss.getLoss(TimeLoss.UNPLANNED_DOWNTIME).getSeconds();
 
 		spUnplannedDowntimePareto = new StackPane();
 
@@ -406,9 +406,9 @@ public class DashboardController extends DialogController implements CategoryCli
 	}
 
 	private void onSelectSetupPareto() throws Exception {
-		List<ParetoItem> items = EquipmentLossManager.fetchParetoData(equipmentLoss, TimeLoss.SETUP);
+		List<ParetoItem> items = EquipmentLossManager.getParetoData(equipmentLoss, TimeLoss.SETUP);
 
-		Number divisor = equipmentLoss.getAvailableTime().getSeconds();
+		Number divisor = equipmentLoss.getLoss(TimeLoss.SETUP).getSeconds();
 
 		spSetupPareto = new StackPane();
 
@@ -425,9 +425,9 @@ public class DashboardController extends DialogController implements CategoryCli
 	}
 
 	private void onSelectPlannedDowntimePareto() throws Exception {
-		List<ParetoItem> items = EquipmentLossManager.fetchParetoData(equipmentLoss, TimeLoss.PLANNED_DOWNTIME);
+		List<ParetoItem> items = EquipmentLossManager.getParetoData(equipmentLoss, TimeLoss.PLANNED_DOWNTIME);
 
-		Number divisor = equipmentLoss.getAvailableTime().getSeconds();
+		Number divisor = equipmentLoss.getLoss(TimeLoss.PLANNED_DOWNTIME).getSeconds();
 
 		spPlannedDowntimePareto = new StackPane();
 

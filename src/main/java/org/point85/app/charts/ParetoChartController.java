@@ -89,7 +89,7 @@ public class ParetoChartController {
 		// Y-Axis (%)
 		NumberAxis yAxis = new NumberAxis(0, 100, 10);
 		yAxis.setLabel("Percent");
-		yAxis.setAutoRanging(true);
+		yAxis.setAutoRanging(false);
 		yAxis.setUpperBound(100.0d);
 		yAxis.setLowerBound(0.0d);
 
@@ -139,6 +139,8 @@ public class ParetoChartController {
 		yAxis.setLabel("Cumulative Percent");
 		yAxis.setSide(Side.RIGHT);
 		yAxis.setAutoRanging(false);
+		yAxis.setUpperBound(100.0d);
+		yAxis.setLowerBound(0.0d);
 
 		// create the line chart
 		LineChart<String, Number> chLineChart = new LineChart<>(xAxis, yAxis);

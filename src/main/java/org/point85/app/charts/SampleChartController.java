@@ -168,9 +168,8 @@ public class SampleChartController {
 	
 	public void setYAxis(int tickUnit, int upperBound) {
 		this.yAxis.setLowerBound(0);
-		this.yAxis.setTickUnit(tickUnit);
 		this.yAxis.setUpperBound(upperBound);
-
+		this.yAxis.setTickUnit(tickUnit);
 	}
 
 	public void reset(int xTickUnit, int xUpperBound, int yTickUnit, int yUpperBound) {
