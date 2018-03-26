@@ -91,6 +91,7 @@ public class ParetoChartController {
 		yAxis.setLabel("Percent");
 		yAxis.setAutoRanging(true);
 		yAxis.setUpperBound(100.0d);
+		yAxis.setLowerBound(0.0d);
 
 		// create bar chart
 		BarChart<String, Number> chBarChart = new BarChart<>(xAxis, yAxis);

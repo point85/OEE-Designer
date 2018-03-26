@@ -297,8 +297,8 @@ public class DashboardController extends DialogController implements CategoryCli
 		return divisor;
 	}
 
-	private Float convertDuration(Duration duration) {
-		float divisor = this.determineTimeUnits(duration);
+	private Float convertDuration(Duration duration, float divisor) {
+		//float divisor = this.determineTimeUnits(duration);
 		float time = ((float) duration.getSeconds()) / divisor;
 		return new Float(time);
 	}
@@ -480,36 +480,36 @@ public class DashboardController extends DialogController implements CategoryCli
 		List<XYChart.Data<Number, String>> yieldPoints = new ArrayList<>();
 
 		// x-axis time units
-		determineTimeUnits(equipmentLoss.getDuration());
+		float divisor = determineTimeUnits(equipmentLoss.getDuration());
 
 		// value adding
 		String category = TimeCategory.VALUE_ADDING.toString();
-		Number netTime = convertDuration(equipmentLoss.getValueAddingTime());
-		Number yield = convertDuration(equipmentLoss.getLoss(TimeLoss.STARTUP_YIELD));
+		Number netTime = convertDuration(equipmentLoss.getValueAddingTime(), divisor);
+		Number yield = convertDuration(equipmentLoss.getLoss(TimeLoss.STARTUP_YIELD), divisor);
 
 		netTimePoints.add(new XYChart.Data<Number, String>(netTime, category));
 		yieldPoints.add(new XYChart.Data<Number, String>(yield, category));
 
 		// effective net production time
 		category = TimeCategory.EFFECTIVE_NET_PRODUCTION.toString();
-		netTime = convertDuration(equipmentLoss.getEffectiveNetProductionTime());
-		Number rejects = convertDuration(equipmentLoss.getLoss(TimeLoss.REJECT_REWORK));
+		netTime = convertDuration(equipmentLoss.getEffectiveNetProductionTime(), divisor);
+		Number rejects = convertDuration(equipmentLoss.getLoss(TimeLoss.REJECT_REWORK), divisor);
 
 		netTimePoints.add(new XYChart.Data<Number, String>(netTime, category));
 		rejectPoints.add(new XYChart.Data<Number, String>(rejects, category));
 
 		// efficient net production time
 		category = TimeCategory.EFFICIENT_NET_PRODUCTION.toString();
-		netTime = convertDuration(equipmentLoss.getEfficientNetProductionTime());
-		Number reducedSpeed = convertDuration(equipmentLoss.getLoss(TimeLoss.REDUCED_SPEED));
+		netTime = convertDuration(equipmentLoss.getEfficientNetProductionTime(), divisor);
+		Number reducedSpeed = convertDuration(equipmentLoss.getLoss(TimeLoss.REDUCED_SPEED), divisor);
 
 		netTimePoints.add(new XYChart.Data<Number, String>(netTime, category));
 		reducedSpeedPoints.add(new XYChart.Data<Number, String>(reducedSpeed, category));
 
 		// net production time
 		category = TimeCategory.NET_PRODUCTION.toString();
-		netTime = convertDuration(equipmentLoss.getNetProductionTime());
-		Number minorStoppagesLoss = convertDuration(equipmentLoss.getLoss(TimeLoss.MINOR_STOPPAGES));
+		netTime = convertDuration(equipmentLoss.getNetProductionTime(), divisor);
+		Number minorStoppagesLoss = convertDuration(equipmentLoss.getLoss(TimeLoss.MINOR_STOPPAGES), divisor);
 
 		netTimePoints.add(new XYChart.Data<Number, String>(netTime, category));
 
@@ -520,40 +520,40 @@ public class DashboardController extends DialogController implements CategoryCli
 
 		// reported production time
 		category = TimeCategory.REPORTED_PRODUCTION.toString();
-		netTime = convertDuration(equipmentLoss.getReportedProductionTime());
-		Number unplannedDowntime = convertDuration(equipmentLoss.getLoss(TimeLoss.UNPLANNED_DOWNTIME));
+		netTime = convertDuration(equipmentLoss.getReportedProductionTime(), divisor);
+		Number unplannedDowntime = convertDuration(equipmentLoss.getLoss(TimeLoss.UNPLANNED_DOWNTIME), divisor);
 
 		netTimePoints.add(new XYChart.Data<Number, String>(netTime, category));
 		unplannedDowntimePoints.add(new XYChart.Data<Number, String>(unplannedDowntime, category));
 
 		// production time
 		category = TimeCategory.PRODUCTION.toString();
-		netTime = convertDuration(equipmentLoss.getProductionTime());
-		Number setup = convertDuration(equipmentLoss.getLoss(TimeLoss.SETUP));
+		netTime = convertDuration(equipmentLoss.getProductionTime(), divisor);
+		Number setup = convertDuration(equipmentLoss.getLoss(TimeLoss.SETUP), divisor);
 
 		netTimePoints.add(new XYChart.Data<Number, String>(netTime, category));
 		setupPoints.add(new XYChart.Data<Number, String>(setup, category));
 
 		// scheduled time
 		category = TimeCategory.SCHEDULED_PRODUCTION.toString();
-		netTime = convertDuration(equipmentLoss.getScheduledProductionTime());
-		Number plannedDowntime = convertDuration(equipmentLoss.getLoss(TimeLoss.PLANNED_DOWNTIME));
+		netTime = convertDuration(equipmentLoss.getScheduledProductionTime(), divisor);
+		Number plannedDowntime = convertDuration(equipmentLoss.getLoss(TimeLoss.PLANNED_DOWNTIME), divisor);
 
 		netTimePoints.add(new XYChart.Data<Number, String>(netTime, category));
 		plannedDowntimePoints.add(new XYChart.Data<Number, String>(plannedDowntime, category));
 
 		// available time
 		category = TimeCategory.AVAILABLE.toString();
-		netTime = convertDuration(equipmentLoss.getAvailableTime());
-		Number specialEventsLosses = convertDuration(equipmentLoss.getLoss(TimeLoss.UNSCHEDULED));
+		netTime = convertDuration(equipmentLoss.getAvailableTime(), divisor);
+		Number specialEventsLosses = convertDuration(equipmentLoss.getLoss(TimeLoss.UNSCHEDULED), divisor);
 
 		netTimePoints.add(new XYChart.Data<Number, String>(netTime, category));
 		unscheduledPoints.add(new XYChart.Data<Number, String>(specialEventsLosses, category));
 
 		// operations time
 		category = TimeCategory.REQUIRED_OPERATIONS.toString();
-		netTime = convertDuration(equipmentLoss.getRequiredOperationsTime());
-		Number noDemand = convertDuration(equipmentLoss.getLoss(TimeLoss.NOT_SCHEDULED));
+		netTime = convertDuration(equipmentLoss.getRequiredOperationsTime(), divisor);
+		Number noDemand = convertDuration(equipmentLoss.getLoss(TimeLoss.NOT_SCHEDULED), divisor);
 
 		netTimePoints.add(new XYChart.Data<Number, String>(netTime, category));
 		notScheduledPoints.add(new XYChart.Data<Number, String>(noDemand, category));
@@ -904,9 +904,7 @@ public class DashboardController extends DialogController implements CategoryCli
 			}
 
 			OffsetDateTime odtFrom = DomainUtils.fromLocalDateTime(ldtFrom);
-			//equipmentLoss.setStartDateTime(odtFrom);
 			OffsetDateTime odtTo = DomainUtils.fromLocalDateTime(ldtTo);
-			//equipmentLoss.setEndDateTime(odtTo);
 
 			// equipment
 			Equipment equipment = equipmentLoss.getEquipment();
