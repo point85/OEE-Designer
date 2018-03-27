@@ -298,7 +298,6 @@ public class DashboardController extends DialogController implements CategoryCli
 	}
 
 	private Float convertDuration(Duration duration, float divisor) {
-		//float divisor = this.determineTimeUnits(duration);
 		float time = ((float) duration.getSeconds()) / divisor;
 		return new Float(time);
 	}
