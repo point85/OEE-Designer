@@ -5,6 +5,8 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalTime;
+import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -37,7 +39,20 @@ public abstract class AppUtils {
 	// no text
 	public static final String EMPTY_STRING = "";
 
-	// format a BigDecimal nicely
+	// format a Duration
+	public static String formatDuration(Duration duration) {
+		// remove the "PT" prefix
+		return duration.toString().substring(2);
+	}
+
+	// format an OffsetDateTime
+	public static String formatOffsetDateTime(OffsetDateTime odt) {
+		OffsetDateTime truncated = odt.truncatedTo(ChronoUnit.SECONDS);
+		String value = truncated.toString().replace('T', ' ');
+		return value;
+	}
+
+	// format a BigDecimal
 	public static String formatDouble(double decimal) {
 		NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.getDefault());
 		numberFormat.setGroupingUsed(true);

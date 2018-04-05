@@ -45,6 +45,7 @@ import org.point85.tilesfx.skins.BarChartItem;
 import org.point85.tilesfx.skins.LeaderBoardItem;
 import org.point85.tilesfx.tools.FlowGridPane;
 
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -63,6 +64,7 @@ import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
@@ -72,6 +74,7 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 
 public class DashboardController extends DialogController implements CategoryClickListener {
 	private static final String LOSS_CHART_TITLE = "Equipment Times";
@@ -218,10 +221,13 @@ public class DashboardController extends DialogController implements CategoryCli
 	private TableView<ResolvedEvent> tvResolvedEvents;
 
 	@FXML
-	private TableColumn<ResolvedEvent, String> tcAvailability;
+	private TableColumn<ResolvedEvent, Reason> tcAvailability;
 
 	@FXML
-	private TableColumn<ResolvedEvent, String> tcEventTimestamp;
+	private TableColumn<ResolvedEvent, String> tcTimestamp;
+
+	@FXML
+	private TableColumn<ResolvedEvent, String> tcDuration;
 
 	@FXML
 	private TableColumn<ResolvedEvent, String> tcShift;
@@ -230,7 +236,7 @@ public class DashboardController extends DialogController implements CategoryCli
 	private TableColumn<ResolvedEvent, String> tcReason;
 
 	@FXML
-	private TableColumn<ResolvedEvent, String> tcLoss;
+	private TableColumn<ResolvedEvent, Text> tcLoss;
 
 	@FXML
 	private TableColumn<ResolvedEvent, String> tcProdType;
@@ -358,9 +364,20 @@ public class DashboardController extends DialogController implements CategoryCli
 
 		resolvedEvents.clear();
 
+		AvailabilityRecord lastAvailability = null;
+
 		for (BaseRecord record : records) {
 			ResolvedEvent event = new ResolvedEvent(record);
+
+			if (event.getReason() == null && lastAvailability != null) {
+				// set to previous event's reason
+				event.setReason(lastAvailability.getReason());
+			}
 			resolvedEvents.add(event);
+
+			if (record instanceof AvailabilityRecord) {
+				lastAvailability = (AvailabilityRecord) record;
+			}
 		}
 
 		tvResolvedEvents.refresh();
@@ -797,9 +814,45 @@ public class DashboardController extends DialogController implements CategoryCli
 		// server status table
 		tvResolvedEvents.setItems(resolvedEvents);
 
+		// loss category
+		tcAvailability.setCellFactory(column -> {
+			return new TableCell<ResolvedEvent, Reason>() {
+				@Override
+				protected void updateItem(Reason reason, boolean empty) {
+					super.updateItem(reason, empty);
+
+					if (reason != null && reason.getLossCategory() != null) {
+						Color color = reason.getLossCategory().getColor();
+
+						// remove 0x
+						String colorString = color.toString();
+						setStyle("-fx-background-color: #" + colorString.substring(2));
+					}
+				}
+			};
+		});
+
+		tcAvailability.setCellValueFactory(cellDataFeatures -> {
+			// set the reason
+			Reason reason = cellDataFeatures.getValue().getReason();
+			return new SimpleObjectProperty<Reason>(reason);
+		});
+
 		// time
-		tcEventTimestamp.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(cellDataFeatures.getValue().getStartTime().toString());
+		tcTimestamp.setCellValueFactory(cellDataFeatures -> {
+			return new SimpleStringProperty(AppUtils.formatOffsetDateTime(cellDataFeatures.getValue().getStartTime()));
+		});
+
+		// duration
+		tcDuration.setCellValueFactory(cellDataFeatures -> {
+			ResolvedEvent event = cellDataFeatures.getValue();
+
+			SimpleStringProperty property = null;
+
+			if (event.getDuration() != null) {
+				property = new SimpleStringProperty(AppUtils.formatDuration(event.getDuration()));
+			}
+			return property;
 		});
 
 		// shift
@@ -817,10 +870,9 @@ public class DashboardController extends DialogController implements CategoryCli
 		// reason
 		tcReason.setCellValueFactory(cellDataFeatures -> {
 			ResolvedEvent event = cellDataFeatures.getValue();
-
 			SimpleStringProperty property = null;
 
-			if (event.getReason() != null) {
+			if (event.getResolverType().equals(EventResolverType.AVAILABILITY)) {
 				property = new SimpleStringProperty(event.getReason().getName());
 			}
 			return property;
@@ -829,13 +881,16 @@ public class DashboardController extends DialogController implements CategoryCli
 		// loss
 		tcLoss.setCellValueFactory(cellDataFeatures -> {
 			ResolvedEvent event = cellDataFeatures.getValue();
+			SimpleObjectProperty<Text> lossProperty = null;
+			Reason reason = event.getReason();
 
-			SimpleStringProperty property = null;
-
-			if (event.getReason() != null) {
-				property = new SimpleStringProperty(event.getReason().getLossCategory().toString());
+			if (event.getResolverType().equals(EventResolverType.AVAILABILITY)) {
+				Color color = reason.getLossCategory().getColor();
+				Text text = new Text(reason.getLossCategory().toString());
+				text.setFill(color);
+				lossProperty = new SimpleObjectProperty<Text>(text);
 			}
-			return property;
+			return lossProperty;
 		});
 
 		// production type

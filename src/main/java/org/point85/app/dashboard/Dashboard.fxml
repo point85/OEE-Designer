@@ -51,7 +51,7 @@
          <children>
             <TabPane fx:id="tpParetoCharts" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0">
                <tabs>
-                  <Tab fx:id="tbTimeLosses" text="Time Losses">
+                  <Tab fx:id="tbTimeLosses" closable="false" text="Time Losses">
                     <content>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
@@ -67,64 +67,65 @@
                         </AnchorPane>
                     </content>
                   </Tab>
-                  <Tab fx:id="tbFirstLevelPareto" text="First-Level Pareto">
+                  <Tab fx:id="tbFirstLevelPareto" closable="false" text="First-Level Pareto">
                      <content>
                         <AnchorPane fx:id="apLevel1Pareto" />
                      </content>
                   </Tab>
-                  <Tab fx:id="tbEvents" text="Events">
+                  <Tab fx:id="tbEvents" closable="false" text="Events">
                     <content>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
                               <TableView fx:id="tvResolvedEvents" layoutX="407.0" layoutY="83.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
                                 <columns>
-                                  <TableColumn fx:id="tcAvailability" prefWidth="20.0" />
-                                  <TableColumn fx:id="tcEventTimestamp" prefWidth="200.0" text="Time" />
+                                  <TableColumn fx:id="tcTimestamp" prefWidth="200.0" text="Time" />
                                     <TableColumn fx:id="tcShift" prefWidth="75.0" text="Shift" />
-                                    <TableColumn fx:id="tcReason" prefWidth="75.0" text="Reason" />
-                                    <TableColumn fx:id="tcLoss" prefWidth="75.0" text="Loss" />
-                                    <TableColumn fx:id="tcProdType" prefWidth="75.0" text="Produced" />
+                                    <TableColumn fx:id="tcDuration" prefWidth="75.0" text="Duration" />
+                                    <TableColumn fx:id="tcProdType" prefWidth="125.0" text="Event" />
+                                  <TableColumn fx:id="tcAvailability" prefWidth="20.0" />
+                                    <TableColumn fx:id="tcReason" prefWidth="150.0" text="Reason" />
+                                    <TableColumn fx:id="tcLoss" prefWidth="150.0" text="Loss" />
                                     <TableColumn fx:id="tcProdAmount" prefWidth="75.0" text="Amount" />
                                     <TableColumn fx:id="tcProdUnit" prefWidth="75.0" text="UOM" />
-                                    <TableColumn fx:id="tcMaterial" prefWidth="75.0" text="Material" />
-                                    <TableColumn fx:id="tcJob" prefWidth="75.0" text="Job" />
+                                    <TableColumn fx:id="tcMaterial" prefWidth="150.0" text="Material" />
+                                    <TableColumn fx:id="tcJob" prefWidth="100.0" text="Job" />
                                 </columns>
                               </TableView>
                            </children>
                         </AnchorPane>
                     </content>
                   </Tab>
-                  <Tab fx:id="tbYieldPareto" text="Startup &amp; Yield">
+                  <Tab fx:id="tbYieldPareto" closable="false" text="Startup &amp; Yield">
                     <content>
                       <AnchorPane fx:id="apYieldPareto" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                     </content>
                   </Tab>
-                  <Tab fx:id="tbRejectsPareto" text="Rejects &amp; Rework">
+                  <Tab fx:id="tbRejectsPareto" closable="false" text="Rejects &amp; Rework">
                     <content>
                       <AnchorPane fx:id="apRejectsPareto" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                     </content>
                   </Tab>
-                  <Tab fx:id="tbReducedSpeedPareto" text="Reduced Speed">
+                  <Tab fx:id="tbReducedSpeedPareto" closable="false" text="Reduced Speed">
                     <content>
                       <AnchorPane fx:id="apSpeedPareto" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                     </content>
                   </Tab>
-                  <Tab fx:id="tbMinorStoppagesPareto" text="Stoppages">
+                  <Tab fx:id="tbMinorStoppagesPareto" closable="false" text="Stoppages">
                     <content>
                       <AnchorPane fx:id="apMinorStoppagesPareto" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                     </content>
                   </Tab>
-                  <Tab fx:id="tbUnplannedDowntimePareto" text="Unplanned Downtime">
+                  <Tab fx:id="tbUnplannedDowntimePareto" closable="false" text="Unplanned Downtime">
                     <content>
                       <AnchorPane fx:id="apUnplannedDowntimePareto" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                     </content>
                   </Tab>
-                  <Tab fx:id="tbSetupPareto" text="Setup">
+                  <Tab fx:id="tbSetupPareto" closable="false" text="Setup">
                     <content>
                       <AnchorPane fx:id="apSetupPareto" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                     </content>
                   </Tab>
-                  <Tab fx:id="tbPlannedDowntimePareto" text="Planned Downtime">
+                  <Tab fx:id="tbPlannedDowntimePareto" closable="false" text="Planned Downtime">
                     <content>
                       <AnchorPane fx:id="apPlannedDowntimePareto" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                     </content>
