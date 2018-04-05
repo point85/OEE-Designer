@@ -9,6 +9,8 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -69,6 +71,28 @@
                      <content>
                         <AnchorPane fx:id="apLevel1Pareto" />
                      </content>
+                  </Tab>
+                  <Tab fx:id="tbEvents" text="Events">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <TableView fx:id="tvResolvedEvents" layoutX="407.0" layoutY="83.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+                                <columns>
+                                  <TableColumn fx:id="tcAvailability" prefWidth="20.0" />
+                                  <TableColumn fx:id="tcEventTimestamp" prefWidth="200.0" text="Time" />
+                                    <TableColumn fx:id="tcShift" prefWidth="75.0" text="Shift" />
+                                    <TableColumn fx:id="tcReason" prefWidth="75.0" text="Reason" />
+                                    <TableColumn fx:id="tcLoss" prefWidth="75.0" text="Loss" />
+                                    <TableColumn fx:id="tcProdType" prefWidth="75.0" text="Produced" />
+                                    <TableColumn fx:id="tcProdAmount" prefWidth="75.0" text="Amount" />
+                                    <TableColumn fx:id="tcProdUnit" prefWidth="75.0" text="UOM" />
+                                    <TableColumn fx:id="tcMaterial" prefWidth="75.0" text="Material" />
+                                    <TableColumn fx:id="tcJob" prefWidth="75.0" text="Job" />
+                                </columns>
+                              </TableView>
+                           </children>
+                        </AnchorPane>
+                    </content>
                   </Tab>
                   <Tab fx:id="tbYieldPareto" text="Startup &amp; Yield">
                     <content>

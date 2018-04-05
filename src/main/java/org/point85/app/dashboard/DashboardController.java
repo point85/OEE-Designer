@@ -6,6 +6,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.point85.app.AppUtils;
@@ -16,6 +18,7 @@ import org.point85.app.charts.CategoryClickListener;
 import org.point85.app.charts.ParetoChartController;
 import org.point85.domain.DomainUtils;
 import org.point85.domain.collector.AvailabilityRecord;
+import org.point85.domain.collector.BaseRecord;
 import org.point85.domain.collector.SetupRecord;
 import org.point85.domain.messaging.CollectorResolvedEventMessage;
 import org.point85.domain.oee.EquipmentLoss;
@@ -25,9 +28,11 @@ import org.point85.domain.oee.TimeCategory;
 import org.point85.domain.oee.TimeLoss;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Equipment;
+import org.point85.domain.plant.EquipmentMaterial;
 import org.point85.domain.plant.Material;
 import org.point85.domain.plant.Reason;
 import org.point85.domain.script.EventResolverType;
+import org.point85.domain.script.ResolvedEvent;
 import org.point85.domain.uom.MeasurementSystem;
 import org.point85.domain.uom.Quantity;
 import org.point85.domain.uom.Unit;
@@ -40,6 +45,7 @@ import org.point85.tilesfx.skins.BarChartItem;
 import org.point85.tilesfx.skins.LeaderBoardItem;
 import org.point85.tilesfx.tools.FlowGridPane;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -57,6 +63,8 @@ import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
@@ -78,10 +86,10 @@ public class DashboardController extends DialogController implements CategoryCli
 
 	// 1 hour = 3600 sec
 	private static final long MINS_AMOUNT = 3600;
-	
+
 	// 24 hours
 	private static final long HOURS_AMOUNT = 24 * MINS_AMOUNT;
-	
+
 	// 1 30-day month
 	private static final long DAYS_AMOUNT = 30 * HOURS_AMOUNT;
 
@@ -203,7 +211,41 @@ public class DashboardController extends DialogController implements CategoryCli
 	// x-axis time unit
 	private Unit timeUnit = Unit.MINUTE;
 
-	// private float divisor = 1.0f;
+	// list of events
+	private ObservableList<ResolvedEvent> resolvedEvents = FXCollections.observableArrayList(new ArrayList<>());
+
+	@FXML
+	private TableView<ResolvedEvent> tvResolvedEvents;
+
+	@FXML
+	private TableColumn<ResolvedEvent, String> tcAvailability;
+
+	@FXML
+	private TableColumn<ResolvedEvent, String> tcEventTimestamp;
+
+	@FXML
+	private TableColumn<ResolvedEvent, String> tcShift;
+
+	@FXML
+	private TableColumn<ResolvedEvent, String> tcReason;
+
+	@FXML
+	private TableColumn<ResolvedEvent, String> tcLoss;
+
+	@FXML
+	private TableColumn<ResolvedEvent, String> tcProdType;
+
+	@FXML
+	private TableColumn<ResolvedEvent, String> tcProdAmount;
+
+	@FXML
+	private TableColumn<ResolvedEvent, String> tcProdUnit;
+
+	@FXML
+	private TableColumn<ResolvedEvent, String> tcMaterial;
+
+	@FXML
+	private TableColumn<ResolvedEvent, String> tcJob;
 
 	// loss chart
 	@FXML
@@ -215,6 +257,9 @@ public class DashboardController extends DialogController implements CategoryCli
 
 	@FXML
 	private Tab tbTimeLosses;
+
+	@FXML
+	private Tab tbEvents;
 
 	@FXML
 	private Tab tbFirstLevelPareto;
@@ -306,6 +351,19 @@ public class DashboardController extends DialogController implements CategoryCli
 		if (bcLosses.getData() == null || bcLosses.getData().size() == 0) {
 			createLossChart();
 		}
+	}
+
+	private void onSelectHistory() {
+		List<BaseRecord> records = equipmentLoss.getEventRecords();
+
+		resolvedEvents.clear();
+
+		for (BaseRecord record : records) {
+			ResolvedEvent event = new ResolvedEvent(record);
+			resolvedEvents.add(event);
+		}
+
+		tvResolvedEvents.refresh();
 	}
 
 	private void onSelectMinorStoppagesPareto() throws Exception {
@@ -731,6 +789,105 @@ public class DashboardController extends DialogController implements CategoryCli
 		});
 
 		buildDashboardTiles();
+
+		initializeEventTable();
+	}
+
+	private void initializeEventTable() {
+		// server status table
+		tvResolvedEvents.setItems(resolvedEvents);
+
+		// time
+		tcEventTimestamp.setCellValueFactory(cellDataFeatures -> {
+			return new SimpleStringProperty(cellDataFeatures.getValue().getStartTime().toString());
+		});
+
+		// shift
+		tcShift.setCellValueFactory(cellDataFeatures -> {
+			ResolvedEvent event = cellDataFeatures.getValue();
+
+			SimpleStringProperty property = null;
+
+			if (event.getShift() != null) {
+				property = new SimpleStringProperty(event.getShift().getName());
+			}
+			return property;
+		});
+
+		// reason
+		tcReason.setCellValueFactory(cellDataFeatures -> {
+			ResolvedEvent event = cellDataFeatures.getValue();
+
+			SimpleStringProperty property = null;
+
+			if (event.getReason() != null) {
+				property = new SimpleStringProperty(event.getReason().getName());
+			}
+			return property;
+		});
+
+		// loss
+		tcLoss.setCellValueFactory(cellDataFeatures -> {
+			ResolvedEvent event = cellDataFeatures.getValue();
+
+			SimpleStringProperty property = null;
+
+			if (event.getReason() != null) {
+				property = new SimpleStringProperty(event.getReason().getLossCategory().toString());
+			}
+			return property;
+		});
+
+		// production type
+		tcProdType.setCellValueFactory(cellDataFeatures -> {
+			SimpleStringProperty property = null;
+			ResolvedEvent event = cellDataFeatures.getValue();
+
+			if (event.getResolverType() != null) {
+				property = new SimpleStringProperty(event.getResolverType().toString());
+			}
+			return property;
+		});
+
+		// production amount
+		tcProdAmount.setCellValueFactory(cellDataFeatures -> {
+			SimpleStringProperty property = null;
+			ResolvedEvent event = cellDataFeatures.getValue();
+
+			if (event.getQuantity() != null) {
+				property = new SimpleStringProperty(AppUtils.formatDouble(event.getQuantity().getAmount()));
+			}
+			return property;
+		});
+
+		// production UOM
+		tcProdUnit.setCellValueFactory(cellDataFeatures -> {
+			SimpleStringProperty property = null;
+			ResolvedEvent event = cellDataFeatures.getValue();
+
+			if (event.getQuantity() != null) {
+				property = new SimpleStringProperty(event.getQuantity().getUOM().getSymbol());
+			}
+			return property;
+		});
+
+		// material
+		tcMaterial.setCellValueFactory(cellDataFeatures -> {
+			SimpleStringProperty property = null;
+			ResolvedEvent event = cellDataFeatures.getValue();
+
+			if (event.getMaterial() != null) {
+				property = new SimpleStringProperty(event.getMaterial().getName());
+			}
+			return property;
+		});
+
+		// job
+		tcJob.setCellValueFactory(cellDataFeatures -> {
+			ResolvedEvent event = cellDataFeatures.getValue();
+			return new SimpleStringProperty(event.getJob());
+		});
+
 	}
 
 	private void refreshCharts(Tab newValue) throws Exception {
@@ -754,6 +911,8 @@ public class DashboardController extends DialogController implements CategoryCli
 			onSelectSetupPareto();
 		} else if (id.equals(tbPlannedDowntimePareto.getId())) {
 			onSelectPlannedDowntimePareto();
+		} else if (id.equals(tbEvents.getId())) {
+			onSelectHistory();
 		}
 	}
 
@@ -912,28 +1071,40 @@ public class DashboardController extends DialogController implements CategoryCli
 				throw new Exception("Equipment must be selected.");
 			}
 
-			// material and job during this period
+			// material and job during this period from setups
+			Material material = null;
+			String job = null;
+
 			List<SetupRecord> setups = PersistenceService.instance().fetchSetupForPeriod(equipment, odtFrom, odtTo);
 
 			if (setups.size() != 1) {
-				throw new Exception("Setup record not found for equipment " + equipment.getName() + " for the period "
-						+ odtFrom + " to " + odtTo);
+				EquipmentMaterial eqm = equipment.getDefaultEquipmentMaterial();
+
+				if (eqm != null) {
+					material = eqm.getMaterial();
+				} else {
+					throw new Exception("The default material being produced must be specified for equipment "
+							+ equipment.getName());
+				}
+			} else {
+				// setup record found
+				material = setups.get(0).getMaterial();
+				job = setups.get(0).getJob();
 			}
 
-			if (setups.get(0).getMaterial() == null) {
+			if (material == null) {
 				throw new Exception(
 						"The material being produced must be specified for equipment " + equipment.getName());
 			}
 
-			Material material = setups.get(0).getMaterial();
 			equipmentLoss.setMaterial(material);
 
 			tiJobMaterial.setDescription(material.getDisplayString());
-
-			tiJobMaterial.setText(setups.get(0).getJob());
+			tiJobMaterial.setText(job);
 
 			// calculate the time losses over this period
 			EquipmentLossManager.calculateEquipmentLoss(equipmentLoss, odtFrom, odtTo);
+			equipmentLoss.getEventRecords().addAll(setups);
 
 			String symbol = null;
 			double amount = 0.0d;
@@ -974,10 +1145,29 @@ public class DashboardController extends DialogController implements CategoryCli
 			lbiStartupProduction.setFormatString(PROD_FORMAT + " " + symbol);
 			lbiStartupProduction.setValue(amount, true);
 
-			System.out.println(this.equipmentLoss.toString());
+			// System.out.println(this.equipmentLoss.toString());
 
 			// show last availability record
-			AvailabilityRecord history = PersistenceService.instance().fetchLastAvailability(equipment);
+			List<BaseRecord> historyRecords = equipmentLoss.getEventRecords();
+
+			Collections.sort(historyRecords, new Comparator<BaseRecord>() {
+				public int compare(BaseRecord record1, BaseRecord record2) {
+
+					return record1.getStartTime().compareTo(record2.getStartTime());
+				}
+			});
+
+			AvailabilityRecord history = null;
+
+			for (int i = historyRecords.size() - 1; i == 0; i--) {
+				if (historyRecords.get(i) instanceof AvailabilityRecord) {
+					history = (AvailabilityRecord) historyRecords.get(i);
+					break;
+				}
+			}
+
+			// AvailabilityRecord history =
+			// PersistenceService.instance().fetchLastAvailability(equipment);
 
 			if (history != null) {
 				// availability reason
