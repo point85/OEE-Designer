@@ -35,7 +35,7 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Label text="From midnight" GridPane.halignment="RIGHT" />
+                        <Label text="From midnight on" GridPane.halignment="RIGHT" />
                         <DatePicker fx:id="dpFromDate" maxWidth="1.7976931348623157E308" promptText="Choose starting date" GridPane.columnIndex="1" />
                         <Label text="To end of" GridPane.columnIndex="2" GridPane.halignment="RIGHT" />
                         <DatePicker fx:id="dpToDate" maxWidth="1.7976931348623157E308" promptText="Choose ending date" GridPane.columnIndex="3" />
@@ -80,11 +80,12 @@
                                 <columns>
                                   <TableColumn fx:id="tcTimestamp" prefWidth="200.0" text="Time" />
                                     <TableColumn fx:id="tcShift" prefWidth="75.0" text="Shift" />
-                                    <TableColumn fx:id="tcDuration" prefWidth="75.0" text="Duration" />
                                     <TableColumn fx:id="tcProdType" prefWidth="125.0" text="Event" />
+                                    <TableColumn fx:id="tcDuration" prefWidth="75.0" text="Duration" />
                                   <TableColumn fx:id="tcAvailability" prefWidth="20.0" />
                                     <TableColumn fx:id="tcReason" prefWidth="150.0" text="Reason" />
-                                    <TableColumn fx:id="tcLoss" prefWidth="150.0" text="Loss" />
+                                    <TableColumn fx:id="tcLossCategory" prefWidth="150.0" text="Loss Category" />
+                                    <TableColumn fx:id="tcLostTime" prefWidth="75.0" text="Lost Time" />
                                     <TableColumn fx:id="tcProdAmount" prefWidth="75.0" text="Amount" />
                                     <TableColumn fx:id="tcProdUnit" prefWidth="75.0" text="UOM" />
                                     <TableColumn fx:id="tcMaterial" prefWidth="150.0" text="Material" />

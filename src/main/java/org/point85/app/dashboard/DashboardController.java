@@ -28,8 +28,6 @@ import org.point85.domain.oee.TimeCategory;
 import org.point85.domain.oee.TimeLoss;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Equipment;
-import org.point85.domain.plant.EquipmentMaterial;
-import org.point85.domain.plant.Material;
 import org.point85.domain.plant.Reason;
 import org.point85.domain.script.EventResolverType;
 import org.point85.domain.script.ResolvedEvent;
@@ -236,7 +234,10 @@ public class DashboardController extends DialogController implements CategoryCli
 	private TableColumn<ResolvedEvent, String> tcReason;
 
 	@FXML
-	private TableColumn<ResolvedEvent, Text> tcLoss;
+	private TableColumn<ResolvedEvent, Text> tcLossCategory;
+
+	@FXML
+	private TableColumn<ResolvedEvent, String> tcLostTime;
 
 	@FXML
 	private TableColumn<ResolvedEvent, String> tcProdType;
@@ -365,6 +366,7 @@ public class DashboardController extends DialogController implements CategoryCli
 		resolvedEvents.clear();
 
 		AvailabilityRecord lastAvailability = null;
+		SetupRecord lastSetup = null;
 
 		for (BaseRecord record : records) {
 			ResolvedEvent event = new ResolvedEvent(record);
@@ -373,11 +375,27 @@ public class DashboardController extends DialogController implements CategoryCli
 				// set to previous event's reason
 				event.setReason(lastAvailability.getReason());
 			}
+
+			if (event.getMaterial() == null && lastSetup != null) {
+				// set to previous event's material
+				event.setMaterial(lastSetup.getMaterial());
+			}
+
+			if (event.getJob() == null && lastSetup != null) {
+				// set to previous event's job
+				event.setJob(lastSetup.getJob());
+			}
+
 			resolvedEvents.add(event);
 
 			if (record instanceof AvailabilityRecord) {
 				lastAvailability = (AvailabilityRecord) record;
 			}
+
+			if (record instanceof SetupRecord) {
+				lastSetup = (SetupRecord) record;
+			}
+
 		}
 
 		tvResolvedEvents.refresh();
@@ -825,8 +843,7 @@ public class DashboardController extends DialogController implements CategoryCli
 						Color color = reason.getLossCategory().getColor();
 
 						// remove 0x
-						String colorString = color.toString();
-						setStyle("-fx-background-color: #" + colorString.substring(2));
+						setStyle("-fx-background-color: #" + color.toString().substring(2));
 					}
 				}
 			};
@@ -834,8 +851,9 @@ public class DashboardController extends DialogController implements CategoryCli
 
 		tcAvailability.setCellValueFactory(cellDataFeatures -> {
 			// set the reason
-			Reason reason = cellDataFeatures.getValue().getReason();
-			return new SimpleObjectProperty<Reason>(reason);
+			ResolvedEvent event = cellDataFeatures.getValue();
+			return new SimpleObjectProperty<Reason>(event.getReason());
+
 		});
 
 		// time
@@ -878,8 +896,8 @@ public class DashboardController extends DialogController implements CategoryCli
 			return property;
 		});
 
-		// loss
-		tcLoss.setCellValueFactory(cellDataFeatures -> {
+		// loss category
+		tcLossCategory.setCellValueFactory(cellDataFeatures -> {
 			ResolvedEvent event = cellDataFeatures.getValue();
 			SimpleObjectProperty<Text> lossProperty = null;
 			Reason reason = event.getReason();
@@ -891,6 +909,12 @@ public class DashboardController extends DialogController implements CategoryCli
 				lossProperty = new SimpleObjectProperty<Text>(text);
 			}
 			return lossProperty;
+		});
+
+		// lost production time
+		tcLostTime.setCellValueFactory(cellDataFeatures -> {
+			ResolvedEvent event = cellDataFeatures.getValue();
+			return new SimpleStringProperty(DomainUtils.formatDuration(event.getLostTime()));
 		});
 
 		// production type
@@ -1096,6 +1120,7 @@ public class DashboardController extends DialogController implements CategoryCli
 	@FXML
 	private void onRefresh() {
 		try {
+			// clear previous calculation
 			equipmentLoss.reset();
 
 			// time period
@@ -1127,40 +1152,54 @@ public class DashboardController extends DialogController implements CategoryCli
 			}
 
 			// material and job during this period from setups
-			Material material = null;
-			String job = null;
+			List<SetupRecord> setups = PersistenceService.instance().fetchSetupsForPeriod(equipment, odtFrom, odtTo);
 
-			List<SetupRecord> setups = PersistenceService.instance().fetchSetupForPeriod(equipment, odtFrom, odtTo);
-
-			if (setups.size() != 1) {
-				EquipmentMaterial eqm = equipment.getDefaultEquipmentMaterial();
-
-				if (eqm != null) {
-					material = eqm.getMaterial();
-				} else {
-					throw new Exception("The default material being produced must be specified for equipment "
-							+ equipment.getName());
-				}
-			} else {
-				// setup record found
-				material = setups.get(0).getMaterial();
-				job = setups.get(0).getJob();
-			}
-
-			if (material == null) {
+			if (setups.size() == 0) {
 				throw new Exception(
 						"The material being produced must be specified for equipment " + equipment.getName());
 			}
 
-			equipmentLoss.setMaterial(material);
+			// step through each setup period since materials could have changed
+			for (SetupRecord setup : setups) {
+				/*
+				 * if (setups.size() != 1) { EquipmentMaterial eqm =
+				 * equipment.getDefaultEquipmentMaterial();
+				 * 
+				 * if (eqm != null) { material = eqm.getMaterial(); } else { throw new
+				 * Exception("The default material being produced must be specified for equipment "
+				 * + equipment.getName()); } } else { // setup record found material =
+				 * setups.get(0).getMaterial(); job = setups.get(0).getJob(); }
+				 * 
+				 * if (material == null) { throw new Exception(
+				 * "The material being produced must be specified for equipment " +
+				 * equipment.getName()); }
+				 */
+				equipmentLoss.setMaterial(setup.getMaterial());
 
-			tiJobMaterial.setDescription(material.getDisplayString());
-			tiJobMaterial.setText(job);
+				// calculate the time losses over the setup period
+				OffsetDateTime periodStart = setup.getStartTime();
 
-			// calculate the time losses over this period
-			EquipmentLossManager.calculateEquipmentLoss(equipmentLoss, odtFrom, odtTo);
-			equipmentLoss.getEventRecords().addAll(setups);
+				if (periodStart.compareTo(odtFrom) < 0) {
+					periodStart = odtFrom;
+				}
 
+				OffsetDateTime periodEnd = setup.getEndTime();
+
+				if (periodEnd == null || (periodEnd.compareTo(odtTo) > 0)) {
+					periodEnd = odtTo;
+				}
+
+				EquipmentLossManager.calculateEquipmentLoss(equipmentLoss, periodStart, periodEnd);
+				equipmentLoss.getEventRecords().addAll(setups);
+			}
+
+			// last setup
+			SetupRecord lastSetup = setups.get(setups.size() - 1);
+
+			tiJobMaterial.setDescription(lastSetup.getMaterial().getDisplayString());
+			tiJobMaterial.setText(lastSetup.getJob());
+
+			// show the production
 			String symbol = null;
 			double amount = 0.0d;
 
@@ -1200,11 +1239,10 @@ public class DashboardController extends DialogController implements CategoryCli
 			lbiStartupProduction.setFormatString(PROD_FORMAT + " " + symbol);
 			lbiStartupProduction.setValue(amount, true);
 
-			// System.out.println(this.equipmentLoss.toString());
-
-			// show last availability record
+			// show last availability and setup records
 			List<BaseRecord> historyRecords = equipmentLoss.getEventRecords();
 
+			// sort by start time
 			Collections.sort(historyRecords, new Comparator<BaseRecord>() {
 				public int compare(BaseRecord record1, BaseRecord record2) {
 
@@ -1212,21 +1250,19 @@ public class DashboardController extends DialogController implements CategoryCli
 				}
 			});
 
-			AvailabilityRecord history = null;
+			AvailabilityRecord lastAvailability = null;
 
 			for (int i = historyRecords.size() - 1; i == 0; i--) {
 				if (historyRecords.get(i) instanceof AvailabilityRecord) {
-					history = (AvailabilityRecord) historyRecords.get(i);
+					lastAvailability = (AvailabilityRecord) historyRecords.get(i);
 					break;
 				}
 			}
 
-			// AvailabilityRecord history =
-			// PersistenceService.instance().fetchLastAvailability(equipment);
-
-			if (history != null) {
+			// last availability
+			if (lastAvailability != null) {
 				// availability reason
-				Reason reason = history.getReason();
+				Reason reason = lastAvailability.getReason();
 
 				tiAvailability.setText(reason.getName() + " (" + reason.getDescription() + ")");
 
