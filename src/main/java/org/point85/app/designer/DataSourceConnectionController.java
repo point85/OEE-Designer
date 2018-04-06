@@ -27,7 +27,7 @@ public abstract class DataSourceConnectionController extends DesignerDialogContr
 
 	// connection state colors
 	public static final Color CONNECTED_COLOR = Color.GREEN;
-	public static final Color CONNECTING_COLOR = Color.YELLOW;
+	public static final Color CONNECTING_COLOR = Color.BLUE;
 	public static final Color DISCONNECTED_COLOR = Color.BLACK;
 
 	// timer to check for long-running connection

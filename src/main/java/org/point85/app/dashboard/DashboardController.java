@@ -850,7 +850,7 @@ public class DashboardController extends DialogController implements CategoryCli
 			SimpleStringProperty property = null;
 
 			if (event.getDuration() != null) {
-				property = new SimpleStringProperty(AppUtils.formatDuration(event.getDuration()));
+				property = new SimpleStringProperty(DomainUtils.formatDuration(event.getDuration()));
 			}
 			return property;
 		});

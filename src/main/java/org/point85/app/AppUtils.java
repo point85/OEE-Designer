@@ -39,12 +39,6 @@ public abstract class AppUtils {
 	// no text
 	public static final String EMPTY_STRING = "";
 
-	// format a Duration
-	public static String formatDuration(Duration duration) {
-		// remove the "PT" prefix
-		return duration.toString().substring(2);
-	}
-
 	// format an OffsetDateTime
 	public static String formatOffsetDateTime(OffsetDateTime odt) {
 		OffsetDateTime truncated = odt.truncatedTo(ChronoUnit.SECONDS);
