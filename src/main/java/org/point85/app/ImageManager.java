@@ -30,9 +30,6 @@ public class ImageManager {
 	}
 
 	public Image getImage(Images id) throws Exception {
-		// TODO
-		System.out.println("Getting image " + id);
-
 		Image image = imageCache.get(id);
 
 		if (image != null) {

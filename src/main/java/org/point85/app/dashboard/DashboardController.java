@@ -1072,13 +1072,13 @@ public class DashboardController extends DialogController implements CategoryCli
 			break;
 		}
 
-		case JOB: {
+		case JOB_CHANGE: {
 			// job
 			tiJobMaterial.setText(message.getJob());
 			break;
 		}
 
-		case MATERIAL: {
+		case MATL_CHANGE: {
 			// material
 			String displayString = message.getMaterialName() + " (" + message.getMaterialDescription() + ")";
 			tiJobMaterial.setDescription(displayString);

@@ -271,13 +271,13 @@ public class EventResolverController extends DesignerDialogController {
 				}
 				break;
 				
-			case JOB:
+			case JOB_CHANGE:
 				if (result != null) {
 					taResult.appendText("Job " + result.toString() + '\n');
 				}
 				break;
 				
-			case MATERIAL:
+			case MATL_CHANGE:
 				if (result != null) {
 					taResult.appendText("Material: " + result.toString() + '\n');
 				}

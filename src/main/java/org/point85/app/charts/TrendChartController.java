@@ -15,10 +15,10 @@ import org.point85.domain.DomainUtils;
 import org.point85.domain.oee.TimeLoss;
 import org.point85.domain.plant.EquipmentEventResolver;
 import org.point85.domain.plant.Reason;
-import org.point85.domain.script.OeeContext;
-import org.point85.domain.script.ResolvedEvent;
 import org.point85.domain.script.EventResolver;
 import org.point85.domain.script.EventResolverType;
+import org.point85.domain.script.OeeContext;
+import org.point85.domain.script.ResolvedEvent;
 
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
@@ -282,7 +282,7 @@ public class TrendChartController extends DesignerController {
 		EventResolverType type = eventResolver.getType();
 
 		switch (type) {
-		case AVAILABILITY:
+		case AVAILABILITY: {
 			// plot loss category
 			TimeLoss loss = resolvedItem.getReason().getLossCategory();
 
@@ -290,18 +290,26 @@ public class TrendChartController extends DesignerController {
 				plotData(resolvedItem.getInputValue(), loss.toString());
 			}
 			break;
-		case JOB:
+		}
+
+		case JOB_CHANGE: {
 			plotData(resolvedItem.getInputValue(), resolvedItem.getOutputValue());
 			break;
-		case MATERIAL:
+		}
+
+		case MATL_CHANGE: {
 			plotData(resolvedItem.getInputValue(), resolvedItem.getOutputValue());
 			break;
-		case OTHER:
+		}
+
+		case OTHER: {
 			plotData(resolvedItem.getInputValue(), resolvedItem.getOutputValue());
 			break;
+		}
+
 		case PROD_GOOD:
 		case PROD_REJECT:
-		case PROD_STARTUP:
+		case PROD_STARTUP: {
 			Object plottedValue = resolvedItem.getInputValue();
 
 			// convert from String
@@ -311,6 +319,7 @@ public class TrendChartController extends DesignerController {
 
 			plotData(plottedValue, resolvedItem.getQuantity().getAmount());
 			break;
+		}
 		default:
 			break;
 		}

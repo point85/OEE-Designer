@@ -322,10 +322,9 @@ GO
 CREATE TABLE [dbo].[AVAILABILITY](
 	[AVAIL_KEY] [bigint] IDENTITY(1,1) NOT NULL,
 	[ENT_KEY] [bigint] NOT NULL,
-	[MATL_KEY] [bigint] NULL,
-	[JOB] [nvarchar](64) NULL,
 	[START_TIME] [datetimeoffset](3) NULL,
 	[END_TIME] [datetimeoffset](3) NULL,
+	[SHIFT_KEY] [bigint] NULL,
 	[REASON_KEY] [bigint] NULL,
 	[DURATION] [bigint] NULL,
 	[EVENT_TYPE] [nvarchar](16) NULL
@@ -340,11 +339,9 @@ GO
 CREATE TABLE [dbo].[PRODUCTION](
 	[PROD_KEY] [bigint] IDENTITY(1,1) NOT NULL,
 	[ENT_KEY] [bigint] NOT NULL,
-	[MATL_KEY] [bigint] NULL,
-	[JOB] [nvarchar](64) NULL,
 	[START_TIME] [datetimeoffset](3) NULL,
 	[END_TIME] [datetimeoffset](3) NULL,
-	[PROD_TYPE] [nvarchar](16) NULL,
+	[SHIFT_KEY] [bigint] NULL,
 	[AMOUNT] [float] NULL,
 	[UOM_KEY] [bigint] NULL,
 	[EVENT_TYPE] [nvarchar](16) NULL

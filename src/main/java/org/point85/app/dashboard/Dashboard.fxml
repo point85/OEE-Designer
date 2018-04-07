@@ -83,7 +83,7 @@
                                     <TableColumn fx:id="tcProdType" prefWidth="125.0" text="Event" />
                                     <TableColumn fx:id="tcDuration" prefWidth="75.0" text="Duration" />
                                   <TableColumn fx:id="tcAvailability" prefWidth="20.0" />
-                                    <TableColumn fx:id="tcReason" prefWidth="150.0" text="Reason" />
+                                    <TableColumn fx:id="tcReason" prefWidth="175.0" text="Reason" />
                                     <TableColumn fx:id="tcLossCategory" prefWidth="150.0" text="Loss Category" />
                                     <TableColumn fx:id="tcLostTime" prefWidth="75.0" text="Lost Time" />
                                     <TableColumn fx:id="tcProdAmount" prefWidth="75.0" text="Amount" />
