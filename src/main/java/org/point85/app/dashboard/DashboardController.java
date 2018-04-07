@@ -1158,22 +1158,12 @@ public class DashboardController extends DialogController implements CategoryCli
 				throw new Exception(
 						"The material being produced must be specified for equipment " + equipment.getName());
 			}
+			
+			// add setup events
+			equipmentLoss.getEventRecords().addAll(setups);
 
 			// step through each setup period since materials could have changed
 			for (SetupRecord setup : setups) {
-				/*
-				 * if (setups.size() != 1) { EquipmentMaterial eqm =
-				 * equipment.getDefaultEquipmentMaterial();
-				 * 
-				 * if (eqm != null) { material = eqm.getMaterial(); } else { throw new
-				 * Exception("The default material being produced must be specified for equipment "
-				 * + equipment.getName()); } } else { // setup record found material =
-				 * setups.get(0).getMaterial(); job = setups.get(0).getJob(); }
-				 * 
-				 * if (material == null) { throw new Exception(
-				 * "The material being produced must be specified for equipment " +
-				 * equipment.getName()); }
-				 */
 				equipmentLoss.setMaterial(setup.getMaterial());
 
 				// calculate the time losses over the setup period
@@ -1190,7 +1180,6 @@ public class DashboardController extends DialogController implements CategoryCli
 				}
 
 				EquipmentLossManager.calculateEquipmentLoss(equipmentLoss, periodStart, periodEnd);
-				equipmentLoss.getEventRecords().addAll(setups);
 			}
 
 			// last setup
