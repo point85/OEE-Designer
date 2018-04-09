@@ -8,7 +8,9 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.point85.app.AppUtils;
 import org.point85.app.DialogController;
@@ -28,6 +30,7 @@ import org.point85.domain.oee.TimeCategory;
 import org.point85.domain.oee.TimeLoss;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Equipment;
+import org.point85.domain.plant.Material;
 import org.point85.domain.plant.Reason;
 import org.point85.domain.script.EventResolverType;
 import org.point85.domain.script.ResolvedEvent;
@@ -58,6 +61,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Data;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Tab;
@@ -75,6 +79,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 public class DashboardController extends DialogController implements CategoryClickListener {
+	private static final String ALL_MATERIALS = "<All>";
 	private static final String LOSS_CHART_TITLE = "Equipment Times";
 	private static final String TIME_CATEGORY_LABEL = "Time Categories";
 	private static final String NET_TIME_SERIES = "Time in Category";
@@ -108,12 +113,21 @@ public class DashboardController extends DialogController implements CategoryCli
 	// the loss data
 	private EquipmentLoss equipmentLoss;
 
+	// possible materials
+	private Map<String, Material> materialMap = new HashMap<>();
+
 	// selection criteria
 	@FXML
 	private DatePicker dpFromDate;
 
 	@FXML
 	private DatePicker dpToDate;
+
+	@FXML
+	private ComboBox<String> cbMaterials;
+
+	@FXML
+	private Button btFindMaterial;
 
 	@FXML
 	private Button btRefresh;
@@ -828,6 +842,23 @@ public class DashboardController extends DialogController implements CategoryCli
 		initializeEventTable();
 	}
 
+	// find material
+	@FXML
+	private void onFindMaterial() {
+		try {
+			// get the material from the dialog
+			Material material = null;
+			// getApp().showMaterialEditor();
+
+			if (material == null) {
+				return;
+			}
+
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+
 	private void initializeEventTable() {
 		// server status table
 		tvResolvedEvents.setItems(resolvedEvents);
@@ -1116,6 +1147,14 @@ public class DashboardController extends DialogController implements CategoryCli
 			break;
 		}
 	}
+	
+	@FXML
+	private void clearMaterials() {
+		// material filtering
+		materialMap.clear();
+		cbMaterials.getItems().clear();
+		cbMaterials.getItems().add(ALL_MATERIALS);
+	}
 
 	@FXML
 	private void onRefresh() {
@@ -1150,20 +1189,35 @@ public class DashboardController extends DialogController implements CategoryCli
 			if (equipment == null) {
 				throw new Exception("Equipment must be selected.");
 			}
-
-			// material and job during this period from setups
-			List<SetupRecord> setups = PersistenceService.instance().fetchSetupsForPeriod(equipment, odtFrom, odtTo);
+			
+			String materialId = cbMaterials.getSelectionModel().getSelectedItem();
+			List<SetupRecord> setups = null;
+			
+			if (materialId != null && !materialId.equals(ALL_MATERIALS)) {
+				// filter for a specific material
+				setups = PersistenceService.instance().fetchSetupsForPeriodAndMaterial(equipment, odtFrom, odtTo, materialMap.get(materialId));
+			} else {
+				// material and job during this period from setups
+				setups = PersistenceService.instance().fetchSetupsForPeriod(equipment, odtFrom, odtTo);
+			}
 
 			if (setups.size() == 0) {
 				throw new Exception(
 						"The material being produced must be specified for equipment " + equipment.getName());
 			}
-			
+
 			// add setup events
 			equipmentLoss.getEventRecords().addAll(setups);
-
+			
 			// step through each setup period since materials could have changed
 			for (SetupRecord setup : setups) {
+				String id = setup.getMaterial().getDisplayString();
+
+				if (materialMap.get(id) == null) {
+					materialMap.put(id, setup.getMaterial());
+					cbMaterials.getItems().add(id);
+				}
+
 				equipmentLoss.setMaterial(setup.getMaterial());
 
 				// calculate the time losses over the setup period
@@ -1181,6 +1235,8 @@ public class DashboardController extends DialogController implements CategoryCli
 
 				EquipmentLossManager.calculateEquipmentLoss(equipmentLoss, periodStart, periodEnd);
 			}
+
+			Collections.sort(cbMaterials.getItems());
 
 			// last setup
 			SetupRecord lastSetup = setups.get(setups.size() - 1);
