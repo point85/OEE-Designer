@@ -2,6 +2,7 @@ package org.point85.app;
 
 import org.point85.app.charts.SampleChartController;
 import org.point85.app.charts.TrendChartController;
+import org.point85.app.dashboard.AvailabilityEditorController;
 import org.point85.app.dashboard.DashboardController;
 import org.point85.app.dashboard.DashboardDialogController;
 import org.point85.app.designer.DataCollectorController;
@@ -168,6 +169,12 @@ public class LoaderFactory {
 	
 	public static FXMLLoader templateScheduleLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(TemplateScheduleDialogController.class.getResource("TemplateScheduleDialog.fxml"));
+		fxmlLoader.load();
+		return fxmlLoader;
+	}
+	
+	public static FXMLLoader availabilityEditorLoader() throws Exception {
+		FXMLLoader fxmlLoader = new FXMLLoader(AvailabilityEditorController.class.getResource("AvailabilityEditor.fxml"));
 		fxmlLoader.load();
 		return fxmlLoader;
 	}

@@ -164,19 +164,29 @@ public abstract class AppUtils {
 		return displayStrings;
 	}
 
-	public static Duration durationFromString(String hrsMins) throws Exception {
+	public static Duration durationFromString(String period) throws Exception {
 
-		String[] fields = hrsMins.split(":");
+		String[] fields = period.split(":");
 
-		if (fields.length != 2) {
-			throw new Exception("Both hours and minutes for the shift duration must be specified.");
+		int hours = 0;
+		int minutes = 0;
+		int seconds = 0;
+
+		if (fields.length > 0) {
+			hours = Integer.valueOf(fields[0]);
 		}
 
-		long seconds = Integer.valueOf(fields[0]) * 3600 + Integer.valueOf(fields[1]) * 60;
+		if (fields.length > 1) {
+			minutes = Integer.valueOf(fields[1]);
+		}
 
-		Duration duration = Duration.ofSeconds(seconds);
+		if (fields.length > 2) {
+			seconds = Integer.valueOf(fields[2]);
+		}
 
-		return duration;
+		long totalSeconds = hours * 3600 + minutes * 60 + seconds;
+
+		return Duration.ofSeconds(totalSeconds);
 	}
 
 	public static LocalTime localTimeFromString(String hrsMins) throws Exception {
@@ -196,11 +206,12 @@ public abstract class AppUtils {
 	}
 
 	public static String stringFromDuration(Duration duration) {
-		long seconds = duration.getSeconds();
-		long hours = seconds / 3600;
-		long minutes = (seconds - hours * 3600) / 60;
+		long totalSeconds = duration.getSeconds();
+		long hours = totalSeconds / 3600;
+		long minutes = (totalSeconds - hours * 3600) / 60;
+		long seconds = totalSeconds - (hours * 3600) - (minutes * 60);
 
-		return String.format("%02d", hours) + ":" + String.format("%02d", minutes);
+		return String.format("%02d", hours) + ":" + String.format("%02d", minutes) + ":" + String.format("%02d", seconds);
 	}
 
 	// get the UOM from cache first, then from the database if not found

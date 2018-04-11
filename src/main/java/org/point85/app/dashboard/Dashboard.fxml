@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.chart.StackedBarChart?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
@@ -81,7 +83,7 @@
                     <content>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
-                              <TableView fx:id="tvResolvedEvents" layoutX="407.0" layoutY="83.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+                              <TableView fx:id="tvResolvedEvents" layoutX="407.0" layoutY="83.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="50.0">
                                 <columns>
                                   <TableColumn fx:id="tcTimestamp" prefWidth="200.0" text="Time" />
                                     <TableColumn fx:id="tcShift" prefWidth="75.0" text="Shift" />
@@ -97,6 +99,18 @@
                                     <TableColumn fx:id="tcJob" prefWidth="100.0" text="Job" />
                                 </columns>
                               </TableView>
+                              <ButtonBar layoutX="71.0" layoutY="-6.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="50.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <buttons>
+                                    <Button fx:id="btDeleteEvent" mnemonicParsing="false" onAction="#onDeleteEvent" text="Delete" />
+                                    <Button fx:id="btUpdateEvent" mnemonicParsing="false" onAction="#onUpdateEvent" text="Update" />
+                                    <Button mnemonicParsing="false" text="New Material" />
+                                    <Button mnemonicParsing="false" text="New Production" />
+                                  <Button fx:id="btEditAvailability" mnemonicParsing="false" onAction="#onNewAvailability" text="New Availability" />
+                                </buttons>
+                                 <opaqueInsets>
+                                    <Insets />
+                                 </opaqueInsets>
+                              </ButtonBar>
                            </children>
                         </AnchorPane>
                     </content>

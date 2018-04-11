@@ -211,7 +211,6 @@ public class DesignerApplication {
 			Stage dialogStage = new Stage(StageStyle.DECORATED);
 			dialogStage.setTitle("Edit Reason");
 			dialogStage.initModality(Modality.NONE);
-			// dialogStage.initOwner(primaryStage);
 			Scene scene = new Scene(page);
 			dialogStage.setScene(scene);
 

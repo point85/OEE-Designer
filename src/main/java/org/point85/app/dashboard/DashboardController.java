@@ -16,6 +16,7 @@ import org.point85.app.AppUtils;
 import org.point85.app.DialogController;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
+import org.point85.app.LoaderFactory;
 import org.point85.app.charts.CategoryClickListener;
 import org.point85.app.charts.ParetoChartController;
 import org.point85.domain.DomainUtils;
@@ -51,9 +52,11 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
+import javafx.scene.Scene;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.StackedBarChart;
@@ -77,6 +80,9 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class DashboardController extends DialogController implements CategoryClickListener {
 	private static final String ALL_MATERIALS = "<All>";
@@ -127,10 +133,26 @@ public class DashboardController extends DialogController implements CategoryCli
 	private ComboBox<String> cbMaterials;
 
 	@FXML
-	private Button btFindMaterial;
+	private Button btRefresh;
+
+	// event editors
+	@FXML
+	private Button btEditAvailability;
 
 	@FXML
-	private Button btRefresh;
+	private Button btEditProduction;
+
+	@FXML
+	private Button btEditMaterial;
+
+	@FXML
+	private Button btUpdateEvent;
+
+	@FXML
+	private Button btDeleteEvent;
+
+	// availability controller
+	private AvailabilityEditorController availabilityEditorController;
 
 	// container for dashboard tiles
 	@FXML
@@ -1147,7 +1169,7 @@ public class DashboardController extends DialogController implements CategoryCli
 			break;
 		}
 	}
-	
+
 	@FXML
 	private void clearMaterials() {
 		// material filtering
@@ -1165,15 +1187,10 @@ public class DashboardController extends DialogController implements CategoryCli
 			// time period
 			LocalDate from = dpFromDate.getValue();
 
-			if (from == null) {
-				from = LocalDate.now();
-			}
 			LocalDateTime ldtFrom = LocalDateTime.of(from, LocalTime.MIN);
 
 			LocalDate to = dpToDate.getValue();
-			if (to == null) {
-				to = LocalDate.now();
-			}
+
 			LocalDateTime ldtTo = LocalDateTime.of(to, LocalTime.MAX);
 
 			if (ldtTo.isBefore(ldtFrom)) {
@@ -1189,13 +1206,14 @@ public class DashboardController extends DialogController implements CategoryCli
 			if (equipment == null) {
 				throw new Exception("Equipment must be selected.");
 			}
-			
+
 			String materialId = cbMaterials.getSelectionModel().getSelectedItem();
 			List<SetupRecord> setups = null;
-			
+
 			if (materialId != null && !materialId.equals(ALL_MATERIALS)) {
 				// filter for a specific material
-				setups = PersistenceService.instance().fetchSetupsForPeriodAndMaterial(equipment, odtFrom, odtTo, materialMap.get(materialId));
+				setups = PersistenceService.instance().fetchSetupsForPeriodAndMaterial(equipment, odtFrom, odtTo,
+						materialMap.get(materialId));
 			} else {
 				// material and job during this period from setups
 				setups = PersistenceService.instance().fetchSetupsForPeriod(equipment, odtFrom, odtTo);
@@ -1208,7 +1226,7 @@ public class DashboardController extends DialogController implements CategoryCli
 
 			// add setup events
 			equipmentLoss.getEventRecords().addAll(setups);
-			
+
 			// step through each setup period since materials could have changed
 			for (SetupRecord setup : setups) {
 				String id = setup.getMaterial().getDisplayString();
@@ -1324,6 +1342,84 @@ public class DashboardController extends DialogController implements CategoryCli
 
 			// display the selected tab
 			refreshCharts(tpParetoCharts.getSelectionModel().getSelectedItem());
+
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+
+	private AvailabilityEditorController getAvailabilityController() throws Exception {
+		if (availabilityEditorController == null) {
+			FXMLLoader loader = LoaderFactory.availabilityEditorLoader();
+			AnchorPane page = (AnchorPane) loader.getRoot();
+
+			Stage dialogStage = new Stage(StageStyle.DECORATED);
+			dialogStage.setTitle("Availability Editor");
+			dialogStage.initModality(Modality.APPLICATION_MODAL);
+			Scene scene = new Scene(page);
+			dialogStage.setScene(scene);
+
+			// get the controller
+			availabilityEditorController = loader.getController();
+			availabilityEditorController.setDialogStage(dialogStage);
+			// availabilityEditorController.initializeEditor();
+		}
+		return availabilityEditorController;
+	}
+
+	@FXML
+	private void onNewAvailability() {
+		try {
+			ResolvedEvent event = new ResolvedEvent(equipmentLoss.getEquipment());
+			getAvailabilityController().initializeEditor(event);
+			getAvailabilityController().getDialogStage().showAndWait();
+
+			onRefresh();
+
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+
+	@FXML
+	private void onUpdateEvent() {
+		try {
+			ResolvedEvent event = tvResolvedEvents.getSelectionModel().getSelectedItem();
+
+			if (event == null) {
+				throw new Exception("An event must be selected.");
+			}
+
+			// getAvailabilityController().setEquipment(equipmentLoss.getEquipment());
+			// getAvailabilityController().setResolvedEvent(event);
+			getAvailabilityController().initializeEditor(event);
+			getAvailabilityController().getDialogStage().showAndWait();
+
+			onRefresh();
+
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+
+	@FXML
+	private void onDeleteEvent() {
+		try {
+			ResolvedEvent event = tvResolvedEvents.getSelectionModel().getSelectedItem();
+
+			if (event == null) {
+				throw new Exception("An event must be selected.");
+			}
+
+			BaseRecord baseRecord = null;
+
+			if (event.getResolverType().equals(EventResolverType.AVAILABILITY)) {
+				baseRecord = PersistenceService.instance().fetchAvailabilityByKey(event.getRecordKey());
+			}
+
+			PersistenceService.instance().delete(baseRecord);
+
+			onRefresh();
 
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
