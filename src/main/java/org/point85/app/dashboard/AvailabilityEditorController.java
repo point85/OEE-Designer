@@ -20,7 +20,6 @@ import org.point85.domain.plant.Reason;
 import org.point85.domain.schedule.Shift;
 import org.point85.domain.schedule.ShiftInstance;
 import org.point85.domain.schedule.WorkSchedule;
-import org.point85.domain.script.ResolvedEvent;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -37,7 +36,7 @@ import javafx.stage.StageStyle;
 
 public class AvailabilityEditorController extends DialogController {
 
-	private ResolvedEvent resolvedEvent;
+	private AvailabilityRecord resolvedEvent;
 
 	// reason editor controller
 	private ReasonEditorController reasonController;
@@ -64,7 +63,7 @@ public class AvailabilityEditorController extends DialogController {
 	private TextField tfDuration;
 
 	// @FXML
-	public void initializeEditor(ResolvedEvent event) throws Exception {
+	public void initializeEditor(AvailabilityRecord event) throws Exception {
 		resolvedEvent = event;
 
 		// images for buttons
@@ -138,9 +137,9 @@ public class AvailabilityEditorController extends DialogController {
 		Duration duration = AppUtils.durationFromString(tfDuration.getText());
 		resolvedEvent.setDuration(duration);
 
-		AvailabilityRecord record = new AvailabilityRecord(resolvedEvent);
+		// AvailabilityRecord record = new AvailabilityRecord(resolvedEvent);
 
-		PersistenceService.instance().save(record);
+		PersistenceService.instance().save(resolvedEvent);
 
 	}
 
@@ -209,11 +208,11 @@ public class AvailabilityEditorController extends DialogController {
 		}
 	}
 
-	public ResolvedEvent getResolvedEvent() {
+	public AvailabilityRecord getResolvedEvent() {
 		return resolvedEvent;
 	}
 
-	public void setResolvedEvent(ResolvedEvent resolvedEvent) {
+	public void setResolvedEvent(AvailabilityRecord resolvedEvent) {
 		this.resolvedEvent = resolvedEvent;
 	}
 

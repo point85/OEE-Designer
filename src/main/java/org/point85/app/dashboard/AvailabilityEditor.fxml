@@ -23,7 +23,7 @@
             <Button fx:id="btCancel" mnemonicParsing="false" onAction="#onCancel" text="Cancel" />
          </children>
       </HBox>
-      <GridPane hgap="5.0" layoutX="175.0" layoutY="52.0" vgap="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+      <GridPane hgap="5.0" layoutX="175.0" layoutY="52.0" vgap="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
         <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="5.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
@@ -38,7 +38,7 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="btReasonEditor" mnemonicParsing="false" onAction="#onShowReasonEditor" prefHeight="16.0" prefWidth="16.0" GridPane.halignment="RIGHT" />
+            <Button fx:id="btReasonEditor" mnemonicParsing="false" onAction="#onShowReasonEditor" prefHeight="16.0" prefWidth="16.0" GridPane.halignment="CENTER" />
             <Label text="Reason" GridPane.columnIndex="1" GridPane.halignment="RIGHT" />
             <Label fx:id="lbReason" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.halignment="LEFT" />
             <DatePicker fx:id="dpStartDate" maxWidth="1.7976931348623157E308" promptText="Starting date" GridPane.columnIndex="2" GridPane.rowIndex="1" />

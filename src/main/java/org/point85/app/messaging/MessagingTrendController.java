@@ -225,14 +225,11 @@ public class MessagingTrendController extends DesignerDialogController implement
 			String sourceId = eventResolver.getSourceId();
 			String value = tfLoopbackValue.getText();
 
-			// OffsetDateTime odt = OffsetDateTime.now();
-			// String timestamp = odt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-
 			EquipmentEventMessage msg = new EquipmentEventMessage();
 			msg.setSourceId(sourceId);
 			msg.setValue(value);
 
-			pubsub.publish(msg, RoutingKey.EQUIPMENT_SOURCE_EVENT.ALL, 3600);
+			pubsub.publish(msg, RoutingKey.EQUIPMENT_SOURCE_EVENT, 3600);
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}

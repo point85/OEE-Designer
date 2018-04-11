@@ -41,9 +41,9 @@
                     </rowConstraints>
                      <children>
                         <Label text="From midnight on" GridPane.halignment="RIGHT" />
-                        <DatePicker fx:id="dpFromDate" maxWidth="1.7976931348623157E308" onAction="#clearMaterials" promptText="Choose starting date" GridPane.columnIndex="1" />
+                        <DatePicker fx:id="dpStartDate" maxWidth="1.7976931348623157E308" onAction="#clearMaterials" promptText="Choose starting date" GridPane.columnIndex="1" />
                         <Label text="To end of day" GridPane.columnIndex="2" GridPane.halignment="RIGHT" />
-                        <DatePicker fx:id="dpToDate" maxWidth="1.7976931348623157E308" onAction="#clearMaterials" promptText="Choose ending date" GridPane.columnIndex="3" />
+                        <DatePicker fx:id="dpEndDate" maxWidth="1.7976931348623157E308" onAction="#clearMaterials" promptText="Choose ending date" GridPane.columnIndex="3" />
                         <Button fx:id="btRefresh" mnemonicParsing="false" onAction="#onRefresh" text="Refresh" GridPane.columnIndex="6" GridPane.halignment="CENTER" />
                         <ComboBox fx:id="cbMaterials" maxWidth="1.7976931348623157E308" promptText="Choose material" GridPane.columnIndex="5" />
                         <Label text="Material" GridPane.columnIndex="4" GridPane.halignment="RIGHT" />
