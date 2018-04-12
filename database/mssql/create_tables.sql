@@ -320,7 +320,7 @@ IF OBJECT_ID('dbo.AVAILABILITY', 'U') IS NOT NULL
 GO
 
 CREATE TABLE [dbo].[AVAILABILITY](
-	[AVAIL_KEY] [bigint] IDENTITY(1,1) NOT NULL,
+	[AVAIL_KEY] [bigint] NOT NULL,
 	[ENT_KEY] [bigint] NOT NULL,
 	[START_TIME] [datetimeoffset](3) NULL,
 	[END_TIME] [datetimeoffset](3) NULL,
@@ -337,7 +337,7 @@ IF OBJECT_ID('dbo.PRODUCTION', 'U') IS NOT NULL
 GO
 
 CREATE TABLE [dbo].[PRODUCTION](
-	[PROD_KEY] [bigint] IDENTITY(1,1) NOT NULL,
+	[PROD_KEY] [bigint] NOT NULL,
 	[ENT_KEY] [bigint] NOT NULL,
 	[START_TIME] [datetimeoffset](3) NULL,
 	[END_TIME] [datetimeoffset](3) NULL,
@@ -354,12 +354,13 @@ IF OBJECT_ID('dbo.SETUP', 'U') IS NOT NULL
 GO
 
 CREATE TABLE [dbo].[SETUP](
-	[SETUP_KEY] [bigint] IDENTITY(1,1) NOT NULL,
+	[SETUP_KEY] [bigint] NOT NULL,
 	[ENT_KEY] [bigint] NOT NULL,
 	[MATL_KEY] [bigint] NULL,
 	[JOB] [nvarchar](64) NULL,
 	[START_TIME] [datetimeoffset](3) NULL,
 	[END_TIME] [datetimeoffset](3) NULL,
+	[SHIFT_KEY] [bigint] NULL,
 	[EVENT_TYPE] [nvarchar](16) NULL
 ) ON [PRIMARY]
 GO

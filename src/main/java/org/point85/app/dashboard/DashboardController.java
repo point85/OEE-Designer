@@ -64,6 +64,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Data;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.DatePicker;
@@ -137,13 +138,13 @@ public class DashboardController extends DialogController implements CategoryCli
 
 	// event editors
 	@FXML
-	private Button btEditAvailability;
+	private Button btNewAvailability;
 
 	@FXML
-	private Button btEditProduction;
+	private Button btNewProduction;
 
 	@FXML
-	private Button btEditMaterial;
+	private Button btNewSetup;
 
 	@FXML
 	private Button btUpdateEvent;
@@ -153,6 +154,12 @@ public class DashboardController extends DialogController implements CategoryCli
 
 	// availability controller
 	private AvailabilityEditorController availabilityEditorController;
+
+	// setup controller
+	private SetupEditorController setupEditorController;
+
+	// production controller
+	private ProductionEditorController productionEditorController;
 
 	// container for dashboard tiles
 	@FXML
@@ -250,7 +257,7 @@ public class DashboardController extends DialogController implements CategoryCli
 
 	// list of events
 	private ObservableList<BaseRecord> resolvedEvents = FXCollections.observableArrayList(new ArrayList<>());
-	
+
 	private AvailabilityRecord lastAvailability;
 	private SetupRecord lastMaterialSetup;
 	private SetupRecord lastJobSetup;
@@ -405,39 +412,28 @@ public class DashboardController extends DialogController implements CategoryCli
 
 		resolvedEvents.clear();
 
-
-
 		for (BaseRecord event : records) {
 			// ResolvedEvent event = new ResolvedEvent(record);
 
 			/*
-			if (event.getReason() == null && lastAvailability != null) {
-				// set to previous event's reason
-				event.setReason(lastAvailability.getReason());
-			}
-
-			if (event.getMaterial() == null && lastSetup != null) {
-				// set to previous event's material
-				event.setMaterial(lastSetup.getMaterial());
-			}
-
-			if (event.getJob() == null && lastSetup != null) {
-				// set to previous event's job
-				event.setJob(lastSetup.getJob());
-			}
-			*/
+			 * if (event.getReason() == null && lastAvailability != null) { // set to
+			 * previous event's reason event.setReason(lastAvailability.getReason()); }
+			 * 
+			 * if (event.getMaterial() == null && lastSetup != null) { // set to previous
+			 * event's material event.setMaterial(lastSetup.getMaterial()); }
+			 * 
+			 * if (event.getJob() == null && lastSetup != null) { // set to previous event's
+			 * job event.setJob(lastSetup.getJob()); }
+			 */
 
 			resolvedEvents.add(event);
 
 			/*
-			if (event instanceof AvailabilityRecord) {
-				lastAvailability = (AvailabilityRecord) event;
-			}
-
-			if (event instanceof SetupRecord) {
-				lastSetup = (SetupRecord) event;
-			}
-*/
+			 * if (event instanceof AvailabilityRecord) { lastAvailability =
+			 * (AvailabilityRecord) event; }
+			 * 
+			 * if (event instanceof SetupRecord) { lastSetup = (SetupRecord) event; }
+			 */
 		}
 
 		tvResolvedEvents.refresh();
@@ -1030,7 +1026,7 @@ public class DashboardController extends DialogController implements CategoryCli
 			SimpleStringProperty property = null;
 			BaseRecord event = cellDataFeatures.getValue();
 			Material material = null;
-			
+
 			if (event instanceof SetupRecord) {
 				material = ((SetupRecord) event).getMaterial();
 				lastMaterialSetup = (SetupRecord) event;
@@ -1226,9 +1222,17 @@ public class DashboardController extends DialogController implements CategoryCli
 			// time period
 			LocalDate from = dpStartDate.getValue();
 
+			if (from == null) {
+				return;
+			}
+
 			LocalDateTime ldtFrom = LocalDateTime.of(from, LocalTime.MIN);
 
 			LocalDate to = dpEndDate.getValue();
+
+			if (to == null) {
+				to = LocalDate.now();
+			}
 
 			LocalDateTime ldtTo = LocalDateTime.of(to, LocalTime.MAX);
 
@@ -1405,12 +1409,44 @@ public class DashboardController extends DialogController implements CategoryCli
 		return availabilityEditorController;
 	}
 
+	private SetupEditorController getSetupController() throws Exception {
+		if (setupEditorController == null) {
+			FXMLLoader loader = LoaderFactory.setupEditorLoader();
+			AnchorPane page = (AnchorPane) loader.getRoot();
+
+			Stage dialogStage = new Stage(StageStyle.DECORATED);
+			dialogStage.setTitle("Setup Editor");
+			dialogStage.initModality(Modality.APPLICATION_MODAL);
+			Scene scene = new Scene(page);
+			dialogStage.setScene(scene);
+
+			// get the controller
+			setupEditorController = loader.getController();
+			setupEditorController.setDialogStage(dialogStage);
+		}
+		return setupEditorController;
+	}
+
 	@FXML
 	private void onNewAvailability() {
 		try {
 			AvailabilityRecord event = new AvailabilityRecord(equipmentLoss.getEquipment());
 			getAvailabilityController().initializeEditor(event);
 			getAvailabilityController().getDialogStage().showAndWait();
+
+			onRefresh();
+
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+
+	@FXML
+	private void onNewSetup() {
+		try {
+			SetupRecord event = new SetupRecord(equipmentLoss.getEquipment());
+			getSetupController().initializeEditor(event);
+			getSetupController().getDialogStage().showAndWait();
 
 			onRefresh();
 
@@ -1430,8 +1466,11 @@ public class DashboardController extends DialogController implements CategoryCli
 
 			if (event instanceof AvailabilityRecord) {
 				getAvailabilityController().initializeEditor((AvailabilityRecord) event);
+				getAvailabilityController().getDialogStage().showAndWait();
+			} else if (event instanceof SetupRecord) {
+				getSetupController().initializeEditor((SetupRecord) event);
+				getSetupController().getDialogStage().showAndWait();
 			}
-			getAvailabilityController().getDialogStage().showAndWait();
 
 			onRefresh();
 
@@ -1449,6 +1488,14 @@ public class DashboardController extends DialogController implements CategoryCli
 				throw new Exception("An event must be selected.");
 			}
 
+			// confirm
+			String msg = "Do you want to delete event for equipment " + event.getEquipment().getName() + "?";
+			ButtonType type = AppUtils.showConfirmationDialog(msg);
+
+			if (type.equals(ButtonType.CANCEL)) {
+				return;
+			}
+
 			PersistenceService.instance().delete(event);
 
 			onRefresh();
@@ -1456,5 +1503,10 @@ public class DashboardController extends DialogController implements CategoryCli
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}
+	}
+
+	public void enableRefresh(boolean value) {
+		this.btRefresh.setDisable(!value);
+		this.tpParetoCharts.setDisable(!value);
 	}
 }

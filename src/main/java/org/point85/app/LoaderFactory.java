@@ -5,6 +5,7 @@ import org.point85.app.charts.TrendChartController;
 import org.point85.app.dashboard.AvailabilityEditorController;
 import org.point85.app.dashboard.DashboardController;
 import org.point85.app.dashboard.DashboardDialogController;
+import org.point85.app.dashboard.SetupEditorController;
 import org.point85.app.designer.DataCollectorController;
 import org.point85.app.designer.EquipmentMaterialController;
 import org.point85.app.designer.EquipmentResolverController;
@@ -175,6 +176,12 @@ public class LoaderFactory {
 	
 	public static FXMLLoader availabilityEditorLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(AvailabilityEditorController.class.getResource("AvailabilityEditor.fxml"));
+		fxmlLoader.load();
+		return fxmlLoader;
+	}
+	
+	public static FXMLLoader setupEditorLoader() throws Exception {
+		FXMLLoader fxmlLoader = new FXMLLoader(SetupEditorController.class.getResource("SetupEditor.fxml"));
 		fxmlLoader.load();
 		return fxmlLoader;
 	}

@@ -1,31 +1,20 @@
 package org.point85.app.dashboard;
 
 import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.OffsetDateTime;
-import java.util.List;
 
 import org.point85.app.AppUtils;
-import org.point85.app.DialogController;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
 import org.point85.app.LoaderFactory;
 import org.point85.app.reason.ReasonEditorController;
-import org.point85.domain.DomainUtils;
 import org.point85.domain.collector.AvailabilityRecord;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Reason;
-import org.point85.domain.schedule.Shift;
-import org.point85.domain.schedule.ShiftInstance;
-import org.point85.domain.schedule.WorkSchedule;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
@@ -34,9 +23,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-public class AvailabilityEditorController extends DialogController {
+public class AvailabilityEditorController extends EventEditorController {
 
-	private AvailabilityRecord resolvedEvent;
+	private AvailabilityRecord availabilityEvent;
 
 	// reason editor controller
 	private ReasonEditorController reasonController;
@@ -48,23 +37,10 @@ public class AvailabilityEditorController extends DialogController {
 	private Label lbReason;
 
 	@FXML
-	private DatePicker dpStartDate;
-
-	@FXML
-	private TextField tfStartTime;
-
-	@FXML
-	private DatePicker dpEndDate;
-
-	@FXML
-	private TextField tfEndTime;
-
-	@FXML
 	private TextField tfDuration;
 
-	// @FXML
 	public void initializeEditor(AvailabilityRecord event) throws Exception {
-		resolvedEvent = event;
+		availabilityEvent = event;
 
 		// images for buttons
 		setImages();
@@ -82,70 +58,26 @@ public class AvailabilityEditorController extends DialogController {
 		btReasonEditor.setTooltip(new Tooltip("Find reason."));
 	}
 
-	@FXML
-	protected void onOK() {
-		try {
-			// save data
-			saveRecord();
-			super.onOK();
-		} catch (Exception e) {
-			AppUtils.showErrorDialog(e);
-		}
-	}
-
-	private void saveRecord() throws Exception {
+	@Override
+	protected void saveRecord() throws Exception {
 		// time period
-		LocalDate startDate = dpStartDate.getValue();
-		Duration startSeconds = AppUtils.durationFromString(tfStartTime.getText());
-		LocalTime startTime = LocalTime.ofSecondOfDay(startSeconds.getSeconds());
-		LocalDateTime ldtStart = LocalDateTime.of(startDate, startTime);
-
-		LocalDate endDate = dpEndDate.getValue();
-		Duration endSeconds = AppUtils.durationFromString(tfEndTime.getText());
-		LocalTime endTime = LocalTime.ofSecondOfDay(endSeconds.getSeconds());
-		LocalDateTime ldtEnd = LocalDateTime.of(endDate, endTime);
-
-		if (ldtEnd.isBefore(ldtStart)) {
-			throw new Exception("The starting time " + ldtStart + " must be before the ending time " + ldtEnd);
-		}
-
-		OffsetDateTime odtStart = DomainUtils.fromLocalDateTime(ldtStart);
-		OffsetDateTime odtEnd = DomainUtils.fromLocalDateTime(ldtEnd);
-		resolvedEvent.setStartTime(odtStart);
-		resolvedEvent.setEndTime(odtEnd);
-
-		// set shift
-		Shift shift = null;
-		WorkSchedule schedule = resolvedEvent.getEquipment().findWorkSchedule();
-
-		if (schedule != null) {
-			List<ShiftInstance> shiftInstances = schedule.getShiftInstancesForTime(ldtStart);
-
-			if (shiftInstances.size() > 0) {
-				// pick first one
-				shift = shiftInstances.get(0).getShift();
-			}
-		}
-		resolvedEvent.setShift(shift);
+		setTimePeriod(availabilityEvent);
 
 		// reason
-		if (resolvedEvent.getReason() == null) {
+		if (availabilityEvent.getReason() == null) {
 			throw new Exception("A reason must be specified.");
 		}
 
 		// duration
 		Duration duration = AppUtils.durationFromString(tfDuration.getText());
-		resolvedEvent.setDuration(duration);
+		availabilityEvent.setDuration(duration);
 
-		// AvailabilityRecord record = new AvailabilityRecord(resolvedEvent);
-
-		PersistenceService.instance().save(resolvedEvent);
-
+		PersistenceService.instance().save(availabilityEvent);
 	}
 
 	private void showReason() {
-		if (resolvedEvent.getReason() != null) {
-			lbReason.setText(resolvedEvent.getReason().getDisplayString());
+		if (availabilityEvent.getReason() != null) {
+			lbReason.setText(availabilityEvent.getReason().getDisplayString());
 		} else {
 			lbReason.setText(null);
 		}
@@ -176,7 +108,7 @@ public class AvailabilityEditorController extends DialogController {
 			reasonController.getDialogStage().showAndWait();
 
 			Reason reason = reasonController.getSelectedReason();
-			resolvedEvent.setReason(reason);
+			availabilityEvent.setReason(reason);
 			showReason();
 
 		} catch (Exception e) {
@@ -189,31 +121,11 @@ public class AvailabilityEditorController extends DialogController {
 		showReason();
 
 		// start date and time
-		if (resolvedEvent.getStartTime() != null) {
-			dpStartDate.setValue(resolvedEvent.getStartTime().toLocalDate());
-			int seconds = resolvedEvent.getStartTime().toLocalTime().toSecondOfDay();
-			tfStartTime.setText(AppUtils.stringFromDuration(Duration.ofSeconds(seconds)));
-		}
-
-		// end date and time
-		if (resolvedEvent.getEndTime() != null) {
-			dpEndDate.setValue(resolvedEvent.getEndTime().toLocalDate());
-			int seconds = resolvedEvent.getEndTime().toLocalTime().toSecondOfDay();
-			tfEndTime.setText(AppUtils.stringFromDuration(Duration.ofSeconds(seconds)));
-		}
+		super.setAttributes(availabilityEvent);
 
 		// duration
-		if (resolvedEvent.getDuration() != null) {
-			tfDuration.setText(AppUtils.stringFromDuration(resolvedEvent.getDuration()));
+		if (availabilityEvent.getDuration() != null) {
+			tfDuration.setText(AppUtils.stringFromDuration(availabilityEvent.getDuration()));
 		}
 	}
-
-	public AvailabilityRecord getResolvedEvent() {
-		return resolvedEvent;
-	}
-
-	public void setResolvedEvent(AvailabilityRecord resolvedEvent) {
-		this.resolvedEvent = resolvedEvent;
-	}
-
 }

@@ -481,6 +481,9 @@ public class MonitorController {
 		if (selectedEntity instanceof Equipment) {
 			EquipmentLoss loss = new EquipmentLoss((Equipment) selectedEntity);
 			dashboardController.setEquipmentLoss(loss);
+			dashboardController.enableRefresh(true);
+		} else {
+			dashboardController.enableRefresh(false);
 		}
 	}
 

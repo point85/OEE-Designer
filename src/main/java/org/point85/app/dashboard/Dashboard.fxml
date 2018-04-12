@@ -44,7 +44,7 @@
                         <DatePicker fx:id="dpStartDate" maxWidth="1.7976931348623157E308" onAction="#clearMaterials" promptText="Choose starting date" GridPane.columnIndex="1" />
                         <Label text="To end of day" GridPane.columnIndex="2" GridPane.halignment="RIGHT" />
                         <DatePicker fx:id="dpEndDate" maxWidth="1.7976931348623157E308" onAction="#clearMaterials" promptText="Choose ending date" GridPane.columnIndex="3" />
-                        <Button fx:id="btRefresh" mnemonicParsing="false" onAction="#onRefresh" text="Refresh" GridPane.columnIndex="6" GridPane.halignment="CENTER" />
+                        <Button fx:id="btRefresh" disable="true" mnemonicParsing="false" onAction="#onRefresh" text="Refresh" GridPane.columnIndex="6" GridPane.halignment="CENTER" />
                         <ComboBox fx:id="cbMaterials" maxWidth="1.7976931348623157E308" promptText="Choose material" GridPane.columnIndex="5" />
                         <Label text="Material" GridPane.columnIndex="4" GridPane.halignment="RIGHT" />
                      </children>
@@ -56,29 +56,8 @@
       </VBox>
     <AnchorPane minHeight="0.0" minWidth="0.0">
          <children>
-            <TabPane fx:id="tpParetoCharts" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0">
+            <TabPane fx:id="tpParetoCharts" disable="true" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0">
                <tabs>
-                  <Tab fx:id="tbTimeLosses" closable="false" text="Time Losses">
-                    <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                           <children>
-                              <StackedBarChart fx:id="bcLosses" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                <xAxis>
-                                  <NumberAxis side="TOP" />               
-                                </xAxis>
-                                <yAxis>
-                                 <CategoryAxis />
-                                </yAxis>
-                              </StackedBarChart>
-                           </children>
-                        </AnchorPane>
-                    </content>
-                  </Tab>
-                  <Tab fx:id="tbFirstLevelPareto" closable="false" text="First-Level Pareto">
-                     <content>
-                        <AnchorPane fx:id="apLevel1Pareto" />
-                     </content>
-                  </Tab>
                   <Tab fx:id="tbEvents" closable="false" text="Events">
                     <content>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
@@ -103,9 +82,9 @@
                                 <buttons>
                                     <Button fx:id="btDeleteEvent" mnemonicParsing="false" onAction="#onDeleteEvent" text="Delete" />
                                     <Button fx:id="btUpdateEvent" mnemonicParsing="false" onAction="#onUpdateEvent" text="Update" />
-                                    <Button mnemonicParsing="false" text="New Material" />
-                                    <Button mnemonicParsing="false" text="New Production" />
-                                  <Button fx:id="btEditAvailability" mnemonicParsing="false" onAction="#onNewAvailability" text="New Availability" />
+                                    <Button fx:id="btNewSetup" mnemonicParsing="false" onAction="#onNewSetup" text="New Setup" />
+                                    <Button fx:id="btNewProduction" mnemonicParsing="false" text="New Production" />
+                                  <Button fx:id="btNewAvailability" mnemonicParsing="false" onAction="#onNewAvailability" text="New Availability" />
                                 </buttons>
                                  <opaqueInsets>
                                     <Insets />
@@ -114,6 +93,27 @@
                            </children>
                         </AnchorPane>
                     </content>
+                  </Tab>
+                  <Tab fx:id="tbTimeLosses" closable="false" text="Time Losses">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <StackedBarChart fx:id="bcLosses" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <xAxis>
+                                  <NumberAxis side="TOP" />               
+                                </xAxis>
+                                <yAxis>
+                                 <CategoryAxis />
+                                </yAxis>
+                              </StackedBarChart>
+                           </children>
+                        </AnchorPane>
+                    </content>
+                  </Tab>
+                  <Tab fx:id="tbFirstLevelPareto" closable="false" text="First-Level Pareto">
+                     <content>
+                        <AnchorPane fx:id="apLevel1Pareto" />
+                     </content>
                   </Tab>
                   <Tab fx:id="tbYieldPareto" closable="false" text="Startup &amp; Yield">
                     <content>
