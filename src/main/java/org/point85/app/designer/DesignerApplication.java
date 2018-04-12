@@ -721,10 +721,6 @@ public class DesignerApplication {
 	void showDashboard() throws Exception {
 		PlantEntity entity = getPhysicalModelController().getSelectedEntity();
 
-		if (!(entity instanceof Equipment)) {
-			throw new Exception("Equipment must be selected first.");
-		}
-
 		if (dashboardDialogController == null) {
 			FXMLLoader dialogLoader = LoaderFactory.dashboardDialogLoader();
 			AnchorPane pane = (AnchorPane) dialogLoader.getRoot();
@@ -752,6 +748,8 @@ public class DesignerApplication {
 			AnchorPane.setRightAnchor(spDashboard, 0.0);
 
 			DashboardController dashboardController = dashboardLoader.getController();
+			dashboardController.enableRefresh(true);
+			
 			dashboardDialogController.setDashboardController(dashboardController);
 		}
 

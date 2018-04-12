@@ -7,7 +7,7 @@ import org.point85.app.ImageManager;
 import org.point85.app.Images;
 import org.point85.app.LoaderFactory;
 import org.point85.app.reason.ReasonEditorController;
-import org.point85.domain.collector.AvailabilityRecord;
+import org.point85.domain.collector.AvailabilityEvent;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Reason;
 
@@ -25,7 +25,7 @@ import javafx.stage.StageStyle;
 
 public class AvailabilityEditorController extends EventEditorController {
 
-	private AvailabilityRecord availabilityEvent;
+	private AvailabilityEvent availabilityEvent;
 
 	// reason editor controller
 	private ReasonEditorController reasonController;
@@ -39,7 +39,7 @@ public class AvailabilityEditorController extends EventEditorController {
 	@FXML
 	private TextField tfDuration;
 
-	public void initializeEditor(AvailabilityRecord event) throws Exception {
+	public void initializeEditor(AvailabilityEvent event) throws Exception {
 		availabilityEvent = event;
 
 		// images for buttons

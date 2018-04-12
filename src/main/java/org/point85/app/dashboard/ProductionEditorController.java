@@ -1,8 +1,8 @@
 package org.point85.app.dashboard;
 
 import org.point85.app.AppUtils;
-import org.point85.domain.collector.ProductionRecord;
-import org.point85.domain.collector.SetupRecord;
+import org.point85.domain.collector.ProductionEvent;
+import org.point85.domain.collector.SetupEvent;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Equipment;
 import org.point85.domain.plant.EquipmentMaterial;
@@ -16,7 +16,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 
 public class ProductionEditorController extends EventEditorController {
-	private ProductionRecord productionEvent;
+	private ProductionEvent productionEvent;
 
 	private EquipmentMaterial equipmentMaterial;
 
@@ -35,7 +35,7 @@ public class ProductionEditorController extends EventEditorController {
 	@FXML
 	private Label lbUOM;
 
-	public void initializeEditor(ProductionRecord event) throws Exception {
+	public void initializeEditor(ProductionEvent event) throws Exception {
 		productionEvent = event;
 
 		// images for buttons
@@ -70,7 +70,7 @@ public class ProductionEditorController extends EventEditorController {
 		if (equipmentMaterial == null) {
 			// get from equipment material
 			Equipment equipment = productionEvent.getEquipment();
-			SetupRecord lastSetup = PersistenceService.instance().fetchLastSetup(equipment);
+			SetupEvent lastSetup = PersistenceService.instance().fetchLastSetup(equipment);
 
 			if (lastSetup == null) {
 				throw new Exception("No setup record found for equipment " + equipment.getName());

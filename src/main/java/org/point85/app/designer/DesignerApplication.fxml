@@ -39,7 +39,7 @@
                      </contextMenu></TreeView>
                   <ButtonBar buttonMinWidth="25.0" layoutX="14.0" layoutY="45.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="45.0">
                     <buttons>
-                        <Button fx:id="btDashboard" mnemonicParsing="false" onAction="#onShowDashboard" text="Dashboard" />
+                        <Button fx:id="btDashboard" disable="true" mnemonicParsing="false" onAction="#onShowDashboard" text="Dashboard" />
                     </buttons>
                   </ButtonBar>
                   <ButtonBar layoutX="14.0" layoutY="94.0" nodeOrientation="RIGHT_TO_LEFT" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0">

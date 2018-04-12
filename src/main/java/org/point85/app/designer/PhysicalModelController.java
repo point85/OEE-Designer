@@ -361,25 +361,10 @@ public class PhysicalModelController extends DesignerController {
 			return;
 		}
 
-		// check for previous edit
-		if (oldItem != null) {
-			// TODO
-			/*
-			 * boolean isChanged = setAttributes(oldItem);
-			 * 
-			 * if (isChanged) {
-			 * oldItem.setGraphic(ImageManager.instance().getImageView(Images.CHANGED));
-			 * this.addEditedPlantEntity(oldItem); tvEntities.refresh(); }
-			 */
-		}
-
 		// new attributes
 		selectedEntityItem = newItem;
 		PlantEntity selectedEntity = newItem.getValue().getPlantEntity();
 		displayAttributes(selectedEntity);
-
-		// TODO
-		WorkSchedule schedule = selectedEntity.findWorkSchedule();
 
 		// show the children too
 		Set<PlantEntity> children = selectedEntity.getChildren();
@@ -402,11 +387,13 @@ public class PhysicalModelController extends DesignerController {
 		if (selectedEntity instanceof Equipment) {
 			tbAvailability.setDisable(false);
 			tbEquipMaterials.setDisable(false);
+			btDashboard.setDisable(false);
 
 			onSelectEquipmentMaterial();
 		} else {
 			tbAvailability.setDisable(true);
 			tbEquipMaterials.setDisable(true);
+			btDashboard.setDisable(true);
 		}
 	}
 

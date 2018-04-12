@@ -5,7 +5,7 @@ import org.point85.app.ImageManager;
 import org.point85.app.Images;
 import org.point85.app.LoaderFactory;
 import org.point85.app.material.MaterialEditorController;
-import org.point85.domain.collector.SetupRecord;
+import org.point85.domain.collector.SetupEvent;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Material;
 import org.point85.domain.script.EventResolverType;
@@ -23,7 +23,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 public class SetupEditorController extends EventEditorController {
-	private SetupRecord setupEvent;
+	private SetupEvent setupEvent;
 
 	// material editor
 	private MaterialEditorController materialController;
@@ -37,7 +37,7 @@ public class SetupEditorController extends EventEditorController {
 	@FXML
 	private TextField tfJob;
 
-	public void initializeEditor(SetupRecord event) throws Exception {
+	public void initializeEditor(SetupEvent event) throws Exception {
 		setupEvent = event;
 		setupEvent.setResolverType(EventResolverType.MATL_CHANGE);
 
