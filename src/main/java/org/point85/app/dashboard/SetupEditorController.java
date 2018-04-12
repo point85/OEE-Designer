@@ -45,7 +45,7 @@ public class SetupEditorController extends EventEditorController {
 		setImages();
 
 		getDialogStage().setOnShown((we) -> {
-			setAttributes();
+			displayAttributes();
 		});
 	}
 
@@ -73,7 +73,7 @@ public class SetupEditorController extends EventEditorController {
 		PersistenceService.instance().save(setupEvent);
 	}
 
-	private void showMaterial() {
+	private void displayMaterial() {
 		if (setupEvent.getMaterial() != null) {
 			lbMaterial.setText(setupEvent.getMaterial().getDisplayString());
 		} else {
@@ -107,19 +107,19 @@ public class SetupEditorController extends EventEditorController {
 
 			Material material = materialController.getSelectedMaterial();
 			setupEvent.setMaterial(material);
-			showMaterial();
+			displayMaterial();
 
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}
 	}
 
-	void setAttributes() {
-		// material
-		showMaterial();
-
+	void displayAttributes() {
 		// start date and time
-		super.setAttributes(setupEvent);
+		super.displayAttributes(setupEvent);
+		
+		// material
+		displayMaterial();
 		
 		// job
 		tfJob.setText(setupEvent.getJob());

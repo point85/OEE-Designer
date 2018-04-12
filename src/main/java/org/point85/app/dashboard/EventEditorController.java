@@ -34,7 +34,7 @@ abstract class EventEditorController extends DialogController {
 
 	protected abstract void saveRecord() throws Exception;
 
-	protected void setAttributes(BaseRecord event) {
+	protected void displayAttributes(BaseRecord event) {
 
 		// start date and time
 		if (event.getStartTime() != null) {

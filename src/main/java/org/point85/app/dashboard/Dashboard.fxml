@@ -83,7 +83,7 @@
                                     <Button fx:id="btDeleteEvent" mnemonicParsing="false" onAction="#onDeleteEvent" text="Delete" />
                                     <Button fx:id="btUpdateEvent" mnemonicParsing="false" onAction="#onUpdateEvent" text="Update" />
                                     <Button fx:id="btNewSetup" mnemonicParsing="false" onAction="#onNewSetup" text="New Setup" />
-                                    <Button fx:id="btNewProduction" mnemonicParsing="false" text="New Production" />
+                                    <Button fx:id="btNewProduction" mnemonicParsing="false" onAction="#onNewProduction" text="New Production" />
                                   <Button fx:id="btNewAvailability" mnemonicParsing="false" onAction="#onNewAvailability" text="New Availability" />
                                 </buttons>
                                  <opaqueInsets>

@@ -46,7 +46,7 @@ public class AvailabilityEditorController extends EventEditorController {
 		setImages();
 
 		getDialogStage().setOnShown((we) -> {
-			setAttributes();
+			displayAttributes();
 		});
 	}
 
@@ -75,7 +75,7 @@ public class AvailabilityEditorController extends EventEditorController {
 		PersistenceService.instance().save(availabilityEvent);
 	}
 
-	private void showReason() {
+	private void displayReason() {
 		if (availabilityEvent.getReason() != null) {
 			lbReason.setText(availabilityEvent.getReason().getDisplayString());
 		} else {
@@ -109,19 +109,19 @@ public class AvailabilityEditorController extends EventEditorController {
 
 			Reason reason = reasonController.getSelectedReason();
 			availabilityEvent.setReason(reason);
-			showReason();
+			displayReason();
 
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}
 	}
 
-	void setAttributes() {
-		// reason
-		showReason();
-
+	void displayAttributes() {
 		// start date and time
-		super.setAttributes(availabilityEvent);
+		super.displayAttributes(availabilityEvent);
+		
+		// reason
+		displayReason();
 
 		// duration
 		if (availabilityEvent.getDuration() != null) {

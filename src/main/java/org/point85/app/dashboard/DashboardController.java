@@ -1358,11 +1358,14 @@ public class DashboardController extends DialogController implements CategoryCli
 
 			AvailabilityRecord lastAvailability = null;
 
-			for (int i = historyRecords.size() - 1; i == 0; i--) {
+			int i = historyRecords.size() - 1;
+			
+			while (i > -1) {
 				if (historyRecords.get(i) instanceof AvailabilityRecord) {
 					lastAvailability = (AvailabilityRecord) historyRecords.get(i);
 					break;
 				}
+				i--;
 			}
 
 			// last availability
@@ -1409,6 +1412,24 @@ public class DashboardController extends DialogController implements CategoryCli
 		return availabilityEditorController;
 	}
 
+	private ProductionEditorController getProductionController() throws Exception {
+		if (productionEditorController == null) {
+			FXMLLoader loader = LoaderFactory.productionEditorLoader();
+			AnchorPane page = (AnchorPane) loader.getRoot();
+
+			Stage dialogStage = new Stage(StageStyle.DECORATED);
+			dialogStage.setTitle("Production Editor");
+			dialogStage.initModality(Modality.APPLICATION_MODAL);
+			Scene scene = new Scene(page);
+			dialogStage.setScene(scene);
+
+			// get the controller
+			productionEditorController = loader.getController();
+			productionEditorController.setDialogStage(dialogStage);
+		}
+		return productionEditorController;
+	}
+
 	private SetupEditorController getSetupController() throws Exception {
 		if (setupEditorController == null) {
 			FXMLLoader loader = LoaderFactory.setupEditorLoader();
@@ -1433,6 +1454,20 @@ public class DashboardController extends DialogController implements CategoryCli
 			AvailabilityRecord event = new AvailabilityRecord(equipmentLoss.getEquipment());
 			getAvailabilityController().initializeEditor(event);
 			getAvailabilityController().getDialogStage().showAndWait();
+
+			onRefresh();
+
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+
+	@FXML
+	private void onNewProduction() {
+		try {
+			ProductionRecord event = new ProductionRecord(equipmentLoss.getEquipment());
+			getProductionController().initializeEditor(event);
+			getProductionController().getDialogStage().showAndWait();
 
 			onRefresh();
 
@@ -1467,6 +1502,9 @@ public class DashboardController extends DialogController implements CategoryCli
 			if (event instanceof AvailabilityRecord) {
 				getAvailabilityController().initializeEditor((AvailabilityRecord) event);
 				getAvailabilityController().getDialogStage().showAndWait();
+			} else if (event instanceof ProductionRecord) {
+				getProductionController().initializeEditor((ProductionRecord) event);
+				getProductionController().getDialogStage().showAndWait();
 			} else if (event instanceof SetupRecord) {
 				getSetupController().initializeEditor((SetupRecord) event);
 				getSetupController().getDialogStage().showAndWait();
