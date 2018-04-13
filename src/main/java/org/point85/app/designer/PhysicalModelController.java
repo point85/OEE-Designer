@@ -1,5 +1,6 @@
 package org.point85.app.designer;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -180,6 +181,9 @@ public class PhysicalModelController extends DesignerController {
 
 	@FXML
 	private ProgressIndicator piEntities;
+
+	@FXML
+	private TextField tfRetention;
 
 	// extract the PlantEntity name from the tree item
 	public PlantEntity getSelectedEntity() {
@@ -596,9 +600,9 @@ public class PhysicalModelController extends DesignerController {
 			cbEntityTypes.getSelectionModel().select(null);
 			cbEntityTypes.requestFocus();
 			lbSchedule.setText(null);
+			tfRetention.clear();
 
 			// no entity item selection
-			// tvEntities.getSelectionModel().clearSelection();
 			selectedEntityItem = null;
 
 			// equipment materials
@@ -913,6 +917,14 @@ public class PhysicalModelController extends DesignerController {
 			this.lbSchedule.setText("");
 		}
 
+		// retention period
+		if (entity.getRetentionDuration() != null) {
+			long days = entity.getRetentionDuration().toDays();
+			this.tfRetention.setText(String.valueOf(days));
+		} else {
+			this.tfRetention.setText("");
+		}
+
 		if (entity instanceof Equipment) {
 			if (equipmentMaterialController != null) {
 				equipmentMaterialController.showMaterial((Equipment) entity);
@@ -950,6 +962,18 @@ public class PhysicalModelController extends DesignerController {
 		if (!description.equals(entity.getDescription())) {
 			entity.setDescription(description);
 			isDirty = true;
+		}
+
+		// retention period
+		String period = tfRetention.getText().trim();
+
+		if (period.length() > 0) {
+			Duration retention = Duration.ofDays(Long.valueOf(period));
+
+			if (!retention.equals(entity.getRetentionDuration())) {
+				entity.setRetentionDuration(retention);
+				isDirty = true;
+			}
 		}
 
 		if (isDirty) {
