@@ -279,4 +279,20 @@ public abstract class AppUtils {
 		}
 		return symbol;
 	}
+	
+	public static Double stringToDouble(String number) throws Exception {
+		try {
+			return Double.valueOf(number);
+		} catch (NumberFormatException e) {
+			throw new Exception(number + " is not a number.");
+		}
+	}
+	
+	public static Long stringToLong(String number) throws Exception {
+		try {
+			return Long.valueOf(number);
+		} catch (NumberFormatException e) {
+			throw new Exception(number + " is not a number.");
+		}
+	}
 }

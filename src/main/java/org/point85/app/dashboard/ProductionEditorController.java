@@ -56,7 +56,7 @@ public class ProductionEditorController extends EventEditorController {
 		setTimePeriod(productionEvent);
 
 		// amount
-		Double amount = Double.valueOf(tfAmount.getText());
+		Double amount = AppUtils.stringToDouble(tfAmount.getText());
 
 		if (amount == null || amount <= 0d) {
 			throw new Exception("An amount must be specified.");

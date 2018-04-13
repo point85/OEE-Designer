@@ -968,7 +968,13 @@ public class PhysicalModelController extends DesignerController {
 		String period = tfRetention.getText().trim();
 
 		if (period.length() > 0) {
-			Duration retention = Duration.ofDays(Long.valueOf(period));
+			Long days = AppUtils.stringToLong(period);
+
+			if (days < 0) {
+				throw new Exception("The retention period must be greater than or equals to zero days");
+			}
+
+			Duration retention = Duration.ofDays(days);
 
 			if (!retention.equals(entity.getRetentionDuration())) {
 				entity.setRetentionDuration(retention);
