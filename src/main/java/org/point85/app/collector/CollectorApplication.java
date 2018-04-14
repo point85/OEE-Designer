@@ -40,16 +40,21 @@ public class CollectorApplication {
 
 	}
 
-	public void start(Stage primaryStage) throws Exception {
-		AnchorPane mainLayout = (AnchorPane) FXMLLoader.load(getClass().getResource("CollectorApplication.fxml"));
+	public void start(Stage primaryStage) {
+		try {
+			AnchorPane mainLayout = (AnchorPane) FXMLLoader.load(getClass().getResource("CollectorApplication.fxml"));
 
-		// Show the scene containing the root layout.
-		Scene scene = new Scene(mainLayout);
+			// Show the scene containing the root layout.
+			Scene scene = new Scene(mainLayout);
 
-		primaryStage.setScene(scene);
-		primaryStage.setTitle("OEE Collector Application");
-		primaryStage.getIcons().add(ImageManager.instance().getImage(Images.POINT85));
-		primaryStage.show();
+			primaryStage.setScene(scene);
+			primaryStage.setTitle("OEE Collector Application");
+			primaryStage.getIcons().add(ImageManager.instance().getImage(Images.POINT85));
+			primaryStage.show();
+		} catch (Exception e) {
+			e.printStackTrace();
+			stop();
+		}
 	}
 
 	// called by Java FX
@@ -79,9 +84,13 @@ public class CollectorApplication {
 		btRestart.setContentDisplay(ContentDisplay.LEFT);
 	}
 
-	public void stop() throws Exception {
-		if (collector != null) {
-			collector.stopDataCollection();
+	public void stop() {
+		try {
+			if (collector != null) {
+				collector.stopDataCollection();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
