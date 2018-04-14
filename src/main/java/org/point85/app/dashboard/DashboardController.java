@@ -11,6 +11,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.point85.app.AppUtils;
 import org.point85.app.DialogController;
@@ -47,6 +49,7 @@ import org.point85.tilesfx.skins.BarChartItem;
 import org.point85.tilesfx.skins.LeaderBoardItem;
 import org.point85.tilesfx.tools.FlowGridPane;
 
+import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -65,6 +68,7 @@ import javafx.scene.chart.XYChart.Data;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.DatePicker;
@@ -114,8 +118,14 @@ public class DashboardController extends DialogController implements CategoryCli
 	private static final String OEE_FORMAT = "%.1f %%";
 	private static final String PROD_FORMAT = "%.1f ";
 
-	// cumulative production
-	private boolean showCumulative = true;
+	// time between auto refresh
+	private static final long REFRESH_SEC = 300;
+
+	// auto refresh timer
+	private Timer refreshTimer;
+
+	// refresh task
+	private RefreshTask refreshTask;
 
 	// the loss data
 	private EquipmentLoss equipmentLoss;
@@ -135,6 +145,9 @@ public class DashboardController extends DialogController implements CategoryCli
 
 	@FXML
 	private Button btRefresh;
+
+	@FXML
+	private CheckBox cbAutoRefresh;
 
 	// event editors
 	@FXML
@@ -864,6 +877,34 @@ public class DashboardController extends DialogController implements CategoryCli
 		buildDashboardTiles();
 
 		initializeEventTable();
+
+		initializeRefreshTimer();
+
+		// select the time loss chart
+		tpParetoCharts.getSelectionModel().select(tbTimeLosses);
+	}
+
+	private void initializeRefreshTimer() {
+		// create timer and task
+		refreshTimer = new Timer();
+		refreshTask = new RefreshTask();
+	}
+
+	private void startRefreshTimer() {
+		refreshTimer.schedule(refreshTask, 1000, REFRESH_SEC * 1000);
+	}
+
+	private void stopRefreshTimer() {
+		refreshTimer.cancel();
+	}
+
+	@FXML
+	private void onToggleRefresh() {
+		if (cbAutoRefresh.isSelected()) {
+			startRefreshTimer();
+		} else {
+			stopRefreshTimer();
+		}
 	}
 
 	// find material
@@ -1107,11 +1148,7 @@ public class DashboardController extends DialogController implements CategoryCli
 		lbiRejectProduction = new LeaderBoardItem("Reject", 0);
 		lbiStartupProduction = new LeaderBoardItem("Startup", 0);
 
-		String productionText = "Cumulative Quantity";
-
-		if (!showCumulative) {
-			productionText = "Change in Quantity";
-		}
+		String productionText = "Change in Quantity";
 
 		tiProduction = TileBuilder.create().skinType(SkinType.LEADER_BOARD).prefSize(TILE_WIDTH, TILE_HEIGHT)
 				.title("Current Production").text(productionText)
@@ -1359,7 +1396,7 @@ public class DashboardController extends DialogController implements CategoryCli
 			AvailabilityEvent lastAvailability = null;
 
 			int i = historyRecords.size() - 1;
-			
+
 			while (i > -1) {
 				if (historyRecords.get(i) instanceof AvailabilityEvent) {
 					lastAvailability = (AvailabilityEvent) historyRecords.get(i);
@@ -1545,6 +1582,16 @@ public class DashboardController extends DialogController implements CategoryCli
 
 	public void enableRefresh(boolean value) {
 		this.btRefresh.setDisable(!value);
+		this.cbAutoRefresh.setDisable(!value);
 		this.tpParetoCharts.setDisable(!value);
+	}
+
+	private class RefreshTask extends TimerTask {
+		@Override
+		public void run() {
+			Platform.runLater(() -> {
+				onRefresh();
+			});
+		}
 	}
 }

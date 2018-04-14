@@ -6,6 +6,7 @@
 <?import javafx.scene.chart.StackedBarChart?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
@@ -20,7 +21,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<SplitPane fx:id="stRootPane" dividerPositions="0.45" orientation="VERTICAL" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.dashboard.DashboardController">
+<SplitPane fx:id="stRootPane" dividerPositions="0.33" orientation="VERTICAL" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.dashboard.DashboardController">
   <items>
       <VBox>
          <children>
@@ -35,6 +36,7 @@
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="8.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="8.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -47,6 +49,7 @@
                         <Button fx:id="btRefresh" disable="true" mnemonicParsing="false" onAction="#onRefresh" text="Refresh" GridPane.columnIndex="6" GridPane.halignment="CENTER" />
                         <ComboBox fx:id="cbMaterials" maxWidth="1.7976931348623157E308" promptText="Choose material" GridPane.columnIndex="5" />
                         <Label text="Material" GridPane.columnIndex="4" GridPane.halignment="RIGHT" />
+                        <CheckBox fx:id="cbAutoRefresh" disable="true" mnemonicParsing="false" onAction="#onToggleRefresh" text="Auto" GridPane.columnIndex="7" />
                      </children>
                   </GridPane>
                   <AnchorPane fx:id="apTileLayout" layoutY="30.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0" />
