@@ -25,7 +25,7 @@ import org.point85.domain.plant.Equipment;
 import org.point85.domain.plant.PlantEntity;
 import org.point85.domain.script.ResolverFunction;
 import org.point85.domain.script.EventResolver;
-import org.point85.domain.script.EventResolverType;
+import org.point85.domain.script.EventType;
 import org.point85.domain.web.WebSource;
 
 import javafx.beans.property.SimpleObjectProperty;
@@ -50,7 +50,7 @@ public class EquipmentResolverController extends DesignerController {
 	private EventResolver selectedEventResolver;
 
 	@FXML
-	private ComboBox<EventResolverType> cbResolverTypes;
+	private ComboBox<EventType> cbResolverTypes;
 
 	@FXML
 	private ComboBox<DataSourceType> cbDataSources;
@@ -145,7 +145,7 @@ public class EquipmentResolverController extends DesignerController {
 		cbDataSources.getItems().addAll(DataSourceType.values());
 
 		// resolver types
-		cbResolverTypes.getItems().addAll(EventResolverType.values());
+		cbResolverTypes.getItems().addAll(EventType.values());
 
 		// images
 		setImages();
@@ -184,7 +184,7 @@ public class EquipmentResolverController extends DesignerController {
 
 		// resolver type column
 		tcResolverType.setCellValueFactory(cellDataFeatures -> {
-			EventResolverType type = cellDataFeatures.getValue().getType();
+			EventType type = cellDataFeatures.getValue().getType();
 			SimpleStringProperty property = null;
 
 			if (type != null) {
@@ -385,7 +385,7 @@ public class EquipmentResolverController extends DesignerController {
 	@FXML
 	private void onSelectResolverType() {
 		if (getSelectedResolver() != null) {
-			EventResolverType type = this.cbResolverTypes.getSelectionModel().getSelectedItem();
+			EventType type = this.cbResolverTypes.getSelectionModel().getSelectedItem();
 
 			if (type != null) {
 				getSelectedResolver().setType(type);
@@ -539,7 +539,7 @@ public class EquipmentResolverController extends DesignerController {
 		String sourceId = "";
 
 		if (entity != null) {
-			EventResolverType resolverType = cbResolverTypes.getSelectionModel().getSelectedItem();
+			EventType resolverType = cbResolverTypes.getSelectionModel().getSelectedItem();
 			DataSourceType sourceType = cbDataSources.getSelectionModel().getSelectedItem();
 
 			if (resolverType != null) {
@@ -573,7 +573,7 @@ public class EquipmentResolverController extends DesignerController {
 			}
 
 			// resolver type
-			EventResolverType resolverType = cbResolverTypes.getSelectionModel().getSelectedItem();
+			EventType resolverType = cbResolverTypes.getSelectionModel().getSelectedItem();
 
 			if (resolverType == null) {
 				throw new Exception("The script resolver type must be selected.");

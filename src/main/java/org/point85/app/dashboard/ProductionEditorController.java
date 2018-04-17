@@ -1,13 +1,12 @@
 package org.point85.app.dashboard;
 
 import org.point85.app.AppUtils;
-import org.point85.domain.collector.ProductionEvent;
-import org.point85.domain.collector.SetupEvent;
+import org.point85.domain.collector.OeeEvent;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Equipment;
 import org.point85.domain.plant.EquipmentMaterial;
 import org.point85.domain.plant.Material;
-import org.point85.domain.script.EventResolverType;
+import org.point85.domain.script.EventType;
 import org.point85.domain.uom.UnitOfMeasure;
 
 import javafx.fxml.FXML;
@@ -16,7 +15,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 
 public class ProductionEditorController extends EventEditorController {
-	private ProductionEvent productionEvent;
+	private OeeEvent productionEvent;
 
 	private EquipmentMaterial equipmentMaterial;
 
@@ -35,7 +34,7 @@ public class ProductionEditorController extends EventEditorController {
 	@FXML
 	private Label lbUOM;
 
-	public void initializeEditor(ProductionEvent event) throws Exception {
+	public void initializeEditor(OeeEvent event) throws Exception {
 		productionEvent = event;
 
 		// images for buttons
@@ -70,7 +69,7 @@ public class ProductionEditorController extends EventEditorController {
 		if (equipmentMaterial == null) {
 			// get from equipment material
 			Equipment equipment = productionEvent.getEquipment();
-			SetupEvent lastSetup = PersistenceService.instance().fetchLastSetup(equipment);
+			OeeEvent lastSetup = PersistenceService.instance().fetchLastSetup(equipment);
 
 			if (lastSetup == null) {
 				throw new Exception("No setup record found for equipment " + equipment.getName());
@@ -104,19 +103,19 @@ public class ProductionEditorController extends EventEditorController {
 	@FXML
 	private void onSelectProductionType() throws Exception {
 		UnitOfMeasure uom = null;
-		EventResolverType type = null;
+		EventType type = null;
 		if (rbGood.isSelected()) {
 			// good production
 			uom = getEquipmentMaterial().getRunRateUOM().getDividend();
-			type = EventResolverType.PROD_GOOD;
+			type = EventType.PROD_GOOD;
 		} else if (rbReject.isSelected()) {
 			// reject or rework production
 			uom = getEquipmentMaterial().getRejectUOM();
-			type = EventResolverType.PROD_REJECT;
+			type = EventType.PROD_REJECT;
 		} else {
 			// startup loss
 			uom = getEquipmentMaterial().getRunRateUOM().getDividend();
-			type = EventResolverType.PROD_STARTUP;
+			type = EventType.PROD_STARTUP;
 		}
 		productionEvent.setUOM(uom);
 		productionEvent.setResolverType(type);

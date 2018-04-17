@@ -12,14 +12,12 @@ import org.point85.app.LoaderFactory;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerController;
 import org.point85.domain.DomainUtils;
-import org.point85.domain.collector.AvailabilityEvent;
-import org.point85.domain.collector.BaseEvent;
-import org.point85.domain.collector.ProductionEvent;
+import org.point85.domain.collector.OeeEvent;
 import org.point85.domain.oee.TimeLoss;
 import org.point85.domain.plant.EquipmentEventResolver;
 import org.point85.domain.plant.Reason;
 import org.point85.domain.script.EventResolver;
-import org.point85.domain.script.EventResolverType;
+import org.point85.domain.script.EventType;
 import org.point85.domain.script.OeeContext;
 
 import javafx.application.Platform;
@@ -62,7 +60,7 @@ public class TrendChartController extends DesignerController {
 	private EventResolver eventResolver;
 
 	// data for table view
-	private ObservableList<BaseEvent> resolvedItems = FXCollections.observableArrayList(new ArrayList<>());
+	private ObservableList<OeeEvent> resolvedItems = FXCollections.observableArrayList(new ArrayList<>());
 
 	// how to interpolate the data points
 	private ObservableList<InterpolationType> interpolationTypes = FXCollections.observableArrayList(new ArrayList<>());
@@ -87,22 +85,22 @@ public class TrendChartController extends DesignerController {
 	private Button btResetTrend;
 
 	@FXML
-	private TableView<BaseEvent> tvResolvedItems;
+	private TableView<OeeEvent> tvResolvedItems;
 
 	@FXML
-	private TableColumn<BaseEvent, String> tcItem;
+	private TableColumn<OeeEvent, String> tcItem;
 
 	@FXML
-	private TableColumn<BaseEvent, String> tcInputValue;
+	private TableColumn<OeeEvent, String> tcInputValue;
 
 	@FXML
-	private TableColumn<BaseEvent, String> tcTimestamp;
+	private TableColumn<OeeEvent, String> tcTimestamp;
 
 	@FXML
-	private TableColumn<BaseEvent, String> tcOutputValue;
+	private TableColumn<OeeEvent, String> tcOutputValue;
 
 	@FXML
-	private TableColumn<BaseEvent, Text> tcLossCategory;
+	private TableColumn<OeeEvent, Text> tcLossCategory;
 
 	@FXML
 	private Spinner<Integer> spUpdatePeriod;
@@ -226,14 +224,12 @@ public class TrendChartController extends DesignerController {
 		tcLossCategory.setCellValueFactory(cellDataFeatures -> {
 			SimpleObjectProperty<Text> lossProperty = null;
 
-			if (cellDataFeatures.getValue() instanceof AvailabilityEvent) {
-				Reason reason = ((AvailabilityEvent) cellDataFeatures.getValue()).getReason();
-				if (reason != null && reason.getLossCategory() != null) {
-					Color color = reason.getLossCategory().getColor();
-					Text text = new Text(reason.getLossCategory().toString());
-					text.setFill(color);
-					lossProperty = new SimpleObjectProperty<Text>(text);
-				}
+			Reason reason = cellDataFeatures.getValue().getReason();
+			if (reason != null && reason.getLossCategory() != null) {
+				Color color = reason.getLossCategory().getColor();
+				Text text = new Text(reason.getLossCategory().toString());
+				text.setFill(color);
+				lossProperty = new SimpleObjectProperty<Text>(text);
 			}
 
 			return lossProperty;
@@ -279,15 +275,15 @@ public class TrendChartController extends DesignerController {
 		this.eventResolver = scriptResolver;
 	}
 
-	public BaseEvent invokeResolver(OeeContext context, Object sourceValue, OffsetDateTime dateTime) throws Exception {
-		BaseEvent resolvedItem = equipmentResolver.invokeResolver(eventResolver, context, sourceValue, dateTime);
+	public OeeEvent invokeResolver(OeeContext context, Object sourceValue, OffsetDateTime dateTime) throws Exception {
+		OeeEvent resolvedItem = equipmentResolver.invokeResolver(eventResolver, context, sourceValue, dateTime);
 
-		EventResolverType type = eventResolver.getType();
+		EventType type = eventResolver.getType();
 
 		switch (type) {
 		case AVAILABILITY: {
 			// plot loss category
-			TimeLoss loss = ((AvailabilityEvent) resolvedItem).getReason().getLossCategory();
+			TimeLoss loss = resolvedItem.getReason().getLossCategory();
 
 			if (loss != null) {
 				plotData(resolvedItem.getInputValue(), loss.toString());
@@ -320,7 +316,7 @@ public class TrendChartController extends DesignerController {
 				plottedValue = Double.valueOf((String) plottedValue);
 			}
 
-			plotData(plottedValue, ((ProductionEvent) resolvedItem).getAmount());
+			plotData(plottedValue, resolvedItem.getAmount());
 			break;
 		}
 		default:

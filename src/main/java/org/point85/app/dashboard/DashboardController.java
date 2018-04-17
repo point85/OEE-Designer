@@ -22,10 +22,7 @@ import org.point85.app.LoaderFactory;
 import org.point85.app.charts.CategoryClickListener;
 import org.point85.app.charts.ParetoChartController;
 import org.point85.domain.DomainUtils;
-import org.point85.domain.collector.AvailabilityEvent;
-import org.point85.domain.collector.BaseEvent;
-import org.point85.domain.collector.ProductionEvent;
-import org.point85.domain.collector.SetupEvent;
+import org.point85.domain.collector.OeeEvent;
 import org.point85.domain.messaging.CollectorResolvedEventMessage;
 import org.point85.domain.oee.EquipmentLoss;
 import org.point85.domain.oee.EquipmentLossManager;
@@ -36,7 +33,7 @@ import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Equipment;
 import org.point85.domain.plant.Material;
 import org.point85.domain.plant.Reason;
-import org.point85.domain.script.EventResolverType;
+import org.point85.domain.script.EventType;
 import org.point85.domain.uom.MeasurementSystem;
 import org.point85.domain.uom.Quantity;
 import org.point85.domain.uom.Unit;
@@ -269,50 +266,50 @@ public class DashboardController extends DialogController implements CategoryCli
 	private Unit timeUnit = Unit.MINUTE;
 
 	// list of events
-	private ObservableList<BaseEvent> resolvedEvents = FXCollections.observableArrayList(new ArrayList<>());
+	private ObservableList<OeeEvent> resolvedEvents = FXCollections.observableArrayList(new ArrayList<>());
 
-	private AvailabilityEvent lastAvailability;
-	private SetupEvent lastMaterialSetup;
-	private SetupEvent lastJobSetup;
-
-	@FXML
-	private TableView<BaseEvent> tvResolvedEvents;
+	private OeeEvent lastAvailability;
+	private OeeEvent lastMaterialSetup;
+	private OeeEvent lastJobSetup;
 
 	@FXML
-	private TableColumn<BaseEvent, Reason> tcAvailability;
+	private TableView<OeeEvent> tvResolvedEvents;
 
 	@FXML
-	private TableColumn<BaseEvent, String> tcTimestamp;
+	private TableColumn<OeeEvent, Reason> tcAvailability;
 
 	@FXML
-	private TableColumn<BaseEvent, String> tcDuration;
+	private TableColumn<OeeEvent, String> tcTimestamp;
 
 	@FXML
-	private TableColumn<BaseEvent, String> tcShift;
+	private TableColumn<OeeEvent, String> tcDuration;
 
 	@FXML
-	private TableColumn<BaseEvent, String> tcReason;
+	private TableColumn<OeeEvent, String> tcShift;
 
 	@FXML
-	private TableColumn<BaseEvent, Text> tcLossCategory;
+	private TableColumn<OeeEvent, String> tcReason;
 
 	@FXML
-	private TableColumn<BaseEvent, String> tcLostTime;
+	private TableColumn<OeeEvent, Text> tcLossCategory;
 
 	@FXML
-	private TableColumn<BaseEvent, String> tcProdType;
+	private TableColumn<OeeEvent, String> tcLostTime;
 
 	@FXML
-	private TableColumn<BaseEvent, String> tcProdAmount;
+	private TableColumn<OeeEvent, String> tcProdType;
 
 	@FXML
-	private TableColumn<BaseEvent, String> tcProdUnit;
+	private TableColumn<OeeEvent, String> tcProdAmount;
 
 	@FXML
-	private TableColumn<BaseEvent, String> tcMaterial;
+	private TableColumn<OeeEvent, String> tcProdUnit;
 
 	@FXML
-	private TableColumn<BaseEvent, String> tcJob;
+	private TableColumn<OeeEvent, String> tcMaterial;
+
+	@FXML
+	private TableColumn<OeeEvent, String> tcJob;
 
 	// loss chart
 	@FXML
@@ -421,11 +418,11 @@ public class DashboardController extends DialogController implements CategoryCli
 	}
 
 	private void onSelectHistory() {
-		List<BaseEvent> records = equipmentLoss.getEventRecords();
+		List<OeeEvent> records = equipmentLoss.getEventRecords();
 
 		resolvedEvents.clear();
 
-		for (BaseEvent event : records) {
+		for (OeeEvent event : records) {
 			// ResolvedEvent event = new ResolvedEvent(record);
 
 			/*
@@ -929,7 +926,7 @@ public class DashboardController extends DialogController implements CategoryCli
 
 		// loss category
 		tcAvailability.setCellFactory(column -> {
-			return new TableCell<BaseEvent, Reason>() {
+			return new TableCell<OeeEvent, Reason>() {
 				@Override
 				protected void updateItem(Reason reason, boolean empty) {
 					super.updateItem(reason, empty);
@@ -946,13 +943,13 @@ public class DashboardController extends DialogController implements CategoryCli
 
 		tcAvailability.setCellValueFactory(cellDataFeatures -> {
 			// set the reason
-			BaseEvent event = cellDataFeatures.getValue();
+			OeeEvent event = cellDataFeatures.getValue();
 			Reason reason = null;
 
-			if (event instanceof AvailabilityEvent) {
+			if (event.isAvailability()) {
 				// switch to current reason
-				reason = ((AvailabilityEvent) event).getReason();
-				lastAvailability = (AvailabilityEvent) event;
+				reason = event.getReason();
+				lastAvailability = event;
 			} else {
 				// use last reason
 				if (lastAvailability != null) {
@@ -970,11 +967,11 @@ public class DashboardController extends DialogController implements CategoryCli
 
 		// duration
 		tcDuration.setCellValueFactory(cellDataFeatures -> {
-			BaseEvent event = cellDataFeatures.getValue();
+			OeeEvent event = cellDataFeatures.getValue();
 			SimpleStringProperty property = null;
 
-			if (event instanceof AvailabilityEvent) {
-				Duration duration = ((AvailabilityEvent) event).getDuration();
+			if (event.isAvailability()) {
+				Duration duration = event.getDuration();
 				if (duration != null) {
 					property = new SimpleStringProperty(DomainUtils.formatDuration(duration));
 				}
@@ -984,7 +981,7 @@ public class DashboardController extends DialogController implements CategoryCli
 
 		// shift
 		tcShift.setCellValueFactory(cellDataFeatures -> {
-			BaseEvent event = cellDataFeatures.getValue();
+			OeeEvent event = cellDataFeatures.getValue();
 			SimpleStringProperty property = null;
 
 			if (event.getShift() != null) {
@@ -995,22 +992,22 @@ public class DashboardController extends DialogController implements CategoryCli
 
 		// reason
 		tcReason.setCellValueFactory(cellDataFeatures -> {
-			BaseEvent event = cellDataFeatures.getValue();
+			OeeEvent event = cellDataFeatures.getValue();
 			SimpleStringProperty property = null;
 
-			if (event instanceof AvailabilityEvent) {
-				property = new SimpleStringProperty(((AvailabilityEvent) event).getReason().getName());
+			if (event.isAvailability()) {
+				property = new SimpleStringProperty(event.getReason().getName());
 			}
 			return property;
 		});
 
 		// loss category
 		tcLossCategory.setCellValueFactory(cellDataFeatures -> {
-			BaseEvent event = cellDataFeatures.getValue();
+			OeeEvent event = cellDataFeatures.getValue();
 			SimpleObjectProperty<Text> lossProperty = null;
 
-			if (event instanceof AvailabilityEvent) {
-				Reason reason = ((AvailabilityEvent) event).getReason();
+			if (event.isAvailability()) {
+				Reason reason = event.getReason();
 				Color color = reason.getLossCategory().getColor();
 				Text text = new Text(reason.getLossCategory().toString());
 				text.setFill(color);
@@ -1021,14 +1018,14 @@ public class DashboardController extends DialogController implements CategoryCli
 
 		// lost production time
 		tcLostTime.setCellValueFactory(cellDataFeatures -> {
-			BaseEvent event = cellDataFeatures.getValue();
+			OeeEvent event = cellDataFeatures.getValue();
 			return new SimpleStringProperty(DomainUtils.formatDuration(event.getLostTime()));
 		});
 
 		// production type
 		tcProdType.setCellValueFactory(cellDataFeatures -> {
 			SimpleStringProperty property = null;
-			BaseEvent event = cellDataFeatures.getValue();
+			OeeEvent event = cellDataFeatures.getValue();
 
 			if (event.getResolverType() != null) {
 				property = new SimpleStringProperty(event.getResolverType().toString());
@@ -1039,10 +1036,10 @@ public class DashboardController extends DialogController implements CategoryCli
 		// production amount
 		tcProdAmount.setCellValueFactory(cellDataFeatures -> {
 			SimpleStringProperty property = null;
-			BaseEvent event = cellDataFeatures.getValue();
+			OeeEvent event = cellDataFeatures.getValue();
 
-			if (event instanceof ProductionEvent) {
-				double amount = ((ProductionEvent) event).getAmount();
+			if (event.isProduction()) {
+				double amount = event.getAmount();
 				property = new SimpleStringProperty(AppUtils.formatDouble(amount));
 			}
 			return property;
@@ -1051,10 +1048,10 @@ public class DashboardController extends DialogController implements CategoryCli
 		// production UOM
 		tcProdUnit.setCellValueFactory(cellDataFeatures -> {
 			SimpleStringProperty property = null;
-			BaseEvent event = cellDataFeatures.getValue();
+			OeeEvent event = cellDataFeatures.getValue();
 
-			if (event instanceof ProductionEvent) {
-				UnitOfMeasure uom = ((ProductionEvent) event).getUOM();
+			if (event.isProduction()) {
+				UnitOfMeasure uom = event.getUOM();
 				if (uom != null) {
 					property = new SimpleStringProperty(uom.getSymbol());
 				}
@@ -1065,12 +1062,12 @@ public class DashboardController extends DialogController implements CategoryCli
 		// material
 		tcMaterial.setCellValueFactory(cellDataFeatures -> {
 			SimpleStringProperty property = null;
-			BaseEvent event = cellDataFeatures.getValue();
+			OeeEvent event = cellDataFeatures.getValue();
 			Material material = null;
 
-			if (event instanceof SetupEvent) {
-				material = ((SetupEvent) event).getMaterial();
-				lastMaterialSetup = (SetupEvent) event;
+			if (event instanceof OeeEvent) {
+				material = ((OeeEvent) event).getMaterial();
+				lastMaterialSetup = (OeeEvent) event;
 			} else {
 				// use last setup
 				material = lastMaterialSetup.getMaterial();
@@ -1082,12 +1079,12 @@ public class DashboardController extends DialogController implements CategoryCli
 		// job
 		tcJob.setCellValueFactory(cellDataFeatures -> {
 			SimpleStringProperty property = null;
-			BaseEvent event = cellDataFeatures.getValue();
+			OeeEvent event = cellDataFeatures.getValue();
 			String job = null;
 
-			if (event instanceof SetupEvent) {
-				job = ((SetupEvent) event).getJob();
-				lastJobSetup = (SetupEvent) event;
+			if (event instanceof OeeEvent) {
+				job = ((OeeEvent) event).getJob();
+				lastJobSetup = (OeeEvent) event;
 			} else {
 				// use last setup
 				job = lastJobSetup.getJob();
@@ -1183,7 +1180,7 @@ public class DashboardController extends DialogController implements CategoryCli
 	}
 
 	public void update(CollectorResolvedEventMessage message) throws Exception {
-		EventResolverType resolverType = message.getResolverType();
+		EventType resolverType = message.getResolverType();
 
 		switch (resolverType) {
 		case AVAILABILITY: {
@@ -1288,7 +1285,7 @@ public class DashboardController extends DialogController implements CategoryCli
 			}
 
 			String materialId = cbMaterials.getSelectionModel().getSelectedItem();
-			List<SetupEvent> setups = null;
+			List<OeeEvent> setups = null;
 
 			if (materialId != null && !materialId.equals(ALL_MATERIALS)) {
 				// filter for a specific material
@@ -1308,7 +1305,7 @@ public class DashboardController extends DialogController implements CategoryCli
 			equipmentLoss.getEventRecords().addAll(setups);
 
 			// step through each setup period since materials could have changed
-			for (SetupEvent setup : setups) {
+			for (OeeEvent setup : setups) {
 				String id = setup.getMaterial().getDisplayString();
 
 				if (materialMap.get(id) == null) {
@@ -1337,7 +1334,7 @@ public class DashboardController extends DialogController implements CategoryCli
 			Collections.sort(cbMaterials.getItems());
 
 			// last setup
-			SetupEvent lastSetup = setups.get(setups.size() - 1);
+			OeeEvent lastSetup = setups.get(setups.size() - 1);
 
 			tiJobMaterial.setDescription(lastSetup.getMaterial().getDisplayString());
 			tiJobMaterial.setText(lastSetup.getJob());
@@ -1383,23 +1380,23 @@ public class DashboardController extends DialogController implements CategoryCli
 			lbiStartupProduction.setValue(amount, true);
 
 			// show last availability and setup records
-			List<BaseEvent> historyRecords = equipmentLoss.getEventRecords();
+			List<OeeEvent> historyRecords = equipmentLoss.getEventRecords();
 
 			// sort by start time
-			Collections.sort(historyRecords, new Comparator<BaseEvent>() {
-				public int compare(BaseEvent record1, BaseEvent record2) {
+			Collections.sort(historyRecords, new Comparator<OeeEvent>() {
+				public int compare(OeeEvent record1, OeeEvent record2) {
 
 					return record1.getStartTime().compareTo(record2.getStartTime());
 				}
 			});
 
-			AvailabilityEvent lastAvailability = null;
+			OeeEvent lastAvailability = null;
 
 			int i = historyRecords.size() - 1;
 
 			while (i > -1) {
-				if (historyRecords.get(i) instanceof AvailabilityEvent) {
-					lastAvailability = (AvailabilityEvent) historyRecords.get(i);
+				if (historyRecords.get(i).isAvailability()) {
+					lastAvailability = historyRecords.get(i);
 					break;
 				}
 				i--;
@@ -1488,7 +1485,8 @@ public class DashboardController extends DialogController implements CategoryCli
 	@FXML
 	private void onNewAvailability() {
 		try {
-			AvailabilityEvent event = new AvailabilityEvent(equipmentLoss.getEquipment());
+			OeeEvent event = new OeeEvent(equipmentLoss.getEquipment());
+			event.setResolverType(EventType.AVAILABILITY);
 			getAvailabilityController().initializeEditor(event);
 			getAvailabilityController().getDialogStage().showAndWait();
 
@@ -1502,7 +1500,7 @@ public class DashboardController extends DialogController implements CategoryCli
 	@FXML
 	private void onNewProduction() {
 		try {
-			ProductionEvent event = new ProductionEvent(equipmentLoss.getEquipment());
+			OeeEvent event = new OeeEvent(equipmentLoss.getEquipment());
 			getProductionController().initializeEditor(event);
 			getProductionController().getDialogStage().showAndWait();
 
@@ -1516,7 +1514,7 @@ public class DashboardController extends DialogController implements CategoryCli
 	@FXML
 	private void onNewSetup() {
 		try {
-			SetupEvent event = new SetupEvent(equipmentLoss.getEquipment());
+			OeeEvent event = new OeeEvent(equipmentLoss.getEquipment());
 			getSetupController().initializeEditor(event);
 			getSetupController().getDialogStage().showAndWait();
 
@@ -1530,20 +1528,20 @@ public class DashboardController extends DialogController implements CategoryCli
 	@FXML
 	private void onUpdateEvent() {
 		try {
-			BaseEvent event = tvResolvedEvents.getSelectionModel().getSelectedItem();
+			OeeEvent event = tvResolvedEvents.getSelectionModel().getSelectedItem();
 
 			if (event == null) {
 				throw new Exception("An event must be selected.");
 			}
 
-			if (event instanceof AvailabilityEvent) {
-				getAvailabilityController().initializeEditor((AvailabilityEvent) event);
+			if (event.isAvailability()) {
+				getAvailabilityController().initializeEditor(event);
 				getAvailabilityController().getDialogStage().showAndWait();
-			} else if (event instanceof ProductionEvent) {
-				getProductionController().initializeEditor((ProductionEvent) event);
+			} else if (event.isProduction()) {
+				getProductionController().initializeEditor(event);
 				getProductionController().getDialogStage().showAndWait();
-			} else if (event instanceof SetupEvent) {
-				getSetupController().initializeEditor((SetupEvent) event);
+			} else if (event.isSetup()) {
+				getSetupController().initializeEditor(event);
 				getSetupController().getDialogStage().showAndWait();
 			}
 
@@ -1557,7 +1555,7 @@ public class DashboardController extends DialogController implements CategoryCli
 	@FXML
 	private void onDeleteEvent() {
 		try {
-			BaseEvent event = tvResolvedEvents.getSelectionModel().getSelectedItem();
+			OeeEvent event = tvResolvedEvents.getSelectionModel().getSelectedItem();
 
 			if (event == null) {
 				throw new Exception("An event must be selected.");

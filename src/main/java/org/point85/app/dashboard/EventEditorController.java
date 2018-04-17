@@ -10,7 +10,7 @@ import java.util.List;
 import org.point85.app.AppUtils;
 import org.point85.app.DialogController;
 import org.point85.domain.DomainUtils;
-import org.point85.domain.collector.BaseEvent;
+import org.point85.domain.collector.OeeEvent;
 import org.point85.domain.schedule.Shift;
 import org.point85.domain.schedule.ShiftInstance;
 import org.point85.domain.schedule.WorkSchedule;
@@ -34,7 +34,7 @@ abstract class EventEditorController extends DialogController {
 
 	protected abstract void saveRecord() throws Exception;
 
-	protected void displayAttributes(BaseEvent event) {
+	protected void displayAttributes(OeeEvent event) {
 
 		// start date and time
 		if (event.getStartTime() != null) {
@@ -51,7 +51,7 @@ abstract class EventEditorController extends DialogController {
 		}
 	}
 
-	protected void setTimePeriod(BaseEvent event) throws Exception {
+	protected void setTimePeriod(OeeEvent event) throws Exception {
 		// time period
 		LocalDate startDate = dpStartDate.getValue();
 
