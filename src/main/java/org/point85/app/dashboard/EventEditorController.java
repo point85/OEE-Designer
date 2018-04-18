@@ -76,7 +76,7 @@ abstract class EventEditorController extends DialogController {
 			if (tfEndTime.getText() != null && tfEndTime.getText().trim().length() > 0) {
 				endSeconds = AppUtils.durationFromString(tfEndTime.getText().trim());
 			} else {
-				endSeconds = Duration.ofSeconds(86400);
+				endSeconds = Duration.ofSeconds(86399);
 			}
 			LocalTime endTime = LocalTime.ofSecondOfDay(endSeconds.getSeconds());
 			ldtEnd = LocalDateTime.of(endDate, endTime);

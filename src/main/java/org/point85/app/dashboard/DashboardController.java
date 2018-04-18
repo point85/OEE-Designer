@@ -423,27 +423,7 @@ public class DashboardController extends DialogController implements CategoryCli
 		resolvedEvents.clear();
 
 		for (OeeEvent event : records) {
-			// ResolvedEvent event = new ResolvedEvent(record);
-
-			/*
-			 * if (event.getReason() == null && lastAvailability != null) { // set to
-			 * previous event's reason event.setReason(lastAvailability.getReason()); }
-			 * 
-			 * if (event.getMaterial() == null && lastSetup != null) { // set to previous
-			 * event's material event.setMaterial(lastSetup.getMaterial()); }
-			 * 
-			 * if (event.getJob() == null && lastSetup != null) { // set to previous event's
-			 * job event.setJob(lastSetup.getJob()); }
-			 */
-
 			resolvedEvents.add(event);
-
-			/*
-			 * if (event instanceof AvailabilityRecord) { lastAvailability =
-			 * (AvailabilityRecord) event; }
-			 * 
-			 * if (event instanceof SetupRecord) { lastSetup = (SetupRecord) event; }
-			 */
 		}
 
 		tvResolvedEvents.refresh();
@@ -1065,9 +1045,9 @@ public class DashboardController extends DialogController implements CategoryCli
 			OeeEvent event = cellDataFeatures.getValue();
 			Material material = null;
 
-			if (event instanceof OeeEvent) {
-				material = ((OeeEvent) event).getMaterial();
-				lastMaterialSetup = (OeeEvent) event;
+			if (event.isSetup()) {
+				material = event.getMaterial();
+				lastMaterialSetup = event;
 			} else {
 				// use last setup
 				material = lastMaterialSetup.getMaterial();
@@ -1082,9 +1062,9 @@ public class DashboardController extends DialogController implements CategoryCli
 			OeeEvent event = cellDataFeatures.getValue();
 			String job = null;
 
-			if (event instanceof OeeEvent) {
-				job = ((OeeEvent) event).getJob();
-				lastJobSetup = (OeeEvent) event;
+			if (event.isSetup()) {
+				job = event.getJob();
+				lastJobSetup = event;
 			} else {
 				// use last setup
 				job = lastJobSetup.getJob();

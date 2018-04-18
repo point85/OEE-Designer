@@ -91,7 +91,9 @@ public class ProductionEditorController extends EventEditorController {
 		super.displayAttributes(productionEvent);
 
 		// amount
-		tfAmount.setText(Double.toString(productionEvent.getAmount()));
+		if (productionEvent.getAmount() != null) {
+			tfAmount.setText(Double.toString(productionEvent.getAmount()));
+		}
 
 		// UOM
 		UnitOfMeasure uom = productionEvent.getUOM();
