@@ -195,16 +195,20 @@ public class OeeApplication extends Application {
 	 */
 	public static void main(String[] args) {
 		// JVM arg: -Dlog4j=log4j.properties
-		// DESIGNER jdbc:sqlserver://localhost:1433;databaseName=OEE Point85 Point85
-		// MONITOR jdbc:sqlserver://localhost:1433;databaseName=OEE Point85 Point85
-		// COLLECTOR jdbc:sqlserver://localhost:1433;databaseName=OEE Point85 Point85
+		// for SQL Server (DESIGNER, MONITOR, COLLECTOR, TESTER
+		// jdbc:sqlserver://localhost:1433;databaseName=OEE Point85 Point85
+
+		// for Oracle 11g Express Edition
+		// jdbc:oracle:thin:@localhost:1521:xe
+		// jdbc:oracle:thin:SYSTEM/admin@localhost:1521:orcl
 
 		// configure log4j
 		PropertyConfigurator.configure(System.getProperty(LOG4J_PROPS));
 
 		// create the EMF
 		if (logger.isInfoEnabled()) {
-			logger.info("Initializing persistence service.");
+			logger.info("Initializing persistence service with args: " + args[IDX_JDBC] + ", " + args[IDX_USER] + ", "
+					+ args[IDX_PASSWORD]);
 		}
 		PersistenceService.instance().initialize(args[IDX_JDBC], args[IDX_USER], args[IDX_PASSWORD]);
 
