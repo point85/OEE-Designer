@@ -1,4 +1,12 @@
-R1, Reason R1, ,
-R1.1, Reason R1.1, SETUP, R1
-R1.2, Reason R1.2, PLANNED_DOWNTIME, R1
-R2, Reason R2,UNPLANNED_DOWNTIME,
+Setups, Setup reasons, ,
+Setup1, Setup reason #1, SETUP, Setups
+Setup2, Setup reason #2, SETUP, Setups
+Planned Downtimes, Planned downtime reasons, ,
+Planned1, Downtime reason #1, PLANNED_DOWNTIME, Planned Downtimes
+Planned2, Downtime reason #2, PLANNED_DOWNTIME, Planned Downtimes
+Unplanned Downtimes, Unplanned downtime reasons, ,
+Unplanned1, Unplanned downtime reason #1, UNPLANNED_DOWNTIME, Unplanned Downtimes
+Unplanned2, Unplanned downtime  reason #2, UNPLANNED_DOWNTIME, Unplanned Downtimes
+Short Stops, Minor stoppage reasons, ,
+Minor1, Minor stoppage reason #1, MINOR_STOPPAGES, Short Stops
+Minor2, Minor stoppage reason #2, MINOR_STOPPAGES, Short Stops

@@ -556,6 +556,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		});
 
 		// loss categories
+		cbLosses.getItems().clear();
 		cbLosses.getItems().addAll(TimeLoss.getNonWorkingLosses());
 	}
 

@@ -108,6 +108,13 @@ public class TemplateScheduleDialogController extends DesignerDialogController {
 		selectedSchedule = tvTemplates.getSelectionModel().getSelectedItem();
 		super.onOK();
 	}
+	
+	@FXML
+	@Override
+	protected void onCancel() {
+		selectedSchedule = null;
+		super.onCancel();
+	}
 
 	private void createWorkSchedules() throws Exception {
 		scheduleList.add(createNursingICU());

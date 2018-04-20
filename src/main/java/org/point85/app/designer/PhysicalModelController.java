@@ -845,6 +845,9 @@ public class PhysicalModelController extends DesignerController {
 				}
 			} else {
 				// update
+				if (getSelectedEntity().getKey() == null) {
+					throw new Exception("Entity to update does not have a primary key.");
+				}
 				setAttributes(selectedEntityItem);
 			}
 

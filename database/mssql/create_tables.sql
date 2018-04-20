@@ -58,7 +58,6 @@ CREATE TABLE [dbo].[REASON](
 	[VERSION] [int] NULL,
 	[NAME] [nvarchar](64) NULL,
 	[DESCRIPTION] [nvarchar](128) NULL,
-	[ENT_KEY] [bigint] NULL,
 	[PARENT_KEY] [bigint] NULL,
 	[LOSS] [nvarchar](32) NULL
 ) ON [PRIMARY]
@@ -268,9 +267,9 @@ GO
 
 CREATE TABLE [dbo].[ROTATION_SEGMENT](
 	[SEGMENT_KEY] [bigint] NOT NULL,
-	[ROTATION_KEY] [int] NULL,
+	[ROTATION_KEY] [bigint] NULL,
 	[SEQUENCE] [smallint] NULL,
-	[SHIFT_KEY] [smallint] NULL,
+	[SHIFT_KEY] [bigint] NULL,
 	[DAYS_ON] [smallint] NULL,
 	[DAYS_OFF] [smallint] NULL
 ) ON [PRIMARY]
