@@ -205,9 +205,11 @@ public class DataCollectorController extends DialogController {
 			collectors.add(definition.getName());
 		}
 
+		/*
 		if (collectors.size() == 1) {
 			this.cbCollectors.getSelectionModel().select(0);
 		}
+		*/
 	}
 
 	String getHost() {

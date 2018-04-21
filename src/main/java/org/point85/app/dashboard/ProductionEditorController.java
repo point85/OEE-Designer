@@ -120,7 +120,7 @@ public class ProductionEditorController extends EventEditorController {
 			type = EventType.PROD_STARTUP;
 		}
 		productionEvent.setUOM(uom);
-		productionEvent.setResolverType(type);
+		productionEvent.setEventType(type);
 
 		lbUOM.setText(uom.getSymbol());
 	}

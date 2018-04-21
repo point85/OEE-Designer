@@ -290,17 +290,24 @@ public class EquipmentResolverController extends DesignerController {
 		}
 
 		// update period
-		this.tfUpdatePeriod.setText(String.valueOf(eventResolver.getUpdatePeriod()));
+		Integer period = eventResolver.getUpdatePeriod();
+		
+		if (period == null) {
+			period = CollectorDataSource.DEFAULT_UPDATE_PERIOD_MSEC;
+		}
+		tfUpdatePeriod.setText(String.valueOf(period));
 
 		btAddResolver.setText(UPDATE);
-		
+
 		// web does not have a trend
-		DataSourceType type = selectedEventResolver.getDataSource().getDataSourceType();
-		
-		if (type.equals(DataSourceType.WEB)) {
-			btRun.setDisable(true);
-		} else {
-			btRun.setDisable(false);
+		if (selectedEventResolver.getDataSource() != null) {
+			DataSourceType type = selectedEventResolver.getDataSource().getDataSourceType();
+
+			if (type.equals(DataSourceType.WEB)) {
+				btRun.setDisable(true);
+			} else {
+				btRun.setDisable(false);
+			}
 		}
 	}
 
@@ -392,7 +399,7 @@ public class EquipmentResolverController extends DesignerController {
 			}
 		}
 	}
-	
+
 	@FXML
 	private void onSelectHostServer() {
 		// TODO enable buttons
@@ -402,7 +409,7 @@ public class EquipmentResolverController extends DesignerController {
 	@FXML
 	private void onSelectDataSource() throws Exception {
 		DataSourceType sourceType = this.cbDataSources.getSelectionModel().getSelectedItem();
-		
+
 		if (sourceType == null) {
 			return;
 		}
@@ -638,7 +645,7 @@ public class EquipmentResolverController extends DesignerController {
 		this.lbScript.setText(null);
 
 		this.tfUpdatePeriod.setText(null);
-		
+
 		this.btAddResolver.setText(ADD);
 	}
 
@@ -718,6 +725,7 @@ public class EquipmentResolverController extends DesignerController {
 
 			tvResolvers.refresh();
 
+			tvResolvers.getSelectionModel().clearSelection();
 			selectedEventResolver = null;
 
 		} catch (Exception e) {

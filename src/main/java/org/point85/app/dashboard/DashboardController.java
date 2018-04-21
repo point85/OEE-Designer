@@ -1007,8 +1007,8 @@ public class DashboardController extends DialogController implements CategoryCli
 			SimpleStringProperty property = null;
 			OeeEvent event = cellDataFeatures.getValue();
 
-			if (event.getResolverType() != null) {
-				property = new SimpleStringProperty(event.getResolverType().toString());
+			if (event.getEventType() != null) {
+				property = new SimpleStringProperty(event.getEventType().toString());
 			}
 			return property;
 		});
@@ -1466,7 +1466,7 @@ public class DashboardController extends DialogController implements CategoryCli
 	private void onNewAvailability() {
 		try {
 			OeeEvent event = new OeeEvent(equipmentLoss.getEquipment());
-			event.setResolverType(EventType.AVAILABILITY);
+			event.setEventType(EventType.AVAILABILITY);
 			getAvailabilityController().initializeEditor(event);
 			getAvailabilityController().getDialogStage().showAndWait();
 

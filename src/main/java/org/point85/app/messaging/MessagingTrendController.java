@@ -83,6 +83,7 @@ public class MessagingTrendController extends DesignerDialogController implement
 	}
 
 	public void setEventResolver(EventResolver eventResolver) throws Exception {
+		eventResolver.setWatchMode(true);
 		trendChartController.setScriptResolver(eventResolver);
 
 		lbSourceId.setText("Equipment: " + eventResolver.getEquipment().getName() + ", Source Id: "

@@ -39,7 +39,7 @@ public class SetupEditorController extends EventEditorController {
 
 	public void initializeEditor(OeeEvent event) throws Exception {
 		setupEvent = event;
-		setupEvent.setResolverType(EventType.MATL_CHANGE);
+		setupEvent.setEventType(EventType.MATL_CHANGE);
 
 		// images for buttons
 		setImages();

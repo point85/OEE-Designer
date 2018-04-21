@@ -283,11 +283,13 @@ public class TrendChartController extends DesignerController {
 		switch (type) {
 		case AVAILABILITY: {
 			// plot loss category
-			TimeLoss loss = resolvedItem.getReason().getLossCategory();
-
-			if (loss != null) {
-				plotData(resolvedItem.getInputValue(), loss.toString());
+			String lossCategory = null;
+			if (resolvedItem.getReason() != null) {
+				TimeLoss loss = resolvedItem.getReason().getLossCategory();
+				lossCategory = loss.toString();
 			}
+
+			plotData(resolvedItem.getInputValue(), lossCategory);
 			break;
 		}
 
@@ -343,10 +345,12 @@ public class TrendChartController extends DesignerController {
 
 		Platform.runLater(() -> {
 			// plot output value
-			if (plottedValue instanceof String) {
-				outputValueController.plotValue((String) plottedValue);
-			} else if (plottedValue instanceof Number) {
-				outputValueController.plotValue((Number) plottedValue);
+			if (plottedValue != null) {
+				if (plottedValue instanceof String) {
+					outputValueController.plotValue((String) plottedValue);
+				} else if (plottedValue instanceof Number) {
+					outputValueController.plotValue((Number) plottedValue);
+				}
 			}
 
 			// plot input value

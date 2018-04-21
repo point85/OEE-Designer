@@ -17,6 +17,7 @@ import org.point85.app.LoaderFactory;
 import org.point85.app.charts.DataSubscriber;
 import org.point85.app.charts.TrendChartController;
 import org.point85.domain.DomainUtils;
+import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.opc.ua.OpcUaAsynchListener;
 import org.point85.domain.opc.ua.OpcUaServerStatus;
 import org.point85.domain.opc.ua.OpcUaSource;
@@ -45,7 +46,7 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 
 	private ExtensionObject filter = null;
 
-	private double publishingInterval = 3000.0d;
+	private double publishingInterval = (double) CollectorDataSource.DEFAULT_UPDATE_PERIOD_MSEC;
 
 	@FXML
 	private Button btConnect;
@@ -75,7 +76,7 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 
 			trendChartController = loader.getController();
 			trendChartController.initialize(getApp());
-			
+
 			// data provider
 			trendChartController.setProvider(this);
 
@@ -111,8 +112,6 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 	public boolean isSubscribed() {
 		return monitoredNodeId != null ? true : false;
 	}
-	
-	
 
 	public void subscribeToDataSource() throws Exception {
 		getApp().getOpcUaClient().registerAsynchListener(this);
@@ -124,10 +123,10 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 		getApp().getOpcUaClient().unregisterAsynchListener(this);
 		monitoredNodeId = null;
 	}
-	
-	private NodeId getMonitoredNode()  {
+
+	private NodeId getMonitoredNode() {
 		NodeId nodeId = monitoredNodeId;
-		
+
 		if (nodeId == null) {
 			String nodeName = trendChartController.getEventResolver().getSourceId();
 			nodeId = NodeId.parse(nodeName);
@@ -141,6 +140,7 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 	}
 
 	public void setScriptResolver(EventResolver eventResolver) throws Exception {
+		eventResolver.setWatchMode(true);
 		trendChartController.setScriptResolver(eventResolver);
 
 		OpcUaSource dataSource = (OpcUaSource) eventResolver.getDataSource();
@@ -158,14 +158,10 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 
 	@Override
 	public void onOpcUaRead(List<DataValue> dataValues) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void onOpcUaWrite(List<StatusCode> statusCodes) {
-		// TODO Auto-generated method stub
-
 	}
 
 	// on background thread
@@ -195,7 +191,7 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 	@Override
 	protected void onConnectionSucceeded() throws Exception {
 		updateConnectionStatus(ConnectionState.CONNECTED);
-		
+
 		// subscribe for data change events
 		subscribeToDataSource();
 	}
@@ -222,7 +218,7 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 	private void onDisconnect() {
 		try {
 			unsubscribeFromDataSource();
-			
+
 			// disconnect
 			terminateConnectionService();
 			updateConnectionStatus(ConnectionState.DISCONNECTED);

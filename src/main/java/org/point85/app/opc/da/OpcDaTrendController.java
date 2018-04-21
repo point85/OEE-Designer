@@ -105,6 +105,7 @@ public class OpcDaTrendController extends OpcDaController implements OpcDaDataCh
 	}
 
 	public void setScriptResolver(EventResolver eventResolver) throws Exception {
+		eventResolver.setWatchMode(true);
 		trendChartController.setScriptResolver(eventResolver);
 
 		OpcDaSource dataSource = (OpcDaSource) eventResolver.getDataSource();
