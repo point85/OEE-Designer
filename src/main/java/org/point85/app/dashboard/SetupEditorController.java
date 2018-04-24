@@ -1,5 +1,9 @@
 package org.point85.app.dashboard;
 
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.point85.app.AppUtils;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
@@ -7,6 +11,7 @@ import org.point85.app.LoaderFactory;
 import org.point85.app.material.MaterialEditorController;
 import org.point85.domain.collector.OeeEvent;
 import org.point85.domain.persistence.PersistenceService;
+import org.point85.domain.plant.KeyedObject;
 import org.point85.domain.plant.Material;
 import org.point85.domain.script.EventType;
 
@@ -62,15 +67,31 @@ public class SetupEditorController extends EventEditorController {
 		// time period
 		setTimePeriod(setupEvent);
 
-		// reason
+		// material
 		if (setupEvent.getMaterial() == null) {
 			throw new Exception("A material must be specified.");
 		}
 		
 		// job
 		setupEvent.setJob(tfJob.getText());
+		
+		// close off last setup
+		List<KeyedObject> records = new ArrayList<>();
+		records.add(setupEvent);
 
-		PersistenceService.instance().save(setupEvent);
+		// close off last setup
+		OeeEvent lastRecord = PersistenceService.instance().fetchLastSetup(setupEvent.getEquipment());
+
+		if (lastRecord != null) {
+			lastRecord.setEndTime(setupEvent.getStartTime());
+			Duration duration = Duration.between(lastRecord.getStartTime(), lastRecord.getEndTime());
+			lastRecord.setDuration(duration);
+
+			records.add(lastRecord);
+		}
+
+		// save records
+		PersistenceService.instance().save(records);		
 	}
 
 	private void displayMaterial() {

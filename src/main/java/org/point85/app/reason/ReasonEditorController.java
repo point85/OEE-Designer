@@ -124,6 +124,7 @@ public class ReasonEditorController extends DesignerDialogController {
 		losses.addAll(TimeLoss.getAvailabilityLosses());
 		losses.addAll(TimeLoss.getPerformanceLosses());
 		losses.add(TimeLoss.UNSCHEDULED);
+		losses.add(TimeLoss.NO_LOSS);
 
 		Collections.sort(losses, new Comparator<TimeLoss>() {
 			@Override

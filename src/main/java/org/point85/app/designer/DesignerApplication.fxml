@@ -135,6 +135,7 @@
           <Button fx:id="btScheduleEditor" mnemonicParsing="false" onAction="#onShowScheduleEditor" prefHeight="16.0" prefWidth="16.0" />
             <Button fx:id="btReasonEditor" mnemonicParsing="false" onAction="#onShowReasonEditor" prefHeight="16.0" prefWidth="16.0" />
             <Button fx:id="btMaterialEditor" mnemonicParsing="false" onAction="#onShowMaterialEditor" prefHeight="16.0" prefWidth="16.0" />
+            <Separator orientation="VERTICAL" />
             <Button fx:id="btCollectorEditor" mnemonicParsing="false" onAction="#onShowCollectorEditor" prefHeight="16.0" prefWidth="16.0" />
             <Separator orientation="VERTICAL" />
             <Button fx:id="btUomConverter" mnemonicParsing="false" onAction="#onShowUomConverter" prefHeight="16.0" prefWidth="16.0" />

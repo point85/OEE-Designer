@@ -776,6 +776,13 @@ public class PhysicalModelController extends DesignerController {
 	@FXML
 	private void onRefreshEntity() {
 		try {
+			PlantEntity selectedEntity = getSelectedEntity();
+			PlantEntity refreshed = PersistenceService.instance().fetchPlantEntityByName(selectedEntity.getName());
+			selectedEntityItem.getValue().setPlantEntity(refreshed);
+			selectedEntity = refreshed;
+			displayAttributes(selectedEntity);
+			tvEntities.refresh();
+			
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}
@@ -1112,8 +1119,8 @@ public class PhysicalModelController extends DesignerController {
 			return entity;
 		}
 
-		private void setPlantEntity(PlantEntity reason) {
-			this.entity = reason;
+		private void setPlantEntity(PlantEntity entity) {
+			this.entity = entity;
 		}
 
 		@Override

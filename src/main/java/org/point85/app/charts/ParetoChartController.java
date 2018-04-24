@@ -17,6 +17,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 
 public class ParetoChartController {
+	// top N items to chart
+	private static final int TOP_N = 10;
+
 	// bar chart data series, X = reason and Y = % in sample
 	private XYChart.Series<String, Number> barChartSeries;
 
@@ -35,14 +38,15 @@ public class ParetoChartController {
 	// listener for mouse clicks on an X-axis category
 	private CategoryClickListener clickListener;
 
-	public void createParetoChart(String title, StackPane spPareto, List<ParetoItem> items, Number totalCount, String categoryLabel) {
+	public void createParetoChart(String title, StackPane spPareto, List<ParetoItem> items, Number totalCount,
+			String categoryLabel) {
 		barChartSeries = new XYChart.Series<>();
 		lineChartSeries = new XYChart.Series<>();
-		
+
 		this.chartTitle = title;
 		this.totalCount = totalCount;
 
-		// sort the reasons
+		// sort the items
 		this.paretoItems = items;
 		Collections.sort(paretoItems, Collections.reverseOrder());
 
@@ -103,7 +107,13 @@ public class ParetoChartController {
 		// add the points
 		double total = totalCount.doubleValue();
 
+		int count = 0;
 		for (ParetoItem paretoItem : paretoItems) {
+			if (count > TOP_N) {
+				break;
+			}
+			count++;
+
 			Float percentage = new Float(paretoItem.getValue().floatValue() / total * 100.0f);
 			XYChart.Data<String, Number> point = new XYChart.Data<>(paretoItem.getCategory(), percentage);
 			barChartSeries.getData().add(point);
@@ -175,10 +185,10 @@ public class ParetoChartController {
 
 	private void layerCharts(StackPane spPareto, BarChart<String, Number> barChart,
 			LineChart<String, Number> lineChart) {
-		
+
 		hideChart(lineChart);
 		spPareto.getChildren().addAll(barChart, lineChart);
-		
+
 	}
 
 	public Number getTotalCount() {

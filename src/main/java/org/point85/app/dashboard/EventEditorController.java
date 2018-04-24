@@ -52,7 +52,7 @@ abstract class EventEditorController extends DialogController {
 	}
 
 	protected void setTimePeriod(OeeEvent event) throws Exception {
-		// time period
+		// time period, start date and time
 		LocalDate startDate = dpStartDate.getValue();
 
 		if (startDate == null) {
@@ -67,7 +67,9 @@ abstract class EventEditorController extends DialogController {
 		}
 		LocalTime startTime = LocalTime.ofSecondOfDay(startSeconds.getSeconds());
 		LocalDateTime ldtStart = LocalDateTime.of(startDate, startTime);
+		OffsetDateTime odtStart = DomainUtils.fromLocalDateTime(ldtStart);
 
+		// end
 		LocalDateTime ldtEnd = null;
 
 		if (dpEndDate.getValue() != null) {
@@ -95,7 +97,6 @@ abstract class EventEditorController extends DialogController {
 			throw new Exception("The ending time " + ldtEnd + " cannot be later than the current time ");
 		}
 
-		OffsetDateTime odtStart = DomainUtils.fromLocalDateTime(ldtStart);
 		OffsetDateTime odtEnd = DomainUtils.fromLocalDateTime(ldtEnd);
 
 		event.setStartTime(odtStart);

@@ -162,7 +162,11 @@ public class EventResolverController extends DesignerDialogController {
 
 	@FXML
 	private void onClearScript() {
-		taScript.clear();
+		this.taScript.clear();
+		this.tfReasonCode.clear();
+		this.tfMatlId.clear();
+		this.tfValue.clear();
+		this.tfLastValue.clear();
 	}
 
 	@FXML

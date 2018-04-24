@@ -1,0 +1,8 @@
+var reason = 'Planned1';
+
+if (value < 10000) {
+     reason = 'Planned2';
+} else if (value < 20000) {
+    reason = 'Unplanned1'
+}
+return reason;
