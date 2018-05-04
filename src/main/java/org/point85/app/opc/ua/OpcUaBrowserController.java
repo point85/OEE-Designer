@@ -55,6 +55,9 @@ public class OpcUaBrowserController extends OpcUaController {
 
 	// list of OPC DA tags being monitored
 	private List<String> monitoredItemIds = new ArrayList<>();
+	
+	@FXML
+	private TextField tfConnectionName;
 
 	@FXML
 	private TextField tfHost;
@@ -163,7 +166,7 @@ public class OpcUaBrowserController extends OpcUaController {
 				.addListener((observable, oldValue, newValue) -> populateAvailableNodes(newValue));
 	}
 
-	public static void arrayToStringRecursive(Object someArray, StringBuffer sb) {
+	public static void arrayToStringRecursive(Object someArray, StringBuilder sb) {
 		if (someArray == null) {
 			sb.append("null");
 			return;
@@ -194,7 +197,7 @@ public class OpcUaBrowserController extends OpcUaController {
 
 	private String arrayToString(Object[] values) {
 		String valueText = null;
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 
 		sb.append('[');
 
@@ -276,7 +279,7 @@ public class OpcUaBrowserController extends OpcUaController {
 						typeText = "Matrix of " + javaType.getSimpleName() + " with dimensions " + arrayToString(dims);
 					}
 				}
-				StringBuffer sb = new StringBuffer();
+				StringBuilder sb = new StringBuilder();
 				arrayToStringRecursive(value, sb);
 				valueText = sb.toString();
 			}
@@ -489,6 +492,7 @@ public class OpcUaBrowserController extends OpcUaController {
 			return;
 		}
 
+		this.tfConnectionName.setText(source.getName());
 		this.tfHost.setText(source.getHost());
 		this.tfUserName.setText(source.getUserName());
 		this.tfPort.setText(String.valueOf(source.getPort()));
@@ -516,6 +520,7 @@ public class OpcUaBrowserController extends OpcUaController {
 	@FXML
 	private void onNewDataSource() {
 		try {
+			this.tfConnectionName.clear();
 			this.tfHost.clear();
 			this.tfUserName.clear();
 			this.pfPassword.clear();
@@ -523,9 +528,6 @@ public class OpcUaBrowserController extends OpcUaController {
 			this.tfPort.clear();
 			this.tfPath.clear();
 			this.cbDataSources.getSelectionModel().clearSelection();
-
-			// update list
-			// populateDataSources();
 
 			this.setSource(null);
 		} catch (Exception e) {
@@ -539,16 +541,13 @@ public class OpcUaBrowserController extends OpcUaController {
 		try {
 			OpcUaSource dataSource = getSource();
 
+			dataSource.setName(getConnectionName());
 			dataSource.setHost(getHost());
 			dataSource.setUserName(getUserName());
 			dataSource.setPassword(getPassword());
 			dataSource.setPort(getPort());
 			dataSource.setDescription(getDescription());
-			dataSource.setPath(getPath());
-
-			// name is URL
-			String name = dataSource.getEndpointUrl();
-			dataSource.setName(name);
+			dataSource.setPath(getPath());			
 
 			// save data source
 			PersistenceService.instance().save(dataSource);
@@ -567,13 +566,17 @@ public class OpcUaBrowserController extends OpcUaController {
 
 		servers.clear();
 		for (CollectorDataSource source : sources) {
-			servers.add(((OpcUaSource) source).getEndpointUrl());
+			servers.add(((OpcUaSource) source).getName());
 		}
 
 		if (servers.size() == 1) {
 			this.cbDataSources.getSelectionModel().select(0);
 			onSelectDataSource();
 		}
+	}
+	
+	String getConnectionName() {
+		return this.tfConnectionName.getText();
 	}
 
 	String getHost() {

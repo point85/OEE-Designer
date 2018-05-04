@@ -5,6 +5,7 @@ import java.util.TimerTask;
 
 import org.point85.app.AppUtils;
 
+import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
@@ -119,9 +120,9 @@ public abstract class DataSourceConnectionController extends DesignerDialogContr
 		if (service == null) {
 			return;
 		}
-		if (!service.cancel()) {
-			throw new Exception("Unable to cancel connection.");
-		}
+		Platform.runLater(() -> {
+			service.cancel();  
+		});
 	}
 
 	protected abstract void connectToDataSource() throws Exception;

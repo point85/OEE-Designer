@@ -197,10 +197,12 @@ public class OeeApplication extends Application {
 		// JVM arg: -Dlog4j=log4j.properties
 		// for SQL Server (DESIGNER, MONITOR, COLLECTOR, TESTER
 		// jdbc:sqlserver://localhost:1433;databaseName=OEE Point85 Point85
+		// jdbc:sqlserver://point85.database.windows.net:1433;databaseName=Point85 krandall@point85 QWxpQ9vL%5tR
+		// jdbc:sqlserver://point85.database.windows.net:1433;database=Point85;user=krandall@point85;password=QWxpQ9vL%5tR;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
 
 		// for Oracle 11g Express Edition
-		// jdbc:oracle:thin:@localhost:1521:xe
 		// jdbc:oracle:thin:SYSTEM/admin@localhost:1521:orcl
+		// jdbc:oracle:thin:@localhost:1521:xe SYSTEM admin
 
 		// configure log4j
 		PropertyConfigurator.configure(System.getProperty(LOG4J_PROPS));

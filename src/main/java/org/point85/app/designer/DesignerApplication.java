@@ -344,7 +344,7 @@ public class DesignerApplication {
 	}
 
 	OpcUaTreeNode showOpcUaDataSourceBrowser() throws Exception {
-		if (opcUaBrowserController == null) {
+		//if (opcUaBrowserController == null) {
 			// Load the fxml file and create a new stage for the pop-up dialog.
 			FXMLLoader loader = LoaderFactory.opdUaBrowserLoader();
 			AnchorPane page = (AnchorPane) loader.getRoot();
@@ -361,7 +361,7 @@ public class DesignerApplication {
 			opcUaBrowserController = loader.getController();
 			opcUaBrowserController.setDialogStage(dialogStage);
 			opcUaBrowserController.initialize(this);
-		}
+		//}
 
 		// Show the dialog and wait until the user closes it
 		if (!opcUaBrowserController.getDialogStage().isShowing()) {

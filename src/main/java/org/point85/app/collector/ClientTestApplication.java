@@ -334,7 +334,7 @@ public class ClientTestApplication implements MessageListener {
 	}
 
 	private String addQueryParameter(String url, String name, String value) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 
 		if (!url.contains("?")) {
 			sb.append('?');
@@ -364,7 +364,7 @@ public class ClientTestApplication implements MessageListener {
 			BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
 			String inputLine;
-			StringBuffer sb = new StringBuffer();
+			StringBuilder sb = new StringBuilder();
 
 			while ((inputLine = in.readLine()) != null) {
 				sb.append(inputLine);
@@ -406,7 +406,7 @@ public class ClientTestApplication implements MessageListener {
 			BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
 			String inputLine;
-			StringBuffer sb = new StringBuffer();
+			StringBuilder sb = new StringBuilder();
 
 			while ((inputLine = in.readLine()) != null) {
 				sb.append(inputLine);
@@ -556,7 +556,7 @@ public class ClientTestApplication implements MessageListener {
 			BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
 			String inputLine;
-			StringBuffer sb = new StringBuffer();
+			StringBuilder sb = new StringBuilder();
 
 			while ((inputLine = in.readLine()) != null) {
 				sb.append(inputLine);
@@ -608,7 +608,7 @@ public class ClientTestApplication implements MessageListener {
 			BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
 			String inputLine;
-			StringBuffer sb = new StringBuffer();
+			StringBuilder sb = new StringBuilder();
 
 			while ((inputLine = in.readLine()) != null) {
 				sb.append(inputLine);
@@ -665,7 +665,7 @@ public class ClientTestApplication implements MessageListener {
 			BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
 			String inputLine;
-			StringBuffer sb = new StringBuffer();
+			StringBuilder sb = new StringBuilder();
 
 			while ((inputLine = in.readLine()) != null) {
 				sb.append(inputLine);

@@ -777,6 +777,10 @@ public class PhysicalModelController extends DesignerController {
 	private void onRefreshEntity() {
 		try {
 			PlantEntity selectedEntity = getSelectedEntity();
+			if (selectedEntity == null) {
+				return;
+			}
+			
 			PlantEntity refreshed = PersistenceService.instance().fetchPlantEntityByName(selectedEntity.getName());
 			selectedEntityItem.getValue().setPlantEntity(refreshed);
 			selectedEntity = refreshed;

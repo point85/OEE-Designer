@@ -58,7 +58,7 @@ public abstract class AppUtils {
 	public static String formatDate(Date date, TimeZone tz) {
 		DateFormat df = new SimpleDateFormat(DATE_FORMAT);
 		String localTimeString = df.format(date);
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		sb.append(localTimeString);
 
 		if (tz != null) {
@@ -125,7 +125,7 @@ public abstract class AppUtils {
 
 	// create a String from the UOM symbol and name
 	public static String toDisplayString(String symbol, String name) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		sb.append(symbol).append(" (").append(name).append(')');
 		return sb.toString();
 	}
