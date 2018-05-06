@@ -119,7 +119,10 @@ CREATE TABLE [dbo].[DATA_SOURCE](
 	[USER_NAME] [nvarchar](64) NULL,
 	[PASSWORD] [nvarchar](32) NULL,
 	[PORT] [int] NULL,
-	[PARAM1] [nvarchar](128) NULL
+	[END_PATH] [nvarchar](64) NULL,
+	[SEC_POLICY] [nvarchar](64) NULL,
+	[MSG_MODE] [nvarchar](64) NULL,
+	[CERT_PATH] [nvarchar](64) NULL
 ) ON [PRIMARY]
 GO
 

@@ -1,5 +1,6 @@
 package org.point85.app.opc.ua;
 
+import java.io.File;
 import java.lang.reflect.Array;
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
@@ -9,11 +10,13 @@ import java.util.Optional;
 
 import org.eclipse.milo.opcua.stack.core.BuiltinDataType;
 import org.eclipse.milo.opcua.stack.core.Identifiers;
+import org.eclipse.milo.opcua.stack.core.security.SecurityPolicy;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DateTime;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.Variant;
 import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
+import org.eclipse.milo.opcua.stack.core.types.enumerated.MessageSecurityMode;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.NodeClass;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.ServerState;
 import org.eclipse.milo.opcua.stack.core.types.structured.BuildInfo;
@@ -38,12 +41,14 @@ import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.FileChooser;
 
 public class OpcUaBrowserController extends OpcUaController {
 
@@ -55,7 +60,7 @@ public class OpcUaBrowserController extends OpcUaController {
 
 	// list of OPC DA tags being monitored
 	private List<String> monitoredItemIds = new ArrayList<>();
-	
+
 	@FXML
 	private TextField tfConnectionName;
 
@@ -134,6 +139,27 @@ public class OpcUaBrowserController extends OpcUaController {
 	@FXML
 	private Label lbNodeTimestamp;
 
+	@FXML
+	private RadioButton rbAnonymous;
+
+	@FXML
+	private RadioButton rbUserPassword;
+
+	@FXML
+	private RadioButton rbCertificateKey;
+
+	@FXML
+	private ComboBox<SecurityPolicy> cbSecurityPolicies;
+
+	@FXML
+	private ComboBox<MessageSecurityMode> cbMessageModes;
+	
+	@FXML
+	private TextField tfCertificatePath;
+	
+	@FXML
+	private Button btCertificateFile;
+
 	public void initialize(DesignerApplication app) throws Exception {
 		// main app
 		setApp(app);
@@ -146,6 +172,10 @@ public class OpcUaBrowserController extends OpcUaController {
 
 		// retrieve the defined data sources
 		populateDataSources();
+
+		initializeSecuritySettings();
+
+		initializeAuthenticationSettings();
 
 		initializeTreeView();
 	}
@@ -373,7 +403,7 @@ public class OpcUaBrowserController extends OpcUaController {
 			break;
 
 		case DISCONNECTED:
-			setSource(null);
+			//setSource(null);
 
 			piConnection.setVisible(false);
 			lbState.setText(ConnectionState.DISCONNECTED.toString());
@@ -494,11 +524,19 @@ public class OpcUaBrowserController extends OpcUaController {
 
 		this.tfConnectionName.setText(source.getName());
 		this.tfHost.setText(source.getHost());
-		this.tfUserName.setText(source.getUserName());
 		this.tfPort.setText(String.valueOf(source.getPort()));
-		this.pfPassword.setText(source.getPassword());
 		this.tfDescription.setText(source.getDescription());
-		this.tfPath.setText(source.getPath());
+		this.tfPath.setText(source.getEndpointPath());
+		
+		// security
+		this.cbSecurityPolicies.getSelectionModel().select(source.getSecurityPolicy());
+		this.cbMessageModes.getSelectionModel().select(source.getMessageSecurityMode());
+		
+		// authentication
+		this.tfUserName.setText(source.getUserName());
+		this.pfPassword.setText(source.getPassword());
+		this.tfCertificatePath.setText(source.getCertificatePath());
+		
 	}
 
 	@FXML
@@ -543,11 +581,18 @@ public class OpcUaBrowserController extends OpcUaController {
 
 			dataSource.setName(getConnectionName());
 			dataSource.setHost(getHost());
-			dataSource.setUserName(getUserName());
-			dataSource.setPassword(getPassword());
 			dataSource.setPort(getPort());
 			dataSource.setDescription(getDescription());
-			dataSource.setPath(getPath());			
+			dataSource.setPath(getPath());
+			
+			// security
+			dataSource.setSecurityPolicy(getSecurityPolicy());
+			dataSource.setMessageSecurityMode(getMessageMode());
+			
+			// authentication
+			dataSource.setUserName(getUserName());
+			dataSource.setPassword(getPassword());
+			dataSource.setCertificatePath(getCertificatePath());
 
 			// save data source
 			PersistenceService.instance().save(dataSource);
@@ -558,6 +603,28 @@ public class OpcUaBrowserController extends OpcUaController {
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}
+	}
+
+	private void initializeSecuritySettings() {
+		ObservableList<SecurityPolicy> policies = cbSecurityPolicies.getItems();
+		policies.clear();
+
+		for (SecurityPolicy policy : SecurityPolicy.values()) {
+			policies.add(policy);
+		}
+
+		ObservableList<MessageSecurityMode> modes = cbMessageModes.getItems();
+		modes.clear();
+
+		for (MessageSecurityMode mode : MessageSecurityMode.values()) {
+			if (!mode.equals(MessageSecurityMode.Invalid)) {
+				modes.add(mode);
+			}
+		}
+	}
+
+	private void initializeAuthenticationSettings() {
+		// TODO
 	}
 
 	private void populateDataSources() {
@@ -574,7 +641,7 @@ public class OpcUaBrowserController extends OpcUaController {
 			onSelectDataSource();
 		}
 	}
-	
+
 	String getConnectionName() {
 		return this.tfConnectionName.getText();
 	}
@@ -589,6 +656,10 @@ public class OpcUaBrowserController extends OpcUaController {
 
 	String getPassword() {
 		return this.pfPassword.getText();
+	}
+	
+	String getCertificatePath() {
+		return this.tfCertificatePath.getText();
 	}
 
 	String getPath() {
@@ -605,6 +676,22 @@ public class OpcUaBrowserController extends OpcUaController {
 
 	String getDescription() {
 		return this.tfDescription.getText();
+	}
+
+	SecurityPolicy getSecurityPolicy() {
+		return this.cbSecurityPolicies.getSelectionModel().getSelectedItem();
+	}
+
+	void setSecurityPolicy(SecurityPolicy policy) {
+		this.cbSecurityPolicies.getSelectionModel().select(policy);
+	}
+	
+	MessageSecurityMode getMessageMode() {
+		return this.cbMessageModes.getSelectionModel().getSelectedItem();
+	}
+	
+	void setMessageMode(MessageSecurityMode mode) {
+		this.cbMessageModes.getSelectionModel().select(mode);
 	}
 
 	private void populateAvailableNodes(TreeItem<OpcUaTreeNode> selectedItem) {
@@ -652,6 +739,19 @@ public class OpcUaBrowserController extends OpcUaController {
 
 	public OpcUaTreeNode getSelectedNodeId() {
 		return selectedTreeNode;
+	}
+	
+	@FXML
+	private void onBrowseToCerficateFile() {
+		// show file chooser
+		FileChooser fileChooser = new FileChooser();
+		File selectedFile = fileChooser.showOpenDialog(null);
+
+		if (selectedFile == null) {
+			return;
+		}
+		
+		tfCertificatePath.setText(selectedFile.getPath());
 	}
 
 }
