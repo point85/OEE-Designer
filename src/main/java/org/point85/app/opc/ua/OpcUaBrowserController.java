@@ -1,6 +1,5 @@
 package org.point85.app.opc.ua;
 
-import java.io.File;
 import java.lang.reflect.Array;
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
@@ -48,7 +47,6 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.stage.FileChooser;
 
 public class OpcUaBrowserController extends OpcUaController {
 
@@ -146,19 +144,19 @@ public class OpcUaBrowserController extends OpcUaController {
 	private RadioButton rbUserPassword;
 
 	@FXML
-	private RadioButton rbCertificateKey;
+	private RadioButton rbKeystore;
 
 	@FXML
 	private ComboBox<SecurityPolicy> cbSecurityPolicies;
 
 	@FXML
 	private ComboBox<MessageSecurityMode> cbMessageModes;
-	
+
 	@FXML
-	private TextField tfCertificatePath;
-	
+	private TextField tfKeystoreFileName;
+
 	@FXML
-	private Button btCertificateFile;
+	private TextField tfKeystorePassword;
 
 	public void initialize(DesignerApplication app) throws Exception {
 		// main app
@@ -403,7 +401,7 @@ public class OpcUaBrowserController extends OpcUaController {
 			break;
 
 		case DISCONNECTED:
-			//setSource(null);
+			// setSource(null);
 
 			piConnection.setVisible(false);
 			lbState.setText(ConnectionState.DISCONNECTED.toString());
@@ -527,16 +525,16 @@ public class OpcUaBrowserController extends OpcUaController {
 		this.tfPort.setText(String.valueOf(source.getPort()));
 		this.tfDescription.setText(source.getDescription());
 		this.tfPath.setText(source.getEndpointPath());
-		
+
 		// security
 		this.cbSecurityPolicies.getSelectionModel().select(source.getSecurityPolicy());
 		this.cbMessageModes.getSelectionModel().select(source.getMessageSecurityMode());
-		
+
 		// authentication
 		this.tfUserName.setText(source.getUserName());
 		this.pfPassword.setText(source.getPassword());
-		this.tfCertificatePath.setText(source.getCertificatePath());
-		
+		this.tfKeystoreFileName.setText(source.getKeystore());
+
 	}
 
 	@FXML
@@ -584,18 +582,31 @@ public class OpcUaBrowserController extends OpcUaController {
 			dataSource.setPort(getPort());
 			dataSource.setDescription(getDescription());
 			dataSource.setPath(getPath());
-			
+
 			// security
 			dataSource.setSecurityPolicy(getSecurityPolicy());
 			dataSource.setMessageSecurityMode(getMessageMode());
-			
+
+			if (rbAnonymous.isSelected()) {
+				dataSource.setUserName(null);
+				dataSource.setPassword(null);
+				dataSource.setKeystore(null);
+			}
+
 			// authentication
-			dataSource.setUserName(getUserName());
-			dataSource.setPassword(getPassword());
-			dataSource.setCertificatePath(getCertificatePath());
+			if (rbUserPassword.isSelected()) {
+				dataSource.setUserName(getUserName());
+				dataSource.setPassword(getPassword());
+			}
+
+			if (rbKeystore.isSelected()) {
+				dataSource.setKeystore(getKeystoreFileName());
+				dataSource.setPassword(getKeystorePassword());
+			}
 
 			// save data source
-			PersistenceService.instance().save(dataSource);
+			OpcUaSource savedSource = (OpcUaSource) PersistenceService.instance().save(dataSource);
+			setSource(savedSource);
 
 			// update list
 			populateDataSources();
@@ -657,9 +668,13 @@ public class OpcUaBrowserController extends OpcUaController {
 	String getPassword() {
 		return this.pfPassword.getText();
 	}
-	
-	String getCertificatePath() {
-		return this.tfCertificatePath.getText();
+
+	String getKeystoreFileName() {
+		return this.tfKeystoreFileName.getText();
+	}
+
+	String getKeystorePassword() {
+		return this.tfKeystorePassword.getText();
 	}
 
 	String getPath() {
@@ -685,11 +700,11 @@ public class OpcUaBrowserController extends OpcUaController {
 	void setSecurityPolicy(SecurityPolicy policy) {
 		this.cbSecurityPolicies.getSelectionModel().select(policy);
 	}
-	
+
 	MessageSecurityMode getMessageMode() {
 		return this.cbMessageModes.getSelectionModel().getSelectedItem();
 	}
-	
+
 	void setMessageMode(MessageSecurityMode mode) {
 		this.cbMessageModes.getSelectionModel().select(mode);
 	}
@@ -739,19 +754,6 @@ public class OpcUaBrowserController extends OpcUaController {
 
 	public OpcUaTreeNode getSelectedNodeId() {
 		return selectedTreeNode;
-	}
-	
-	@FXML
-	private void onBrowseToCerficateFile() {
-		// show file chooser
-		FileChooser fileChooser = new FileChooser();
-		File selectedFile = fileChooser.showOpenDialog(null);
-
-		if (selectedFile == null) {
-			return;
-		}
-		
-		tfCertificatePath.setText(selectedFile.getPath());
 	}
 
 }

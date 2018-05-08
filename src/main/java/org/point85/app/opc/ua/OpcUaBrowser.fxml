@@ -209,7 +209,6 @@
                                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" prefWidth="100.0" />
                                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0" />
                                           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" prefWidth="100.0" />
                                       </columnConstraints>
                                       <rowConstraints>
                                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -239,11 +238,11 @@
                                           </Label>
                                           <PasswordField fx:id="pfPassword" promptText="Password" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                                           <Label text="Anonymous" GridPane.columnIndex="1" GridPane.halignment="RIGHT" />
-                                          <RadioButton fx:id="rbCertificateKey" mnemonicParsing="false" toggleGroup="$Authentication" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
-                                          <Label text="Certificate" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
-                                          <Label text="Private Key" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
-                                          <Button fx:id="btCertificateFile" mnemonicParsing="false" onAction="#onBrowseToCerficateFile" text="..." GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
-                                          <TextField fx:id="tfCertificatePath" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                                          <RadioButton fx:id="rbKeystore" mnemonicParsing="false" toggleGroup="$Authentication" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+                                          <Label text="Keystore" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
+                                          <Label text="Password" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
+                                          <TextField fx:id="tfCertificatePath" promptText="Keystore file name" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                                          <TextField promptText="Keystore password" GridPane.columnIndex="2" GridPane.rowIndex="4" />
                                        </children>
                                     </GridPane>
                                  </children>
