@@ -35,12 +35,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.ProgressIndicator;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
@@ -138,13 +138,7 @@ public class OpcUaBrowserController extends OpcUaController {
 	private Label lbNodeTimestamp;
 
 	@FXML
-	private RadioButton rbAnonymous;
-
-	@FXML
-	private RadioButton rbUserPassword;
-
-	@FXML
-	private RadioButton rbKeystore;
+	private CheckBox ckAnonymous;
 
 	@FXML
 	private ComboBox<SecurityPolicy> cbSecurityPolicies;
@@ -156,7 +150,7 @@ public class OpcUaBrowserController extends OpcUaController {
 	private TextField tfKeystoreFileName;
 
 	@FXML
-	private TextField tfKeystorePassword;
+	private PasswordField pfKeystorePassword;
 
 	public void initialize(DesignerApplication app) throws Exception {
 		// main app
@@ -532,9 +526,11 @@ public class OpcUaBrowserController extends OpcUaController {
 
 		// authentication
 		this.tfUserName.setText(source.getUserName());
-		this.pfPassword.setText(source.getPassword());
+		this.pfPassword.setText(source.getUserPassword());
+		// this.rbUserPassword.setSelected(true);
 		this.tfKeystoreFileName.setText(source.getKeystore());
-
+		this.pfKeystorePassword.setText(source.getKeystorePassword());
+		// this.rbKeystore.setSelected(true);
 	}
 
 	@FXML
@@ -565,6 +561,12 @@ public class OpcUaBrowserController extends OpcUaController {
 			this.tfPath.clear();
 			this.cbDataSources.getSelectionModel().clearSelection();
 
+			this.cbSecurityPolicies.getSelectionModel().clearSelection();
+			this.cbMessageModes.getSelectionModel().clearSelection();
+
+			this.tfKeystoreFileName.clear();
+			this.pfKeystorePassword.clear();
+
 			this.setSource(null);
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
@@ -587,21 +589,19 @@ public class OpcUaBrowserController extends OpcUaController {
 			dataSource.setSecurityPolicy(getSecurityPolicy());
 			dataSource.setMessageSecurityMode(getMessageMode());
 
-			if (rbAnonymous.isSelected()) {
+			if (ckAnonymous.isSelected()) {
 				dataSource.setUserName(null);
 				dataSource.setPassword(null);
 				dataSource.setKeystore(null);
-			}
+				dataSource.setKeystorePassword(null);
+			} else {
 
-			// authentication
-			if (rbUserPassword.isSelected()) {
+				// authentication
+
 				dataSource.setUserName(getUserName());
 				dataSource.setPassword(getPassword());
-			}
-
-			if (rbKeystore.isSelected()) {
 				dataSource.setKeystore(getKeystoreFileName());
-				dataSource.setPassword(getKeystorePassword());
+				dataSource.setKeystorePassword(getKeystorePassword());
 			}
 
 			// save data source
@@ -635,7 +635,7 @@ public class OpcUaBrowserController extends OpcUaController {
 	}
 
 	private void initializeAuthenticationSettings() {
-		// TODO
+		this.ckAnonymous.setSelected(true);
 	}
 
 	private void populateDataSources() {
@@ -674,7 +674,7 @@ public class OpcUaBrowserController extends OpcUaController {
 	}
 
 	String getKeystorePassword() {
-		return this.tfKeystorePassword.getText();
+		return this.pfKeystorePassword.getText();
 	}
 
 	String getPath() {
@@ -749,6 +749,16 @@ public class OpcUaBrowserController extends OpcUaController {
 			}
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
+		}
+	}
+
+	@FXML
+	private void onSelectAnonymous() {
+		if (this.ckAnonymous.isSelected()) {
+			this.tfKeystoreFileName.clear();
+			this.pfKeystorePassword.clear();
+			this.tfUserName.clear();
+			this.pfPassword.clear();
 		}
 	}
 

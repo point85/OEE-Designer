@@ -412,7 +412,7 @@ public class OpcDaBrowserController extends OpcDaController {
 		this.tfHost.setText(source.getHost());
 		this.tfProgId.setText(source.getProgId());
 		this.tfUserName.setText(source.getUserName());
-		this.pfPassword.setText(source.getPassword());
+		this.pfPassword.setText(source.getUserPassword());
 		this.tfDescription.setText(source.getDescription());
 	}
 

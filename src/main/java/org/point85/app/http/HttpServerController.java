@@ -114,7 +114,7 @@ public class HttpServerController extends DialogController {
 		this.tfHost.setText(dataSource.getHost());
 		this.tfUserName.setText(dataSource.getUserName());
 		this.tfPort.setText(String.valueOf(dataSource.getPort()));
-		this.pfPassword.setText(dataSource.getPassword());
+		this.pfPassword.setText(dataSource.getUserPassword());
 		this.tfDescription.setText(dataSource.getDescription());
 	}
 

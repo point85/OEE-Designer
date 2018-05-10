@@ -114,7 +114,7 @@ public class MqBrokerController extends DesignerDialogController {
 		this.tfHost.setText(dataSource.getHost());
 		this.tfUserName.setText(dataSource.getUserName());
 		this.tfPort.setText(String.valueOf(dataSource.getPort()));
-		this.pfPassword.setText(dataSource.getPassword());
+		this.pfPassword.setText(dataSource.getUserPassword());
 		this.tfDescription.setText(dataSource.getDescription());
 	}
 
