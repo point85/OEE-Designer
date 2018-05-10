@@ -122,7 +122,8 @@ CREATE TABLE [dbo].[DATA_SOURCE](
 	[END_PATH] [nvarchar](64) NULL,
 	[SEC_POLICY] [nvarchar](64) NULL,
 	[MSG_MODE] [nvarchar](64) NULL,
-	[KEYSTORE] [nvarchar](64) NULL
+	[KEYSTORE] [nvarchar](64) NULL,
+	[KEYSTORE_PWD] [nvarchar](64) NULL
 ) ON [PRIMARY]
 GO
 

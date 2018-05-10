@@ -31,6 +31,7 @@ import org.point85.domain.opc.ua.OpcUaServerStatus;
 import org.point85.domain.opc.ua.OpcUaSource;
 import org.point85.domain.persistence.PersistenceService;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -395,19 +396,20 @@ public class OpcUaBrowserController extends OpcUaController {
 			break;
 
 		case DISCONNECTED:
-			// setSource(null);
+			// on callback
+			Platform.runLater(() -> {
+				piConnection.setVisible(false);
+				lbState.setText(ConnectionState.DISCONNECTED.toString());
+				lbState.setTextFill(DISCONNECTED_COLOR);
 
-			piConnection.setVisible(false);
-			lbState.setText(ConnectionState.DISCONNECTED.toString());
-			lbState.setTextFill(DISCONNECTED_COLOR);
+				lbNodeId.setText(null);
+				lbNodeDescription.setText(null);
+				lbNodeType.setText(null);
+				taNodeValue.clear();
+				lbNodeTimestamp.setText(null);
 
-			lbNodeId.setText(null);
-			lbNodeDescription.setText(null);
-			lbNodeType.setText(null);
-			taNodeValue.clear();
-			lbNodeTimestamp.setText(null);
-
-			tvBrowser.setRoot(null);
+				tvBrowser.setRoot(null);
+			});
 			break;
 
 		default:
@@ -589,20 +591,11 @@ public class OpcUaBrowserController extends OpcUaController {
 			dataSource.setSecurityPolicy(getSecurityPolicy());
 			dataSource.setMessageSecurityMode(getMessageMode());
 
-			if (ckAnonymous.isSelected()) {
-				dataSource.setUserName(null);
-				dataSource.setPassword(null);
-				dataSource.setKeystore(null);
-				dataSource.setKeystorePassword(null);
-			} else {
-
-				// authentication
-
-				dataSource.setUserName(getUserName());
-				dataSource.setPassword(getPassword());
-				dataSource.setKeystore(getKeystoreFileName());
-				dataSource.setKeystorePassword(getKeystorePassword());
-			}
+			// authentication
+			dataSource.setUserName(getUserName());
+			dataSource.setPassword(getPassword());
+			dataSource.setKeystore(getKeystoreFileName());
+			dataSource.setKeystorePassword(getKeystorePassword());
 
 			// save data source
 			OpcUaSource savedSource = (OpcUaSource) PersistenceService.instance().save(dataSource);
