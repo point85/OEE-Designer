@@ -38,7 +38,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
@@ -180,9 +179,6 @@ public class PhysicalModelController extends DesignerController {
 	private Button btDashboard;
 
 	@FXML
-	private ProgressIndicator piEntities;
-
-	@FXML
 	private TextField tfRetention;
 
 	// extract the PlantEntity name from the tree item
@@ -235,7 +231,6 @@ public class PhysicalModelController extends DesignerController {
 		int launch = -1;
 
 		if (launch == 0) {
-			piEntities.setVisible(true);
 
 			new Thread() {
 				public void run() {
@@ -253,12 +248,9 @@ public class PhysicalModelController extends DesignerController {
 				} catch (Exception e) {
 					AppUtils.showErrorDialog(
 							"Unable to fetch plant entities.  Check database connection.  " + e.getMessage());
-				} finally {
-					piEntities.setVisible(false);
 				}
 			});
 		} else if (launch == 2) {
-			piEntities.setVisible(true);
 
 			// service
 			EntityManagerService service = new EntityManagerService();
@@ -266,7 +258,6 @@ public class PhysicalModelController extends DesignerController {
 			service.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
 				@Override
 				public void handle(WorkerStateEvent event) {
-					piEntities.setVisible(false);
 
 					String value = (String) event.getSource().getValue();
 
@@ -317,9 +308,6 @@ public class PhysicalModelController extends DesignerController {
 			}
 		});
 
-		// select equipment material
-		// onSelectEquipmentMaterial();
-
 		// disable tabs
 		tbEquipMaterials.setDisable(true);
 		tbAvailability.setDisable(true);
@@ -331,10 +319,6 @@ public class PhysicalModelController extends DesignerController {
 
 		Collections.sort(entities);
 		return entities;
-	}
-
-	void turnOffProgressIndictor() {
-		piEntities.setVisible(false);
 	}
 
 	// display top-level entities
@@ -780,13 +764,13 @@ public class PhysicalModelController extends DesignerController {
 			if (selectedEntity == null) {
 				return;
 			}
-			
+
 			PlantEntity refreshed = PersistenceService.instance().fetchPlantEntityByName(selectedEntity.getName());
 			selectedEntityItem.getValue().setPlantEntity(refreshed);
 			selectedEntity = refreshed;
 			displayAttributes(selectedEntity);
 			tvEntities.refresh();
-			
+
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}

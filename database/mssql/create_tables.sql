@@ -76,7 +76,7 @@ GO
 CREATE TABLE [dbo].[MATERIAL](
 	[MAT_KEY] [bigint] NULL,
 	[VERSION] [int] NULL,
-	[ID] [nvarchar](64) NULL,
+	[NAME] [nvarchar](64) NULL,
 	[DESCRIPTION] [nvarchar](128) NULL,
 	[CATEGORY] [nvarchar](32) NULL
 ) ON [PRIMARY]

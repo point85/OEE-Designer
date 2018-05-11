@@ -160,8 +160,6 @@ public class DesignerApplication {
 					} catch (Exception e) {
 						AppUtils.showErrorDialog(
 								"Unable to fetch plant entities.  Check database connection.  " + e.getMessage());
-					} finally {
-						physicalModelController.turnOffProgressIndictor();
 					}
 				});
 			} else if (populate == 2) {
@@ -170,8 +168,6 @@ public class DesignerApplication {
 				} catch (Exception e) {
 					AppUtils.showErrorDialog(
 							"Unable to fetch plant entities.  Check database connection.  " + e.getMessage());
-				} finally {
-					physicalModelController.turnOffProgressIndictor();
 				}
 			}
 
@@ -344,24 +340,24 @@ public class DesignerApplication {
 	}
 
 	OpcUaTreeNode showOpcUaDataSourceBrowser() throws Exception {
-		//if (opcUaBrowserController == null) {
-			// Load the fxml file and create a new stage for the pop-up dialog.
-			FXMLLoader loader = LoaderFactory.opdUaBrowserLoader();
-			AnchorPane page = (AnchorPane) loader.getRoot();
+		// if (opcUaBrowserController == null) {
+		// Load the fxml file and create a new stage for the pop-up dialog.
+		FXMLLoader loader = LoaderFactory.opdUaBrowserLoader();
+		AnchorPane page = (AnchorPane) loader.getRoot();
 
-			// Create the dialog Stage.
-			Stage dialogStage = new Stage(StageStyle.DECORATED);
-			dialogStage.setTitle("Browse OPC UA Data Source");
-			dialogStage.initModality(Modality.NONE);
-			// dialogStage.initOwner(primaryStage);
-			Scene scene = new Scene(page);
-			dialogStage.setScene(scene);
+		// Create the dialog Stage.
+		Stage dialogStage = new Stage(StageStyle.DECORATED);
+		dialogStage.setTitle("Browse OPC UA Data Source");
+		dialogStage.initModality(Modality.NONE);
+		// dialogStage.initOwner(primaryStage);
+		Scene scene = new Scene(page);
+		dialogStage.setScene(scene);
 
-			// get the controller
-			opcUaBrowserController = loader.getController();
-			opcUaBrowserController.setDialogStage(dialogStage);
-			opcUaBrowserController.initialize(this);
-		//}
+		// get the controller
+		opcUaBrowserController = loader.getController();
+		opcUaBrowserController.setDialogStage(dialogStage);
+		opcUaBrowserController.initialize(this);
+		// }
 
 		// Show the dialog and wait until the user closes it
 		if (!opcUaBrowserController.getDialogStage().isShowing()) {
@@ -749,7 +745,7 @@ public class DesignerApplication {
 
 			DashboardController dashboardController = dashboardLoader.getController();
 			dashboardController.enableRefresh(true);
-			
+
 			dashboardDialogController.setDashboardController(dashboardController);
 		}
 

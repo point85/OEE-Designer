@@ -36,7 +36,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
@@ -139,7 +138,7 @@ public class OpcUaBrowserController extends OpcUaController {
 	private Label lbNodeTimestamp;
 
 	@FXML
-	private CheckBox ckAnonymous;
+	private Button btClearAuthentication;
 
 	@FXML
 	private ComboBox<SecurityPolicy> cbSecurityPolicies;
@@ -167,8 +166,6 @@ public class OpcUaBrowserController extends OpcUaController {
 		populateDataSources();
 
 		initializeSecuritySettings();
-
-		initializeAuthenticationSettings();
 
 		initializeTreeView();
 	}
@@ -354,6 +351,9 @@ public class OpcUaBrowserController extends OpcUaController {
 		// delete
 		btDelete.setGraphic(ImageManager.instance().getImageView(Images.DELETE));
 		btDelete.setContentDisplay(ContentDisplay.LEFT);
+		
+		// clear
+		btClearAuthentication.setGraphic(ImageManager.instance().getImageView(Images.CLEAR));
 	}
 
 	private void updateConnectionStatus(ConnectionState state) throws Exception {
@@ -627,10 +627,6 @@ public class OpcUaBrowserController extends OpcUaController {
 		}
 	}
 
-	private void initializeAuthenticationSettings() {
-		this.ckAnonymous.setSelected(true);
-	}
-
 	private void populateDataSources() {
 		// fetch the sources
 		List<CollectorDataSource> sources = PersistenceService.instance().fetchDataSources(DataSourceType.OPC_UA);
@@ -746,13 +742,11 @@ public class OpcUaBrowserController extends OpcUaController {
 	}
 
 	@FXML
-	private void onSelectAnonymous() {
-		if (this.ckAnonymous.isSelected()) {
-			this.tfKeystoreFileName.clear();
-			this.pfKeystorePassword.clear();
-			this.tfUserName.clear();
-			this.pfPassword.clear();
-		}
+	private void onClearAuthentication() {
+		this.tfKeystoreFileName.clear();
+		this.pfKeystorePassword.clear();
+		this.tfUserName.clear();
+		this.pfPassword.clear();
 	}
 
 	public OpcUaTreeNode getSelectedNodeId() {

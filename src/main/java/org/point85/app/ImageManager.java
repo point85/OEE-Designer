@@ -155,6 +155,10 @@ public class ImageManager {
 		case SOURCE:
 			image = new Image(path + "DataSource.png", DIM, DIM, true, true);
 			break;
+		case SPLASH:
+			// large splash image
+			image = new Image(path + "FactoryEquipment.jpg", 847, 477, true, true);
+			break;
 		case START:
 			image = new Image(path + "Start.png", DIM, DIM, true, true);
 			break;
