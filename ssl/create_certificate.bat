@@ -1,0 +1,1 @@
+C:\tools\OpenSSL-Win32h\bin\openssl.exe req -x509 -sha256 -newkey rsa:2048 -keyout out/privateKey.key -out out/certificate.crt -extensions v3_self_signed -config openssl.cnf
