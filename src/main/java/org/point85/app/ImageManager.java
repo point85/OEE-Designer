@@ -120,7 +120,7 @@ public class ImageManager {
 			image = new Image(path + "OpcUaSource.png", DIM, DIM, true, true);
 			break;
 		case POINT85:
-			image = new Image(path + "Point85.png", DIM, DIM, true, true);
+			image = new Image(path + "Point85.png", 64, 64, true, true);
 			break;
 		case REASON:
 			image = new Image(path + "Reason.png", DIM, DIM, true, true);
@@ -157,7 +157,7 @@ public class ImageManager {
 			break;
 		case SPLASH:
 			// large splash image
-			image = new Image(path + "FactoryEquipment.jpg", 847, 477, true, true);
+			image = new Image(path + "FactoryEquipment.jpg", 848, 477, true, true);
 			break;
 		case START:
 			image = new Image(path + "Start.png", DIM, DIM, true, true);

@@ -5,7 +5,7 @@ import java.time.Duration;
 import org.point85.app.AppUtils;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
-import org.point85.app.LoaderFactory;
+import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.reason.ReasonEditorController;
 import org.point85.domain.collector.OeeEvent;
 import org.point85.domain.persistence.PersistenceService;
@@ -88,7 +88,7 @@ public class AvailabilityEditorController extends EventEditorController {
 		try {
 			// display the reason editor as a dialog
 			if (reasonController == null) {
-				FXMLLoader loader = LoaderFactory.reasonEditorLoader();
+				FXMLLoader loader = FXMLLoaderFactory.reasonEditorLoader();
 				AnchorPane page = (AnchorPane) loader.getRoot();
 
 				// Create the dialog Stage.

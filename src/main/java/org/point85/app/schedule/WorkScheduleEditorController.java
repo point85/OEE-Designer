@@ -13,7 +13,7 @@ import java.util.Set;
 import org.point85.app.AppUtils;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
-import org.point85.app.LoaderFactory;
+import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
 import org.point85.domain.oee.TimeLoss;
@@ -1606,7 +1606,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 	private void onChooseSchedule() {
 		try {
 			if (templateController == null) {
-				FXMLLoader loader = LoaderFactory.templateScheduleLoader();
+				FXMLLoader loader = FXMLLoaderFactory.templateScheduleLoader();
 				AnchorPane page = (AnchorPane) loader.getRoot();
 
 				// Create the dialog Stage.

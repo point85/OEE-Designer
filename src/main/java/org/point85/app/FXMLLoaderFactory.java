@@ -30,7 +30,7 @@ import org.point85.app.web.WebServerController;
 
 import javafx.fxml.FXMLLoader;
 
-public class LoaderFactory {
+public class FXMLLoaderFactory {
 	public static FXMLLoader dashboardLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(DashboardController.class.getResource("Dashboard.fxml"));
 		fxmlLoader.load();
@@ -189,6 +189,12 @@ public class LoaderFactory {
 	
 	public static FXMLLoader productionEditorLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(ProductionEditorController.class.getResource("ProductionEditor.fxml"));
+		fxmlLoader.load();
+		return fxmlLoader;
+	}
+	
+	public static FXMLLoader splashLoader() throws Exception {
+		FXMLLoader fxmlLoader = new FXMLLoader(SplashController.class.getResource("Splash.fxml"));
 		fxmlLoader.load();
 		return fxmlLoader;
 	}

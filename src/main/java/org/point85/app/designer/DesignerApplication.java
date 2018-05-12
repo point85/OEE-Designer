@@ -5,7 +5,7 @@ import java.net.URL;
 import org.point85.app.AppUtils;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
-import org.point85.app.LoaderFactory;
+import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.dashboard.DashboardController;
 import org.point85.app.dashboard.DashboardDialogController;
 import org.point85.app.http.HttpServerController;
@@ -200,7 +200,7 @@ public class DesignerApplication {
 	public Reason showReasonEditor() throws Exception {
 		// Load the fxml file and create a new stage for the pop-up dialog.
 		if (reasonController == null) {
-			FXMLLoader loader = LoaderFactory.reasonEditorLoader();
+			FXMLLoader loader = FXMLLoaderFactory.reasonEditorLoader();
 			AnchorPane page = (AnchorPane) loader.getRoot();
 
 			// Create the dialog Stage.
@@ -227,7 +227,7 @@ public class DesignerApplication {
 	// display the material editor as a dialog
 	public Material showMaterialEditor() throws Exception {
 		if (this.materialController == null) {
-			FXMLLoader loader = LoaderFactory.materialEditorLoader();
+			FXMLLoader loader = FXMLLoaderFactory.materialEditorLoader();
 			AnchorPane pane = (AnchorPane) loader.getRoot();
 
 			// Create the dialog Stage.
@@ -256,7 +256,7 @@ public class DesignerApplication {
 	public UnitOfMeasure showUomEditor() throws Exception {
 		if (this.uomController == null) {
 			// Load the fxml file and create a new stage for the pop-up dialog.
-			FXMLLoader loader = LoaderFactory.uomEditorLoader();
+			FXMLLoader loader = FXMLLoaderFactory.uomEditorLoader();
 			AnchorPane page = (AnchorPane) loader.getRoot();
 
 			// Create the dialog Stage
@@ -286,7 +286,7 @@ public class DesignerApplication {
 	WorkSchedule showScheduleEditor() throws Exception {
 		if (this.scheduleController == null) {
 			// Load the fxml file and create a new stage for the pop-up dialog.
-			FXMLLoader loader = LoaderFactory.scheduleEditorLoader();
+			FXMLLoader loader = FXMLLoaderFactory.scheduleEditorLoader();
 			AnchorPane page = (AnchorPane) loader.getRoot();
 
 			// Create the dialog Stage.
@@ -314,7 +314,7 @@ public class DesignerApplication {
 	OpcDaBrowserLeaf showOpcDaDataSourceBrowser() throws Exception {
 		if (opcDaBrowserController == null) {
 			// Load the fxml file and create a new stage for the pop-up dialog.
-			FXMLLoader loader = LoaderFactory.opdDaBrowserLoader();
+			FXMLLoader loader = FXMLLoaderFactory.opdDaBrowserLoader();
 			AnchorPane page = (AnchorPane) loader.getRoot();
 
 			// Create the dialog Stage.
@@ -342,7 +342,7 @@ public class DesignerApplication {
 	OpcUaTreeNode showOpcUaDataSourceBrowser() throws Exception {
 		// if (opcUaBrowserController == null) {
 		// Load the fxml file and create a new stage for the pop-up dialog.
-		FXMLLoader loader = LoaderFactory.opdUaBrowserLoader();
+		FXMLLoader loader = FXMLLoaderFactory.opdUaBrowserLoader();
 		AnchorPane page = (AnchorPane) loader.getRoot();
 
 		// Create the dialog Stage.
@@ -370,7 +370,7 @@ public class DesignerApplication {
 	String showScriptEditor(EventResolver eventResolver) throws Exception {
 		// Load the fxml file and create a new stage for the pop-up dialog.
 		if (scriptController == null) {
-			FXMLLoader loader = LoaderFactory.eventResolverLoader();
+			FXMLLoader loader = FXMLLoaderFactory.eventResolverLoader();
 			AnchorPane page = (AnchorPane) loader.getRoot();
 
 			// Create the dialog Stage.
@@ -400,7 +400,7 @@ public class DesignerApplication {
 
 	HttpSource showHttpServerEditor() throws Exception {
 		if (httpServerController == null) {
-			FXMLLoader loader = LoaderFactory.httpServerLoader();
+			FXMLLoader loader = FXMLLoaderFactory.httpServerLoader();
 			AnchorPane page = (AnchorPane) loader.getRoot();
 
 			// Create the dialog Stage.
@@ -424,7 +424,7 @@ public class DesignerApplication {
 
 	MessagingSource showRmqBrokerEditor() throws Exception {
 		if (mqBrokerController == null) {
-			FXMLLoader loader = LoaderFactory.mqBrokerLoader();
+			FXMLLoader loader = FXMLLoaderFactory.mqBrokerLoader();
 			AnchorPane page = (AnchorPane) loader.getRoot();
 
 			// Create the dialog Stage.
@@ -450,7 +450,7 @@ public class DesignerApplication {
 
 	WebSource showWebServerEditor() throws Exception {
 		if (webServerController == null) {
-			FXMLLoader loader = LoaderFactory.webServerLoader();
+			FXMLLoader loader = FXMLLoaderFactory.webServerLoader();
 			AnchorPane page = (AnchorPane) loader.getRoot();
 
 			// Create the dialog Stage.
@@ -476,7 +476,7 @@ public class DesignerApplication {
 
 	DataCollector showCollectorEditor() throws Exception {
 		if (dataCollectorController == null) {
-			FXMLLoader loader = LoaderFactory.dataCollectorLoader();
+			FXMLLoader loader = FXMLLoaderFactory.dataCollectorLoader();
 			AnchorPane page = (AnchorPane) loader.getRoot();
 
 			// Create the dialog Stage.
@@ -502,7 +502,7 @@ public class DesignerApplication {
 
 	void showUomConverter() throws Exception {
 		if (uomConversionController == null) {
-			FXMLLoader loader = LoaderFactory.uomConversionLoader();
+			FXMLLoader loader = FXMLLoaderFactory.uomConversionLoader();
 			AnchorPane page = (AnchorPane) loader.getRoot();
 
 			// Create the dialog stage
@@ -527,7 +527,7 @@ public class DesignerApplication {
 	void showOpcDaTrendDialog(EventResolver eventResolver) throws Exception {
 		if (opcDaTrendController == null) {
 			// Load the fxml file and create a new stage for the pop-up dialog.
-			FXMLLoader loader = LoaderFactory.opcDaTrendLoader();
+			FXMLLoader loader = FXMLLoaderFactory.opcDaTrendLoader();
 			AnchorPane page = (AnchorPane) loader.getRoot();
 
 			// Create the dialog Stage.
@@ -565,7 +565,7 @@ public class DesignerApplication {
 	void showOpcUaTrendDialog(EventResolver eventResolver) throws Exception {
 		if (opcUaTrendController == null) {
 			// Load the fxml file and create a new stage for the pop-up dialog.
-			FXMLLoader loader = LoaderFactory.opcUaTrendLoader();
+			FXMLLoader loader = FXMLLoaderFactory.opcUaTrendLoader();
 			AnchorPane page = (AnchorPane) loader.getRoot();
 
 			// Create the dialog Stage.
@@ -604,7 +604,7 @@ public class DesignerApplication {
 	void showHttpTrendDialog(EventResolver eventResolver) throws Exception {
 		if (httpTrendController == null) {
 			// Load the fxml file and create a new stage for the pop-up dialog.
-			FXMLLoader loader = LoaderFactory.httpTrendLoader();
+			FXMLLoader loader = FXMLLoaderFactory.httpTrendLoader();
 			AnchorPane page = (AnchorPane) loader.getRoot();
 
 			// Create the dialog Stage.
@@ -645,7 +645,7 @@ public class DesignerApplication {
 	void showMessagingTrendDialog(EventResolver eventResolver) throws Exception {
 		if (messagingTrendController == null) {
 			// Load the fxml file and create a new stage for the pop-up dialog.
-			FXMLLoader loader = LoaderFactory.messagingTrendLoader();
+			FXMLLoader loader = FXMLLoaderFactory.messagingTrendLoader();
 			AnchorPane page = (AnchorPane) loader.getRoot();
 
 			// Create the dialog Stage.
@@ -718,7 +718,7 @@ public class DesignerApplication {
 		PlantEntity entity = getPhysicalModelController().getSelectedEntity();
 
 		if (dashboardDialogController == null) {
-			FXMLLoader dialogLoader = LoaderFactory.dashboardDialogLoader();
+			FXMLLoader dialogLoader = FXMLLoaderFactory.dashboardDialogLoader();
 			AnchorPane pane = (AnchorPane) dialogLoader.getRoot();
 
 			// Create the dialog Stage.
@@ -733,7 +733,7 @@ public class DesignerApplication {
 			dashboardDialogController.setDialogStage(dialogStage);
 
 			// load the content
-			FXMLLoader dashboardLoader = LoaderFactory.dashboardLoader();
+			FXMLLoader dashboardLoader = FXMLLoaderFactory.dashboardLoader();
 			SplitPane spDashboard = (SplitPane) dashboardLoader.getRoot();
 
 			pane.getChildren().add(0, spDashboard);

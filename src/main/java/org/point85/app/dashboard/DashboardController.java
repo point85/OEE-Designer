@@ -18,7 +18,7 @@ import org.point85.app.AppUtils;
 import org.point85.app.DialogController;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
-import org.point85.app.LoaderFactory;
+import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.charts.CategoryClickListener;
 import org.point85.app.charts.ParetoChartController;
 import org.point85.domain.DomainUtils;
@@ -1410,7 +1410,7 @@ public class DashboardController extends DialogController implements CategoryCli
 
 	private AvailabilityEditorController getAvailabilityController() throws Exception {
 		if (availabilityEditorController == null) {
-			FXMLLoader loader = LoaderFactory.availabilityEditorLoader();
+			FXMLLoader loader = FXMLLoaderFactory.availabilityEditorLoader();
 			AnchorPane page = (AnchorPane) loader.getRoot();
 
 			Stage dialogStage = new Stage(StageStyle.DECORATED);
@@ -1428,7 +1428,7 @@ public class DashboardController extends DialogController implements CategoryCli
 
 	private ProductionEditorController getProductionController() throws Exception {
 		if (productionEditorController == null) {
-			FXMLLoader loader = LoaderFactory.productionEditorLoader();
+			FXMLLoader loader = FXMLLoaderFactory.productionEditorLoader();
 			AnchorPane page = (AnchorPane) loader.getRoot();
 
 			Stage dialogStage = new Stage(StageStyle.DECORATED);
@@ -1446,7 +1446,7 @@ public class DashboardController extends DialogController implements CategoryCli
 
 	private SetupEditorController getSetupController() throws Exception {
 		if (setupEditorController == null) {
-			FXMLLoader loader = LoaderFactory.setupEditorLoader();
+			FXMLLoader loader = FXMLLoaderFactory.setupEditorLoader();
 			AnchorPane page = (AnchorPane) loader.getRoot();
 
 			Stage dialogStage = new Stage(StageStyle.DECORATED);

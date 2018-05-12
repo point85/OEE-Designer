@@ -7,7 +7,7 @@ import java.util.List;
 import org.point85.app.AppUtils;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
-import org.point85.app.LoaderFactory;
+import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.material.MaterialEditorController;
 import org.point85.domain.collector.OeeEvent;
 import org.point85.domain.persistence.PersistenceService;
@@ -107,7 +107,7 @@ public class SetupEditorController extends EventEditorController {
 		try {
 			// display the material editor as a dialog
 			if (materialController == null) {
-				FXMLLoader loader = LoaderFactory.materialEditorLoader();
+				FXMLLoader loader = FXMLLoaderFactory.materialEditorLoader();
 				AnchorPane page = (AnchorPane) loader.getRoot();
 
 				// Create the dialog Stage.

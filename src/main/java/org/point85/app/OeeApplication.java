@@ -1,5 +1,7 @@
 package org.point85.app;
 
+//import java.time.Duration;
+
 import org.apache.log4j.PropertyConfigurator;
 import org.point85.app.collector.ClientTestApplication;
 import org.point85.app.collector.CollectorApplication;
@@ -14,15 +16,9 @@ import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.concurrent.Worker;
-import javafx.geometry.Pos;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.ProgressIndicator;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
@@ -59,14 +55,12 @@ public class OeeApplication extends Application {
 
 	// show splash screen during database connection time
 	private boolean showSplash = true;
+	
+	// splash screen
+	private VBox splashLayout;
+	
+	//private Stage mainStage;
 
-	// splash layout
-	private Pane splashLayout;
-	private ProgressIndicator loadProgress;
-	private Label progressText;
-	private Stage mainStage;
-	private static final int SPLASH_WIDTH = 650;
-	private static final int SPLASH_HEIGHT = 225;
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -74,16 +68,18 @@ public class OeeApplication extends Application {
 			final Task<String> startTask = new Task<String>() {
 				@Override
 				protected String call() throws InterruptedException {
-					// updateProgress(1, 2);
-					updateMessage("Connecting to database.");
+					// wait for a database connection
 					PersistenceService.instance().getEntityManagerFactory();
-					updateMessage("Connected");
 					return "OK";
 				}
 			};
 
-			showSplash(primaryStage, startTask, () -> showMainStage(null));
+			// start the database connection
 			new Thread(startTask).start();
+			
+			// show the dialog and show the main stage when done
+			showSplash(primaryStage, startTask, () -> showMainStage(null));
+
 		} else {
 			showMainStage(primaryStage);
 		}
@@ -107,53 +103,42 @@ public class OeeApplication extends Application {
 		System.exit(0);
 	}
 
-	@Override
-	public void init() throws Exception {
-		if (showSplash) {
-			ImageView splash = ImageManager.instance().getImageView(Images.SPLASH);
-
-			//loadProgress = new ProgressIndicator();
-			//loadProgress.setPrefWidth(SPLASH_WIDTH - 20);
-			progressText = new Label("Point85 Designer");
-			progressText.setPrefWidth(SPLASH_WIDTH - 20);
-			splashLayout = new VBox();
-			//splashLayout.getChildren().addAll(splash, loadProgress, progressText);
-			splashLayout.getChildren().addAll(splash, progressText);
-			//splashLayout.getChildren().addAll(progressText);
-			progressText.setAlignment(Pos.CENTER);
-			splashLayout.setStyle("-fx-padding: 5; " + "-fx-background-color: cornsilk; " + "-fx-border-width:5; "
-					+ "-fx-border-color: " + "linear-gradient(" + "to bottom, " + "chocolate, "
-					+ "derive(chocolate, 50%)" + ");");
-			splashLayout.setEffect(new DropShadow());
-		}
-	}
-
-	private void showSplash(final Stage initStage, Task<String> task, InitCompletionHandler initCompletionHandler) {
-		progressText.textProperty().bind(task.messageProperty());
-		//loadProgress.progressProperty().bind(task.progressProperty());
+	private void showSplash(final Stage stage, Task<String> task, InitCompletionHandler initCompletionHandler) throws Exception {
+		
+		// completion listener
 		task.stateProperty().addListener((observableValue, oldState, newState) -> {
-			if (newState == Worker.State.SUCCEEDED) {
-				//loadProgress.progressProperty().unbind();
-				//loadProgress.setProgress(1);
-				initStage.toFront();
-				FadeTransition fadeSplash = new FadeTransition(Duration.seconds(1.2), splashLayout);
+			if (newState == Worker.State.SUCCEEDED) {				
+				stage.toFront();
+				FadeTransition fadeSplash = new FadeTransition(Duration.seconds(0.5), splashLayout);
 				fadeSplash.setFromValue(1.0);
 				fadeSplash.setToValue(0.0);
-				fadeSplash.setOnFinished(actionEvent -> initStage.hide());
+				fadeSplash.setOnFinished(actionEvent -> stage.hide());
 				fadeSplash.play();
-
+				
+				//stage.hide();
+				
 				initCompletionHandler.complete();
 			} 
 		});
-
+		
+		// load dialog
+		FXMLLoader loader = FXMLLoaderFactory.splashLoader();	
+		SplashController splashController = loader.getController();
+		splashController.initialize();
+		splashController.setSplashText("Connecting to database ...");
+		
+		splashLayout = (VBox) loader.getRoot();
+		
 		Scene splashScene = new Scene(splashLayout, Color.TRANSPARENT);
+		stage.setScene(splashScene);
+		
+		// center in main stage
 		final Rectangle2D bounds = Screen.getPrimary().getBounds();
-		initStage.setScene(splashScene);
-		initStage.setX(bounds.getMinX() + bounds.getWidth() / 2 - SPLASH_WIDTH / 2);
-		initStage.setY(bounds.getMinY() + bounds.getHeight() / 2 - SPLASH_HEIGHT / 2);
-		initStage.initStyle(StageStyle.TRANSPARENT);
-		initStage.setAlwaysOnTop(true);
-		initStage.show();
+		stage.setX(bounds.getMinX() + bounds.getWidth() / 2 - SplashController.SPLASH_WIDTH / 2);
+		stage.setY(bounds.getMinY() + bounds.getHeight() / 2 - SplashController.SPLASH_HEIGHT / 2);
+		stage.initStyle(StageStyle.TRANSPARENT);
+		stage.setAlwaysOnTop(true);
+		stage.show();
 	}
 
 	private void showMainStage(final Stage stage) {
@@ -165,6 +150,7 @@ public class OeeApplication extends Application {
 			logger.info("Starting application " + appId);
 		}
 
+		Stage mainStage = null;
 		if (stage == null) {
 			mainStage = new Stage(StageStyle.DECORATED);
 		} else {

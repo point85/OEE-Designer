@@ -8,7 +8,7 @@ import java.util.Set;
 import org.point85.app.AppUtils;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
-import org.point85.app.LoaderFactory;
+import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.dashboard.DashboardController;
 import org.point85.domain.collector.CollectorState;
 import org.point85.domain.collector.DataCollector;
@@ -319,7 +319,7 @@ public class MonitorController {
 
 	private void onSelectDashboard() throws Exception {
 		if (dashboardController == null) {
-			FXMLLoader loader = LoaderFactory.dashboardLoader();
+			FXMLLoader loader = FXMLLoaderFactory.dashboardLoader();
 			SplitPane pane = (SplitPane) loader.getRoot();
 
 			apDashboard.getChildren().add(pane);

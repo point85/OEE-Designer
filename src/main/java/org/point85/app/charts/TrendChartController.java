@@ -8,7 +8,7 @@ import java.util.Map;
 import org.point85.app.AppUtils;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
-import org.point85.app.LoaderFactory;
+import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerController;
 import org.point85.domain.DomainUtils;
@@ -146,7 +146,7 @@ public class TrendChartController extends DesignerController {
 
 	private void initializeCharts() throws Exception {
 		// load first value chart controller
-		FXMLLoader loader = LoaderFactory.sampleChartLoader();
+		FXMLLoader loader = FXMLLoaderFactory.sampleChartLoader();
 		AnchorPane pane1 = (AnchorPane) loader.getRoot();
 		spCharts.getChildren().add(INPUT_VALUE_VIEW, pane1);
 		inputValueController = loader.getController();
@@ -154,7 +154,7 @@ public class TrendChartController extends DesignerController {
 		inputValueController.getChart().getYAxis().setLabel("Value");
 
 		// load second state chart controller
-		loader = LoaderFactory.sampleChartLoader();
+		loader = FXMLLoaderFactory.sampleChartLoader();
 		AnchorPane pane2 = (AnchorPane) loader.getRoot();
 		spCharts.getChildren().add(OUTPUT_VALUE_VIEW, pane2);
 		outputValueController = loader.getController();

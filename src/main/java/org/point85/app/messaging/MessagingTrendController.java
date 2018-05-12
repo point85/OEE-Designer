@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.point85.app.AppUtils;
-import org.point85.app.LoaderFactory;
+import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.charts.DataSubscriber;
 import org.point85.app.charts.TrendChartController;
 import org.point85.app.designer.DesignerDialogController;
@@ -60,7 +60,7 @@ public class MessagingTrendController extends DesignerDialogController implement
 	public SplitPane initializeTrend() throws Exception {
 		if (trendChartController == null) {
 			// Load the fxml file and create the anchor pane
-			FXMLLoader loader = LoaderFactory.trendChartLoader();
+			FXMLLoader loader = FXMLLoaderFactory.trendChartLoader();
 			spTrendChart = (SplitPane) loader.getRoot();
 
 			trendChartController = loader.getController();

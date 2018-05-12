@@ -10,7 +10,7 @@ import java.util.Set;
 import org.point85.app.AppUtils;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
-import org.point85.app.LoaderFactory;
+import org.point85.app.FXMLLoaderFactory;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Area;
 import org.point85.domain.plant.Enterprise;
@@ -24,12 +24,9 @@ import org.point85.domain.schedule.WorkSchedule;
 import org.point85.domain.script.EventResolver;
 import org.point85.domain.script.EventType;
 
-import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -228,6 +225,7 @@ public class PhysicalModelController extends DesignerController {
 		setApp(app);
 
 		// fill in the top-level entity nodes
+		/*
 		int launch = -1;
 
 		if (launch == 0) {
@@ -270,7 +268,7 @@ public class PhysicalModelController extends DesignerController {
 
 			service.start();
 		}
-
+*/
 		// images
 		setImages();
 
@@ -313,6 +311,7 @@ public class PhysicalModelController extends DesignerController {
 		tbAvailability.setDisable(true);
 	}
 
+	/*
 	private List<PlantEntity> fetchTopEntities() {
 		// long before = System.currentTimeMillis();
 		List<PlantEntity> entities = PersistenceService.instance().fetchTopPlantEntities();
@@ -320,6 +319,7 @@ public class PhysicalModelController extends DesignerController {
 		Collections.sort(entities);
 		return entities;
 	}
+	*/
 
 	// display top-level entities
 	void populateTopEntityNodes() throws Exception {
@@ -1028,7 +1028,7 @@ public class PhysicalModelController extends DesignerController {
 	private void onSelectEquipmentMaterial() throws Exception {
 		if (equipmentMaterialController == null) {
 			// Load the fxml file and create the anchor pane
-			FXMLLoader loader = LoaderFactory.equipmentMaterialLoader();
+			FXMLLoader loader = FXMLLoaderFactory.equipmentMaterialLoader();
 			AnchorPane pane = (AnchorPane) loader.getRoot();
 			tbEquipMaterials.setContent(pane);
 
@@ -1048,7 +1048,7 @@ public class PhysicalModelController extends DesignerController {
 	private EquipmentResolverController getResolverController() throws Exception {
 		if (resolverController == null) {
 			// Load the fxml file and create the anchor pane
-			FXMLLoader loader = LoaderFactory.equipmentResolverLoader();
+			FXMLLoader loader = FXMLLoaderFactory.equipmentResolverLoader();
 			AnchorPane pane = (AnchorPane) loader.getRoot();
 			tbAvailability.setContent(pane);
 
