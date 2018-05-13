@@ -33,11 +33,11 @@ import javafx.geometry.Side;
 import javafx.scene.chart.Axis;
 import javafx.scene.text.Text;
 
-
+@SuppressWarnings("rawtypes")
 public class SmoothedChartTileSkin extends TileSkin {
     private Text                             titleText;
     private SmoothedChart<String, Number>    chart;
-    private Axis                             xAxis;
+	private Axis                             xAxis;
     private Axis                             yAxis;
     private EventHandler<SmoothedChartEvent> chartEventEventHandler;
 
@@ -49,7 +49,8 @@ public class SmoothedChartTileSkin extends TileSkin {
 
 
     // ******************** Initialization ************************************
-    @Override protected void initGraphics() {
+    @SuppressWarnings("unchecked")
+	@Override protected void initGraphics() {
         super.initGraphics();
 
         chartEventEventHandler = e -> tile.fireTileEvent(new TileEvent(EventType.SELECTED_CHART_DATA, new ChartData(e.getValue())));

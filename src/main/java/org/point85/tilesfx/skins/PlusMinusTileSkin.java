@@ -60,7 +60,8 @@ public class PlusMinusTileSkin extends TileSkin {
 
 
     // ******************** Initialization ************************************
-    @Override protected void initGraphics() {
+    @SuppressWarnings("rawtypes")
+	@Override protected void initGraphics() {
         super.initGraphics();
 
         mouseEventHandler = e -> {

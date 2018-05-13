@@ -66,7 +66,8 @@ public class SliderTileSkin extends TileSkin {
 
 
     // ******************** Initialization ************************************
-    @Override protected void initGraphics() {
+    @SuppressWarnings("rawtypes")
+	@Override protected void initGraphics() {
         super.initGraphics();
 
         mouseEventHandler = e -> {

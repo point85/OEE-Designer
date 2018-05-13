@@ -31,6 +31,7 @@ import javafx.scene.text.Text;
 /**
  * Created by hansolo on 26.12.16.
  */
+@SuppressWarnings("rawtypes")
 public class CustomTileSkin extends TileSkin {
     private Text           titleText;
     private Text           text;
@@ -67,7 +68,8 @@ public class CustomTileSkin extends TileSkin {
         getPane().getChildren().addAll(titleText, graphicContainer, text);
     }
 
-    @Override protected void registerListeners() {
+    @SuppressWarnings("unchecked")
+	@Override protected void registerListeners() {
         super.registerListeners();
         tile.graphicProperty().addListener(graphicListener);
     }
@@ -87,7 +89,8 @@ public class CustomTileSkin extends TileSkin {
         }
     }
 
-    @Override public void dispose() {
+    @SuppressWarnings("unchecked")
+	@Override public void dispose() {
         tile.graphicProperty().removeListener(graphicListener);
         super.dispose();
     }

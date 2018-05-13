@@ -8,6 +8,8 @@ import javafx.scene.image.ImageView;
 
 public class ImageManager {
 	private static final String path = "/org/point85/images/";
+	
+	// standard image size LxW
 	private static final int DIM = 16;
 
 	private ConcurrentMap<Images, Image> imageCache;

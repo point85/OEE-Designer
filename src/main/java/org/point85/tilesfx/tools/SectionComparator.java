@@ -26,7 +26,12 @@ import org.point85.tilesfx.Section;
  * Created by hansolo on 26.01.16.
  */
 public class SectionComparator implements Comparator<Section>, Serializable {
-    @Override public int compare(final Section SECTION_1, final Section SECTION_2) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -954520157460078875L;
+
+	@Override public int compare(final Section SECTION_1, final Section SECTION_2) {
         return SECTION_1.compareTo(SECTION_2);
     }
 }

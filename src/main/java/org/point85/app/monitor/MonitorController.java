@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.point85.app.AppUtils;
+import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
-import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.dashboard.DashboardController;
 import org.point85.domain.collector.CollectorState;
 import org.point85.domain.collector.DataCollector;
@@ -268,7 +268,6 @@ public class MonitorController {
 		tcBrokerPort.setCellValueFactory(cellDataFeatures -> {
 			return new SimpleObjectProperty<Integer>(cellDataFeatures.getValue().getBrokerPort());
 		});
-
 	}
 
 	// notifications
@@ -330,8 +329,6 @@ public class MonitorController {
 			AnchorPane.setRightAnchor(pane, 0.0);
 
 			dashboardController = loader.getController();
-			// dashboardController.addTabPaneListener();
-			// dashboardController.buildDashboardTiles();
 		}
 	}
 
@@ -477,7 +474,7 @@ public class MonitorController {
 			}
 		}
 		newItem.setExpanded(true);
-		
+
 		if (selectedEntity instanceof Equipment) {
 			EquipmentLoss loss = new EquipmentLoss((Equipment) selectedEntity);
 			dashboardController.setEquipmentLoss(loss);

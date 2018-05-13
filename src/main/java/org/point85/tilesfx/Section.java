@@ -399,7 +399,8 @@ public class Section implements Comparable<Section> {
     public final EventHandler<SectionEvent> getOnSectionUpdate() { return onSectionUpdateProperty().get(); }
     private ObjectProperty<EventHandler<SectionEvent>> onSectionUpdate = new SimpleObjectProperty<>(this, "onSectionUpdate");
 
-    public void fireSectionEvent(final SectionEvent EVENT) {
+    @SuppressWarnings("rawtypes")
+	public void fireSectionEvent(final SectionEvent EVENT) {
         final EventHandler<SectionEvent> HANDLER;
         final EventType                  TYPE = EVENT.getEventType();
         if (SectionEvent.TILES_FX_SECTION_ENTERED == TYPE) {
@@ -420,7 +421,11 @@ public class Section implements Comparable<Section> {
 
     // ******************** Inner Classes *************************************
     public static class SectionEvent extends Event {
-        public static final EventType<SectionEvent> TILES_FX_SECTION_ENTERED = new EventType<>(ANY, "TILES_FX_SECTION_ENTERED");
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = -2867463224260748929L;
+		public static final EventType<SectionEvent> TILES_FX_SECTION_ENTERED = new EventType<>(ANY, "TILES_FX_SECTION_ENTERED");
         public static final EventType<SectionEvent> TILES_FX_SECTION_LEFT    = new EventType<>(ANY, "TILES_FX_SECTION_LEFT");
         public static final EventType<SectionEvent> TILES_FX_SECTION_UPDATE  = new EventType<>(ANY, "TILES_FX_SECTION_UPDATE");
 

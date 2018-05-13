@@ -23,8 +23,8 @@ public abstract class DataSourceConnectionController extends DesignerDialogContr
 	// state of our connection
 	protected ConnectionState connectionState = ConnectionState.DISCONNECTED;
 
-	// TODO maximum time to allow an OPC Server connection
-	protected static final long MAX_WAIT_SECONDS = 600;
+	// maximum time to allow for an OPC Server connection
+	protected static final long MAX_WAIT_SECONDS = 30;
 
 	// connection state colors
 	public static final Color CONNECTED_COLOR = Color.GREEN;

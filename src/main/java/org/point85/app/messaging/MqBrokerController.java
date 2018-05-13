@@ -98,24 +98,17 @@ public class MqBrokerController extends DesignerDialogController {
 
 	@FXML
 	private void onSelectDataSource() {
-		/*
-		 * String sourceId = getDataSourceId(); if (sourceId == null ||
-		 * sourceId.length() == 0) { return; }
-		 * 
-		 * // retrieve data source by name MessagingSource source = null; try { source =
-		 * (MessagingSource)
-		 * PersistencyService.getInstance().fetchByName(MessagingSource.MSG_SRC_BY_NAME,
-		 * sourceId); setSource(source); } catch (Exception e) { // not saved yet
-		 * return; }
-		 */
+		try {
+			dataSource = cbDataSources.getSelectionModel().getSelectedItem();
 
-		dataSource = cbDataSources.getSelectionModel().getSelectedItem();
-
-		this.tfHost.setText(dataSource.getHost());
-		this.tfUserName.setText(dataSource.getUserName());
-		this.tfPort.setText(String.valueOf(dataSource.getPort()));
-		this.pfPassword.setText(dataSource.getUserPassword());
-		this.tfDescription.setText(dataSource.getDescription());
+			this.tfHost.setText(dataSource.getHost());
+			this.tfUserName.setText(dataSource.getUserName());
+			this.tfPort.setText(String.valueOf(dataSource.getPort()));
+			this.pfPassword.setText(dataSource.getUserPassword());
+			this.tfDescription.setText(dataSource.getDescription());
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
 	}
 
 	@FXML
@@ -185,7 +178,7 @@ public class MqBrokerController extends DesignerDialogController {
 
 		brokers.clear();
 		for (CollectorDataSource source : sources) {
-			brokers.add((MessagingSource)source);
+			brokers.add((MessagingSource) source);
 		}
 		cbDataSources.setItems(brokers);
 

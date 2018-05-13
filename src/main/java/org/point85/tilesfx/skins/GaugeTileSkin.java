@@ -72,7 +72,8 @@ public class GaugeTileSkin extends TileSkin {
     private Tooltip           alertTooltip;
     private Map<Section, Arc> sectionMap;
     private Color             barColor;
-    private Color             thresholdColor;
+    @SuppressWarnings("unused")
+	private Color             thresholdColor;
 
 
     // ******************** Constructors **************************************

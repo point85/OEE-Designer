@@ -7,7 +7,6 @@ import org.point85.app.AppUtils;
 import org.point85.app.DialogController;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
-import org.point85.app.designer.DesignerApplication;
 import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.DataSourceType;
 import org.point85.domain.http.HttpSource;
@@ -56,9 +55,7 @@ public class HttpServerController extends DialogController {
 	@FXML
 	private Button btDelete;
 
-	public void initialize(DesignerApplication app) throws Exception {
-		// main app
-		// setApp(app);
+	public void initializeServer() throws Exception {
 
 		// button images
 		setImages();
@@ -98,24 +95,17 @@ public class HttpServerController extends DialogController {
 
 	@FXML
 	private void onSelectDataSource() {
-		/*
-		 * String sourceId = getDataSourceId(); if (sourceId == null ||
-		 * sourceId.length() == 0) { return; }
-		 * 
-		 * // retrieve data source by name HttpSource source = null; try { source =
-		 * (HttpSource)
-		 * PersistencyService.getInstance().fetchByName(HttpSource.HTTP_SRC_BY_NAME,
-		 * sourceId); setSource(source); } catch (Exception e) { // not saved yet
-		 * return; }
-		 */
+		try {
+			dataSource = cbDataSources.getSelectionModel().getSelectedItem();
 
-		dataSource = cbDataSources.getSelectionModel().getSelectedItem();
-
-		this.tfHost.setText(dataSource.getHost());
-		this.tfUserName.setText(dataSource.getUserName());
-		this.tfPort.setText(String.valueOf(dataSource.getPort()));
-		this.pfPassword.setText(dataSource.getUserPassword());
-		this.tfDescription.setText(dataSource.getDescription());
+			this.tfHost.setText(dataSource.getHost());
+			this.tfUserName.setText(dataSource.getUserName());
+			this.tfPort.setText(String.valueOf(dataSource.getPort()));
+			this.pfPassword.setText(dataSource.getUserPassword());
+			this.tfDescription.setText(dataSource.getDescription());
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
 	}
 
 	@FXML
@@ -185,7 +175,7 @@ public class HttpServerController extends DialogController {
 
 		servers.clear();
 		for (CollectorDataSource source : sources) {
-			servers.add((HttpSource)source);
+			servers.add((HttpSource) source);
 		}
 		cbDataSources.setItems(servers);
 

@@ -16,7 +16,7 @@ import javafx.stage.Stage;
 
 public class CollectorApplication {
 	// logger
-	private final Logger logger = LoggerFactory.getLogger(getClass());
+	private static final Logger logger = LoggerFactory.getLogger(CollectorApplication.class);
 
 	// the collector
 	private CollectorServer collector;

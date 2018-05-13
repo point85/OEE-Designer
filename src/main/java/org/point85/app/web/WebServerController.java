@@ -7,7 +7,6 @@ import org.point85.app.AppUtils;
 import org.point85.app.DialogController;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
-import org.point85.app.designer.DesignerApplication;
 import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.DataSourceType;
 import org.point85.domain.persistence.PersistenceService;
@@ -56,9 +55,7 @@ public class WebServerController extends DialogController {
 	@FXML
 	private Button btDelete;
 
-	public void initialize(DesignerApplication app) throws Exception {
-		// main app
-		// setApp(app);
+	public void initializeServer() throws Exception {
 
 		// button images
 		setImages();
@@ -195,20 +192,16 @@ public class WebServerController extends DialogController {
 
 	@FXML
 	private void onSelectDataSource() {
-		/*
-		 * String sourceId = getDataSourceId(); if (sourceId == null ||
-		 * sourceId.length() == 0) { return; }
-		 * 
-		 * // retrieve data source by name try { dataSource = (WebSource)
-		 * PersistencyService.getInstance().fetchByName(WebSource.WEB_SRC_BY_NAME,
-		 * sourceId); } catch (Exception e) { // not saved yet return; }
-		 */
-		dataSource = this.cbDataSources.getSelectionModel().getSelectedItem();
+		try {
+			dataSource = this.cbDataSources.getSelectionModel().getSelectedItem();
 
-		this.tfHost.setText(dataSource.getHost());
-		this.tfUserName.setText(dataSource.getUserName());
-		this.tfPort.setText(String.valueOf(dataSource.getPort()));
-		this.pfPassword.setText(dataSource.getUserPassword());
-		this.tfDescription.setText(dataSource.getDescription());
+			this.tfHost.setText(dataSource.getHost());
+			this.tfUserName.setText(dataSource.getUserName());
+			this.tfPort.setText(String.valueOf(dataSource.getPort()));
+			this.pfPassword.setText(dataSource.getUserPassword());
+			this.tfDescription.setText(dataSource.getDescription());
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
 	}
 }

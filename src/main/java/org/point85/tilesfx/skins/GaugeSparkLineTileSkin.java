@@ -510,7 +510,8 @@ public class GaugeSparkLineTileSkin extends TileSkin {
         super.dispose();
     }
 
-    private void smooth(final List<Double> DATA_LIST) {
+    @SuppressWarnings("unused")
+	private void smooth(final List<Double> DATA_LIST) {
         int     size   = DATA_LIST.size();
         Point[] points = new Point[size];
 

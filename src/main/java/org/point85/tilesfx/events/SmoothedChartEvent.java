@@ -22,7 +22,11 @@ import javafx.event.EventType;
 
 
 public class SmoothedChartEvent extends Event {
-    public static final EventType<SmoothedChartEvent> DATA_SELECTED = new EventType<>(ANY, "DATA_SELECTED");
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 521642296251435364L;
+	public static final EventType<SmoothedChartEvent> DATA_SELECTED = new EventType<>(ANY, "DATA_SELECTED");
     private final double value;
 
 

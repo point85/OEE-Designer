@@ -46,6 +46,7 @@ import javafx.scene.text.TextFlow;
 /**
  * Created by hansolo on 03.03.17.
  */
+@SuppressWarnings("rawtypes")
 public class CircularProgressTileSkin extends TileSkin {
     private static final double  ANGLE_RANGE = 360;
     private double               size;
@@ -164,7 +165,8 @@ public class CircularProgressTileSkin extends TileSkin {
         getPane().getChildren().addAll(barBackground, bar, separator, titleText, text, graphicContainer, percentageFlow, valueUnitFlow);
     }
 
-    @Override protected void registerListeners() {
+    @SuppressWarnings("unchecked")
+	@Override protected void registerListeners() {
         super.registerListeners();
         tile.currentValueProperty().addListener(currentValueListener);
         tile.graphicProperty().addListener(graphicListener);
@@ -216,7 +218,8 @@ public class CircularProgressTileSkin extends TileSkin {
         }
     }
 
-    @Override public void dispose() {
+    @SuppressWarnings("unchecked")
+	@Override public void dispose() {
         tile.currentValueProperty().removeListener(currentValueListener);
         tile.graphicProperty().removeListener(graphicListener);
         super.dispose();

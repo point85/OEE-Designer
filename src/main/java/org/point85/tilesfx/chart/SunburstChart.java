@@ -695,7 +695,7 @@ public class SunburstChart extends Region {
 
                         rotateContextForText(chartCtx, segmentStartAngle, -(segmentAngle * 0.5), textOrientation);
 
-                        switch (getVisibleData()) {
+						switch (getVisibleData()) {
                             case VALUE:
                                 chartCtx.fillText(String.format(Locale.US, formatString, value), 0, 0, maxTextWidth);
                                 break;
@@ -705,6 +705,10 @@ public class SunburstChart extends Region {
                             case NAME_VALUE:
                                 chartCtx.fillText(String.join("", segmentData.getName(), " (", String.format(Locale.US, formatString, value),")"), 0, 0, maxTextWidth);
                                 break;
+							case NONE:
+								break;
+							default:
+								break;
                         }
                         chartCtx.restore();
                     }

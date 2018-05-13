@@ -1,7 +1,5 @@
 package org.point85.app;
 
-//import java.time.Duration;
-
 import org.apache.log4j.PropertyConfigurator;
 import org.point85.app.collector.ClientTestApplication;
 import org.point85.app.collector.CollectorApplication;
@@ -33,6 +31,7 @@ public class OeeApplication extends Application {
 	private static final String COLLECTOR_APP = "COLLECTOR";
 	private static final String TESTER_APP = "TESTER";
 
+	// program args
 	private static final int IDX_APP = 0;
 	private static final int IDX_JDBC = 1;
 	private static final int IDX_USER = 2;
@@ -53,36 +52,26 @@ public class OeeApplication extends Application {
 	// client test application
 	private ClientTestApplication clientTestApp;
 
-	// show splash screen during database connection time
-	private boolean showSplash = true;
-	
 	// splash screen
 	private VBox splashLayout;
-	
-	//private Stage mainStage;
-
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		if (showSplash) {
-			final Task<String> startTask = new Task<String>() {
-				@Override
-				protected String call() throws InterruptedException {
-					// wait for a database connection
-					PersistenceService.instance().getEntityManagerFactory();
-					return "OK";
-				}
-			};
 
-			// start the database connection
-			new Thread(startTask).start();
-			
-			// show the dialog and show the main stage when done
-			showSplash(primaryStage, startTask, () -> showMainStage(null));
+		final Task<String> startTask = new Task<String>() {
+			@Override
+			protected String call() throws InterruptedException {
+				// wait for a database connection
+				PersistenceService.instance().getEntityManagerFactory();
+				return "OK";
+			}
+		};
 
-		} else {
-			showMainStage(primaryStage);
-		}
+		// start the database connection
+		new Thread(startTask).start();
+
+		// show the dialog and show the main stage when done
+		showSplash(primaryStage, startTask, () -> showMainStage(null));
 	}
 
 	@Override
@@ -103,35 +92,36 @@ public class OeeApplication extends Application {
 		System.exit(0);
 	}
 
-	private void showSplash(final Stage stage, Task<String> task, InitCompletionHandler initCompletionHandler) throws Exception {
-		
+	private void showSplash(final Stage stage, Task<String> task, InitCompletionHandler initCompletionHandler)
+			throws Exception {
+
 		// completion listener
 		task.stateProperty().addListener((observableValue, oldState, newState) -> {
-			if (newState == Worker.State.SUCCEEDED) {				
+			if (newState == Worker.State.SUCCEEDED) {
 				stage.toFront();
+
+				// fade out to main app
 				FadeTransition fadeSplash = new FadeTransition(Duration.seconds(0.5), splashLayout);
 				fadeSplash.setFromValue(1.0);
 				fadeSplash.setToValue(0.0);
 				fadeSplash.setOnFinished(actionEvent -> stage.hide());
 				fadeSplash.play();
-				
-				//stage.hide();
-				
+
 				initCompletionHandler.complete();
-			} 
+			}
 		});
-		
+
 		// load dialog
-		FXMLLoader loader = FXMLLoaderFactory.splashLoader();	
+		FXMLLoader loader = FXMLLoaderFactory.splashLoader();
 		SplashController splashController = loader.getController();
 		splashController.initialize();
-		splashController.setSplashText("Connecting to database ...");
-		
+		splashController.setSplashText("Starting application.  Please wait ...");
+
 		splashLayout = (VBox) loader.getRoot();
-		
+
 		Scene splashScene = new Scene(splashLayout, Color.TRANSPARENT);
 		stage.setScene(splashScene);
-		
+
 		// center in main stage
 		final Rectangle2D bounds = Screen.getPrimary().getBounds();
 		stage.setX(bounds.getMinX() + bounds.getWidth() / 2 - SplashController.SPLASH_WIDTH / 2);
@@ -157,6 +147,7 @@ public class OeeApplication extends Application {
 			mainStage = stage;
 		}
 
+		// show the configured app
 		if (appId.equals(DESIGNER_APP)) {
 			designerApp = new DesignerApplication();
 			designerApp.start(mainStage);
@@ -184,7 +175,7 @@ public class OeeApplication extends Application {
 	public static void main(String[] args) {
 		// configuration folder
 		String configDir = System.getProperty(DomainUtils.CONFIG_DIR);
-		
+
 		// configure log4j
 		PropertyConfigurator.configure(configDir + "/logging/log4j.properties");
 
@@ -198,5 +189,4 @@ public class OeeApplication extends Application {
 		// start GUI
 		launch(args);
 	}
-
 }

@@ -61,7 +61,8 @@ public class GradientLookup {
 
 
     // ******************** Methods *******************************************
-    public Color getColorAt(final double POSITION_OF_COLOR) {
+    @SuppressWarnings("unchecked")
+	public Color getColorAt(final double POSITION_OF_COLOR) {
         if (stops.isEmpty()) return Color.BLACK;
 
         final double POSITION = Helper.clamp(0.0, 1.0, POSITION_OF_COLOR);

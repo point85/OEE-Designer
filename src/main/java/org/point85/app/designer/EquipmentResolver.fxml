@@ -59,7 +59,7 @@
             <Label text="Data Type" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
             <Label fx:id="lbDataType" GridPane.columnIndex="2" GridPane.rowIndex="4" />
             <Label text="Collector Host" GridPane.columnIndex="1" GridPane.halignment="RIGHT" />
-            <ComboBox fx:id="cbCollectors" maxWidth="1.7976931348623157E308" onAction="#onSelectHostServer" prefWidth="150.0" promptText="Data collector host machine" GridPane.columnIndex="2" />
+            <ComboBox fx:id="cbCollectors" maxWidth="1.7976931348623157E308" prefWidth="150.0" promptText="Data collector host machine" GridPane.columnIndex="2" />
             <Button fx:id="btEditCollector" mnemonicParsing="false" onAction="#onEditCollector" prefHeight="16.0" prefWidth="16.0" GridPane.halignment="CENTER" />
             <Label text="Update (msec)" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
             <TextField fx:id="tfUpdatePeriod" maxWidth="-Infinity" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="6" />

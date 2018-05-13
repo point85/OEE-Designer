@@ -151,6 +151,7 @@ import javafx.util.Duration;
 /**
  * Created by hansolo on 19.12.16.
  */
+@SuppressWarnings("rawtypes")
 public class Tile extends Control {
     public enum SkinType { SMOOTHED_CHART("ChartTileSkin"), BAR_CHART("BarChartTileSkin"),
                            CLOCK("ClockTileSkin"), GAUGE("GaugeTileSkin"),
@@ -1457,13 +1458,15 @@ public class Tile extends Control {
     public void setSeries(final List<Series<String, Number>> SERIES) {
         SERIES.forEach(series -> addTilesFXSeries(new TilesFXSeries<String, Number>(series)));
     }
-    public void setSeries(final Series<String, Number>... SERIES) {
+    @SuppressWarnings("unchecked")
+	public void setSeries(final Series<String, Number>... SERIES) {
         setSeries(Arrays.asList(SERIES));
     }
     public void addSeries(final Series<String, Number> SERIES) {
         addTilesFXSeries(new TilesFXSeries<String, Number>(SERIES));
     }
-    public void removeSeries(final Series<String, Number> SERIES) {
+    @SuppressWarnings("unchecked")
+	public void removeSeries(final Series<String, Number> SERIES) {
         TilesFXSeries<String, Number> seriesToRemove = series.stream().filter(tilesFxSeries -> tilesFxSeries.getSeries().equals(SERIES)).findFirst().orElse(null);
         if (null == seriesToRemove) return;
         series.removeAll(seriesToRemove);
@@ -1478,7 +1481,8 @@ public class Tile extends Control {
         getTilesFXSeries().setAll(SERIES);
         fireTileEvent(SERIES_EVENT);
     }
-    public void setTilesFXSeries(final TilesFXSeries<String, Number>... SERIES) { setTilesFXSeries(Arrays.asList(SERIES)); }
+    @SuppressWarnings("unchecked")
+	public void setTilesFXSeries(final TilesFXSeries<String, Number>... SERIES) { setTilesFXSeries(Arrays.asList(SERIES)); }
     public void addTilesFXSeries(final TilesFXSeries<String, Number> SERIES) {
         if (null == SERIES) return;
         getTilesFXSeries().add(SERIES);
@@ -4623,24 +4627,6 @@ public class Tile extends Control {
         return fillWithGradient;
     }
 
-    /*
-    public DarkSky getDarkSky() { return darkSky; }
-    public void setDarkSky(final DarkSky DARK_SKY) {
-        darkSky = DARK_SKY;
-        fireTileEvent(REDRAW_EVENT);
-    }
-
-    public void updateWeather() {
-        if (null == darkSky) return;
-        if (darkSky.update()) {
-            fireTileEvent(REDRAW_EVENT);
-        } else {
-            //System.out.println("Wrong or missing DarkSky API key");
-            throw new IllegalArgumentException("Do you use a valid DarkSKY API key?");
-        }
-    }
-    */
-
     public Color getNotificationBackgroundColor() { return _notificationBackgroundColor; }
     public void setNotificationBackgroundColor(final Color COLOR) {
         _notificationBackgroundColor = COLOR;
@@ -4655,7 +4641,8 @@ public class Tile extends Control {
 
     public void showNotifier(final boolean SHOW) { fireTileEvent(SHOW ? SHOW_NOTIFIER_EVENT : HIDE_NOTIFIER_EVENT); }
 
-    private Properties readProperties(final String FILE_NAME) {
+    @SuppressWarnings("unused")
+	private Properties readProperties(final String FILE_NAME) {
         final ClassLoader LOADER     = Thread.currentThread().getContextClassLoader();
         final Properties  PROPERTIES = new Properties();
         try(InputStream resourceStream = LOADER.getResourceAsStream(FILE_NAME)) {
@@ -4786,7 +4773,8 @@ public class Tile extends Control {
         if (null != periodicTickExecutorService) { periodicTickExecutorService.shutdownNow(); }
     }
 
-    private void createShutdownHook() { Runtime.getRuntime().addShutdownHook(new Thread(() -> stop())); }
+    @SuppressWarnings("unused")
+	private void createShutdownHook() { Runtime.getRuntime().addShutdownHook(new Thread(() -> stop())); }
 
     
     // ******************** Event handling ************************************
@@ -4828,7 +4816,8 @@ public class Tile extends Control {
 
 
     // ******************** Style related *************************************
-    @Override protected Skin createDefaultSkin() {
+    @SuppressWarnings("unchecked")
+	@Override protected Skin createDefaultSkin() {
         switch (skinType) {
             case SMOOTHED_CHART   : return new SmoothedChartTileSkin(Tile.this);
             case BAR_CHART        : return new BarChartTileSkin(Tile.this);

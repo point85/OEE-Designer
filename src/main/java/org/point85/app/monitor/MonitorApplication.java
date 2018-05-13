@@ -39,7 +39,7 @@ import javafx.stage.Stage;
 
 public class MonitorApplication implements MessageListener {
 	// logger
-	private final Logger logger = LoggerFactory.getLogger(getClass());
+	private static final Logger logger = LoggerFactory.getLogger(MonitorApplication.class);
 
 	// data collectors being monitored
 	private List<DataCollector> collectors;

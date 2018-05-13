@@ -17,11 +17,10 @@ import javafx.scene.image.ImageView;
 
 /**
  *
- * @author krandall
+ * @author Kent Randall
  */
 public class OpcDaTagTreeItem extends TreeItem<OpcDaTagTreeBranch> {
 	// true if TagNode is a leaf (it has OPC items)
-
 	private boolean isLeaf = false;
 	// We do the children and leaf testing only once, and then set these
 	// booleans to false so that we do not check again during this
@@ -80,8 +79,8 @@ public class OpcDaTagTreeItem extends TreeItem<OpcDaTagTreeBranch> {
 
 		if (treeBrowser != null) {
 			Collection<OpcDaTagTreeBranch> branches = treeBrowser.getBranches(tagBranch);
-			
-			Image folder = ((ImageView)getGraphic()).getImage();
+
+			Image folder = ((ImageView) getGraphic()).getImage();
 
 			for (OpcDaTagTreeBranch childBranch : branches) {
 				children.add(new OpcDaTagTreeItem(childBranch, treeBrowser, new ImageView(folder)));

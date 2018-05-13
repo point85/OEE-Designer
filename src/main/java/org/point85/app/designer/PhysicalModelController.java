@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.point85.app.AppUtils;
+import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
-import org.point85.app.FXMLLoaderFactory;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Area;
 import org.point85.domain.plant.Enterprise;
@@ -25,8 +25,6 @@ import org.point85.domain.script.EventResolver;
 import org.point85.domain.script.EventType;
 
 import javafx.collections.ObservableList;
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -198,77 +196,11 @@ public class PhysicalModelController extends DesignerController {
 		return tvEntities.getRoot();
 	}
 
-	private void showRootEntities(List<PlantEntity> entities) {
-		try {
-			// add them to the root entity
-			ObservableList<TreeItem<EntityNode>> children = getRootEntityItem().getChildren();
-			children.clear();
-
-			for (PlantEntity entity : entities) {
-				TreeItem<EntityNode> entityItem = new TreeItem<>(new EntityNode(entity));
-				children.add(entityItem);
-				setEntityGraphic(entityItem);
-			}
-
-			// refresh tree view
-			getRootEntityItem().setExpanded(true);
-			tvEntities.getSelectionModel().clearSelection();
-			tvEntities.refresh();
-		} catch (Exception e) {
-			AppUtils.showErrorDialog("Unable to fetch plant entities.  Check database connection.  " + e.getMessage());
-		}
-	}
-
 	// initialize app
 	void initialize(DesignerApplication app) throws Exception {
 		// main app
 		setApp(app);
 
-		// fill in the top-level entity nodes
-		/*
-		int launch = -1;
-
-		if (launch == 0) {
-
-			new Thread() {
-				public void run() {
-					List<PlantEntity> entities = fetchTopEntities();
-
-					Platform.runLater(() -> {
-						showRootEntities(entities);
-					});
-				}
-			}.start();
-		} else if (launch == 1) {
-			Platform.runLater(() -> {
-				try {
-					populateTopEntityNodes();
-				} catch (Exception e) {
-					AppUtils.showErrorDialog(
-							"Unable to fetch plant entities.  Check database connection.  " + e.getMessage());
-				}
-			});
-		} else if (launch == 2) {
-
-			// service
-			EntityManagerService service = new EntityManagerService();
-
-			service.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-				@Override
-				public void handle(WorkerStateEvent event) {
-
-					String value = (String) event.getSource().getValue();
-
-					if (value != null) {
-						// failed
-						AppUtils.showErrorDialog(value);
-					}
-				}
-			});
-
-			service.start();
-		}
-*/
 		// images
 		setImages();
 
@@ -310,16 +242,6 @@ public class PhysicalModelController extends DesignerController {
 		tbEquipMaterials.setDisable(true);
 		tbAvailability.setDisable(true);
 	}
-
-	/*
-	private List<PlantEntity> fetchTopEntities() {
-		// long before = System.currentTimeMillis();
-		List<PlantEntity> entities = PersistenceService.instance().fetchTopPlantEntities();
-
-		Collections.sort(entities);
-		return entities;
-	}
-	*/
 
 	// display top-level entities
 	void populateTopEntityNodes() throws Exception {
@@ -528,7 +450,6 @@ public class PhysicalModelController extends DesignerController {
 		try {
 			EventResolver scriptResolver = new EventResolver();
 			scriptResolver.setType(EventType.OTHER);
-			// scriptResolver.setDataType(lbDataType.getText());
 
 			this.getApp().showScriptEditor(scriptResolver);
 		} catch (Exception e) {
@@ -1115,28 +1036,5 @@ public class PhysicalModelController extends DesignerController {
 		public String toString() {
 			return entity.getName() + " (" + entity.getDescription() + ")";
 		}
-	}
-
-	private class EntityManagerService extends Service<String> {
-
-		@Override
-		protected Task<String> createTask() {
-			Task<String> task = new Task<String>() {
-
-				@Override
-				protected String call() throws Exception {
-					String errorMessage = null;
-
-					try {
-						populateTopEntityNodes();
-					} catch (Exception e) {
-						errorMessage = "Unable to fetch plant entities.  Check database connection.  " + e.getMessage();
-					}
-					return errorMessage;
-				}
-			};
-			return task;
-		}
-
 	}
 }

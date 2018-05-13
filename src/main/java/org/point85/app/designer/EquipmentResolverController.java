@@ -399,13 +399,7 @@ public class EquipmentResolverController extends DesignerController {
 			}
 		}
 	}
-
-	@FXML
-	private void onSelectHostServer() {
-		// TODO enable buttons
-		cbCollectors.getSelectionModel().getSelectedItem();
-	}
-
+	
 	@FXML
 	private void onSelectDataSource() throws Exception {
 		DataSourceType sourceType = this.cbDataSources.getSelectionModel().getSelectedItem();

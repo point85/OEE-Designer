@@ -279,11 +279,8 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 
 		private DataValue dataValue;
 
-		private UaMonitoredItem item;
-
 		public ResolutionService(DataValue dataValue, UaMonitoredItem item) {
 			this.dataValue = dataValue;
-			this.item = item;
 		}
 
 		@Override
@@ -297,7 +294,6 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 					try {
 						// resolve the input value into a reason
 						Object javaValue = dataValue.getValue().getValue();
-						String itemId = item.getReadValueId().getNodeId().toParseableString();
 						DateTime dt = dataValue.getServerTime();
 						OffsetDateTime odt = DomainUtils.localTimeFromDateTime(dt);
 
@@ -315,5 +311,4 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 			return resolutionTask;
 		}
 	}
-
 }

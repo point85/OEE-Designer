@@ -37,6 +37,7 @@ import javafx.scene.paint.Color;
 /**
  * Created by hansolo on 20.03.17.
  */
+@SuppressWarnings("rawtypes")
 public class PixelMatrixBuilder<B extends PixelMatrixBuilder<B>> {
     private HashMap<String, Property> properties = new HashMap<>();
 
@@ -51,119 +52,144 @@ public class PixelMatrixBuilder<B extends PixelMatrixBuilder<B>> {
     }
 
     public final B colsAndRows(final int[] COLS_AND_ROWS) { return colsAndRows(COLS_AND_ROWS[0], COLS_AND_ROWS[1]); }
-    public final B colsAndRows(final int COLS, final int ROWS) {
+	@SuppressWarnings("unchecked")
+	public final B colsAndRows(final int COLS, final int ROWS) {
         properties.put("cols", new SimpleIntegerProperty(COLS));
         properties.put("rows", new SimpleIntegerProperty(ROWS));
         return (B)this;
     }
 
-    public final B pixelOnColor(final Color COLOR) {
+    @SuppressWarnings("unchecked")
+	public final B pixelOnColor(final Color COLOR) {
         properties.put("pixelOnColor", new SimpleObjectProperty(COLOR));
         return (B)this;
     }
-    public final B pixelOffColor(final Color COLOR) {
+    @SuppressWarnings("unchecked")
+	public final B pixelOffColor(final Color COLOR) {
         properties.put("pixelOffColor", new SimpleObjectProperty(COLOR));
         return (B)this;
     }
 
-    public final B pixelShape(final PixelShape SHAPE) {
+    @SuppressWarnings("unchecked")
+	public final B pixelShape(final PixelShape SHAPE) {
         properties.put("pixelShape", new SimpleObjectProperty(SHAPE));
         return (B)this;
     }
 
-    public final B matrixFont(final MatrixFont FONT) {
+    @SuppressWarnings("unchecked")
+	public final B matrixFont(final MatrixFont FONT) {
         properties.put("matrixFont", new SimpleObjectProperty(FONT));
         return (B)this;
     }
 
-    public final B useSpacer(final boolean USE) {
+    @SuppressWarnings("unchecked")
+	public final B useSpacer(final boolean USE) {
         properties.put("useSpacer", new SimpleBooleanProperty(USE));
         return (B)this;
     }
 
-    public final B squarePixels(final boolean SQUARE) {
+    @SuppressWarnings("unchecked")
+	public final B squarePixels(final boolean SQUARE) {
         properties.put("squarePixels", new SimpleBooleanProperty(SQUARE));
         return (B)this;
     }
 
-    public final B spacerSizeFactor(final double FACTOR) {
+    @SuppressWarnings("unchecked")
+	public final B spacerSizeFactor(final double FACTOR) {
         properties.put("spacerSizeFactor", new SimpleDoubleProperty(FACTOR));
         return (B)this;
     }
 
-    public final B prefSize(final double WIDTH, final double HEIGHT) {
+    @SuppressWarnings("unchecked")
+	public final B prefSize(final double WIDTH, final double HEIGHT) {
         properties.put("prefSize", new SimpleObjectProperty<>(new Dimension2D(WIDTH, HEIGHT)));
         return (B)this;
     }
-    public final B minSize(final double WIDTH, final double HEIGHT) {
+    @SuppressWarnings("unchecked")
+	public final B minSize(final double WIDTH, final double HEIGHT) {
         properties.put("minSize", new SimpleObjectProperty<>(new Dimension2D(WIDTH, HEIGHT)));
         return (B)this;
     }
-    public final B maxSize(final double WIDTH, final double HEIGHT) {
+    @SuppressWarnings("unchecked")
+	public final B maxSize(final double WIDTH, final double HEIGHT) {
         properties.put("maxSize", new SimpleObjectProperty<>(new Dimension2D(WIDTH, HEIGHT)));
         return (B)this;
     }
 
-    public final B prefWidth(final double PREF_WIDTH) {
+    @SuppressWarnings("unchecked")
+	public final B prefWidth(final double PREF_WIDTH) {
         properties.put("prefWidth", new SimpleDoubleProperty(PREF_WIDTH));
         return (B)this;
     }
-    public final B prefHeight(final double PREF_HEIGHT) {
+    @SuppressWarnings("unchecked")
+	public final B prefHeight(final double PREF_HEIGHT) {
         properties.put("prefHeight", new SimpleDoubleProperty(PREF_HEIGHT));
         return (B)this;
     }
 
-    public final B minWidth(final double MIN_WIDTH) {
+    @SuppressWarnings("unchecked")
+	public final B minWidth(final double MIN_WIDTH) {
         properties.put("minWidth", new SimpleDoubleProperty(MIN_WIDTH));
         return (B)this;
     }
-    public final B minHeight(final double MIN_HEIGHT) {
+    @SuppressWarnings("unchecked")
+	public final B minHeight(final double MIN_HEIGHT) {
         properties.put("minHeight", new SimpleDoubleProperty(MIN_HEIGHT));
         return (B)this;
     }
 
-    public final B maxWidth(final double MAX_WIDTH) {
+    @SuppressWarnings("unchecked")
+	public final B maxWidth(final double MAX_WIDTH) {
         properties.put("maxWidth", new SimpleDoubleProperty(MAX_WIDTH));
         return (B)this;
     }
-    public final B maxHeight(final double MAX_HEIGHT) {
+    @SuppressWarnings("unchecked")
+	public final B maxHeight(final double MAX_HEIGHT) {
         properties.put("maxHeight", new SimpleDoubleProperty(MAX_HEIGHT));
         return (B)this;
     }
 
-    public final B scaleX(final double SCALE_X) {
+    @SuppressWarnings("unchecked")
+	public final B scaleX(final double SCALE_X) {
         properties.put("scaleX", new SimpleDoubleProperty(SCALE_X));
         return (B)this;
     }
-    public final B scaleY(final double SCALE_Y) {
+    @SuppressWarnings("unchecked")
+	public final B scaleY(final double SCALE_Y) {
         properties.put("scaleY", new SimpleDoubleProperty(SCALE_Y));
         return (B)this;
     }
 
-    public final B layoutX(final double LAYOUT_X) {
+    @SuppressWarnings("unchecked")
+	public final B layoutX(final double LAYOUT_X) {
         properties.put("layoutX", new SimpleDoubleProperty(LAYOUT_X));
         return (B)this;
     }
-    public final B layoutY(final double LAYOUT_Y) {
+    @SuppressWarnings("unchecked")
+	public final B layoutY(final double LAYOUT_Y) {
         properties.put("layoutY", new SimpleDoubleProperty(LAYOUT_Y));
         return (B)this;
     }
 
-    public final B translateX(final double TRANSLATE_X) {
+    @SuppressWarnings("unchecked")
+	public final B translateX(final double TRANSLATE_X) {
         properties.put("translateX", new SimpleDoubleProperty(TRANSLATE_X));
         return (B)this;
     }
-    public final B translateY(final double TRANSLATE_Y) {
+    @SuppressWarnings("unchecked")
+	public final B translateY(final double TRANSLATE_Y) {
         properties.put("translateY", new SimpleDoubleProperty(TRANSLATE_Y));
         return (B)this;
     }
 
-    public final B padding(final Insets INSETS) {
+    @SuppressWarnings("unchecked")
+	public final B padding(final Insets INSETS) {
         properties.put("padding", new SimpleObjectProperty<>(INSETS));
         return (B)this;
     }
 
-    public final PixelMatrix build() {
+    @SuppressWarnings("unchecked")
+	public final PixelMatrix build() {
         final PixelMatrix CONTROL;
         if (properties.keySet().contains("cols") && properties.keySet().contains("rows")) {
             int cols = ((IntegerProperty) properties.get("cols")).get();

@@ -395,7 +395,8 @@ public class TimeSection implements Comparable<TimeSection> {
     public final EventHandler<TimeSectionEvent> getOnTimeSectionLeft() { return onTimeSectionLeftProperty().get(); }
     private ObjectProperty<EventHandler<TimeSectionEvent>> onTimeSectionLeft = new SimpleObjectProperty<>(this, "onTimeSectionLeft");
 
-    public void fireTimeSectionEvent(final TimeSectionEvent EVENT) {
+    @SuppressWarnings("rawtypes")
+	public void fireTimeSectionEvent(final TimeSectionEvent EVENT) {
         final EventHandler<TimeSectionEvent> HANDLER;
         final EventType                      TYPE = EVENT.getEventType();
         if (TimeSectionEvent.TIME_SECTION_ENTERED == TYPE) {
@@ -414,7 +415,11 @@ public class TimeSection implements Comparable<TimeSection> {
 
     // ******************** Inner Classes *************************************
     public static class TimeSectionEvent extends Event {
-        public static final EventType<TimeSectionEvent> TIME_SECTION_ENTERED = new EventType<>(ANY, "TIME_SECTION_ENTERED");
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 5422176121999627065L;
+		public static final EventType<TimeSectionEvent> TIME_SECTION_ENTERED = new EventType<>(ANY, "TIME_SECTION_ENTERED");
         public static final EventType<TimeSectionEvent> TIME_SECTION_LEFT    = new EventType<>(ANY, "TIME_SECTION_LEFT");
 
         // ******************** Constructors **************************************

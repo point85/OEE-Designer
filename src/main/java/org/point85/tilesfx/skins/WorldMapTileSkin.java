@@ -77,7 +77,8 @@ public class WorldMapTileSkin extends TileSkin {
 
 
     // ******************** Initialization ************************************
-    @Override protected void initGraphics() {
+    @SuppressWarnings("unlikely-arg-type")
+	@Override protected void initGraphics() {
         super.initGraphics();
 
         poiLocations       = FXCollections.observableHashMap();
@@ -231,7 +232,8 @@ public class WorldMapTileSkin extends TileSkin {
         super.dispose();
     }
 
-    private void setFillAndStroke() {
+    @SuppressWarnings("unused")
+	private void setFillAndStroke() {
         countryPaths.keySet().forEach(name -> {
             Country country = Country.valueOf(name);
             setCountryFillAndStroke(country, null == country.getColor() ? tile.getForegroundColor() : country.getColor(), tile.getBackgroundColor());

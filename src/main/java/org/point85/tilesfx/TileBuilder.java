@@ -74,6 +74,7 @@ import javafx.scene.text.TextAlignment;
 /**
  * Created by hansolo on 13.12.15.
  */
+@SuppressWarnings("rawtypes")
 public class TileBuilder<B extends TileBuilder<B>> {
     private HashMap<String, Property> properties = new HashMap<>();
 
@@ -83,581 +84,696 @@ public class TileBuilder<B extends TileBuilder<B>> {
 
 
     // ******************** Methods *******************************************
-    public static final TileBuilder create() {
+	public static final TileBuilder create() {
         return new TileBuilder();
     }
 
-    public final B skinType(final SkinType TYPE) {
+    @SuppressWarnings("unchecked")
+	public final B skinType(final SkinType TYPE) {
         properties.put("skinType", new SimpleObjectProperty<>(TYPE));
         return (B)this;
     }
 
-    public final B value(final double VALUE) {
+    @SuppressWarnings("unchecked")
+	public final B value(final double VALUE) {
         properties.put("value", new SimpleDoubleProperty(VALUE));
         return (B) this;
     }
 
-    public final B minValue(final double VALUE) {
+    @SuppressWarnings("unchecked")
+	public final B minValue(final double VALUE) {
         properties.put("minValue", new SimpleDoubleProperty(VALUE));
         return (B) this;
     }
 
-    public final B maxValue(final double VALUE) {
+    @SuppressWarnings("unchecked")
+	public final B maxValue(final double VALUE) {
         properties.put("maxValue", new SimpleDoubleProperty(VALUE));
         return (B) this;
     }
 
-    public final B threshold(final double VALUE) {
+    @SuppressWarnings("unchecked")
+	public final B threshold(final double VALUE) {
         properties.put("threshold", new SimpleDoubleProperty(VALUE));
         return (B)this;
     }
 
-    public final B referenceValue(final double VALUE) {
+    @SuppressWarnings("unchecked")
+	public final B referenceValue(final double VALUE) {
         properties.put("referenceValue", new SimpleDoubleProperty(VALUE));
         return (B)this;
     }
 
-    public final B autoReferenceValue(final boolean AUTO_REFERENCE_VALUE) {
+    @SuppressWarnings("unchecked")
+	public final B autoReferenceValue(final boolean AUTO_REFERENCE_VALUE) {
         properties.put("autoReferenceValue", new SimpleBooleanProperty(AUTO_REFERENCE_VALUE));
         return (B)this;
     }
 
-    public final B decimals(final int DECIMALS) {
+    @SuppressWarnings("unchecked")
+	public final B decimals(final int DECIMALS) {
         properties.put("decimals", new SimpleIntegerProperty(DECIMALS));
         return (B) this;
     }
 
-    public final B tickLabelDecimals(final int DECIMALS) {
+    @SuppressWarnings("unchecked")
+	public final B tickLabelDecimals(final int DECIMALS) {
         properties.put("tickLabelDecimals", new SimpleIntegerProperty(DECIMALS));
         return (B)this;
     }
 
-    public final B title(final String TITLE) {
+    @SuppressWarnings("unchecked")
+	public final B title(final String TITLE) {
         properties.put("title", new SimpleStringProperty(TITLE));
         return (B)this;
     }
 
-    public final B titleAlignment(final TextAlignment ALIGNMENT) {
+    @SuppressWarnings("unchecked")
+	public final B titleAlignment(final TextAlignment ALIGNMENT) {
         properties.put("titleAlignment", new SimpleObjectProperty(ALIGNMENT));
         return (B)this;
     }
 
-    public final B description(final String SUBTITLE) {
+    @SuppressWarnings("unchecked")
+	public final B description(final String SUBTITLE) {
         properties.put("description", new SimpleStringProperty(SUBTITLE));
         return (B)this;
     }
 
-    public final B descriptionAlignment(final Pos ALIGNMENT) {
+    @SuppressWarnings("unchecked")
+	public final B descriptionAlignment(final Pos ALIGNMENT) {
         properties.put("descriptionAlignment", new SimpleObjectProperty(ALIGNMENT));
         return (B)this;
     }
 
-    public final B unit(final String UNIT) {
+    @SuppressWarnings("unchecked")
+	public final B unit(final String UNIT) {
         properties.put("unit", new SimpleStringProperty(UNIT));
         return (B)this;
     }
 
-    public final B duration(final LocalTime DURATION) {
+    @SuppressWarnings("unchecked")
+	public final B duration(final LocalTime DURATION) {
         properties.put("duration", new SimpleObjectProperty(DURATION));
         return (B)this;
     }
 
-    public final B selected(final boolean SELECTED) {
+    @SuppressWarnings("unchecked")
+	public final B selected(final boolean SELECTED) {
         properties.put("selected", new SimpleBooleanProperty(SELECTED));
         return (B)this;
     }
 
-    public final B averagingEnabled(final boolean ENABLED) {
+    @SuppressWarnings("unchecked")
+	public final B averagingEnabled(final boolean ENABLED) {
         properties.put("averagingEnabled", new SimpleBooleanProperty(ENABLED));
         return (B)this;
     }
 
-    public final B averagingPeriod(final int PERIOD) {
+    @SuppressWarnings("unchecked")
+	public final B averagingPeriod(final int PERIOD) {
         properties.put("averagingPeriod", new SimpleIntegerProperty(PERIOD));
         return (B)this;
     }
 
-    public final B foregroundBaseColor(final Color COLOR) {
+    @SuppressWarnings("unchecked")
+	public final B foregroundBaseColor(final Color COLOR) {
         properties.put("foregroundBaseColor", new SimpleObjectProperty<>(COLOR));
         return (B)this;
     }
 
-    public final B startFromZero(final boolean START) {
+    @SuppressWarnings("unchecked")
+	public final B startFromZero(final boolean START) {
         properties.put("startFromZero", new SimpleBooleanProperty(START));
         return (B)this;
     }
 
-    public final B returnToZero(final boolean RETURN) {
+    @SuppressWarnings("unchecked")
+	public final B returnToZero(final boolean RETURN) {
         properties.put("returnToZero", new SimpleBooleanProperty(RETURN));
         return (B)this;
     }
 
-    public final B minMeasuredValueVisible(final boolean VISIBLE) {
+    @SuppressWarnings("unchecked")
+	public final B minMeasuredValueVisible(final boolean VISIBLE) {
         properties.put("minMeasuredValueVisible", new SimpleBooleanProperty(VISIBLE));
         return (B)this;
     }
 
-    public final B maxMeasuredValueVisible(final boolean VISIBLE) {
+    @SuppressWarnings("unchecked")
+	public final B maxMeasuredValueVisible(final boolean VISIBLE) {
         properties.put("maxMeasuredValueVisible", new SimpleBooleanProperty(VISIBLE));
         return (B)this;
     }
 
-    public final B oldValueVisible(final boolean VISIBLE) {
+    @SuppressWarnings("unchecked")
+	public final B oldValueVisible(final boolean VISIBLE) {
         properties.put("oldValueVisible", new SimpleBooleanProperty(VISIBLE));
         return (B)this;
     }
 
-    public final B valueVisible(final boolean VISIBLE) {
+    @SuppressWarnings("unchecked")
+	public final B valueVisible(final boolean VISIBLE) {
         properties.put("valueVisible", new SimpleBooleanProperty(VISIBLE));
         return (B)this;
     }
 
-    public final B foregroundColor(final Color COLOR) {
+    @SuppressWarnings("unchecked")
+	public final B foregroundColor(final Color COLOR) {
         properties.put("foregroundColor", new SimpleObjectProperty(COLOR));
         return (B)this;
     }
 
-    public final B backgroundColor(final Color COLOR) {
+    @SuppressWarnings("unchecked")
+	public final B backgroundColor(final Color COLOR) {
         properties.put("backgroundColor", new SimpleObjectProperty<>(COLOR));
         return (B)this;
     }
 
-    public final B borderColor(final Color COLOR) {
+    @SuppressWarnings("unchecked")
+	public final B borderColor(final Color COLOR) {
         properties.put("borderColor", new SimpleObjectProperty<>(COLOR));
         return (B)this;
     }
 
-    public final B borderWidth(final double WIDTH) {
+    @SuppressWarnings("unchecked")
+	public final B borderWidth(final double WIDTH) {
         properties.put("borderWidth", new SimpleDoubleProperty(WIDTH));
         return (B)this;
     }
 
-    public final B knobColor(final Color COLOR) {
+    @SuppressWarnings("unchecked")
+	public final B knobColor(final Color COLOR) {
         properties.put("knobColor", new SimpleObjectProperty<>(COLOR));
         return (B)this;
     }
 
-    public final B activeColor(final Color COLOR) {
+    @SuppressWarnings("unchecked")
+	public final B activeColor(final Color COLOR) {
         properties.put("activeColor", new SimpleObjectProperty(COLOR));
         return (B)this;
     }
 
-    public final B animated(final boolean ANIMATED) {
+    @SuppressWarnings("unchecked")
+	public final B animated(final boolean ANIMATED) {
         properties.put("animated", new SimpleBooleanProperty(ANIMATED));
         return (B)this;
     }
 
-    public final B animationDuration(final long DURATION) {
+    @SuppressWarnings("unchecked")
+	public final B animationDuration(final long DURATION) {
         properties.put("animationDuration", new SimpleLongProperty(DURATION));
         return (B)this;
     }
 
-    public final B startAngle(final double ANGLE) {
+    @SuppressWarnings("unchecked")
+	public final B startAngle(final double ANGLE) {
         properties.put("startAngle", new SimpleDoubleProperty(ANGLE));
         return (B)this;
     }
 
-    public final B angleRange(final double RANGE) {
+    @SuppressWarnings("unchecked")
+	public final B angleRange(final double RANGE) {
         properties.put("angleRange", new SimpleDoubleProperty(RANGE));
         return (B)this;
     }
 
-    public final B autoScale(final boolean AUTO_SCALE) {
+    @SuppressWarnings("unchecked")
+	public final B autoScale(final boolean AUTO_SCALE) {
         properties.put("autoScale", new SimpleBooleanProperty(AUTO_SCALE));
         return (B)this;
     }
 
-    public final B needleColor(final Color COLOR) {
+    @SuppressWarnings("unchecked")
+	public final B needleColor(final Color COLOR) {
         properties.put("needleColor", new SimpleObjectProperty<>(COLOR));
         return (B)this;
     }
 
-    public final B needleBorderColor(final Color COLOR) {
+    @SuppressWarnings("unchecked")
+	public final B needleBorderColor(final Color COLOR) {
         properties.put("needleBorderColor", new SimpleObjectProperty<>(COLOR));
         return (B)this;
     }
 
-    public final B barColor(final Color COLOR) {
+    @SuppressWarnings("unchecked")
+	public final B barColor(final Color COLOR) {
         properties.put("barColor", new SimpleObjectProperty<>(COLOR));
         return (B)this;
     }
 
-    public final B barBorderColor(final Color COLOR) {
+    @SuppressWarnings("unchecked")
+	public final B barBorderColor(final Color COLOR) {
         properties.put("barBorderColor", new SimpleObjectProperty<>(COLOR));
         return (B)this;
     }
 
-    public final B barBackgroundColor(final Color COLOR) {
+    @SuppressWarnings("unchecked")
+	public final B barBackgroundColor(final Color COLOR) {
         properties.put("barBackgroundColor", new SimpleObjectProperty<>(COLOR));
         return (B)this;
     }
 
-    public final B locale(final Locale LOCALE) {
+    @SuppressWarnings("unchecked")
+	public final B locale(final Locale LOCALE) {
         properties.put("locale", new SimpleObjectProperty<>(LOCALE));
         return (B)this;
     }
 
-    public final B numberFormat(final NumberFormat FORMAT) {
+    @SuppressWarnings("unchecked")
+	public final B numberFormat(final NumberFormat FORMAT) {
         properties.put("numberFormat", new SimpleObjectProperty<>(FORMAT));
         return (B)this;
     }
 
-    public final B shadowsEnabled(final boolean ENABLED) {
+    @SuppressWarnings("unchecked")
+	public final B shadowsEnabled(final boolean ENABLED) {
         properties.put("shadowsEnabled", new SimpleBooleanProperty(ENABLED));
         return (B)this;
     }
 
-    public final B styleClass(final String... STYLES) {
+    @SuppressWarnings("unchecked")
+	public final B styleClass(final String... STYLES) {
         properties.put("styleClass", new SimpleObjectProperty<>(STYLES));
         return (B)this;
     }
 
-    public final B sections(final Section... SECTIONS) {
+    @SuppressWarnings("unchecked")
+	public final B sections(final Section... SECTIONS) {
         properties.put("sectionsArray", new SimpleObjectProperty<>(SECTIONS));
         return (B)this;
     }
 
-    public final B sections(final List<Section> SECTIONS) {
+    @SuppressWarnings("unchecked")
+	public final B sections(final List<Section> SECTIONS) {
         properties.put("sectionsList", new SimpleObjectProperty<>(SECTIONS));
         return (B)this;
     }
 
-    public final B series(final Series<String, Number>... SERIES) {
+    @SuppressWarnings("unchecked")
+	public final B series(final Series<String, Number>... SERIES) {
         properties.put("seriesArray", new SimpleObjectProperty(SERIES));
         return (B)this;
     }
 
-    public final B series(final List<Series<String, Number>> SERIES) {
+    @SuppressWarnings("unchecked")
+	public final B series(final List<Series<String, Number>> SERIES) {
         properties.put("seriesList", new SimpleObjectProperty(SERIES));
         return (B)this;
     }
 
-    public final B tilesFxSeries(final TilesFXSeries<String, Number>... SERIES) {
+    @SuppressWarnings("unchecked")
+	public final B tilesFxSeries(final TilesFXSeries<String, Number>... SERIES) {
         properties.put("tilesFxSeriesArray", new SimpleObjectProperty(SERIES));
         return (B)this;
     }
 
-    public final B tilesFxSeries(final List<TilesFXSeries<String, Number>> SERIES) {
+    @SuppressWarnings("unchecked")
+	public final B tilesFxSeries(final List<TilesFXSeries<String, Number>> SERIES) {
         properties.put("tilesFxSeriesList", new SimpleObjectProperty(SERIES));
         return (B)this;
     }
 
-    public final B chartType(final ChartType TYPE) {
+    @SuppressWarnings("unchecked")
+	public final B chartType(final ChartType TYPE) {
         properties.put("chartType", new SimpleObjectProperty(TYPE));
         return (B)this;
     }
 
-    public final B tooltipTimeout(final double TIMEOUT) {
+    @SuppressWarnings("unchecked")
+	public final B tooltipTimeout(final double TIMEOUT) {
         properties.put("tooltipTimeout", new SimpleDoubleProperty(TIMEOUT));
         return (B)this;
     }
 
-    public final B barChartItems(final BarChartItem... ITEMS) {
+    @SuppressWarnings("unchecked")
+	public final B barChartItems(final BarChartItem... ITEMS) {
         properties.put("barChartItemsArray", new SimpleObjectProperty<>(ITEMS));
         return (B)this;
     }
 
-    public final B barChartItems(final List<BarChartItem> ITEMS) {
+    @SuppressWarnings("unchecked")
+	public final B barChartItems(final List<BarChartItem> ITEMS) {
         properties.put("barChartItemsList", new SimpleObjectProperty<>(ITEMS));
         return (B)this;
     }
 
-    public final B leaderBoardItems(final LeaderBoardItem... ITEMS) {
+    @SuppressWarnings("unchecked")
+	public final B leaderBoardItems(final LeaderBoardItem... ITEMS) {
         properties.put("leaderBoardItemsArray", new SimpleObjectProperty<>(ITEMS));
         return (B)this;
     }
 
-    public final B leaderBoardItems(final List<LeaderBoardItem> ITEMS) {
+    @SuppressWarnings("unchecked")
+	public final B leaderBoardItems(final List<LeaderBoardItem> ITEMS) {
         properties.put("leaderBoardItemsList", new SimpleObjectProperty<>(ITEMS));
         return (B)this;
     }
 
-    public final B chartData(final ChartData... DATA) {
+    @SuppressWarnings("unchecked")
+	public final B chartData(final ChartData... DATA) {
         properties.put("chartDataArray", new SimpleObjectProperty(DATA));
         return (B)this;
     }
 
-    public final B chartData(final List<ChartData> DATA) {
+    @SuppressWarnings("unchecked")
+	public final B chartData(final List<ChartData> DATA) {
         properties.put("chartDataList", new SimpleObjectProperty(DATA));
         return (B)this;
     }
 
-    public final B characters(final String... CHARACTERS) {
+    @SuppressWarnings("unchecked")
+	public final B characters(final String... CHARACTERS) {
         properties.put("characterArray", new SimpleObjectProperty<>(CHARACTERS));
         return (B)this;
     }
 
-    public final B flipTimeInMS(final long TIME) {
+    @SuppressWarnings("unchecked")
+	public final B flipTimeInMS(final long TIME) {
         properties.put("flipTimeInMS", new SimpleLongProperty(TIME));
         return (B)this;
     }
 
-    public final B flipText(final String TEXT) {
+    @SuppressWarnings("unchecked")
+	public final B flipText(final String TEXT) {
         properties.put("flipText", new SimpleStringProperty(TEXT));
         return (B)this;
     }
 
-    public final B titleColor(final Color COLOR) {
+    @SuppressWarnings("unchecked")
+	public final B titleColor(final Color COLOR) {
         properties.put("titleColor", new SimpleObjectProperty<>(COLOR));
         return (B)this;
     }
 
-    public final B descriptionColor(final Color COLOR) {
+    @SuppressWarnings("unchecked")
+	public final B descriptionColor(final Color COLOR) {
         properties.put("descriptionColor", new SimpleObjectProperty<>(COLOR));
         return (B)this;
     }
 
-    public B unitColor(final Color COLOR) {
+    @SuppressWarnings("unchecked")
+	public B unitColor(final Color COLOR) {
         properties.put("unitColor", new SimpleObjectProperty<>(COLOR));
         return (B)this;
     }
 
-    public B valueColor(final Color COLOR) {
+    @SuppressWarnings("unchecked")
+	public B valueColor(final Color COLOR) {
         properties.put("valueColor", new SimpleObjectProperty<>(COLOR));
         return (B)this;
     }
 
-    public B thresholdColor(final Color COLOR) {
+    @SuppressWarnings("unchecked")
+	public B thresholdColor(final Color COLOR) {
         properties.put("thresholdColor", new SimpleObjectProperty<>(COLOR));
         return (B)this;
     }
 
-    public final B checkSectionsForValue(final boolean CHECK) {
+    @SuppressWarnings("unchecked")
+	public final B checkSectionsForValue(final boolean CHECK) {
         properties.put("checkSectionsForValue", new SimpleBooleanProperty(CHECK));
         return (B)this;
     }
 
-    public final B checkThreshold(final boolean CHECK) {
+    @SuppressWarnings("unchecked")
+	public final B checkThreshold(final boolean CHECK) {
         properties.put("checkThreshold", new SimpleBooleanProperty(CHECK));
         return (B)this;
     }
 
-    public final B innerShadowEnabled(final boolean ENABLED) {
+    @SuppressWarnings("unchecked")
+	public final B innerShadowEnabled(final boolean ENABLED) {
         properties.put("innerShadowEnabled", new SimpleBooleanProperty(ENABLED));
         return (B)this;
     }
 
-    public final B thresholdVisible(final boolean VISIBLE) {
+    @SuppressWarnings("unchecked")
+	public final B thresholdVisible(final boolean VISIBLE) {
         properties.put("thresholdVisible", new SimpleBooleanProperty(VISIBLE));
         return (B)this;
     }
 
-    public final B averageVisible(final boolean VISIBLE) {
+    @SuppressWarnings("unchecked")
+	public final B averageVisible(final boolean VISIBLE) {
         properties.put("averageVisible", new SimpleBooleanProperty(VISIBLE));
         return (B)this;
     }
 
-    public final B sectionsVisible(final boolean VISIBLE) {
+    @SuppressWarnings("unchecked")
+	public final B sectionsVisible(final boolean VISIBLE) {
         properties.put("sectionsVisible", new SimpleBooleanProperty(VISIBLE));
         return (B)this;
     }
 
-    public final B sectionsAlwaysVisible(final boolean VISIBLE) {
+    @SuppressWarnings("unchecked")
+	public final B sectionsAlwaysVisible(final boolean VISIBLE) {
         properties.put("sectionsAlwaysVisible", new SimpleBooleanProperty(VISIBLE));
         return (B)this;
     }
 
-    public final B sectionTextVisible(final boolean VISIBLE) {
+    @SuppressWarnings("unchecked")
+	public final B sectionTextVisible(final boolean VISIBLE) {
         properties.put("sectionTextVisible", new SimpleBooleanProperty(VISIBLE));
         return (B)this;
     }
 
-    public final B sectionIconsVisible(final boolean VISIBLE) {
+    @SuppressWarnings("unchecked")
+	public final B sectionIconsVisible(final boolean VISIBLE) {
         properties.put("sectionIconsVisible", new SimpleBooleanProperty(VISIBLE));
         return (B)this;
     }
 
-    public final B highlightSections(final boolean HIGHLIGHT) {
+    @SuppressWarnings("unchecked")
+	public final B highlightSections(final boolean HIGHLIGHT) {
         properties.put("highlightSections", new SimpleBooleanProperty(HIGHLIGHT));
         return (B)this;
     }
 
-    public final B orientation(final Orientation ORIENTATION) {
+    @SuppressWarnings("unchecked")
+	public final B orientation(final Orientation ORIENTATION) {
         properties.put("orientation", new SimpleObjectProperty<>(ORIENTATION));
         return (B)this;
     }
 
-    public final B customFontEnabled(final boolean ENABLED) {
+    @SuppressWarnings("unchecked")
+	public final B customFontEnabled(final boolean ENABLED) {
         properties.put("customFontEnabled", new SimpleBooleanProperty(ENABLED));
         return (B)this;
     }
 
-    public final B customFont(final Font FONT) {
+    @SuppressWarnings("unchecked")
+	public final B customFont(final Font FONT) {
         properties.put("customFont", new SimpleObjectProperty(FONT));
         return (B)this;
     }
 
-    public final B alertMessage(final String MESSAGE) {
+    @SuppressWarnings("unchecked")
+	public final B alertMessage(final String MESSAGE) {
         properties.put("alertMessage", new SimpleStringProperty(MESSAGE));
         return (B)this;
     }
 
-    public final B smoothing(final boolean SMOOTHING) {
+    @SuppressWarnings("unchecked")
+	public final B smoothing(final boolean SMOOTHING) {
         properties.put("smoothing", new SimpleBooleanProperty(SMOOTHING));
         return (B)this;
     }
 
-    public final B onValueChanged(final InvalidationListener LISTENER) {
+    @SuppressWarnings("unchecked")
+	public final B onValueChanged(final InvalidationListener LISTENER) {
         properties.put("onValueChanged", new SimpleObjectProperty<>(LISTENER));
         return (B)this;
     }
 
-    public final B onThresholdExceeded(final TileEventListener HANDLER) {
+    @SuppressWarnings("unchecked")
+	public final B onThresholdExceeded(final TileEventListener HANDLER) {
         properties.put("onThresholdExceeded", new SimpleObjectProperty<>(HANDLER));
         return (B)this;
     }
 
-    public final B onThresholdUnderrun(final TileEventListener HANDLER) {
+    @SuppressWarnings("unchecked")
+	public final B onThresholdUnderrun(final TileEventListener HANDLER) {
         properties.put("onThresholdUnderrun", new SimpleObjectProperty<>(HANDLER));
         return (B)this;
     }
 
-    public final B time(final ZonedDateTime TIME) {
+    @SuppressWarnings("unchecked")
+	public final B time(final ZonedDateTime TIME) {
         properties.put("time", new SimpleObjectProperty<>(TIME));
         return (B)this;
     }
 
-    public final B text(final String TEXT) {
+    @SuppressWarnings("unchecked")
+	public final B text(final String TEXT) {
         properties.put("text", new SimpleStringProperty(TEXT));
         return (B)this;
     }
 
-    public final B textAlignment(final TextAlignment ALIGNMENT) {
+    @SuppressWarnings("unchecked")
+	public final B textAlignment(final TextAlignment ALIGNMENT) {
         properties.put("textAlignment", new SimpleObjectProperty(ALIGNMENT));
         return (B)this;
     }
 
-    public final B timeSections(final TimeSection... SECTIONS) {
+    @SuppressWarnings("unchecked")
+	public final B timeSections(final TimeSection... SECTIONS) {
         properties.put("timeSectionsArray", new SimpleObjectProperty<>(SECTIONS));
         return (B)this;
     }
 
-    public final B timeSections(final List<TimeSection> SECTIONS) {
+    @SuppressWarnings("unchecked")
+	public final B timeSections(final List<TimeSection> SECTIONS) {
         properties.put("timeSectionsList", new SimpleObjectProperty<>(SECTIONS));
         return (B)this;
     }
 
-    public final B discreteSeconds(final boolean DISCRETE) {
+    @SuppressWarnings("unchecked")
+	public final B discreteSeconds(final boolean DISCRETE) {
         properties.put("discreteSeconds", new SimpleBooleanProperty(DISCRETE));
         return (B)this;
     }
 
-    public final B discreteMinutes(final boolean DISCRETE) {
+    @SuppressWarnings("unchecked")
+	public final B discreteMinutes(final boolean DISCRETE) {
         properties.put("discreteMinutes", new SimpleBooleanProperty(DISCRETE));
         return (B)this;
     }
 
-    public final B discreteHours(final boolean DISCRETE) {
+    @SuppressWarnings("unchecked")
+	public final B discreteHours(final boolean DISCRETE) {
         properties.put("discreteHours", new SimpleBooleanProperty(DISCRETE));
         return (B)this;
     }
 
-    public final B secondsVisible(final boolean VISIBLE) {
+    @SuppressWarnings("unchecked")
+	public final B secondsVisible(final boolean VISIBLE) {
         properties.put("secondsVisible", new SimpleBooleanProperty(VISIBLE));
         return (B)this;
     }
 
-    public final B textVisible(final boolean VISIBLE) {
+    @SuppressWarnings("unchecked")
+	public final B textVisible(final boolean VISIBLE) {
         properties.put("textVisible", new SimpleBooleanProperty(VISIBLE));
         return (B)this;
     }
 
-    public final B dateVisible(final boolean VISIBLE) {
+    @SuppressWarnings("unchecked")
+	public final B dateVisible(final boolean VISIBLE) {
         properties.put("dateVisible", new SimpleBooleanProperty(VISIBLE));
         return (B)this;
     }
 
-    public final B running(final boolean RUNNING) {
+    @SuppressWarnings("unchecked")
+	public final B running(final boolean RUNNING) {
         properties.put("running", new SimpleBooleanProperty(RUNNING));
         return (B)this;
     }
 
-    public final B textColor(final Color COLOR) {
+    @SuppressWarnings("unchecked")
+	public final B textColor(final Color COLOR) {
         properties.put("textColor", new SimpleObjectProperty<>(COLOR));
         return (B)this;
     }
 
-    public final B dateColor(final Color COLOR) {
+    @SuppressWarnings("unchecked")
+	public final B dateColor(final Color COLOR) {
         properties.put("dateColor", new SimpleObjectProperty<>(COLOR));
         return (B)this;
     }
 
-    public final B hourTickMarkColor(final Color COLOR) {
+    @SuppressWarnings("unchecked")
+	public final B hourTickMarkColor(final Color COLOR) {
         properties.put("hourTickMarkColor", new SimpleObjectProperty<>(COLOR));
         return (B)this;
     }
 
-    public final B minuteTickMarkColor(final Color COLOR) {
+    @SuppressWarnings("unchecked")
+	public final B minuteTickMarkColor(final Color COLOR) {
         properties.put("minuteTickMarkColor", new SimpleObjectProperty<>(COLOR));
         return (B)this;
     }
 
-    public final B alarmColor(final Color COLOR) {
+    @SuppressWarnings("unchecked")
+	public final B alarmColor(final Color COLOR) {
         properties.put("alarmColor", new SimpleObjectProperty<>(COLOR));
         return (B)this;
     }
 
-    public final B hourTickMarksVisible(final boolean VISIBLE) {
+    @SuppressWarnings("unchecked")
+	public final B hourTickMarksVisible(final boolean VISIBLE) {
         properties.put("hourTickMarksVisible", new SimpleBooleanProperty(VISIBLE));
         return (B)this;
     }
 
-    public final B minuteTickMarksVisible(final boolean VISIBLE) {
+    @SuppressWarnings("unchecked")
+	public final B minuteTickMarksVisible(final boolean VISIBLE) {
         properties.put("minuteTickMarksVisible", new SimpleBooleanProperty(VISIBLE));
         return (B)this;
     }
 
-    public final B hourColor(final Color COLOR) {
+    @SuppressWarnings("unchecked")
+	public final B hourColor(final Color COLOR) {
         properties.put("hourColor", new SimpleObjectProperty<>(COLOR));
         return (B)this;
     }
 
-    public final B minuteColor(final Color COLOR) {
+    @SuppressWarnings("unchecked")
+	public final B minuteColor(final Color COLOR) {
         properties.put("minuteColor", new SimpleObjectProperty<>(COLOR));
         return (B)this;
     }
 
-    public final B secondColor(final Color COLOR) {
+    @SuppressWarnings("unchecked")
+	public final B secondColor(final Color COLOR) {
         properties.put("secondColor", new SimpleObjectProperty<>(COLOR));
         return (B)this;
     }
 
-    public final B alarmsEnabled(final boolean ENABLED) {
+    @SuppressWarnings("unchecked")
+	public final B alarmsEnabled(final boolean ENABLED) {
         properties.put("alarmsEnabled", new SimpleBooleanProperty(ENABLED));
         return (B)this;
     }
 
-    public final B alarmsVisible(final boolean VISIBLE) {
+    @SuppressWarnings("unchecked")
+	public final B alarmsVisible(final boolean VISIBLE) {
         properties.put("alarmsVisible", new SimpleBooleanProperty(VISIBLE));
         return (B)this;
     }
 
-    public final B tooltipText(final String TEXT) {
+    @SuppressWarnings("unchecked")
+	public final B tooltipText(final String TEXT) {
         properties.put("tooltipText", new SimpleStringProperty(TEXT));
         return (B)this;
     }
 
-    public final B alarms(final Alarm... ALARMS) {
+    @SuppressWarnings("unchecked")
+	public final B alarms(final Alarm... ALARMS) {
         properties.put("alarmsArray", new SimpleObjectProperty<>(ALARMS));
         return (B)this;
     }
 
-    public final B alarms(final List<Alarm> ALARMS) {
+    @SuppressWarnings("unchecked")
+	public final B alarms(final List<Alarm> ALARMS) {
         properties.put("alarmsList", new SimpleObjectProperty<>(ALARMS));
         return (B)this;
     }
 
-    public final B onAlarm(final AlarmEventListener LISTENER) {
+    @SuppressWarnings("unchecked")
+	public final B onAlarm(final AlarmEventListener LISTENER) {
         properties.put("onAlarm", new SimpleObjectProperty<>(LISTENER));
         return (B)this;
     }
 
-    public final B onTimeEvent(final TimeEventListener LISTENER) {
+    @SuppressWarnings("unchecked")
+	public final B onTimeEvent(final TimeEventListener LISTENER) {
         properties.put("onTimeEvent", new SimpleObjectProperty<>(LISTENER));
         return (B)this;
     }
 
-    public final B increment(final double INCREMENT) {
+    @SuppressWarnings("unchecked")
+	public final B increment(final double INCREMENT) {
         properties.put("increment", new SimpleDoubleProperty(INCREMENT));
         return (B)this;
     }
@@ -669,263 +785,317 @@ public class TileBuilder<B extends TileBuilder<B>> {
     }
     */
 
-    public final B graphic(final Node GRAPHIC) {
+    @SuppressWarnings("unchecked")
+	public final B graphic(final Node GRAPHIC) {
         properties.put("graphic", new SimpleObjectProperty(GRAPHIC));
         return (B)this;
     }
 
-    public final B currentLocation(final Location LOCATION) {
+    @SuppressWarnings("unchecked")
+	public final B currentLocation(final Location LOCATION) {
         properties.put("currentLocation", new SimpleObjectProperty(LOCATION));
         return (B)this;
     }
 
-    public final B pointsOfInterest(final Location... LOCATIONS) {
+    @SuppressWarnings("unchecked")
+	public final B pointsOfInterest(final Location... LOCATIONS) {
         properties.put("poiArray", new SimpleObjectProperty(LOCATIONS));
         return (B)this;
     }
-    public final B pointsOfInterest(final List<Location> LOCATIONS) {
+    @SuppressWarnings("unchecked")
+	public final B pointsOfInterest(final List<Location> LOCATIONS) {
         properties.put("poiList", new SimpleObjectProperty(LOCATIONS));
         return (B)this;
     }
 
-    public final B track(final Location... LOCATIONS) {
+    @SuppressWarnings("unchecked")
+	public final B track(final Location... LOCATIONS) {
         properties.put("trackArray", new SimpleObjectProperty(LOCATIONS));
         return (B)this;
     }
-    public final B track(final List<Location> LOCATIONS) {
+    @SuppressWarnings("unchecked")
+	public final B track(final List<Location> LOCATIONS) {
         properties.put("trackList", new SimpleObjectProperty(LOCATIONS));
         return (B)this;
     }
 
-    public final B trackColor(final TileColor COLOR) {
+    @SuppressWarnings("unchecked")
+	public final B trackColor(final TileColor COLOR) {
         properties.put("trackColor", new SimpleObjectProperty(COLOR));
         return (B)this;
     }
 
-    public final B mapProvider(final MapProvider PROVIDER) {
+    @SuppressWarnings("unchecked")
+	public final B mapProvider(final MapProvider PROVIDER) {
         properties.put("mapProvider", new SimpleObjectProperty(PROVIDER));
         return (B)this;
     }
 
-    public final B gradientStops(final Stop... STOPS) {
+    @SuppressWarnings("unchecked")
+	public final B gradientStops(final Stop... STOPS) {
         properties.put("gradientStopsArray", new SimpleObjectProperty(STOPS));
         return (B)this;
     }
-    public final B gradientStops(final List<Stop> STOPS) {
+    @SuppressWarnings("unchecked")
+	public final B gradientStops(final List<Stop> STOPS) {
         properties.put("gradientStopsList", new SimpleObjectProperty(STOPS));
         return (B)this;
     }
 
-    public final B strokeWithGradient(final boolean STROKE_WITH_GRADIENT) {
+    @SuppressWarnings("unchecked")
+	public final B strokeWithGradient(final boolean STROKE_WITH_GRADIENT) {
         properties.put("strokeWithGradient", new SimpleBooleanProperty(STROKE_WITH_GRADIENT));
         return (B)this;
     }
 
-    public final B fillWithGradient(final boolean FILL_WITH_GRADIENT) {
+    @SuppressWarnings("unchecked")
+	public final B fillWithGradient(final boolean FILL_WITH_GRADIENT) {
         properties.put("fillWithGradient", new SimpleBooleanProperty(FILL_WITH_GRADIENT));
         return (B)this;
     }
 
-    public final B roundedCorners(final boolean ROUNDED) {
+    @SuppressWarnings("unchecked")
+	public final B roundedCorners(final boolean ROUNDED) {
         properties.put("roundedCorners", new SimpleBooleanProperty(ROUNDED));
         return (B)this;
     }
 
-    public final B textSize(final TextSize SIZE) {
+    @SuppressWarnings("unchecked")
+	public final B textSize(final TextSize SIZE) {
         properties.put("textSize", new SimpleObjectProperty(SIZE));
         return (B)this;
     }
 
-    public final B xAxis(final Axis AXIS) {
+    @SuppressWarnings("unchecked")
+	public final B xAxis(final Axis AXIS) {
         properties.put("xAxis", new SimpleObjectProperty(AXIS));
         return (B)this;
     }
 
-    public final B yAxis(final Axis AXIS) {
+    @SuppressWarnings("unchecked")
+	public final B yAxis(final Axis AXIS) {
         properties.put("yAxis", new SimpleObjectProperty(AXIS));
         return (B)this;
     }
 
-    public final B radarChartMode(final RadarChart.Mode MODE) {
+    @SuppressWarnings("unchecked")
+	public final B radarChartMode(final RadarChart.Mode MODE) {
        properties.put("radarChartMode", new SimpleObjectProperty(MODE));
        return (B)this;
     }
 
-    public final B chartGridColor(final Color COLOR) {
+    @SuppressWarnings("unchecked")
+	public final B chartGridColor(final Color COLOR) {
         properties.put("chartGridColor", new SimpleObjectProperty(COLOR));
         return (B)this;
     }
 
-    public final B country(final Country COUNTRY) {
+    @SuppressWarnings("unchecked")
+	public final B country(final Country COUNTRY) {
         properties.put("country", new SimpleObjectProperty(COUNTRY));
         return (B)this;
     }
 
-    public final B countryGroup(final CountryGroup COUNTRY_GROUP) {
+    @SuppressWarnings("unchecked")
+	public final B countryGroup(final CountryGroup COUNTRY_GROUP) {
         properties.put("countryGroup", new SimpleObjectProperty(COUNTRY_GROUP));
         return (B)this;
     }
 
-    public final B sortedData(final boolean SORTED) {
+    @SuppressWarnings("unchecked")
+	public final B sortedData(final boolean SORTED) {
         properties.put("sortedData", new SimpleBooleanProperty(SORTED));
         return (B)this;
     }
 
-    public final B dataPointsVisible(final boolean VISIBLE) {
+    @SuppressWarnings("unchecked")
+	public final B dataPointsVisible(final boolean VISIBLE) {
         properties.put("dataPointsVisible", new SimpleBooleanProperty(VISIBLE));
         return (B)this;
     }
 
-    public final B sunburstTree(final TreeNode TREE) {
+    @SuppressWarnings("unchecked")
+	public final B sunburstTree(final TreeNode TREE) {
         properties.put("sunburstTree", new SimpleObjectProperty(TREE));
         return (B)this;
     }
 
-    public final B sunburstBackgroundColor(final Color COLOR) {
+    @SuppressWarnings("unchecked")
+	public final B sunburstBackgroundColor(final Color COLOR) {
         properties.put("sunburstBackgroundColor", new SimpleObjectProperty(COLOR));
         return (B)this;
     }
 
-    public final B sunburstTextColor(final Color COLOR) {
+    @SuppressWarnings("unchecked")
+	public final B sunburstTextColor(final Color COLOR) {
         properties.put("sunburstTextColor", new SimpleObjectProperty(COLOR));
         return (B)this;
     }
 
-    public final B sunburstUseColorFromParent(final boolean USE) {
+    @SuppressWarnings("unchecked")
+	public final B sunburstUseColorFromParent(final boolean USE) {
         properties.put("sunburstUseColorFromParent", new SimpleBooleanProperty(USE));
         return (B)this;
     }
 
-    public final B sunburstTextOrientation(final TextOrientation ORIENTATION) {
+    @SuppressWarnings("unchecked")
+	public final B sunburstTextOrientation(final TextOrientation ORIENTATION) {
         properties.put("sunburstTextOrientation", new SimpleObjectProperty(ORIENTATION));
         return (B)this;
     }
 
-    public final B sunburstVisibleData(final VisibleData VISIBLE_DATA) {
+    @SuppressWarnings("unchecked")
+	public final B sunburstVisibleData(final VisibleData VISIBLE_DATA) {
         properties.put("sunburstVisibleData", new SimpleObjectProperty(VISIBLE_DATA));
         return (B)this;
     }
 
-    public final B sunburstInteractive(final boolean INTERACTIVE) {
+    @SuppressWarnings("unchecked")
+	public final B sunburstInteractive(final boolean INTERACTIVE) {
         properties.put("sunburstInteractive", new SimpleBooleanProperty(INTERACTIVE));
         return (B)this;
     }
 
-    public final B sunburstAutoTextColor(final boolean AUTOMATIC) {
+    @SuppressWarnings("unchecked")
+	public final B sunburstAutoTextColor(final boolean AUTOMATIC) {
         properties.put("sunburstAutoTextColor", new SimpleBooleanProperty(AUTOMATIC));
         return (B)this;
     }
 
-    public final B sunburstUseChartDataTextColor(final boolean USE) {
+    @SuppressWarnings("unchecked")
+	public final B sunburstUseChartDataTextColor(final boolean USE) {
         properties.put("sunburstUseChartDataTextColor", new SimpleBooleanProperty(USE));
         return (B)this;
     }
 
-    public final B snapToTicks(final boolean SNAP) {
+    @SuppressWarnings("unchecked")
+	public final B snapToTicks(final boolean SNAP) {
         properties.put("snapToTicks", new SimpleBooleanProperty(SNAP));
         return (B)this;
     }
 
-    public final B minorTickCount(final int COUNT) {
+    @SuppressWarnings("unchecked")
+	public final B minorTickCount(final int COUNT) {
         properties.put("minorTickCount", new SimpleIntegerProperty(COUNT));
         return (B)this;
     }
 
-    public final B majorTickUnit(final double UNIT) {
+    @SuppressWarnings("unchecked")
+	public final B majorTickUnit(final double UNIT) {
         properties.put("majorTickUnit", new SimpleDoubleProperty(UNIT));
         return (B)this;
     }
 
-    public final B matrixSize(final int COLS, final int ROWS) {
+    @SuppressWarnings("unchecked")
+	public final B matrixSize(final int COLS, final int ROWS) {
         properties.put("matrixSize", null);
         properties.put("matrixColumns", new SimpleIntegerProperty(COLS));
         properties.put("matrixRows", new SimpleIntegerProperty(ROWS));
         return (B)this;
     }
 
-    public final B notificationBackgroundColor(final Color COLOR) {
+    @SuppressWarnings("unchecked")
+	public final B notificationBackgroundColor(final Color COLOR) {
         properties.put("notificationBackgroundColor", new SimpleObjectProperty(COLOR));
         return (B)this;
     }
 
-    public final B notificationForegroundColor(final Color COLOR) {
+    @SuppressWarnings("unchecked")
+	public final B notificationForegroundColor(final Color COLOR) {
         properties.put("notificationForegroundColor", new SimpleObjectProperty(COLOR));
         return (B)this;
     }
 
-    public final B prefSize(final double WIDTH, final double HEIGHT) {
+    @SuppressWarnings("unchecked")
+	public final B prefSize(final double WIDTH, final double HEIGHT) {
         properties.put("prefSize", new SimpleObjectProperty<>(new Dimension2D(WIDTH, HEIGHT)));
         return (B)this;
     }
-    public final B minSize(final double WIDTH, final double HEIGHT) {
+    @SuppressWarnings("unchecked")
+	public final B minSize(final double WIDTH, final double HEIGHT) {
         properties.put("minSize", new SimpleObjectProperty<>(new Dimension2D(WIDTH, HEIGHT)));
         return (B)this;
     }
-    public final B maxSize(final double WIDTH, final double HEIGHT) {
+    @SuppressWarnings("unchecked")
+	public final B maxSize(final double WIDTH, final double HEIGHT) {
         properties.put("maxSize", new SimpleObjectProperty<>(new Dimension2D(WIDTH, HEIGHT)));
         return (B)this;
     }
 
-    public final B prefWidth(final double PREF_WIDTH) {
+    @SuppressWarnings("unchecked")
+	public final B prefWidth(final double PREF_WIDTH) {
         properties.put("prefWidth", new SimpleDoubleProperty(PREF_WIDTH));
         return (B)this;
     }
-    public final B prefHeight(final double PREF_HEIGHT) {
+    @SuppressWarnings("unchecked")
+	public final B prefHeight(final double PREF_HEIGHT) {
         properties.put("prefHeight", new SimpleDoubleProperty(PREF_HEIGHT));
         return (B)this;
     }
 
-    public final B minWidth(final double MIN_WIDTH) {
+    @SuppressWarnings("unchecked")
+	public final B minWidth(final double MIN_WIDTH) {
         properties.put("minWidth", new SimpleDoubleProperty(MIN_WIDTH));
         return (B)this;
     }
-    public final B minHeight(final double MIN_HEIGHT) {
+    @SuppressWarnings("unchecked")
+	public final B minHeight(final double MIN_HEIGHT) {
         properties.put("minHeight", new SimpleDoubleProperty(MIN_HEIGHT));
         return (B)this;
     }
 
-    public final B maxWidth(final double MAX_WIDTH) {
+    @SuppressWarnings("unchecked")
+	public final B maxWidth(final double MAX_WIDTH) {
         properties.put("maxWidth", new SimpleDoubleProperty(MAX_WIDTH));
         return (B)this;
     }
-    public final B maxHeight(final double MAX_HEIGHT) {
+    @SuppressWarnings("unchecked")
+	public final B maxHeight(final double MAX_HEIGHT) {
         properties.put("maxHeight", new SimpleDoubleProperty(MAX_HEIGHT));
         return (B)this;
     }
 
-    public final B scaleX(final double SCALE_X) {
+    @SuppressWarnings("unchecked")
+	public final B scaleX(final double SCALE_X) {
         properties.put("scaleX", new SimpleDoubleProperty(SCALE_X));
         return (B)this;
     }
-    public final B scaleY(final double SCALE_Y) {
+    @SuppressWarnings("unchecked")
+	public final B scaleY(final double SCALE_Y) {
         properties.put("scaleY", new SimpleDoubleProperty(SCALE_Y));
         return (B)this;
     }
 
-    public final B layoutX(final double LAYOUT_X) {
+    @SuppressWarnings("unchecked")
+	public final B layoutX(final double LAYOUT_X) {
         properties.put("layoutX", new SimpleDoubleProperty(LAYOUT_X));
         return (B)this;
     }
-    public final B layoutY(final double LAYOUT_Y) {
+    @SuppressWarnings("unchecked")
+	public final B layoutY(final double LAYOUT_Y) {
         properties.put("layoutY", new SimpleDoubleProperty(LAYOUT_Y));
         return (B)this;
     }
 
-    public final B translateX(final double TRANSLATE_X) {
+    @SuppressWarnings("unchecked")
+	public final B translateX(final double TRANSLATE_X) {
         properties.put("translateX", new SimpleDoubleProperty(TRANSLATE_X));
         return (B)this;
     }
-    public final B translateY(final double TRANSLATE_Y) {
+    @SuppressWarnings("unchecked")
+	public final B translateY(final double TRANSLATE_Y) {
         properties.put("translateY", new SimpleDoubleProperty(TRANSLATE_Y));
         return (B)this;
     }
 
-    public final B padding(final Insets INSETS) {
+    @SuppressWarnings("unchecked")
+	public final B padding(final Insets INSETS) {
         properties.put("padding", new SimpleObjectProperty<>(INSETS));
         return (B)this;
     }
 
-    public final Tile build() {
+    @SuppressWarnings("unchecked")
+	public final Tile build() {
         final Tile CONTROL;
         if (properties.containsKey("skinType")) {
             SkinType skinType = ((ObjectProperty<SkinType>) properties.get("skinType")).get();

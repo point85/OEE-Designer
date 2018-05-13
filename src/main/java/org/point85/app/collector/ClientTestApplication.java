@@ -69,7 +69,7 @@ import javafx.stage.Stage;
 
 public class ClientTestApplication implements MessageListener {
 	// logger
-	private final Logger logger = LoggerFactory.getLogger(getClass());
+	private static final Logger logger = LoggerFactory.getLogger(ClientTestApplication.class);
 
 	// AMQP message publisher/subscriber
 	private Map<String, PublisherSubscriber> pubsubs = new HashMap<>();

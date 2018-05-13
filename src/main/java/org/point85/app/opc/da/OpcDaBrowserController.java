@@ -13,8 +13,8 @@ import org.point85.app.AppUtils;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
 import org.point85.app.designer.DesignerApplication;
+import org.point85.domain.DomainUtils;
 import org.point85.domain.opc.da.OpcDaBrowserLeaf;
-import org.point85.domain.opc.da.DaOpcClient;
 import org.point85.domain.opc.da.OpcDaMonitoredGroup;
 import org.point85.domain.opc.da.OpcDaServerStatus;
 import org.point85.domain.opc.da.OpcDaSource;
@@ -235,7 +235,7 @@ public class OpcDaBrowserController extends OpcDaController {
 			this.taTagValue.setText(value);
 
 			// timestamp
-			ZonedDateTime zdt = DaOpcClient.fromFiletime(itemStateEntry.getValue().getTimestamp());
+			ZonedDateTime zdt = DomainUtils.fromFiletime(itemStateEntry.getValue().getTimestamp());
 			this.lbTagTimestamp.setText(zdt.toString());
 		}
 	}
@@ -395,25 +395,29 @@ public class OpcDaBrowserController extends OpcDaController {
 
 	@FXML
 	private void onSelectProgId() {
+		try {
 
-		if (getSelectedProgId() == null || getSelectedProgId().length() == 0) {
-			return;
+			if (getSelectedProgId() == null || getSelectedProgId().length() == 0) {
+				return;
+			}
+
+			// retrieve data source by name (ProgId)
+			OpcDaSource source = PersistenceService.instance().fetchOpcDaSourceByName(getSelectedProgId());
+			if (source != null) {
+				setSource(source);
+			} else {
+				// not saved yet
+				return;
+			}
+
+			this.tfHost.setText(source.getHost());
+			this.tfProgId.setText(source.getProgId());
+			this.tfUserName.setText(source.getUserName());
+			this.pfPassword.setText(source.getUserPassword());
+			this.tfDescription.setText(source.getDescription());
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
 		}
-
-		// retrieve data source by name (ProgId)
-		OpcDaSource source = PersistenceService.instance().fetchOpcDaSourceByName(getSelectedProgId());
-		if (source != null) {
-			setSource(source);
-		} else {
-			// not saved yet
-			return;
-		}
-
-		this.tfHost.setText(source.getHost());
-		this.tfProgId.setText(source.getProgId());
-		this.tfUserName.setText(source.getUserName());
-		this.pfPassword.setText(source.getUserPassword());
-		this.tfDescription.setText(source.getDescription());
 	}
 
 	@FXML

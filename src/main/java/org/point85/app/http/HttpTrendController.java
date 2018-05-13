@@ -236,12 +236,10 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 
 	// service class for callbacks on received data
 	private class ResolutionService extends Service<Void> {
-		private String sourceId;
 		private String dataValue;
 		private OffsetDateTime timestamp;
 
 		public ResolutionService(String sourceId, String dataValue, OffsetDateTime timestamp) {
-			this.sourceId = sourceId;
 			this.dataValue = dataValue;
 			this.timestamp = timestamp;
 		}

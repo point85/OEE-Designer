@@ -32,6 +32,7 @@ import javafx.scene.paint.Color;
 /**
  * Created by hansolo on 19.12.16.
  */
+@SuppressWarnings("rawtypes")
 public class Alarm {
     public enum Repetition { ONCE, HALF_HOURLY, HOURLY, DAILY, WEEKLY }
     public static final boolean          ARMED   = true;
@@ -206,7 +207,11 @@ public class Alarm {
 
     // ******************** Inner Classes *************************************
     public static class AlarmMarkerEvent extends Event {;
-        public static final EventType<AlarmMarkerEvent> ALARM_MARKER_PRESSED  = new EventType<>(ANY, "ALARM_MARKER_PRESSED");
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = -3754391934611681337L;
+		public static final EventType<AlarmMarkerEvent> ALARM_MARKER_PRESSED  = new EventType<>(ANY, "ALARM_MARKER_PRESSED");
         public static final EventType<AlarmMarkerEvent> ALARM_MARKER_RELEASED = new EventType<>(ANY, "ALARM_MARKER_RELEASED");
 
 

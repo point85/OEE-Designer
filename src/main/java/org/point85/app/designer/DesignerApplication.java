@@ -3,9 +3,9 @@ package org.point85.app.designer;
 import java.net.URL;
 
 import org.point85.app.AppUtils;
+import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
-import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.dashboard.DashboardController;
 import org.point85.app.dashboard.DashboardDialogController;
 import org.point85.app.http.HttpServerController;
@@ -55,7 +55,7 @@ import javafx.stage.StageStyle;
 
 public class DesignerApplication {
 	// logger
-	private final Logger logger = LoggerFactory.getLogger(getClass());
+	private static final Logger logger = LoggerFactory.getLogger(DesignerApplication.class);
 
 	// physical model controller
 	private PhysicalModelController physicalModelController;
@@ -234,7 +234,7 @@ public class DesignerApplication {
 			Stage dialogStage = new Stage(StageStyle.DECORATED);
 			dialogStage.setTitle("Edit Material");
 			dialogStage.initModality(Modality.NONE);
-			// dialogStage.initOwner(primaryStage);
+
 			Scene scene = new Scene(pane);
 			dialogStage.setScene(scene);
 
@@ -263,7 +263,7 @@ public class DesignerApplication {
 			Stage dialogStage = new Stage(StageStyle.DECORATED);
 			dialogStage.setTitle("Edit Unit Of Measure");
 			dialogStage.initModality(Modality.NONE);
-			// dialogStage.initOwner(primaryStage);
+
 			Scene scene = new Scene(page);
 			dialogStage.setScene(scene);
 
@@ -293,7 +293,7 @@ public class DesignerApplication {
 			Stage dialogStage = new Stage(StageStyle.DECORATED);
 			dialogStage.setTitle("Edit Work Schedule");
 			dialogStage.initModality(Modality.NONE);
-			// dialogStage.initOwner(primaryStage);
+
 			Scene scene = new Scene(page);
 			dialogStage.setScene(scene);
 
@@ -321,7 +321,7 @@ public class DesignerApplication {
 			Stage dialogStage = new Stage(StageStyle.DECORATED);
 			dialogStage.setTitle("Browse OPC DA Data Source");
 			dialogStage.initModality(Modality.NONE);
-			// dialogStage.initOwner(primaryStage);
+
 			Scene scene = new Scene(page);
 			dialogStage.setScene(scene);
 
@@ -340,24 +340,24 @@ public class DesignerApplication {
 	}
 
 	OpcUaTreeNode showOpcUaDataSourceBrowser() throws Exception {
-		// if (opcUaBrowserController == null) {
-		// Load the fxml file and create a new stage for the pop-up dialog.
-		FXMLLoader loader = FXMLLoaderFactory.opdUaBrowserLoader();
-		AnchorPane page = (AnchorPane) loader.getRoot();
+		if (opcUaBrowserController == null) {
+			// Load the fxml file and create a new stage for the pop-up dialog.
+			FXMLLoader loader = FXMLLoaderFactory.opdUaBrowserLoader();
+			AnchorPane page = (AnchorPane) loader.getRoot();
 
-		// Create the dialog Stage.
-		Stage dialogStage = new Stage(StageStyle.DECORATED);
-		dialogStage.setTitle("Browse OPC UA Data Source");
-		dialogStage.initModality(Modality.NONE);
-		// dialogStage.initOwner(primaryStage);
-		Scene scene = new Scene(page);
-		dialogStage.setScene(scene);
+			// Create the dialog Stage.
+			Stage dialogStage = new Stage(StageStyle.DECORATED);
+			dialogStage.setTitle("Browse OPC UA Data Source");
+			dialogStage.initModality(Modality.NONE);
 
-		// get the controller
-		opcUaBrowserController = loader.getController();
-		opcUaBrowserController.setDialogStage(dialogStage);
-		opcUaBrowserController.initialize(this);
-		// }
+			Scene scene = new Scene(page);
+			dialogStage.setScene(scene);
+
+			// get the controller
+			opcUaBrowserController = loader.getController();
+			opcUaBrowserController.setDialogStage(dialogStage);
+			opcUaBrowserController.initialize(this);
+		}
 
 		// Show the dialog and wait until the user closes it
 		if (!opcUaBrowserController.getDialogStage().isShowing()) {
@@ -377,7 +377,7 @@ public class DesignerApplication {
 			Stage dialogStage = new Stage(StageStyle.DECORATED);
 			dialogStage.setTitle("Edit Script Resolver");
 			dialogStage.initModality(Modality.NONE);
-			// dialogStage.initOwner(primaryStage);
+
 			Scene scene = new Scene(page);
 			dialogStage.setScene(scene);
 
@@ -413,7 +413,7 @@ public class DesignerApplication {
 			// get the controller
 			httpServerController = loader.getController();
 			httpServerController.setDialogStage(dialogStage);
-			httpServerController.initialize(this);
+			httpServerController.initializeServer();
 		}
 
 		// Show the dialog and wait until the user closes it
@@ -463,7 +463,7 @@ public class DesignerApplication {
 			// get the controller
 			webServerController = loader.getController();
 			webServerController.setDialogStage(dialogStage);
-			webServerController.initialize(this);
+			webServerController.initializeServer();
 		}
 
 		// Show the dialog and wait until the user closes it

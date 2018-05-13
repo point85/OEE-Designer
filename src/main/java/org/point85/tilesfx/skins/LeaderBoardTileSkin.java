@@ -121,6 +121,7 @@ public class LeaderBoardTileSkin extends TileSkin {
 		});
 	}
 
+	@SuppressWarnings("unused")
 	private void sortItems() {
 		List<LeaderBoardItem> items = tile.getLeaderBoardItems();
 

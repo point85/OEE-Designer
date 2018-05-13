@@ -1,9 +1,9 @@
 package org.point85.app.opc.da;
 
 import org.point85.app.AppUtils;
+import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
-import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.charts.DataSubscriber;
 import org.point85.app.charts.TrendChartController;
 import org.point85.app.designer.DataSourceConnectionController;
@@ -63,11 +63,6 @@ public class OpcDaTrendController extends OpcDaController implements OpcDaDataCh
 
 	@FXML
 	private Label lbState;
-
-	@FXML
-	public void initialize() {
-		// called by javaFX
-	}
 
 	public SplitPane initializeTrend() throws Exception {
 		if (trendChartController == null) {
@@ -307,5 +302,4 @@ public class OpcDaTrendController extends OpcDaController implements OpcDaDataCh
 			return resolutionTask;
 		}
 	}
-
 }

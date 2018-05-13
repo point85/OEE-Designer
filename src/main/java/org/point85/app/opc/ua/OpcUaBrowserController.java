@@ -351,7 +351,7 @@ public class OpcUaBrowserController extends OpcUaController {
 		// delete
 		btDelete.setGraphic(ImageManager.instance().getImageView(Images.DELETE));
 		btDelete.setContentDisplay(ContentDisplay.LEFT);
-		
+
 		// clear
 		btClearAuthentication.setGraphic(ImageManager.instance().getImageView(Images.CLEAR));
 	}
@@ -501,38 +501,40 @@ public class OpcUaBrowserController extends OpcUaController {
 
 	@FXML
 	private void onSelectDataSource() {
-		String name = getDataSourceId();
-		if (name == null || name.length() == 0) {
-			return;
+		try {
+			String name = getDataSourceId();
+			if (name == null || name.length() == 0) {
+				return;
+			}
+
+			// retrieve data source by name
+			OpcUaSource source = PersistenceService.instance().fetchOpcUaSourceByName(name);
+
+			if (source != null) {
+				setSource(source);
+			} else {
+				// not saved yet
+				return;
+			}
+
+			this.tfConnectionName.setText(source.getName());
+			this.tfHost.setText(source.getHost());
+			this.tfPort.setText(String.valueOf(source.getPort()));
+			this.tfDescription.setText(source.getDescription());
+			this.tfPath.setText(source.getEndpointPath());
+
+			// security
+			this.cbSecurityPolicies.getSelectionModel().select(source.getSecurityPolicy());
+			this.cbMessageModes.getSelectionModel().select(source.getMessageSecurityMode());
+
+			// authentication
+			this.tfUserName.setText(source.getUserName());
+			this.pfPassword.setText(source.getUserPassword());
+			this.tfKeystoreFileName.setText(source.getKeystore());
+			this.pfKeystorePassword.setText(source.getKeystorePassword());
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
 		}
-
-		// retrieve data source by name
-		OpcUaSource source = PersistenceService.instance().fetchOpcUaSourceByName(name);
-
-		if (source != null) {
-			setSource(source);
-		} else {
-			// not saved yet
-			return;
-		}
-
-		this.tfConnectionName.setText(source.getName());
-		this.tfHost.setText(source.getHost());
-		this.tfPort.setText(String.valueOf(source.getPort()));
-		this.tfDescription.setText(source.getDescription());
-		this.tfPath.setText(source.getEndpointPath());
-
-		// security
-		this.cbSecurityPolicies.getSelectionModel().select(source.getSecurityPolicy());
-		this.cbMessageModes.getSelectionModel().select(source.getMessageSecurityMode());
-
-		// authentication
-		this.tfUserName.setText(source.getUserName());
-		this.pfPassword.setText(source.getUserPassword());
-		// this.rbUserPassword.setSelected(true);
-		this.tfKeystoreFileName.setText(source.getKeystore());
-		this.pfKeystorePassword.setText(source.getKeystorePassword());
-		// this.rbKeystore.setSelected(true);
 	}
 
 	@FXML

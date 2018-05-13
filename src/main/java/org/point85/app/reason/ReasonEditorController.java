@@ -152,20 +152,6 @@ public class ReasonEditorController extends DesignerDialogController {
 			return;
 		}
 
-		// check for previous edit
-		if (oldItem != null) {
-			// TODO
-			/*
-			boolean isChanged = setAttributes(oldItem);
-
-			if (isChanged) {
-				oldItem.setGraphic(ImageManager.instance().getImageView(Images.CHANGED));
-				addEditedReason(oldItem);
-				tvReasons.refresh();
-			}
-			*/
-		}
-
 		// new attributes
 		selectedReasonItem = newItem;
 		Reason selectedReason = newItem.getValue().getReason();
