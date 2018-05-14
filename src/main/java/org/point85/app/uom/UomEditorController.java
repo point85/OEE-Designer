@@ -29,9 +29,9 @@ import java.util.Collections;
 import java.util.List;
 
 import org.point85.app.AppUtils;
+import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
-import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
 import org.point85.domain.DomainUtils;
@@ -659,6 +659,13 @@ public class UomEditorController extends DesignerDialogController {
 		}
 	}
 
+	@FXML
+	private void markedChanged() throws Exception {
+		if (selectedUomItem != null) {
+			selectedUomItem.setGraphic(ImageManager.instance().getImageView(Images.CHANGED));
+		}
+	}
+
 	// set the UOM attributes from the UI
 	private void setAttributes(TreeItem<UomNode> uomItem) throws Exception {
 		if (uomItem == null || !uomItem.getValue().isUnitOfMeasure()) {
@@ -676,15 +683,16 @@ public class UomEditorController extends DesignerDialogController {
 
 		String symbol = this.tfSymbol.getText().trim();
 		String category = this.cbCategories.getSelectionModel().getSelectedItem();
+
+		if (category == null) {
+			category = CUSTOM_CATEGORY;
+		}
+
 		String type = this.cbUnitTypes.getSelectionModel().getSelectedItem();
 
 		if (type == null) {
 			AppUtils.showErrorDialog("The unit type is required.");
 			return;
-		}
-
-		if (category == null) {
-			category = CUSTOM_CATEGORY;
 		}
 
 		// type of unit
@@ -698,6 +706,7 @@ public class UomEditorController extends DesignerDialogController {
 			uom.setName(name);
 			uom.setSymbol(symbol);
 			uom.setDescription(description);
+			uom.setCategory(category);
 		}
 
 		// scalar, product, quotient or power
@@ -709,6 +718,10 @@ public class UomEditorController extends DesignerDialogController {
 				throw new Exception("A base power UOM symbol must be selected.");
 			}
 			UnitOfMeasure base = AppUtils.getUOMForEditing(baseSymbol);
+
+			if (base == null) {
+				return;
+			}
 
 			if (!base.getMeasurementType().equals(MeasurementType.SCALAR)) {
 				throw new Exception("The base unit of measure must be a scalar.");
@@ -734,6 +747,10 @@ public class UomEditorController extends DesignerDialogController {
 			// product or quotient
 			String uom1Symbol = AppUtils.parseSymbol(cbUom1Units.getSelectionModel().getSelectedItem());
 			UnitOfMeasure uom1 = AppUtils.getUOMForEditing(uom1Symbol);
+
+			if (uom1 == null) {
+				return;
+			}
 
 			if (!uom1.getMeasurementType().equals(MeasurementType.SCALAR)) {
 				throw new Exception("The multiplier/dividend unit of measure must be a scalar.");
@@ -779,9 +796,6 @@ public class UomEditorController extends DesignerDialogController {
 		} else {
 			// should not happen
 		}
-
-		// category
-		uom.setCategory(category);
 
 		// conversion scaling factor
 		double scalingFactor = 1d;
@@ -845,7 +859,8 @@ public class UomEditorController extends DesignerDialogController {
 			editedUomItems.add(uomItem);
 		}
 
-		selectedUomItem.setGraphic(ImageManager.instance().getImageView(Images.CHANGED));
+		markedChanged();
+
 		tvUoms.refresh();
 
 		// update categories
@@ -975,6 +990,7 @@ public class UomEditorController extends DesignerDialogController {
 			ObservableList<String> units = AppUtils.getUnitsOfMeasure(unitType);
 			ObservableList<String> customDisplayStrings = AppUtils.getCustomSymbols(UnitType.valueOf(unitType));
 
+			cbUom1Units.setDisable(false);
 			cbUom1Units.getItems().clear();
 			cbUom1Units.getItems().addAll(units);
 			cbUom1Units.getItems().addAll(customDisplayStrings);
@@ -996,6 +1012,7 @@ public class UomEditorController extends DesignerDialogController {
 			ObservableList<String> units = AppUtils.getUnitsOfMeasure(unitType);
 			ObservableList<String> customDisplayStrings = AppUtils.getCustomSymbols(UnitType.valueOf(unitType));
 
+			cbUom2Units.setDisable(false);
 			cbUom2Units.getItems().clear();
 			cbUom2Units.getItems().addAll(units);
 			cbUom2Units.getItems().addAll(customDisplayStrings);
@@ -1017,6 +1034,7 @@ public class UomEditorController extends DesignerDialogController {
 			ObservableList<String> units = AppUtils.getUnitsOfMeasure(unitType);
 			ObservableList<String> customDisplayStrings = AppUtils.getCustomSymbols(UnitType.valueOf(unitType));
 
+			cbPowerUnits.setDisable(false);
 			cbPowerUnits.getItems().clear();
 			cbPowerUnits.getItems().addAll(units);
 			cbPowerUnits.getItems().addAll(customDisplayStrings);

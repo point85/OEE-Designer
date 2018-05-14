@@ -607,6 +607,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		}
 
 		// check for previous edit
+		/*
 		if (oldItem != null) {
 			boolean isChanged = setAttributes(oldItem);
 
@@ -615,6 +616,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 				tvSchedules.refresh();
 			}
 		}
+		*/
 		selectedScheduleItem = newItem;
 
 		// new attributes
@@ -975,11 +977,6 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		// name
 		String name = this.tfScheduleName.getText().trim();
 
-		/*
-		 * if (name.length() == 0) { throw new
-		 * Exception("The schedule name must be specified."); }
-		 */
-
 		if (!name.equals(schedule.getName())) {
 			schedule.setName(name);
 			isDirty = true;
@@ -1240,6 +1237,10 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 			shiftNames.remove(shift.getName());
 			currentShift = null;
 			tvShifts.getSelectionModel().clearSelection();
+			
+			// add to edited schedules
+			addEditedSchedule(selectedScheduleItem);
+			
 			tvShifts.refresh();
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
@@ -1312,8 +1313,13 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 
 			getSelectedSchedule().getTeams().remove(team);
 			teamList.remove(team);
+			Collections.sort(shiftList);
 			currentTeam = null;
 			tvTeams.getSelectionModel().clearSelection();
+			
+			// add to edited schedules
+			addEditedSchedule(selectedScheduleItem);
+			
 			tvTeams.refresh();
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
@@ -1388,6 +1394,10 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 			rotationList.remove(rotation);
 			currentRotation = null;
 			tvRotations.getSelectionModel().clearSelection();
+			
+			// add to edited schedules
+			addEditedSchedule(selectedScheduleItem);
+			
 			tvRotations.refresh();
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
@@ -1479,6 +1489,10 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 
 			currentRotationSegment = null;
 			tvRotationSegments.getSelectionModel().clearSelection();
+			
+			// add to edited schedules
+			addEditedSchedule(selectedScheduleItem);
+			
 			tvRotationSegments.refresh();
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
@@ -1578,6 +1592,10 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 			Collections.sort(periodList);
 			currentPeriod = null;
 			tvNonWorkingPeriods.getSelectionModel().clearSelection();
+			
+			// add to edited schedules
+			addEditedSchedule(selectedScheduleItem);
+			
 			tvNonWorkingPeriods.refresh();
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);

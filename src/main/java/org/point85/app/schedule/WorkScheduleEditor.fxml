@@ -194,7 +194,7 @@
                                                          <padding>
                                                             <Insets right="10.0" />
                                                          </padding></Label>
-                                                      <ComboBox fx:id="cbRotationSegmentShifts" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.columnIndex="1" />
+                                                      <ComboBox fx:id="cbRotationSegmentShifts" maxWidth="1.7976931348623157E308" prefWidth="150.0" visibleRowCount="4" GridPane.columnIndex="1" />
                                                       <Spinner fx:id="spDaysOn" editable="true" styleClass="split-arrows-horizontal" GridPane.columnIndex="3" />
                                                       <Label text="Days On" GridPane.columnIndex="2" GridPane.halignment="RIGHT">
                                                          <padding>
@@ -272,7 +272,7 @@
                                        </children>
                                     </GridPane>
                                     <Button fx:id="btNewTeam" mnemonicParsing="false" onAction="#onNewTeam" prefWidth="100.0" text="New" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="110.0" />
-                                    <Button fx:id="btAddTeam" layoutX="579.0" layoutY="166.0" mnemonicParsing="false" onAction="#onAddTeam" prefWidth="100.0" text="Add" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="166.0" />
+                                    <Button fx:id="btAddTeam" mnemonicParsing="false" onAction="#onAddTeam" prefWidth="100.0" text="Add" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="160.0" />
                                     <Button fx:id="btRemoveTeam" mnemonicParsing="false" onAction="#onRemoveTeam" prefWidth="100.0" text="Remove" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="210.0" />
                                     <TableView fx:id="tvTeams" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="110.0">
                                       <columns>
