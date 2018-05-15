@@ -106,7 +106,7 @@
                                     <Insets right="10.0" />
                                  </GridPane.margin>
                               </Label>
-                              <ComboBox fx:id="cbCategories" editable="true" maxWidth="1.7976931348623157E308" onAction="#markedChanged" promptText="Enter or select the category" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <ComboBox fx:id="cbCategories" editable="true" maxWidth="1.7976931348623157E308" promptText="Enter or select the category" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                            </children>
                         </GridPane>
                         <GridPane>
@@ -144,7 +144,7 @@
                                  <font>
                                     <Font size="18.0" />
                                  </font></Label>
-                              <ComboBox fx:id="cbAbscissaUnits" maxWidth="1.7976931348623157E308" onAction="#markedChanged" prefWidth="200.0" promptText="Abscissa UOM" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2">
+                              <ComboBox fx:id="cbAbscissaUnits" maxWidth="1.7976931348623157E308" prefWidth="200.0" promptText="Abscissa UOM" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2">
                                  <GridPane.margin>
                                     <Insets left="5.0" />
                                  </GridPane.margin>
@@ -153,7 +153,7 @@
                                  <GridPane.margin>
                                     <Insets left="5.0" />
                                  </GridPane.margin></TextField>
-                              <ComboBox fx:id="cbScalingFactor" editable="true" onAction="#markedChanged" prefWidth="150.0" promptText="Scaling factor" GridPane.rowIndex="2" />
+                              <ComboBox fx:id="cbScalingFactor" editable="true" prefWidth="150.0" promptText="Scaling factor" GridPane.rowIndex="2" />
                            </children>
                            <VBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="25.0" />
@@ -192,18 +192,18 @@
                                                    </GridPane.margin>
                                                 </Label>
                                                 <ComboBox fx:id="cbUom1Types" maxWidth="1.7976931348623157E308" onAction="#setPossibleUom1Units" prefWidth="150.0" promptText="Select first UOM type" GridPane.columnIndex="1" />
-                                                <ComboBox fx:id="cbUom1Units" disable="true" maxWidth="1.7976931348623157E308" onAction="#markedChanged" prefWidth="150.0" promptText="Select first UOM id" GridPane.columnIndex="3" />
+                                                <ComboBox fx:id="cbUom1Units" disable="true" maxWidth="1.7976931348623157E308" prefWidth="150.0" promptText="Select first UOM id" GridPane.columnIndex="3" />
                                                 <Label text="Unit" GridPane.columnIndex="2">
                                                    <GridPane.margin>
                                                       <Insets left="5.0" right="5.0" />
                                                    </GridPane.margin>
                                                 </Label>
-                                                <RadioButton fx:id="rbProduct" mnemonicParsing="false" onAction="#markedChanged" text="Multiplied By" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+                                                <RadioButton fx:id="rbProduct" mnemonicParsing="false" text="Multiplied By" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1">
                                                    <toggleGroup>
                                                       <ToggleGroup fx:id="MultiplyOrDivide" />
                                                    </toggleGroup>
                                                 </RadioButton>
-                                                <RadioButton fx:id="rbQuotient" mnemonicParsing="false" onAction="#markedChanged" text="Divided By" toggleGroup="$MultiplyOrDivide" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                                                <RadioButton fx:id="rbQuotient" mnemonicParsing="false" text="Divided By" toggleGroup="$MultiplyOrDivide" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
                                                 <Label text="Type" GridPane.rowIndex="2">
                                                    <GridPane.margin>
                                                       <Insets left="5.0" right="5.0" />
@@ -215,7 +215,7 @@
                                                       <Insets left="5.0" right="5.0" />
                                                    </GridPane.margin>
                                                 </Label>
-                                                <ComboBox fx:id="cbUom2Units" disable="true" maxWidth="1.7976931348623157E308" onAction="#markedChanged" prefWidth="150.0" promptText="Select second UOM id" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                                                <ComboBox fx:id="cbUom2Units" disable="true" maxWidth="1.7976931348623157E308" prefWidth="150.0" promptText="Select second UOM id" GridPane.columnIndex="3" GridPane.rowIndex="2" />
                                              </children>
                                           </GridPane>
                                        </children>
@@ -253,7 +253,7 @@
                                                       <Insets left="5.0" />
                                                    </GridPane.margin>
                                                 </ComboBox>
-                                                <ComboBox fx:id="cbPowerUnits" editable="true" maxWidth="1.7976931348623157E308" onAction="#markedChanged" prefWidth="150.0" promptText="UOM identifier" GridPane.columnIndex="3" GridPane.halignment="LEFT">
+                                                <ComboBox fx:id="cbPowerUnits" editable="true" maxWidth="1.7976931348623157E308" prefWidth="150.0" promptText="UOM identifier" GridPane.columnIndex="3" GridPane.halignment="LEFT">
                                                    <GridPane.margin>
                                                       <Insets left="5.0" />
                                                    </GridPane.margin>

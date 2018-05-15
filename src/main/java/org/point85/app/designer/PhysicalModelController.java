@@ -505,6 +505,7 @@ public class PhysicalModelController extends DesignerController {
 			cbEntityTypes.getSelectionModel().select(null);
 			cbEntityTypes.requestFocus();
 			lbSchedule.setText(null);
+			lbSchedule.setUserData(null);
 			tfRetention.clear();
 
 			// no entity item selection
@@ -690,6 +691,9 @@ public class PhysicalModelController extends DesignerController {
 			selectedEntityItem.getValue().setPlantEntity(refreshed);
 			selectedEntity = refreshed;
 			displayAttributes(selectedEntity);
+
+			removeEditedPlantEntity(selectedEntityItem);
+
 			tvEntities.refresh();
 
 		} catch (Exception e) {
@@ -741,9 +745,12 @@ public class PhysicalModelController extends DesignerController {
 			TreeItem<EntityNode> selectedEntityItem = tvEntities.getSelectionModel().getSelectedItem();
 			TreeItem<EntityNode> parentNode = selectedEntityItem.getParent();
 			parentNode.getChildren().remove(selectedEntityItem);
+			tvEntities.getSelectionModel().clearSelection();
 
 			tvEntities.refresh();
 			parentNode.setExpanded(true);
+
+			onNewEntity();
 
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
@@ -832,8 +839,10 @@ public class PhysicalModelController extends DesignerController {
 		// work schedule
 		if (entity.getWorkSchedule() != null) {
 			this.lbSchedule.setText(entity.getWorkSchedule().getName());
+			this.lbSchedule.setUserData(entity.getWorkSchedule());
 		} else {
-			this.lbSchedule.setText("");
+			this.lbSchedule.setText(null);
+			this.lbSchedule.setUserData(null);
 		}
 
 		// retention period
@@ -901,6 +910,14 @@ public class PhysicalModelController extends DesignerController {
 			}
 		}
 
+		// work schedule
+		WorkSchedule schedule = (WorkSchedule) lbSchedule.getUserData();
+
+		if (schedule != null && !schedule.equals(entity.getWorkSchedule())) {
+			entity.setWorkSchedule(schedule);
+			isDirty = true;
+		}
+
 		if (isDirty) {
 			addEditedPlantEntity(entityItem);
 		}
@@ -912,6 +929,13 @@ public class PhysicalModelController extends DesignerController {
 		if (item != null && !editedEntityItems.contains(item)) {
 			item.setGraphic(ImageManager.instance().getImageView(Images.CHANGED));
 			editedEntityItems.add(item);
+		}
+	}
+	
+	private void removeEditedPlantEntity(TreeItem<EntityNode> item) throws Exception {
+		if (item != null && editedEntityItems.contains(item)) {
+			setEntityGraphic(item);
+			editedEntityItems.remove(item);
 		}
 	}
 
@@ -940,6 +964,7 @@ public class PhysicalModelController extends DesignerController {
 
 			// add schedule to text field
 			lbSchedule.setText(selectedSchedule.getName());
+			lbSchedule.setUserData(selectedSchedule);
 
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
@@ -1008,7 +1033,8 @@ public class PhysicalModelController extends DesignerController {
 
 			getSelectedEntity().setWorkSchedule(null);
 			selectedSchedule = null;
-			lbSchedule.setText("");
+			lbSchedule.setText(null);
+			lbSchedule.setUserData(null);
 			markSelectedPlantEntity();
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
