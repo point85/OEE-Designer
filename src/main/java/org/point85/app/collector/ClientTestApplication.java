@@ -58,6 +58,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -121,6 +122,12 @@ public class ClientTestApplication implements MessageListener {
 
 	@FXML
 	private ComboBox<String> cbRmqHostPort;
+	
+	@FXML
+	private TextField tfRmqUserName;
+	
+	@FXML
+	private PasswordField pfRmqUserPassword;
 
 	@FXML
 	private Button btHttpPost;
@@ -737,6 +744,8 @@ public class ClientTestApplication implements MessageListener {
 	private void onSendEquipmentEventMsg() {
 		try {
 			String hostPort = cbRmqHostPort.getSelectionModel().getSelectedItem();
+			String userName = tfRmqUserName.getText();
+			String userPassword = pfRmqUserPassword.getText();
 
 			if (hostPort == null) {
 				throw new Exception("A host and port must be specified");
@@ -750,7 +759,7 @@ public class ClientTestApplication implements MessageListener {
 
 				String[] tokens = hostPort.split(":");
 
-				pubsub.connect(tokens[0], Integer.valueOf(tokens[1]));
+				pubsub.connect(tokens[0], Integer.valueOf(tokens[1]), userName, userPassword);
 			}
 
 			String sourceId = (String) cbRmqSourceId.getSelectionModel().getSelectedItem();

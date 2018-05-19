@@ -85,6 +85,12 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 		return spTrendChart;
 	}
 
+	public void setUpdatePeriodMsec(Integer millis) {
+		if (millis != null) {
+			trendChartController.setUpdatePeriodMsec(millis);
+		}
+	}
+
 	// images for buttons
 	@Override
 	protected void setImages() throws Exception {

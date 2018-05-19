@@ -86,8 +86,8 @@ public class MessagingTrendController extends DesignerDialogController implement
 		eventResolver.setWatchMode(true);
 		trendChartController.setScriptResolver(eventResolver);
 
-		lbSourceId.setText("Equipment: " + eventResolver.getEquipment().getName() + ", Source Id: "
-				+ eventResolver.getSourceId());
+		lbSourceId.setText(
+				"Equipment: " + eventResolver.getEquipment().getName() + ", Source Id: " + eventResolver.getSourceId());
 		lbBroker.setText(eventResolver.getDataSource().getId());
 	}
 
@@ -149,7 +149,8 @@ public class MessagingTrendController extends DesignerDialogController implement
 
 			List<RoutingKey> keys = new ArrayList<>();
 			keys.add(RoutingKey.EQUIPMENT_SOURCE_EVENT);
-			pubsub.connectToBroker(source.getHost(), source.getPort(), queueName, false, keys, this);
+			pubsub.connectToBroker(source.getHost(), source.getPort(), source.getUserName(), source.getUserPassword(),
+					queueName, false, keys, this);
 
 			// start the trend
 			trendChartController.onStartTrending();

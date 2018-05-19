@@ -117,6 +117,8 @@ public class MonitorApplication implements MessageListener {
 		for (DataCollector collector : collectors) {
 			String brokerHostName = collector.getBrokerHost();
 			Integer brokerPort = collector.getBrokerPort();
+			String brokerUser = collector.getBrokerUserName();
+			String brokerPassword = collector.getBrokerUserPassword();
 
 			if (brokerHostName != null && brokerPort != null) {
 				String key = brokerHostName + ":" + brokerPort;
@@ -133,7 +135,8 @@ public class MonitorApplication implements MessageListener {
 					routingKeys.add(RoutingKey.NOTIFICATION_STATUS);
 					routingKeys.add(RoutingKey.RESOLVED_EVENT);
 
-					pubsub.connectToBroker(brokerHostName, brokerPort, queueName, false, routingKeys, this);
+					pubsub.connectToBroker(brokerHostName, brokerPort, brokerUser, brokerPassword, queueName, false,
+							routingKeys, this);
 
 					pubSubs.put(key, pubsub);
 					notificationPubSubs.add(pubsub);

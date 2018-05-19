@@ -545,6 +545,7 @@ public class OpcUaBrowserController extends OpcUaController {
 			if (source != null) {
 				PersistenceService.instance().delete(source);
 				servers.remove(getSource().getId());
+				cbDataSources.setItems(servers);
 
 				onNewDataSource();
 			}
@@ -565,8 +566,8 @@ public class OpcUaBrowserController extends OpcUaController {
 			this.tfPath.clear();
 			this.cbDataSources.getSelectionModel().clearSelection();
 
-			this.cbSecurityPolicies.getSelectionModel().clearSelection();
-			this.cbMessageModes.getSelectionModel().clearSelection();
+			this.cbSecurityPolicies.getSelectionModel().select(SecurityPolicy.None);
+			this.cbMessageModes.getSelectionModel().select(MessageSecurityMode.None);
 
 			this.tfKeystoreFileName.clear();
 			this.pfKeystorePassword.clear();

@@ -583,6 +583,8 @@ public class DesignerApplication {
 
 			// add the trend chart
 			SplitPane chartPane = opcUaTrendController.initializeTrend();
+			
+			opcUaTrendController.setUpdatePeriodMsec(eventResolver.getUpdatePeriod());
 
 			AnchorPane.setBottomAnchor(chartPane, 50.0);
 			AnchorPane.setLeftAnchor(chartPane, 5.0);

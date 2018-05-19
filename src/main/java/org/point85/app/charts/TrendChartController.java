@@ -51,6 +51,8 @@ public class TrendChartController extends DesignerController {
 	private static final String START = "Start";
 	private static final String STOP = "Stop";
 
+	private static final int DEFAULT_UPDATE_SEC = 5;
+
 	// the data provider
 	private DataSubscriber subscriber;
 
@@ -136,10 +138,9 @@ public class TrendChartController extends DesignerController {
 		// value and state charts
 		initializeCharts();
 
-		// 5 sec default update period
-		// spinner value factory
+		// spinner value factory for update period
 		SpinnerValueFactory<Integer> periodValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1,
-				Integer.MAX_VALUE, 5);
+				Integer.MAX_VALUE, DEFAULT_UPDATE_SEC);
 
 		spUpdatePeriod.setValueFactory(periodValueFactory);
 	}
@@ -372,6 +373,12 @@ public class TrendChartController extends DesignerController {
 		} else {
 			this.onStartTrending();
 		}
+	}
+
+	public void setUpdatePeriodMsec(Integer millis) {
+		if (millis != null) {
+			spUpdatePeriod.getValueFactory().setValue(millis/1000);
+		} 
 	}
 
 	public void onStartTrending() {
