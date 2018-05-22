@@ -86,23 +86,32 @@
                                     <TableColumn fx:id="tcCollectorLoad" prefWidth="75.0" text="CPU (%)" />
                                 </columns>
                               </TableView>
-                              <TableView fx:id="tvCollectorStatus">
-                                <columns>
-                                    <TableColumn prefWidth="75.0" text="Collector">
-                                       <columns>
-                                        <TableColumn fx:id="tcCollectorName" prefWidth="150.0" text="Name" />
-                                        <TableColumn fx:id="tcCollectorDescription" prefWidth="400.0" text="Description" />
-                                       </columns>
-                                    </TableColumn>
-                                    <TableColumn fx:id="tcCollectorState" prefWidth="100.0" text="State" />
-                                    <TableColumn prefWidth="75.0" text="RMQ Broker">
-                                       <columns>
-                                          <TableColumn fx:id="tcBrokerHost" prefWidth="150.0" text="Host" />
-                                          <TableColumn fx:id="tcBrokerPort" prefWidth="75.0" text="Port" />
-                                       </columns>
-                                    </TableColumn>
-                                </columns>
-                              </TableView>
+                              <AnchorPane>
+                                 <children>
+                                    <HBox alignment="CENTER_LEFT" prefHeight="50.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <children>
+                                          <Button fx:id="btRestart" mnemonicParsing="false" onAction="#onRestart" text="Restart" />
+                                       </children>
+                                    </HBox>
+                                    <TableView fx:id="tvCollectorStatus" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="50.0">
+                                      <columns>
+                                          <TableColumn prefWidth="75.0" text="Collector">
+                                             <columns>
+                                              <TableColumn fx:id="tcCollectorName" prefWidth="150.0" text="Name" />
+                                              <TableColumn fx:id="tcCollectorDescription" prefWidth="400.0" text="Description" />
+                                             </columns>
+                                          </TableColumn>
+                                          <TableColumn fx:id="tcCollectorState" prefWidth="100.0" text="State" />
+                                          <TableColumn prefWidth="75.0" text="RMQ Broker">
+                                             <columns>
+                                                <TableColumn fx:id="tcBrokerHost" prefWidth="150.0" text="Host" />
+                                                <TableColumn fx:id="tcBrokerPort" prefWidth="75.0" text="Port" />
+                                             </columns>
+                                          </TableColumn>
+                                      </columns>
+                                    </TableView>
+                                 </children>
+                              </AnchorPane>
                            </items>
                         </SplitPane>
                         <HBox alignment="CENTER_LEFT" layoutX="25.0" layoutY="-27.0" prefHeight="50.0" spacing="20.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">

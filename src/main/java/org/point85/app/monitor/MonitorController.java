@@ -12,10 +12,13 @@ import org.point85.app.Images;
 import org.point85.app.dashboard.DashboardController;
 import org.point85.domain.collector.CollectorState;
 import org.point85.domain.collector.DataCollector;
+import org.point85.domain.messaging.CollectorCommandMessage;
 import org.point85.domain.messaging.CollectorNotificationMessage;
 import org.point85.domain.messaging.CollectorResolvedEventMessage;
 import org.point85.domain.messaging.CollectorServerStatusMessage;
 import org.point85.domain.messaging.NotificationSeverity;
+import org.point85.domain.messaging.PublisherSubscriber;
+import org.point85.domain.messaging.RoutingKey;
 import org.point85.domain.oee.EquipmentLoss;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.EntityLevel;
@@ -30,6 +33,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Pagination;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
@@ -55,6 +59,9 @@ public class MonitorController {
 
 	// list of data collectors
 	private ObservableList<DataCollector> serverCollectors = FXCollections.observableArrayList(new ArrayList<>());
+
+	// parent app
+	private MonitorApplication monitorApp;
 
 	// dashboard
 	private DashboardController dashboardController;
@@ -139,12 +146,17 @@ public class MonitorController {
 	@FXML
 	private Button btRefresh;
 
+	@FXML
+	private Button btRestart;
+
 	public MonitorController() {
 
 	}
 
 	// initialize app
-	void initializeApplication() throws Exception {
+	void initializeApplication(MonitorApplication app) throws Exception {
+		// the app
+		this.monitorApp = app;
 
 		// images
 		setImages();
@@ -340,8 +352,18 @@ public class MonitorController {
 		this.onRefresh();
 	}
 
-	private void setImages() {
-
+	private void setImages() throws Exception {
+		// clear messages
+		btClearMessages.setGraphic(ImageManager.instance().getImageView(Images.CLEAR));
+		btClearMessages.setContentDisplay(ContentDisplay.LEFT);
+		
+		// refresh
+		btRefresh.setGraphic(ImageManager.instance().getImageView(Images.REFRESH));
+		btRefresh.setContentDisplay(ContentDisplay.LEFT);
+		
+		// restart
+		btRestart.setGraphic(ImageManager.instance().getImageView(Images.STARTUP));
+		btRestart.setContentDisplay(ContentDisplay.LEFT);
 	}
 
 	private void setEntityGraphic(TreeItem<EntityNode> item) throws Exception {
@@ -579,6 +601,37 @@ public class MonitorController {
 
 		serverCollectors.clear();
 		tvCollectorStatus.refresh();
+	}
+
+	@FXML
+	private void onRestart() {
+		try {
+			// send message to selected collector
+			DataCollector collector = tvCollectorStatus.getSelectionModel().getSelectedItem();
+
+			if (collector == null) {
+				return;
+			}
+
+			// create the message
+			CollectorCommandMessage message = new CollectorCommandMessage(monitorApp.getHostname(),
+					monitorApp.getIpAddress());
+			message.setCommand(CollectorCommandMessage.CMD_RESTART);
+
+			// publisher
+			PublisherSubscriber pubsub = new PublisherSubscriber();
+
+			if (collector.getBrokerHost() == null) {
+				throw new Exception("The collector does not have a messaging broker configured.");
+			}
+
+			pubsub.connect(collector.getBrokerHost(), collector.getBrokerPort(), collector.getBrokerUserName(),
+					collector.getBrokerUserPassword());
+
+			pubsub.publish(message, RoutingKey.COMMAND_MESSAGE, 30);
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
 	}
 
 	// the wrapped PlantEntity

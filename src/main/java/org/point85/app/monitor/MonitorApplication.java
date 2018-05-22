@@ -3,7 +3,6 @@ package org.point85.app.monitor;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,7 +47,7 @@ public class MonitorApplication implements MessageListener {
 	protected Gson gson = new Gson();
 
 	// RabbitMQ message publisher/subscriber
-	private List<PublisherSubscriber> notificationPubSubs = new ArrayList<>();
+	private List<PublisherSubscriber> monitorPubSubs = new ArrayList<>();
 
 	// counter for pubsub queues
 	private int queueCounter = 0;
@@ -56,8 +55,22 @@ public class MonitorApplication implements MessageListener {
 	// status monitor
 	private MonitorController monitorController;
 
+	// JVM host name
+	private String hostname;
+
+	// JVM host IP address
+	private String ip;
+
 	public MonitorApplication() {
 
+	}
+
+	String getHostname() {
+		return hostname;
+	}
+
+	String getIpAddress() {
+		return ip;
 	}
 
 	public void start(Stage primaryStage) {
@@ -76,7 +89,7 @@ public class MonitorApplication implements MessageListener {
 			primaryStage.setScene(scene);
 
 			monitorController = loader.getController();
-			monitorController.initializeApplication();
+			monitorController.initializeApplication(this);
 
 			// connect to RMA brokers
 			connectToNotificationBrokers();
@@ -84,6 +97,11 @@ public class MonitorApplication implements MessageListener {
 			primaryStage.show();
 
 			// send a loopback message
+			// our host
+			InetAddress address = InetAddress.getLocalHost();
+			hostname = address.getHostName();
+			ip = address.getHostAddress();
+
 			sendStartupNotification();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -96,7 +114,7 @@ public class MonitorApplication implements MessageListener {
 			PersistenceService.instance().close();
 
 			// disconnect from notification pubsubs
-			for (PublisherSubscriber pubSub : this.notificationPubSubs) {
+			for (PublisherSubscriber pubSub : monitorPubSubs) {
 				pubSub.disconnect();
 			}
 		} catch (Exception e) {
@@ -135,11 +153,11 @@ public class MonitorApplication implements MessageListener {
 					routingKeys.add(RoutingKey.NOTIFICATION_STATUS);
 					routingKeys.add(RoutingKey.RESOLVED_EVENT);
 
-					pubsub.connectToBroker(brokerHostName, brokerPort, brokerUser, brokerPassword, queueName, false,
+					pubsub.connectAndSubscribe(brokerHostName, brokerPort, brokerUser, brokerPassword, queueName, false,
 							routingKeys, this);
 
 					pubSubs.put(key, pubsub);
-					notificationPubSubs.add(pubsub);
+					monitorPubSubs.add(pubsub);
 				}
 			}
 		}
@@ -194,20 +212,14 @@ public class MonitorApplication implements MessageListener {
 
 	void sendStartupNotification() throws UnknownHostException {
 		// our host
-		InetAddress address = InetAddress.getLocalHost();
-
-		OffsetDateTime odt = OffsetDateTime.now();
-
-		CollectorNotificationMessage msg = new CollectorNotificationMessage(address.getHostName(),
-				address.getHostAddress());
+		CollectorNotificationMessage msg = new CollectorNotificationMessage(hostname, ip);
 
 		msg.setSeverity(NotificationSeverity.INFO);
 		msg.setText("Monitor startup");
-		msg.setTimestamp(odt);
 
 		try {
-			if (notificationPubSubs.size() > 0) {
-				PublisherSubscriber pubSub = notificationPubSubs.get(0);
+			if (monitorPubSubs.size() > 0) {
+				PublisherSubscriber pubSub = monitorPubSubs.get(0);
 
 				pubSub.publish(msg, RoutingKey.NOTIFICATION_MESSAGE, 3600);
 			}

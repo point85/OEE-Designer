@@ -17,6 +17,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
 public class DataCollectorController extends DialogController {
@@ -41,6 +42,12 @@ public class DataCollectorController extends DialogController {
 	private TextField tfBrokerPort;
 
 	@FXML
+	private TextField tfBrokerUserName;
+
+	@FXML
+	private PasswordField pfBrokerUserPassword;
+
+	@FXML
 	private Button btNew;
 
 	@FXML
@@ -63,7 +70,7 @@ public class DataCollectorController extends DialogController {
 		for (CollectorState state : CollectorState.values()) {
 			cbCollectorStates.getItems().add(state);
 		}
-		
+
 		cbCollectors.setItems(collectors);
 
 		// retrieve the defined collectors
@@ -103,7 +110,7 @@ public class DataCollectorController extends DialogController {
 	private void onSelectCollector() {
 		try {
 			String collector = cbCollectors.getSelectionModel().getSelectedItem();
-			
+
 			// JFX fires this event with a null selected item!
 			if (collector == null) {
 				onNewCollector();
@@ -128,6 +135,18 @@ public class DataCollectorController extends DialogController {
 				this.tfBrokerPort.setText(String.valueOf(configuration.getBrokerPort()));
 			} else {
 				this.tfBrokerPort.clear();
+			}
+
+			if (configuration.getBrokerUserName() != null) {
+				this.tfBrokerUserName.setText(configuration.getBrokerUserName());
+			} else {
+				this.tfBrokerUserName.clear();
+			}
+
+			if (configuration.getBrokerUserPassword() != null) {
+				this.pfBrokerUserPassword.setText(configuration.getBrokerUserPassword());
+			} else {
+				this.pfBrokerUserPassword.clear();
 			}
 
 			this.cbCollectorStates.getSelectionModel().select(configuration.getCollectorState());
@@ -161,6 +180,8 @@ public class DataCollectorController extends DialogController {
 			this.tfDescription.clear();
 			this.tfBrokerHost.clear();
 			this.tfBrokerPort.clear();
+			this.tfBrokerUserName.clear();
+			this.pfBrokerUserPassword.clear();
 
 			this.cbCollectors.getSelectionModel().clearSelection();
 			this.cbCollectorStates.getSelectionModel().select(null);
@@ -182,6 +203,8 @@ public class DataCollectorController extends DialogController {
 			configuration.setDescription(getDescription());
 			configuration.setBrokerHost(getBrokerHost());
 			configuration.setBrokerPort(getBrokerPort());
+			configuration.setBrokerUserName(getBrokerUserName());
+			configuration.setBrokerUserPassword(getBrokerUserPassword());
 			configuration.setCollectorState(getCollectorState());
 
 			// save collector
@@ -230,6 +253,14 @@ public class DataCollectorController extends DialogController {
 			port = Integer.valueOf(portText.trim());
 		}
 		return port;
+	}
+
+	String getBrokerUserName() {
+		return this.tfBrokerUserName.getText();
+	}
+
+	String getBrokerUserPassword() {
+		return this.pfBrokerUserPassword.getText();
 	}
 
 	CollectorState getCollectorState() {

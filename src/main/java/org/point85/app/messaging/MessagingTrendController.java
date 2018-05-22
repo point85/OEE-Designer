@@ -149,7 +149,7 @@ public class MessagingTrendController extends DesignerDialogController implement
 
 			List<RoutingKey> keys = new ArrayList<>();
 			keys.add(RoutingKey.EQUIPMENT_SOURCE_EVENT);
-			pubsub.connectToBroker(source.getHost(), source.getPort(), source.getUserName(), source.getUserPassword(),
+			pubsub.connectAndSubscribe(source.getHost(), source.getPort(), source.getUserName(), source.getUserPassword(),
 					queueName, false, keys, this);
 
 			// start the trend
