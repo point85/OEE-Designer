@@ -19,7 +19,6 @@ import org.point85.domain.messaging.CollectorServerStatusMessage;
 import org.point85.domain.messaging.NotificationSeverity;
 import org.point85.domain.messaging.PublisherSubscriber;
 import org.point85.domain.messaging.RoutingKey;
-import org.point85.domain.oee.EquipmentLoss;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.EntityLevel;
 import org.point85.domain.plant.Equipment;
@@ -356,11 +355,11 @@ public class MonitorController {
 		// clear messages
 		btClearMessages.setGraphic(ImageManager.instance().getImageView(Images.CLEAR));
 		btClearMessages.setContentDisplay(ContentDisplay.LEFT);
-		
+
 		// refresh
 		btRefresh.setGraphic(ImageManager.instance().getImageView(Images.REFRESH));
 		btRefresh.setContentDisplay(ContentDisplay.LEFT);
-		
+
 		// restart
 		btRestart.setGraphic(ImageManager.instance().getImageView(Images.STARTUP));
 		btRestart.setContentDisplay(ContentDisplay.LEFT);
@@ -498,8 +497,7 @@ public class MonitorController {
 		newItem.setExpanded(true);
 
 		if (selectedEntity instanceof Equipment) {
-			EquipmentLoss loss = new EquipmentLoss((Equipment) selectedEntity);
-			dashboardController.setEquipmentLoss(loss);
+			dashboardController.setupEquipmentLoss((Equipment) selectedEntity);
 			dashboardController.enableRefresh(true);
 		} else {
 			dashboardController.enableRefresh(false);
@@ -652,8 +650,12 @@ public class MonitorController {
 			return entity;
 		}
 
-		private void setPlantEntity(PlantEntity reason) {
-			this.entity = reason;
+		private void setPlantEntity(PlantEntity entity) {
+			this.entity = entity;
+
+			if (entity instanceof Equipment) {
+				dashboardController.setupEquipmentLoss((Equipment) entity);
+			}
 		}
 
 		private String getEntityName() {

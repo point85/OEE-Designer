@@ -13,12 +13,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.point85.app.AppUtils;
 import org.point85.app.DialogController;
+import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
-import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.charts.CategoryClickListener;
 import org.point85.app.charts.ParetoChartController;
 import org.point85.domain.DomainUtils;
@@ -32,9 +34,9 @@ import org.point85.domain.oee.TimeLoss;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Equipment;
 import org.point85.domain.plant.Material;
+import org.point85.domain.plant.PlantEntity;
 import org.point85.domain.plant.Reason;
 import org.point85.domain.script.EventType;
-import org.point85.domain.uom.MeasurementSystem;
 import org.point85.domain.uom.Quantity;
 import org.point85.domain.uom.Unit;
 import org.point85.domain.uom.UnitOfMeasure;
@@ -124,8 +126,10 @@ public class DashboardController extends DialogController implements CategoryCli
 	// refresh task
 	private RefreshTask refreshTask;
 
-	// the loss data
+	// the loss data for the current equipment
 	private EquipmentLoss equipmentLoss;
+
+	private ConcurrentMap<String, EquipmentLoss> lossMap = new ConcurrentHashMap<>();
 
 	// possible materials
 	private Map<String, Material> materialMap = new HashMap<>();
@@ -1189,8 +1193,10 @@ public class DashboardController extends DialogController implements CategoryCli
 
 		case PROD_GOOD: {
 			// good production
-			UnitOfMeasure uom = MeasurementSystem.instance().getUOM(message.getUom());
+			UnitOfMeasure uom = DomainUtils.getUomBySymbol(message.getUom());
 			Quantity delta = new Quantity(message.getAmount(), uom);
+
+			setCurrentEquipmentLoss(message.getEquipmentName());
 			Quantity good = equipmentLoss.incrementGoodQuantity(delta);
 			lbiGoodProduction.setValue(good.getAmount(), false);
 			break;
@@ -1198,8 +1204,10 @@ public class DashboardController extends DialogController implements CategoryCli
 
 		case PROD_REJECT: {
 			// reject and rework
-			UnitOfMeasure uom = MeasurementSystem.instance().getUOM(message.getUom());
+			UnitOfMeasure uom = DomainUtils.getUomBySymbol(message.getUom());
 			Quantity delta = new Quantity(message.getAmount(), uom);
+
+			setCurrentEquipmentLoss(message.getEquipmentName());
 			Quantity reject = equipmentLoss.incrementRejectQuantity(delta);
 			lbiRejectProduction.setValue(reject.getAmount(), true);
 			break;
@@ -1207,8 +1215,9 @@ public class DashboardController extends DialogController implements CategoryCli
 
 		case PROD_STARTUP: {
 			// startup and yield
-			UnitOfMeasure uom = MeasurementSystem.instance().getUOM(message.getUom());
+			UnitOfMeasure uom = DomainUtils.getUomBySymbol(message.getUom());
 			Quantity delta = new Quantity(message.getAmount(), uom);
+			setCurrentEquipmentLoss(message.getEquipmentName());
 			Quantity startup = equipmentLoss.incrementStartupQuantity(delta);
 			lbiStartupProduction.setValue(startup.getAmount(), true);
 			break;
@@ -1562,6 +1571,24 @@ public class DashboardController extends DialogController implements CategoryCli
 		this.btRefresh.setDisable(!value);
 		this.cbAutoRefresh.setDisable(!value);
 		this.tpParetoCharts.setDisable(!value);
+	}
+
+	public void setupEquipmentLoss(Equipment equipment) {
+		if (lossMap.get(equipment.getName()) == null) {
+			lossMap.put(equipment.getName(), new EquipmentLoss(equipment));
+		}
+		equipmentLoss = lossMap.get(equipment.getName());
+	}
+
+	private synchronized void setCurrentEquipmentLoss(String equipmentName) {
+		if (lossMap.get(equipmentName) == null) {
+			// new equipment
+			PlantEntity entity = PersistenceService.instance().fetchPlantEntityByName(equipmentName);
+
+			if (entity instanceof Equipment) {
+				setupEquipmentLoss((Equipment) entity);
+			}
+		}
 	}
 
 	private class RefreshTask extends TimerTask {
