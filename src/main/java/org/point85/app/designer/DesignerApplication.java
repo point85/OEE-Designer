@@ -27,7 +27,6 @@ import org.point85.app.web.WebServerController;
 import org.point85.domain.collector.DataCollector;
 import org.point85.domain.http.HttpSource;
 import org.point85.domain.messaging.MessagingSource;
-import org.point85.domain.oee.EquipmentLoss;
 import org.point85.domain.opc.da.DaOpcClient;
 import org.point85.domain.opc.da.OpcDaBrowserLeaf;
 import org.point85.domain.opc.ua.UaOpcClient;
@@ -583,7 +582,7 @@ public class DesignerApplication {
 
 			// add the trend chart
 			SplitPane chartPane = opcUaTrendController.initializeTrend();
-			
+
 			opcUaTrendController.setUpdatePeriodMsec(eventResolver.getUpdatePeriod());
 
 			AnchorPane.setBottomAnchor(chartPane, 50.0);
@@ -750,9 +749,7 @@ public class DesignerApplication {
 
 			dashboardDialogController.setDashboardController(dashboardController);
 		}
-
-		EquipmentLoss loss = new EquipmentLoss((Equipment) entity);
-		dashboardDialogController.getDashboardController().setEquipmentLoss(loss);
+		dashboardDialogController.getDashboardController().setupEquipmentLoss((Equipment) entity);
 
 		// Show the dialog and wait until the user closes it
 		if (!dashboardDialogController.getDialogStage().isShowing()) {

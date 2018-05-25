@@ -129,6 +129,7 @@ public class DashboardController extends DialogController implements CategoryCli
 	// the loss data for the current equipment
 	private EquipmentLoss equipmentLoss;
 
+	// map of loss by equipment
 	private ConcurrentMap<String, EquipmentLoss> lossMap = new ConcurrentHashMap<>();
 
 	// possible materials
@@ -384,10 +385,6 @@ public class DashboardController extends DialogController implements CategoryCli
 	@FXML
 	private AnchorPane apPlannedDowntimePareto;
 	private StackPane spPlannedDowntimePareto;
-
-	public void setEquipmentLoss(EquipmentLoss equipmentLoss) {
-		this.equipmentLoss = equipmentLoss;
-	}
 
 	private float determineTimeUnits(Duration duration) {
 		float divisor = 1.0f;
@@ -872,11 +869,15 @@ public class DashboardController extends DialogController implements CategoryCli
 	}
 
 	private void startRefreshTimer() {
+		if (refreshTimer == null) {
+			initializeRefreshTimer();
+		}
 		refreshTimer.schedule(refreshTask, 1000, REFRESH_SEC * 1000);
 	}
 
 	private void stopRefreshTimer() {
 		refreshTimer.cancel();
+		refreshTimer = null;
 	}
 
 	@FXML

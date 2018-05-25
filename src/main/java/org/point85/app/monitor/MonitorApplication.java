@@ -179,7 +179,7 @@ public class MonitorApplication implements MessageListener {
 		MessageType type = message.getMessageType();
 
 		if (logger.isInfoEnabled()) {
-			logger.info("Received message of type " + type);
+			logger.info("Received message of class " + message.getClass().getSimpleName());
 		}
 
 		if (type.equals(MessageType.NOTIFICATION)) {
