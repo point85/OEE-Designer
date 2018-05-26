@@ -789,6 +789,9 @@ public class PhysicalModelController extends DesignerController {
 			}
 
 			editedEntityItems.remove(selectedEntityItem);
+			
+			equipmentMaterialController.clear();
+			resolverController.clear();
 
 			tvEntities.refresh();
 
@@ -864,12 +867,7 @@ public class PhysicalModelController extends DesignerController {
 		}
 	}
 
-	private boolean setAttributes(TreeItem<EntityNode> entityItem) throws Exception {
-		boolean isDirty = false;
-
-		if (entityItem == null) {
-			return isDirty;
-		}
+	private void setAttributes(TreeItem<EntityNode> entityItem) throws Exception {
 		PlantEntity entity = entityItem.getValue().getPlantEntity();
 
 		// name
@@ -878,19 +876,11 @@ public class PhysicalModelController extends DesignerController {
 		if (name.length() == 0) {
 			throw new Exception("The plant entity name must be specified.");
 		}
-
-		if (!name.equals(entity.getName())) {
-			entity.setName(name);
-			isDirty = true;
-		}
+		entity.setName(name);
 
 		// description
 		String description = taEntityDescription.getText();
-
-		if (!description.equals(entity.getDescription())) {
-			entity.setDescription(description);
-			isDirty = true;
-		}
+		entity.setDescription(description);
 
 		// retention period
 		String period = tfRetention.getText().trim();
@@ -901,28 +891,14 @@ public class PhysicalModelController extends DesignerController {
 			if (days < 0) {
 				throw new Exception("The retention period must be greater than or equals to zero days");
 			}
-
-			Duration retention = Duration.ofDays(days);
-
-			if (!retention.equals(entity.getRetentionDuration())) {
-				entity.setRetentionDuration(retention);
-				isDirty = true;
-			}
+			entity.setRetentionDuration(Duration.ofDays(days));
 		}
 
 		// work schedule
 		WorkSchedule schedule = (WorkSchedule) lbSchedule.getUserData();
+		entity.setWorkSchedule(schedule);
 
-		if (schedule != null && !schedule.equals(entity.getWorkSchedule())) {
-			entity.setWorkSchedule(schedule);
-			isDirty = true;
-		}
-
-		if (isDirty) {
-			addEditedPlantEntity(entityItem);
-		}
-
-		return isDirty;
+		addEditedPlantEntity(entityItem);
 	}
 
 	private void addEditedPlantEntity(TreeItem<EntityNode> item) throws Exception {
@@ -931,7 +907,7 @@ public class PhysicalModelController extends DesignerController {
 			editedEntityItems.add(item);
 		}
 	}
-	
+
 	private void removeEditedPlantEntity(TreeItem<EntityNode> item) throws Exception {
 		if (item != null && editedEntityItems.contains(item)) {
 			setEntityGraphic(item);

@@ -110,8 +110,7 @@ public class CollectorApplication {
 			btRestart.setDisable(false);
 
 		} catch (Exception any) {
-			logger.error(any.getMessage());
-			any.printStackTrace();
+			collector.onException("Failed to start collector.", any);
 			try {
 				onShutdown();
 			} catch (Exception e) {

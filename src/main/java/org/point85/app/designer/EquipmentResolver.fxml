@@ -83,7 +83,7 @@
          <children>
             <Button fx:id="btRun" alignment="CENTER" mnemonicParsing="false" onAction="#onRun" prefWidth="100.0" text="Watch ..." />
             <Button fx:id="btRemoveResolver" mnemonicParsing="false" onAction="#onRemoveResolver" prefWidth="100.0" text="Remove" />
-            <Button fx:id="btAddResolver" mnemonicParsing="false" onAction="#onAddResolver" prefWidth="100.0" text="Add" />
+            <Button fx:id="btAddResolver" mnemonicParsing="false" onAction="#onAddOrUpdateResolver" prefWidth="100.0" text="Add" />
             <Button fx:id="btNewResolver" mnemonicParsing="false" onAction="#onNewResolver" prefWidth="100.0" text="Clear" />
          </children>
       </HBox>

@@ -85,6 +85,9 @@ public class EquipmentMaterialController extends DesignerController {
 	private TableColumn<EquipmentMaterial, String> materialCol;
 
 	@FXML
+	private TableColumn<EquipmentMaterial, String> materialDescCol;
+
+	@FXML
 	private TableColumn<EquipmentMaterial, String> targetOeeCol;
 
 	@FXML
@@ -117,14 +120,25 @@ public class EquipmentMaterialController extends DesignerController {
 				} catch (Exception e) {
 					AppUtils.showErrorDialog(e);
 				}
+			} else {
+				clearEditor();
 			}
 		});
 
-		// material
+		// material name
 		materialCol.setCellValueFactory(cellDataFeatures -> {
 			SimpleStringProperty property = null;
 			if (cellDataFeatures.getValue() != null && cellDataFeatures.getValue().getMaterial() != null) {
 				property = new SimpleStringProperty(cellDataFeatures.getValue().getMaterial().getName());
+			}
+			return property;
+		});
+
+		// material description
+		materialDescCol.setCellValueFactory(cellDataFeatures -> {
+			SimpleStringProperty property = null;
+			if (cellDataFeatures.getValue() != null && cellDataFeatures.getValue().getMaterial() != null) {
+				property = new SimpleStringProperty(cellDataFeatures.getValue().getMaterial().getDescription());
 			}
 			return property;
 		});
@@ -166,7 +180,7 @@ public class EquipmentMaterialController extends DesignerController {
 			return property;
 		});
 
-		// default
+		// default material
 		defaultCol.setCellValueFactory(cellDataFeatures -> {
 			SimpleStringProperty property = null;
 			if (cellDataFeatures.getValue() != null) {
@@ -187,12 +201,6 @@ public class EquipmentMaterialController extends DesignerController {
 		clearEditor();
 
 		tvMaterial.refresh();
-	}
-
-	void setEquipmentMaterials(Equipment equipment) {
-		Set<EquipmentMaterial> equipmentMaterials = new HashSet<>();
-		equipmentMaterials.addAll(equipmentMaterials);
-		equipment.setEquipmentMaterials(equipmentMaterials);
 	}
 
 	protected void setImages() throws Exception {
@@ -282,7 +290,7 @@ public class EquipmentMaterialController extends DesignerController {
 				if (!uom.getMeasurementType().equals(MeasurementType.SCALAR)) {
 					throw new Exception("Unit of measure " + symbol + " is not a scalar.");
 				}
-				
+
 				lbRejectUnit.setText(symbol);
 				if (getSelectedEquipmentMaterial() != null) {
 					getSelectedEquipmentMaterial().setRejectUOM(uom);
@@ -328,22 +336,20 @@ public class EquipmentMaterialController extends DesignerController {
 	}
 
 	@FXML
-	private void onAddMaterial() {
+	private void onAddOrUpdateMaterial() {
 		try {
 			if (selectedEquipmentMaterial == null) {
 				return;
 			}
 
-			if (!(getApp().getPhysicalModelController().getSelectedEntity() instanceof Equipment)) {
+			PlantEntity plantEntity = getApp().getPhysicalModelController().getSelectedEntity();
+
+			if (!(plantEntity instanceof Equipment)) {
 				throw new Exception("Equipment must be selected before adding material.");
 			}
 
 			// equipment
-			Equipment equipment = (Equipment) getApp().getPhysicalModelController().getSelectedEntity();
-
-			// add this equipment material
-			selectedEquipmentMaterial.setEquipment(equipment);
-			equipment.addEquipmentMaterial(selectedEquipmentMaterial);
+			Equipment equipment = (Equipment) plantEntity;
 
 			// material, check cache first
 			Material material = selectedEquipmentMaterial.getMaterial();
@@ -375,40 +381,27 @@ public class EquipmentMaterialController extends DesignerController {
 				selectedEquipmentMaterial.setRejectUOM(uom);
 			}
 
-			// add to equipment if necessary
-			addEquipmentMaterial();
+			// add this equipment material
+			selectedEquipmentMaterial.setEquipment(equipment);
+
+			if (!equipmentMaterials.contains(selectedEquipmentMaterial)) {
+				equipmentMaterials.add(selectedEquipmentMaterial);
+			}
+
+			Set<EquipmentMaterial> materials = new HashSet<>();
+			materials.addAll(equipmentMaterials);
+			equipment.setEquipmentMaterials(materials);
 
 			// mark dirty
 			getApp().getPhysicalModelController().markSelectedPlantEntity();
 
-			// tvMaterial.refresh();
-			// selectedEquipmentMaterial = null;
-			showMaterial(equipment);
+			tvMaterial.getSelectionModel().clearSelection();
+			selectedEquipmentMaterial = null;
+
+			tvMaterial.refresh();
 
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
-		}
-	}
-
-	private void addEquipmentMaterial() throws Exception {
-		if (getSelectedEquipmentMaterial().getKey() != null) {
-			// already added
-			return;
-		}
-
-		// add to entity
-		PlantEntity selectedEntity = getApp().getPhysicalModelController().getSelectedEntity();
-
-		if (selectedEntity == null || !(selectedEntity instanceof Equipment)) {
-			throw new Exception("An equipment entity must be selected before adding material to it.");
-		}
-
-		Equipment equipment = ((Equipment) selectedEntity);
-
-		// new resolver for equipment
-		if (!equipment.hasEquipmentMaterial(selectedEquipmentMaterial)) {
-			equipmentMaterials.add(selectedEquipmentMaterial);
-			equipment.addEquipmentMaterial(selectedEquipmentMaterial);
 		}
 	}
 
@@ -423,14 +416,13 @@ public class EquipmentMaterialController extends DesignerController {
 			Equipment equipment = getSelectedEquipmentMaterial().getEquipment();
 			equipment.removeEquipmentMaterial(getSelectedEquipmentMaterial());
 
+			// mark dirty
+			getApp().getPhysicalModelController().markSelectedPlantEntity();
+
 			equipmentMaterials.remove(getSelectedEquipmentMaterial());
 			selectedEquipmentMaterial = null;
 			tvMaterial.getSelectionModel().clearSelection();
 			tvMaterial.refresh();
-
-			// mark dirty
-			getApp().getPhysicalModelController().markSelectedPlantEntity();
-
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}

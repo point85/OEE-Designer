@@ -23,9 +23,9 @@ import org.point85.domain.opc.ua.OpcUaSource;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Equipment;
 import org.point85.domain.plant.PlantEntity;
-import org.point85.domain.script.ResolverFunction;
 import org.point85.domain.script.EventResolver;
 import org.point85.domain.script.EventType;
+import org.point85.domain.script.ResolverFunction;
 import org.point85.domain.web.WebSource;
 
 import javafx.beans.property.SimpleObjectProperty;
@@ -43,10 +43,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 
 public class EquipmentResolverController extends DesignerController {
-	// availability reason resolvers
+	// equipment event resolvers
 	private ObservableList<EventResolver> eventResolvers = FXCollections.observableArrayList(new ArrayList<>());
 
-	// reason resolver being edited
+	// event resolver being edited
 	private EventResolver selectedEventResolver;
 
 	@FXML
@@ -159,15 +159,19 @@ public class EquipmentResolverController extends DesignerController {
 	}
 
 	private void initializeResolverTable() throws Exception {
-		// bind to list of reason resolvers
+		// bind to list of event resolvers
 		tvResolvers.setItems(eventResolvers);
 
 		// add the table view listener for reason resolver selection
 		tvResolvers.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
-			try {
-				onSelectScriptResolver(newValue);
-			} catch (Exception e) {
-				AppUtils.showErrorDialog(e);
+			if (newValue != null) {
+				try {
+					onSelectScriptResolver(newValue);
+				} catch (Exception e) {
+					AppUtils.showErrorDialog(e);
+				}
+			} else {
+				clearEditor();
 			}
 		});
 
@@ -291,7 +295,7 @@ public class EquipmentResolverController extends DesignerController {
 
 		// update period
 		Integer period = eventResolver.getUpdatePeriod();
-		
+
 		if (period == null) {
 			period = CollectorDataSource.DEFAULT_UPDATE_PERIOD_MSEC;
 		}
@@ -325,19 +329,12 @@ public class EquipmentResolverController extends DesignerController {
 		tvResolvers.refresh();
 	}
 
-	void setResolvers(Equipment equipment) {
-		Set<EventResolver> resolvers = new HashSet<>();
-		resolvers.clear();
-		resolvers.addAll(eventResolvers);
-		equipment.setScriptResolvers(resolvers);
-	}
-
 	// Remove reason
 	@FXML
 	private void onRemoveResolver() {
 		try {
 			if (selectedEventResolver == null) {
-				AppUtils.showErrorDialog("No reason resolver has been selected for deletion.");
+				AppUtils.showErrorDialog("No event resolver has been selected for deletion.");
 				return;
 			}
 
@@ -399,7 +396,7 @@ public class EquipmentResolverController extends DesignerController {
 			}
 		}
 	}
-	
+
 	@FXML
 	private void onSelectDataSource() throws Exception {
 		DataSourceType sourceType = this.cbDataSources.getSelectionModel().getSelectedItem();
@@ -657,40 +654,22 @@ public class EquipmentResolverController extends DesignerController {
 		}
 	}
 
-	private void addScriptResolver() throws Exception {
-		if (selectedEventResolver.getKey() != null) {
-			// already added
-			return;
-		}
-
-		// add to entity
-		PlantEntity selectedEntity = getApp().getPhysicalModelController().getSelectedEntity();
-
-		if (selectedEntity == null || !(selectedEntity instanceof Equipment)) {
-			throw new Exception("An equipment entity must be selected before adding resolvers to it.");
-		}
-
-		Equipment equipment = ((Equipment) selectedEntity);
-
-		// new resolver for equipment
-		if (!equipment.hasResolver(selectedEventResolver)) {
-			eventResolvers.add(selectedEventResolver);
-
-			equipment.addScriptResolver(selectedEventResolver);
-		}
-	}
-
 	// add a new resolver or update an existing one
 	@FXML
-	private void onAddResolver() {
+	private void onAddOrUpdateResolver() {
 		try {
 			if (selectedEventResolver == null) {
 				return;
 			}
 
-			if (!(getApp().getPhysicalModelController().getSelectedEntity() instanceof Equipment)) {
-				throw new Exception("Equipment must be selected before adding a resolver.");
+			PlantEntity plantEntity = getApp().getPhysicalModelController().getSelectedEntity();
+
+			if (!(plantEntity instanceof Equipment)) {
+				throw new Exception("Equipment must be selected before adding material.");
 			}
+
+			// equipment
+			Equipment equipment = (Equipment) plantEntity;
 
 			// collector
 			selectedEventResolver.setCollector(cbCollectors.getSelectionModel().getSelectedItem());
@@ -711,16 +690,24 @@ public class EquipmentResolverController extends DesignerController {
 				selectedEventResolver.setUpdatePeriod(Integer.valueOf(updateText));
 			}
 
-			// add to equipment if necessary
-			addScriptResolver();
+			// add this resolver
+			selectedEventResolver.setEquipment(equipment);
+
+			if (!eventResolvers.contains(selectedEventResolver)) {
+				eventResolvers.add(selectedEventResolver);
+			}
+
+			Set<EventResolver> resolvers = new HashSet<>();
+			resolvers.addAll(eventResolvers);
+			equipment.setScriptResolvers(resolvers);
 
 			// mark dirty
 			getApp().getPhysicalModelController().markSelectedPlantEntity();
 
-			tvResolvers.refresh();
-
 			tvResolvers.getSelectionModel().clearSelection();
 			selectedEventResolver = null;
+
+			tvResolvers.refresh();
 
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);

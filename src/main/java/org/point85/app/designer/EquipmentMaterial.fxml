@@ -86,13 +86,14 @@
       <HBox alignment="CENTER" layoutX="215.0" layoutY="268.0" nodeOrientation="RIGHT_TO_LEFT" spacing="25.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="200.0">
          <children>
             <Button fx:id="btRemoveMaterial" mnemonicParsing="false" onAction="#onRemoveMaterial" prefWidth="100.0" text="Remove" />
-            <Button fx:id="btAddMaterial" mnemonicParsing="false" onAction="#onAddMaterial" prefWidth="100.0" text="Add" />
+            <Button fx:id="btAddMaterial" mnemonicParsing="false" onAction="#onAddOrUpdateMaterial" prefWidth="100.0" text="Add" />
             <Button fx:id="btNewMaterial" mnemonicParsing="false" onAction="#onNewMaterial" prefWidth="100.0" text="Clear" />
          </children>
       </HBox>
       <TableView fx:id="tvMaterial" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="250.0">
          <columns>
-            <TableColumn fx:id="materialCol" prefWidth="150.0" text="Material" />
+            <TableColumn fx:id="materialCol" prefWidth="125.0" text="Material" />
+            <TableColumn fx:id="materialDescCol" prefWidth="150.0" text="Description" />
             <TableColumn fx:id="targetOeeCol" prefWidth="50.0" text="OEE" />
             <TableColumn fx:id="iRRCol" prefWidth="50.0" text="Speed" />
             <TableColumn fx:id="iRRUnitCol" prefWidth="50.0" text="UOM" />
