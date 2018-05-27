@@ -287,12 +287,6 @@ public class EventResolverController extends DesignerDialogController {
 				}
 				break;
 				
-			case OTHER:
-				if (result != null) {
-					taResult.appendText("Result: " + result.toString() + '\n');
-				}
-				break;
-				
 			default:
 				taResult.appendText(result.toString() + '\n');
 				break;

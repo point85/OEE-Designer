@@ -6,7 +6,6 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,8 +14,10 @@ import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import org.point85.app.AppUtils;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
+import org.point85.domain.DomainUtils;
 import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.DataSourceType;
 import org.point85.domain.http.EquipmentEventRequestDto;
@@ -122,10 +123,10 @@ public class ClientTestApplication implements MessageListener {
 
 	@FXML
 	private ComboBox<String> cbRmqHostPort;
-	
+
 	@FXML
 	private TextField tfRmqUserName;
-	
+
 	@FXML
 	private PasswordField pfRmqUserPassword;
 
@@ -134,6 +135,9 @@ public class ClientTestApplication implements MessageListener {
 
 	@FXML
 	private Button btRmqSend;
+	
+	@FXML
+	private Button btReset;
 
 	@FXML
 	private ComboBox<String> cbHttpSourceId;
@@ -182,23 +186,27 @@ public class ClientTestApplication implements MessageListener {
 	private void setImages() throws Exception {
 		// entity
 		btHttpGetEntities.setGraphic(ImageManager.instance().getImageView(Images.EQUIPMENT));
-		btHttpGetEntities.setContentDisplay(ContentDisplay.RIGHT);
+		btHttpGetEntities.setContentDisplay(ContentDisplay.LEFT);
 
 		// materials
 		btHttpGetMaterials.setGraphic(ImageManager.instance().getImageView(Images.MATERIAL));
-		btHttpGetMaterials.setContentDisplay(ContentDisplay.RIGHT);
+		btHttpGetMaterials.setContentDisplay(ContentDisplay.LEFT);
 
 		// reasons
 		btHttpGetReasons.setGraphic(ImageManager.instance().getImageView(Images.REASON));
-		btHttpGetReasons.setContentDisplay(ContentDisplay.RIGHT);
+		btHttpGetReasons.setContentDisplay(ContentDisplay.LEFT);
 
 		// post
 		btHttpPost.setGraphic(ImageManager.instance().getImageView(Images.HTTP));
-		btHttpPost.setContentDisplay(ContentDisplay.RIGHT);
+		btHttpPost.setContentDisplay(ContentDisplay.LEFT);
 
 		// send
 		btRmqSend.setGraphic(ImageManager.instance().getImageView(Images.RMQ));
-		btRmqSend.setContentDisplay(ContentDisplay.RIGHT);
+		btRmqSend.setContentDisplay(ContentDisplay.LEFT);
+		
+		// reset
+		btReset.setGraphic(ImageManager.instance().getImageView(Images.REFRESH_ALL));
+		btReset.setContentDisplay(ContentDisplay.LEFT);
 	}
 
 	// called by Java FX
@@ -340,6 +348,12 @@ public class ClientTestApplication implements MessageListener {
 		return "http://" + tokens[0] + ":" + tokens[1] + '/' + endpoint;
 	}
 
+	private String encode(String input) {
+		CharSequence space = " ";
+		CharSequence encodedSpace = "%20";
+		return input.replace(space, encodedSpace);
+	}
+
 	private String addQueryParameter(String url, String name, String value) {
 		StringBuilder sb = new StringBuilder();
 
@@ -348,7 +362,9 @@ public class ClientTestApplication implements MessageListener {
 		} else {
 			sb.append('&');
 		}
-		sb.append(name).append('=').append(value);
+
+		// replace spaces
+		sb.append(name).append('=').append(encode(value));
 
 		return url + sb.toString();
 	}
@@ -467,6 +483,11 @@ public class ClientTestApplication implements MessageListener {
 		try {
 			// POST event
 			String urlString = buildHttpUrl(OeeHttpServer.EVENT_EP);
+
+			if (logger.isInfoEnabled()) {
+				logger.info("Posting to URL: " + urlString);
+			}
+
 			URL url = new URL(urlString);
 
 			conn = (HttpURLConnection) url.openConnection();
@@ -477,8 +498,7 @@ public class ClientTestApplication implements MessageListener {
 			String sourceId = (String) cbHttpSourceId.getSelectionModel().getSelectedItem();
 			String value = tfHttpValue.getText();
 
-			OffsetDateTime odt = OffsetDateTime.now();
-			String timestamp = odt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+			String timestamp = DomainUtils.offsetDateTimeToString(OffsetDateTime.now());
 
 			EquipmentEventRequestDto dto = new EquipmentEventRequestDto(sourceId, value, timestamp);
 			Gson gson = new Gson();
@@ -834,6 +854,20 @@ public class ClientTestApplication implements MessageListener {
 			}
 		} catch (Exception e) {
 			showErrorDialog(e);
+		}
+	}
+	
+	@FXML
+	private void onReset() {
+		try {
+			populateHttpSourceIds();
+			populateRmqSourceIds();
+			
+			tvMaterials.getSelectionModel().clearSelection();
+			ttvEntities.getSelectionModel().clearSelection();
+			ttvReasons.getSelectionModel().clearSelection();
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
 		}
 	}
 }

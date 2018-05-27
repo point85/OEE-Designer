@@ -2,7 +2,6 @@ package org.point85.app.opc.ua;
 
 import java.lang.reflect.Array;
 import java.time.OffsetDateTime;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -372,8 +371,8 @@ public class OpcUaBrowserController extends OpcUaController {
 				lbState.setTextFill(CONNECTED_COLOR);
 
 				// start time
-				ZonedDateTime start = DomainUtils.utcTimeFromDateTime(status.getStartTime());
-				lbStartTime.setText(DomainUtils.zonedDateTimeToString(start));
+				OffsetDateTime start = DomainUtils.utcTimeFromDateTime(status.getStartTime());
+				lbStartTime.setText(DomainUtils.offsetDateTimeToString(start));
 
 				// product & manufacturer
 				BuildInfo info = status.getBuildInfo();

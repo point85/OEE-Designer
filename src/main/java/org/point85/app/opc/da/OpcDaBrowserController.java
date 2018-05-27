@@ -1,7 +1,6 @@
 package org.point85.app.opc.da;
 
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -235,8 +234,8 @@ public class OpcDaBrowserController extends OpcDaController {
 			this.taTagValue.setText(value);
 
 			// timestamp
-			ZonedDateTime zdt = DomainUtils.fromFiletime(itemStateEntry.getValue().getTimestamp());
-			this.lbTagTimestamp.setText(zdt.toString());
+			OffsetDateTime odt = DomainUtils.fromFiletime(itemStateEntry.getValue().getTimestamp());
+			this.lbTagTimestamp.setText(odt.toString());
 		}
 	}
 
@@ -281,7 +280,8 @@ public class OpcDaBrowserController extends OpcDaController {
 				String serverState = status.getServerState();
 				lbState.setText(serverState);
 				lbState.setTextFill(CONNECTED_COLOR);
-				lbStartTime.setText(status.getStartTime().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+				String formatted = DomainUtils.offsetDateTimeToString(status.getStartTime());
+				lbStartTime.setText(formatted);
 				lbVendor.setText(status.getVendorInfo());
 				lbVersion.setText(status.getVersion());
 			} else {

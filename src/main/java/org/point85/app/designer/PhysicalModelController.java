@@ -22,7 +22,6 @@ import org.point85.domain.plant.Site;
 import org.point85.domain.plant.WorkCell;
 import org.point85.domain.schedule.WorkSchedule;
 import org.point85.domain.script.EventResolver;
-import org.point85.domain.script.EventType;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -448,10 +447,9 @@ public class PhysicalModelController extends DesignerController {
 	@FXML
 	private void onShowScriptEditor() {
 		try {
-			EventResolver scriptResolver = new EventResolver();
-			scriptResolver.setType(EventType.OTHER);
+			EventResolver eventResolver = new EventResolver();
 
-			this.getApp().showScriptEditor(scriptResolver);
+			getApp().showScriptEditor(eventResolver);
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}
@@ -789,11 +787,9 @@ public class PhysicalModelController extends DesignerController {
 			}
 
 			editedEntityItems.remove(selectedEntityItem);
-			
-			equipmentMaterialController.clear();
-			resolverController.clear();
 
-			tvEntities.refresh();
+			// re-display attributes
+			onRefreshEntity();
 
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);

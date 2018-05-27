@@ -6,15 +6,15 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
 
 import org.point85.app.AppUtils;
+import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
-import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.charts.DataSubscriber;
 import org.point85.app.charts.TrendChartController;
 import org.point85.app.designer.DesignerDialogController;
+import org.point85.domain.DomainUtils;
 import org.point85.domain.http.EquipmentEventRequestDto;
 import org.point85.domain.http.HttpEventListener;
 import org.point85.domain.http.HttpSource;
@@ -202,8 +202,7 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 
 			String value = tfLoopbackValue.getText();
 
-			OffsetDateTime odt = OffsetDateTime.now();
-			String timestamp = odt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+			String timestamp = DomainUtils.offsetDateTimeToString(OffsetDateTime.now());
 
 			EquipmentEventRequestDto dto = new EquipmentEventRequestDto(eventResolver.getSourceId(), value, timestamp);
 			Gson gson = new Gson();

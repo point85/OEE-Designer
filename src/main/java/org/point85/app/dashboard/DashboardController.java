@@ -830,8 +830,29 @@ public class DashboardController extends DialogController implements CategoryCli
 
 	@Override
 	protected void setImages() throws Exception {
+		// refresh
 		btRefresh.setGraphic(ImageManager.instance().getImageView(Images.REFRESH));
 		btRefresh.setContentDisplay(ContentDisplay.LEFT);
+		
+		// new availability
+		btNewAvailability.setGraphic(ImageManager.instance().getImageView(Images.ADD));
+		btNewAvailability.setContentDisplay(ContentDisplay.LEFT);
+		
+		// new production
+		btNewProduction.setGraphic(ImageManager.instance().getImageView(Images.NEW));
+		btNewProduction.setContentDisplay(ContentDisplay.LEFT);
+		
+		// new setup
+		btNewSetup.setGraphic(ImageManager.instance().getImageView(Images.IMPORT));
+		btNewSetup.setContentDisplay(ContentDisplay.LEFT);
+		
+		// update event
+		btUpdateEvent.setGraphic(ImageManager.instance().getImageView(Images.UPDATE));
+		btUpdateEvent.setContentDisplay(ContentDisplay.LEFT);
+		
+		// delete event
+		btDeleteEvent.setGraphic(ImageManager.instance().getImageView(Images.DELETE));
+		btDeleteEvent.setContentDisplay(ContentDisplay.LEFT);
 	}
 
 	@FXML
@@ -1369,7 +1390,7 @@ public class DashboardController extends DialogController implements CategoryCli
 			lbiStartupProduction.setFormatString(PROD_FORMAT + " " + symbol);
 			lbiStartupProduction.setValue(amount, true);
 
-			// show last availability and setup records
+			// show last availability and setup records (job changes not shown)
 			List<OeeEvent> historyRecords = equipmentLoss.getEventRecords();
 
 			// sort by start time

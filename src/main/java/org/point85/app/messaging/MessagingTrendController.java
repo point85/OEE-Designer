@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.point85.app.AppUtils;
 import org.point85.app.FXMLLoaderFactory;
+import org.point85.app.ImageManager;
+import org.point85.app.Images;
 import org.point85.app.charts.DataSubscriber;
 import org.point85.app.charts.TrendChartController;
 import org.point85.app.designer.DesignerDialogController;
@@ -29,6 +31,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
@@ -80,6 +83,10 @@ public class MessagingTrendController extends DesignerDialogController implement
 	@Override
 	protected void setImages() throws Exception {
 		super.setImages();
+		
+		// loopback test
+		btLoopback.setGraphic(ImageManager.instance().getImageView(Images.EXECUTE));
+		btLoopback.setContentDisplay(ContentDisplay.LEFT);
 	}
 
 	public void setEventResolver(EventResolver eventResolver) throws Exception {

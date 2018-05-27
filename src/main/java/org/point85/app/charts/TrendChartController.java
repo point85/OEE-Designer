@@ -6,9 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.point85.app.AppUtils;
+import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
-import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerController;
 import org.point85.domain.DomainUtils;
@@ -251,12 +251,12 @@ public class TrendChartController extends DesignerController {
 	protected void setButtonImages() throws Exception {
 		// trend auto starts
 		btToggleTrend.setGraphic(ImageManager.instance().getImageView(Images.STOP));
-		btToggleTrend.setContentDisplay(ContentDisplay.RIGHT);
+		btToggleTrend.setContentDisplay(ContentDisplay.LEFT);
 		btToggleTrend.setText(STOP);
 
 		// clear trend
 		btResetTrend.setGraphic(ImageManager.instance().getImageView(Images.CLEAR));
-		btResetTrend.setContentDisplay(ContentDisplay.RIGHT);
+		btResetTrend.setContentDisplay(ContentDisplay.LEFT);
 	}
 
 	@FXML
@@ -300,11 +300,6 @@ public class TrendChartController extends DesignerController {
 		}
 
 		case MATL_CHANGE: {
-			plotData(resolvedItem.getInputValue(), resolvedItem.getOutputValue());
-			break;
-		}
-
-		case OTHER: {
 			plotData(resolvedItem.getInputValue(), resolvedItem.getOutputValue());
 			break;
 		}
@@ -377,8 +372,8 @@ public class TrendChartController extends DesignerController {
 
 	public void setUpdatePeriodMsec(Integer millis) {
 		if (millis != null) {
-			spUpdatePeriod.getValueFactory().setValue(millis/1000);
-		} 
+			spUpdatePeriod.getValueFactory().setValue(millis / 1000);
+		}
 	}
 
 	public void onStartTrending() {
