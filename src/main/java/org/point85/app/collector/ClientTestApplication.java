@@ -21,6 +21,7 @@ import org.point85.domain.DomainUtils;
 import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.DataSourceType;
 import org.point85.domain.http.EquipmentEventRequestDto;
+import org.point85.domain.http.HttpSource;
 import org.point85.domain.http.MaterialDto;
 import org.point85.domain.http.MaterialResponseDto;
 import org.point85.domain.http.OeeHttpServer;
@@ -32,6 +33,7 @@ import org.point85.domain.http.SourceIdResponseDto;
 import org.point85.domain.messaging.ApplicationMessage;
 import org.point85.domain.messaging.EquipmentEventMessage;
 import org.point85.domain.messaging.MessageListener;
+import org.point85.domain.messaging.MessagingSource;
 import org.point85.domain.messaging.PublisherSubscriber;
 import org.point85.domain.messaging.RoutingKey;
 import org.point85.domain.oee.TimeLoss;
@@ -59,7 +61,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -119,23 +120,17 @@ public class ClientTestApplication implements MessageListener {
 	private TableColumn<Material, String> tcMaterialCategory;
 
 	@FXML
-	private ComboBox<String> cbHttpHostPort;
+	private ComboBox<HttpSource> cbHttpHostPort;
 
 	@FXML
-	private ComboBox<String> cbRmqHostPort;
-
-	@FXML
-	private TextField tfRmqUserName;
-
-	@FXML
-	private PasswordField pfRmqUserPassword;
+	private ComboBox<MessagingSource> cbRmqHostPort;
 
 	@FXML
 	private Button btHttpPost;
 
 	@FXML
 	private Button btRmqSend;
-	
+
 	@FXML
 	private Button btReset;
 
@@ -203,7 +198,7 @@ public class ClientTestApplication implements MessageListener {
 		// send
 		btRmqSend.setGraphic(ImageManager.instance().getImageView(Images.RMQ));
 		btRmqSend.setContentDisplay(ContentDisplay.LEFT);
-		
+
 		// reset
 		btReset.setGraphic(ImageManager.instance().getImageView(Images.REFRESH_ALL));
 		btReset.setContentDisplay(ContentDisplay.LEFT);
@@ -338,14 +333,12 @@ public class ClientTestApplication implements MessageListener {
 	}
 
 	private String buildHttpUrl(String endpoint) throws Exception {
-		String hostPort = cbHttpHostPort.getSelectionModel().getSelectedItem();
+		HttpSource source = cbHttpHostPort.getSelectionModel().getSelectedItem();
 
-		if (hostPort == null) {
+		if (source == null) {
 			throw new Exception("An HTTP server must be selected");
 		}
-
-		String[] tokens = cbHttpHostPort.getSelectionModel().getSelectedItem().split(":");
-		return "http://" + tokens[0] + ":" + tokens[1] + '/' + endpoint;
+		return "http://" + source.getHost() + ":" + source.getPort() + '/' + endpoint;
 	}
 
 	private String encode(String input) {
@@ -763,13 +756,13 @@ public class ClientTestApplication implements MessageListener {
 	@FXML
 	private void onSendEquipmentEventMsg() {
 		try {
-			String hostPort = cbRmqHostPort.getSelectionModel().getSelectedItem();
-			String userName = tfRmqUserName.getText();
-			String userPassword = pfRmqUserPassword.getText();
+			MessagingSource source = cbRmqHostPort.getSelectionModel().getSelectedItem();
 
-			if (hostPort == null) {
-				throw new Exception("A host and port must be specified");
+			if (source == null) {
+				throw new Exception("A messaging source must be specified");
 			}
+
+			String hostPort = source.getHost() + ":" + source.getPort();
 
 			PublisherSubscriber pubsub = pubsubs.get(hostPort);
 
@@ -777,9 +770,7 @@ public class ClientTestApplication implements MessageListener {
 				pubsub = new PublisherSubscriber();
 				pubsubs.put(hostPort, pubsub);
 
-				String[] tokens = hostPort.split(":");
-
-				pubsub.connect(tokens[0], Integer.valueOf(tokens[1]), userName, userPassword);
+				pubsub.connect(source.getHost(), source.getPort(), source.getUserName(), source.getUserPassword());
 			}
 
 			String sourceId = (String) cbRmqSourceId.getSelectionModel().getSelectedItem();
@@ -802,16 +793,11 @@ public class ClientTestApplication implements MessageListener {
 			List<CollectorDataSource> dataSources = PersistenceService.instance().fetchDataSources(DataSourceType.HTTP);
 
 			cbHttpHostPort.getSelectionModel().clearSelection();
-			ObservableList<String> items = cbHttpHostPort.getItems();
+			ObservableList<HttpSource> items = cbHttpHostPort.getItems();
 			items.clear();
 
 			for (CollectorDataSource dataSource : dataSources) {
-				// data sources
-				String hostPort = dataSource.getHost() + ":" + dataSource.getPort();
-
-				if (!items.contains(hostPort)) {
-					items.add(hostPort);
-				}
+				items.add((HttpSource) dataSource);
 			}
 
 			cbHttpSourceId.getSelectionModel().clearSelection();
@@ -833,16 +819,12 @@ public class ClientTestApplication implements MessageListener {
 					.fetchDataSources(DataSourceType.MESSAGING);
 
 			cbRmqHostPort.getSelectionModel().clearSelection();
-			ObservableList<String> items = cbRmqHostPort.getItems();
+			ObservableList<MessagingSource> items = cbRmqHostPort.getItems();
 			items.clear();
 
 			for (CollectorDataSource dataSource : dataSources) {
 				// data sources
-				String hostPort = dataSource.getHost() + ":" + dataSource.getPort();
-
-				if (!items.contains(hostPort)) {
-					items.add(hostPort);
-				}
+				items.add((MessagingSource) dataSource);
 			}
 
 			cbRmqSourceId.getSelectionModel().clearSelection();
@@ -856,13 +838,13 @@ public class ClientTestApplication implements MessageListener {
 			showErrorDialog(e);
 		}
 	}
-	
+
 	@FXML
 	private void onReset() {
 		try {
 			populateHttpSourceIds();
 			populateRmqSourceIds();
-			
+
 			tvMaterials.getSelectionModel().clearSelection();
 			ttvEntities.getSelectionModel().clearSelection();
 			ttvReasons.getSelectionModel().clearSelection();

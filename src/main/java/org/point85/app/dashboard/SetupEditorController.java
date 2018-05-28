@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.point85.app.AppUtils;
+import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
-import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.material.MaterialEditorController;
 import org.point85.domain.collector.OeeEvent;
 import org.point85.domain.persistence.PersistenceService;
@@ -71,16 +71,17 @@ public class SetupEditorController extends EventEditorController {
 		if (setupEvent.getMaterial() == null) {
 			throw new Exception("A material must be specified.");
 		}
-		
+
 		// job
 		setupEvent.setJob(tfJob.getText());
-		
+
 		// close off last setup
 		List<KeyedObject> records = new ArrayList<>();
 		records.add(setupEvent);
 
 		// close off last setup
-		OeeEvent lastRecord = PersistenceService.instance().fetchLastSetup(setupEvent.getEquipment());
+		OeeEvent lastRecord = PersistenceService.instance().fetchLastEvent(setupEvent.getEquipment(),
+				EventType.MATL_CHANGE);
 
 		if (lastRecord != null) {
 			lastRecord.setEndTime(setupEvent.getStartTime());
@@ -91,7 +92,7 @@ public class SetupEditorController extends EventEditorController {
 		}
 
 		// save records
-		PersistenceService.instance().save(records);		
+		PersistenceService.instance().save(records);
 	}
 
 	private void displayMaterial() {
@@ -138,10 +139,10 @@ public class SetupEditorController extends EventEditorController {
 	void displayAttributes() {
 		// start date and time
 		super.displayAttributes(setupEvent);
-		
+
 		// material
 		displayMaterial();
-		
+
 		// job
 		tfJob.setText(setupEvent.getJob());
 	}

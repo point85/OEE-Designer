@@ -60,7 +60,7 @@ public class OeeApplication extends Application {
 
 		final Task<String> startTask = new Task<String>() {
 			@Override
-			protected String call() throws InterruptedException {
+			protected String call() throws Exception {
 				// wait for a database connection
 				PersistenceService.instance().getEntityManagerFactory();
 				return "OK";

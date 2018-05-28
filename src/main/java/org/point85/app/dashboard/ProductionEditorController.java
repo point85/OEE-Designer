@@ -69,7 +69,7 @@ public class ProductionEditorController extends EventEditorController {
 		if (equipmentMaterial == null) {
 			// get from equipment material
 			Equipment equipment = productionEvent.getEquipment();
-			OeeEvent lastSetup = PersistenceService.instance().fetchLastSetup(equipment);
+			OeeEvent lastSetup = PersistenceService.instance().fetchLastEvent(equipment, EventType.MATL_CHANGE);
 
 			if (lastSetup == null) {
 				throw new Exception("No setup record found for equipment " + equipment.getName());

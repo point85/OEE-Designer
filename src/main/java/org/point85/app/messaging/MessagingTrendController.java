@@ -24,6 +24,7 @@ import org.point85.domain.script.EventResolver;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Envelope;
 
+import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
@@ -83,7 +84,7 @@ public class MessagingTrendController extends DesignerDialogController implement
 	@Override
 	protected void setImages() throws Exception {
 		super.setImages();
-		
+
 		// loopback test
 		btLoopback.setGraphic(ImageManager.instance().getImageView(Images.EXECUTE));
 		btLoopback.setContentDisplay(ContentDisplay.LEFT);
@@ -156,8 +157,8 @@ public class MessagingTrendController extends DesignerDialogController implement
 
 			List<RoutingKey> keys = new ArrayList<>();
 			keys.add(RoutingKey.EQUIPMENT_SOURCE_EVENT);
-			pubsub.connectAndSubscribe(source.getHost(), source.getPort(), source.getUserName(), source.getUserPassword(),
-					queueName, false, keys, this);
+			pubsub.connectAndSubscribe(source.getHost(), source.getPort(), source.getUserName(),
+					source.getUserPassword(), queueName, false, keys, this);
 
 			// start the trend
 			trendChartController.onStartTrending();
@@ -259,8 +260,14 @@ public class MessagingTrendController extends DesignerDialogController implement
 			Task<Void> resolutionTask = new Task<Void>() {
 
 				@Override
-				protected Void call() throws Exception {
-					trendChartController.invokeResolver(getApp().getAppContext(), dataValue, timestamp);
+				protected Void call() {
+					try {
+						trendChartController.invokeResolver(getApp().getAppContext(), dataValue, timestamp);
+					} catch (Exception e) {
+						Platform.runLater(() -> {
+							AppUtils.showErrorDialog(e);
+						});
+					}
 					return null;
 				}
 			};

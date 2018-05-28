@@ -836,23 +836,23 @@ public class DashboardController extends DialogController implements CategoryCli
 		
 		// new availability
 		btNewAvailability.setGraphic(ImageManager.instance().getImageView(Images.ADD));
-		btNewAvailability.setContentDisplay(ContentDisplay.LEFT);
+		btNewAvailability.setContentDisplay(ContentDisplay.RIGHT);
 		
 		// new production
 		btNewProduction.setGraphic(ImageManager.instance().getImageView(Images.NEW));
-		btNewProduction.setContentDisplay(ContentDisplay.LEFT);
+		btNewProduction.setContentDisplay(ContentDisplay.RIGHT);
 		
 		// new setup
 		btNewSetup.setGraphic(ImageManager.instance().getImageView(Images.IMPORT));
-		btNewSetup.setContentDisplay(ContentDisplay.LEFT);
+		btNewSetup.setContentDisplay(ContentDisplay.RIGHT);
 		
 		// update event
 		btUpdateEvent.setGraphic(ImageManager.instance().getImageView(Images.UPDATE));
-		btUpdateEvent.setContentDisplay(ContentDisplay.LEFT);
+		btUpdateEvent.setContentDisplay(ContentDisplay.RIGHT);
 		
 		// delete event
 		btDeleteEvent.setGraphic(ImageManager.instance().getImageView(Images.DELETE));
-		btDeleteEvent.setContentDisplay(ContentDisplay.LEFT);
+		btDeleteEvent.setContentDisplay(ContentDisplay.RIGHT);
 	}
 
 	@FXML
