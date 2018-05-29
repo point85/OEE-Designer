@@ -36,7 +36,7 @@ import org.point85.domain.plant.Equipment;
 import org.point85.domain.plant.Material;
 import org.point85.domain.plant.PlantEntity;
 import org.point85.domain.plant.Reason;
-import org.point85.domain.script.EventType;
+import org.point85.domain.script.OeeEventType;
 import org.point85.domain.uom.Quantity;
 import org.point85.domain.uom.Unit;
 import org.point85.domain.uom.UnitOfMeasure;
@@ -1186,7 +1186,7 @@ public class DashboardController extends DialogController implements CategoryCli
 	}
 
 	public void update(CollectorResolvedEventMessage message) throws Exception {
-		EventType resolverType = message.getResolverType();
+		OeeEventType resolverType = message.getResolverType();
 
 		switch (resolverType) {
 		case AVAILABILITY: {
@@ -1497,7 +1497,7 @@ public class DashboardController extends DialogController implements CategoryCli
 	private void onNewAvailability() {
 		try {
 			OeeEvent event = new OeeEvent(equipmentLoss.getEquipment());
-			event.setEventType(EventType.AVAILABILITY);
+			event.setEventType(OeeEventType.AVAILABILITY);
 			getAvailabilityController().initializeEditor(event);
 			getAvailabilityController().getDialogStage().showAndWait();
 

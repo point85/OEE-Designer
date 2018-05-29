@@ -17,7 +17,7 @@ import org.point85.domain.oee.TimeLoss;
 import org.point85.domain.plant.EquipmentEventResolver;
 import org.point85.domain.plant.Reason;
 import org.point85.domain.script.EventResolver;
-import org.point85.domain.script.EventType;
+import org.point85.domain.script.OeeEventType;
 import org.point85.domain.script.OeeContext;
 
 import javafx.application.Platform;
@@ -279,7 +279,7 @@ public class TrendChartController extends DesignerController {
 	public OeeEvent invokeResolver(OeeContext context, Object sourceValue, OffsetDateTime dateTime) throws Exception {
 		OeeEvent resolvedItem = equipmentResolver.invokeResolver(eventResolver, context, sourceValue, dateTime);
 
-		EventType type = eventResolver.getType();
+		OeeEventType type = eventResolver.getType();
 
 		switch (type) {
 		case AVAILABILITY: {

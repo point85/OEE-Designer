@@ -13,7 +13,7 @@ import org.point85.domain.collector.OeeEvent;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.KeyedObject;
 import org.point85.domain.plant.Material;
-import org.point85.domain.script.EventType;
+import org.point85.domain.script.OeeEventType;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -44,7 +44,7 @@ public class SetupEditorController extends EventEditorController {
 
 	public void initializeEditor(OeeEvent event) throws Exception {
 		setupEvent = event;
-		setupEvent.setEventType(EventType.MATL_CHANGE);
+		setupEvent.setEventType(OeeEventType.MATL_CHANGE);
 
 		// images for buttons
 		setImages();
@@ -81,7 +81,7 @@ public class SetupEditorController extends EventEditorController {
 
 		// close off last setup
 		OeeEvent lastRecord = PersistenceService.instance().fetchLastEvent(setupEvent.getEquipment(),
-				EventType.MATL_CHANGE);
+				OeeEventType.MATL_CHANGE);
 
 		if (lastRecord != null) {
 			lastRecord.setEndTime(setupEvent.getStartTime());

@@ -6,7 +6,7 @@ import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Equipment;
 import org.point85.domain.plant.EquipmentMaterial;
 import org.point85.domain.plant.Material;
-import org.point85.domain.script.EventType;
+import org.point85.domain.script.OeeEventType;
 import org.point85.domain.uom.UnitOfMeasure;
 
 import javafx.fxml.FXML;
@@ -69,7 +69,7 @@ public class ProductionEditorController extends EventEditorController {
 		if (equipmentMaterial == null) {
 			// get from equipment material
 			Equipment equipment = productionEvent.getEquipment();
-			OeeEvent lastSetup = PersistenceService.instance().fetchLastEvent(equipment, EventType.MATL_CHANGE);
+			OeeEvent lastSetup = PersistenceService.instance().fetchLastEvent(equipment, OeeEventType.MATL_CHANGE);
 
 			if (lastSetup == null) {
 				throw new Exception("No setup record found for equipment " + equipment.getName());
@@ -105,19 +105,19 @@ public class ProductionEditorController extends EventEditorController {
 	@FXML
 	private void onSelectProductionType() throws Exception {
 		UnitOfMeasure uom = null;
-		EventType type = null;
+		OeeEventType type = null;
 		if (rbGood.isSelected()) {
 			// good production
 			uom = getEquipmentMaterial().getRunRateUOM().getDividend();
-			type = EventType.PROD_GOOD;
+			type = OeeEventType.PROD_GOOD;
 		} else if (rbReject.isSelected()) {
 			// reject or rework production
 			uom = getEquipmentMaterial().getRejectUOM();
-			type = EventType.PROD_REJECT;
+			type = OeeEventType.PROD_REJECT;
 		} else {
 			// startup loss
 			uom = getEquipmentMaterial().getRunRateUOM().getDividend();
-			type = EventType.PROD_STARTUP;
+			type = OeeEventType.PROD_STARTUP;
 		}
 		productionEvent.setUOM(uom);
 		productionEvent.setEventType(type);
