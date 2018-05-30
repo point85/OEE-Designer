@@ -26,7 +26,6 @@ import org.point85.app.script.EventResolverController;
 import org.point85.app.uom.UomConversionController;
 import org.point85.app.uom.UomEditorController;
 import org.point85.app.uom.UomImporterController;
-import org.point85.app.web.WebServerController;
 
 import javafx.fxml.FXMLLoader;
 
@@ -36,7 +35,7 @@ public class FXMLLoaderFactory {
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
-	
+
 	public static FXMLLoader dashboardDialogLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(DashboardDialogController.class.getResource("DashboardDialog.fxml"));
 		fxmlLoader.load();
@@ -60,7 +59,7 @@ public class FXMLLoaderFactory {
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
-	
+
 	public static FXMLLoader uomImporterLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(UomImporterController.class.getResource("UomImport.fxml"));
 		fxmlLoader.load();
@@ -68,7 +67,8 @@ public class FXMLLoaderFactory {
 	}
 
 	public static FXMLLoader scheduleEditorLoader() throws Exception {
-		FXMLLoader fxmlLoader = new FXMLLoader(WorkScheduleEditorController.class.getResource("WorkScheduleEditor.fxml"));
+		FXMLLoader fxmlLoader = new FXMLLoader(
+				WorkScheduleEditorController.class.getResource("WorkScheduleEditor.fxml"));
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
@@ -102,12 +102,6 @@ public class FXMLLoaderFactory {
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
-	
-	public static FXMLLoader webServerLoader() throws Exception {
-		FXMLLoader fxmlLoader = new FXMLLoader(WebServerController.class.getResource("WebServerController.fxml"));
-		fxmlLoader.load();
-		return fxmlLoader;
-	}
 
 	public static FXMLLoader dataCollectorLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(DataCollectorController.class.getResource("DataCollector.fxml"));
@@ -132,67 +126,69 @@ public class FXMLLoaderFactory {
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
-	
+
 	public static FXMLLoader httpTrendLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(HttpTrendController.class.getResource("HttpTrend.fxml"));
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
-	
+
 	public static FXMLLoader messagingTrendLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(MessagingTrendController.class.getResource("MessagingTrend.fxml"));
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
-	
+
 	public static FXMLLoader sampleChartLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(SampleChartController.class.getResource("SampleChart.fxml"));
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
-	
+
 	public static FXMLLoader trendChartLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(TrendChartController.class.getResource("TrendChart.fxml"));
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
-	
+
 	public static FXMLLoader equipmentMaterialLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(EquipmentMaterialController.class.getResource("EquipmentMaterial.fxml"));
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
-	
+
 	public static FXMLLoader equipmentResolverLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(EquipmentResolverController.class.getResource("EquipmentResolver.fxml"));
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
-	
+
 	public static FXMLLoader templateScheduleLoader() throws Exception {
-		FXMLLoader fxmlLoader = new FXMLLoader(TemplateScheduleDialogController.class.getResource("TemplateScheduleDialog.fxml"));
+		FXMLLoader fxmlLoader = new FXMLLoader(
+				TemplateScheduleDialogController.class.getResource("TemplateScheduleDialog.fxml"));
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
-	
+
 	public static FXMLLoader availabilityEditorLoader() throws Exception {
-		FXMLLoader fxmlLoader = new FXMLLoader(AvailabilityEditorController.class.getResource("AvailabilityEditor.fxml"));
+		FXMLLoader fxmlLoader = new FXMLLoader(
+				AvailabilityEditorController.class.getResource("AvailabilityEditor.fxml"));
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
-	
+
 	public static FXMLLoader setupEditorLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(SetupEditorController.class.getResource("SetupEditor.fxml"));
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
-	
+
 	public static FXMLLoader productionEditorLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(ProductionEditorController.class.getResource("ProductionEditor.fxml"));
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
-	
+
 	public static FXMLLoader splashLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(SplashController.class.getResource("Splash.fxml"));
 		fxmlLoader.load();

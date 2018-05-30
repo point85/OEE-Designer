@@ -127,7 +127,6 @@
             <Button fx:id="btOpcDaBrowser" mnemonicParsing="false" onAction="#onShowOpcDaBrowser" prefHeight="16.0" prefWidth="16.0" />
             <Button fx:id="btHttpServerEditor" mnemonicParsing="false" onAction="#onShowHttpServerEditor" prefHeight="16.0" prefWidth="16.0" />
             <Button fx:id="btRmqBrokerEditor" mnemonicParsing="false" onAction="#onShowRmqBrokerEditor" prefHeight="16.0" prefWidth="16.0" />
-            <Button fx:id="btWebServerEditor" mnemonicParsing="false" onAction="#onShowWebServerEditor" prefHeight="16.0" prefWidth="16.0" />
             <Separator orientation="VERTICAL" />
             <Button fx:id="btUomEditor" mnemonicParsing="false" onAction="#onShowUomEditor" prefHeight="16.0" prefWidth="16.0" />
           <Button fx:id="btScheduleEditor" mnemonicParsing="false" onAction="#onShowScheduleEditor" prefHeight="16.0" prefWidth="16.0" />

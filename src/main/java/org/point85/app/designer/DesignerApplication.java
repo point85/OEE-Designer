@@ -23,7 +23,6 @@ import org.point85.app.schedule.WorkScheduleEditorController;
 import org.point85.app.script.EventResolverController;
 import org.point85.app.uom.UomConversionController;
 import org.point85.app.uom.UomEditorController;
-import org.point85.app.web.WebServerController;
 import org.point85.domain.collector.DataCollector;
 import org.point85.domain.http.HttpSource;
 import org.point85.domain.messaging.MessagingSource;
@@ -39,7 +38,6 @@ import org.point85.domain.schedule.WorkSchedule;
 import org.point85.domain.script.EventResolver;
 import org.point85.domain.script.OeeContext;
 import org.point85.domain.uom.UnitOfMeasure;
-import org.point85.domain.web.WebSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -82,9 +80,6 @@ public class DesignerApplication {
 
 	// RabbitMQ broker editor
 	private MqBrokerController mqBrokerController;
-
-	// web server editor
-	private WebServerController webServerController;
 
 	// data collection definition
 	private DataCollectorController dataCollectorController;
@@ -445,32 +440,6 @@ public class DesignerApplication {
 		}
 
 		return mqBrokerController.getSource();
-	}
-
-	WebSource showWebServerEditor() throws Exception {
-		if (webServerController == null) {
-			FXMLLoader loader = FXMLLoaderFactory.webServerLoader();
-			AnchorPane page = (AnchorPane) loader.getRoot();
-
-			// Create the dialog Stage.
-			Stage dialogStage = new Stage(StageStyle.DECORATED);
-			dialogStage.setTitle("Edit Web Servers");
-			dialogStage.initModality(Modality.WINDOW_MODAL);
-			Scene scene = new Scene(page);
-			dialogStage.setScene(scene);
-
-			// get the controller
-			webServerController = loader.getController();
-			webServerController.setDialogStage(dialogStage);
-			webServerController.initializeServer();
-		}
-
-		// Show the dialog and wait until the user closes it
-		if (!webServerController.getDialogStage().isShowing()) {
-			webServerController.getDialogStage().showAndWait();
-		}
-
-		return webServerController.getSource();
 	}
 
 	DataCollector showCollectorEditor() throws Exception {

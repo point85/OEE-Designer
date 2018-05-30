@@ -94,9 +94,6 @@ public class PhysicalModelController extends DesignerController {
 	private Button btRmqBrokerEditor;
 
 	@FXML
-	private Button btWebServerEditor;
-
-	@FXML
 	private Button btCollectorEditor;
 
 	@FXML
@@ -332,9 +329,6 @@ public class PhysicalModelController extends DesignerController {
 		btRmqBrokerEditor.setGraphic(ImageManager.instance().getImageView(Images.RMQ));
 		btRmqBrokerEditor.setTooltip(new Tooltip("Display RabbitMQ broker editor."));
 
-		btWebServerEditor.setGraphic(ImageManager.instance().getImageView(Images.WEB));
-		btWebServerEditor.setTooltip(new Tooltip("Display web server editor."));
-
 		btCollectorEditor.setGraphic(ImageManager.instance().getImageView(Images.COLLECTOR));
 		btCollectorEditor.setTooltip(new Tooltip("Display collector configuration editor."));
 
@@ -403,15 +397,6 @@ public class PhysicalModelController extends DesignerController {
 	private void onShowRmqBrokerEditor() {
 		try {
 			this.getApp().showRmqBrokerEditor();
-		} catch (Exception e) {
-			AppUtils.showErrorDialog(e);
-		}
-	}
-
-	@FXML
-	private void onShowWebServerEditor() {
-		try {
-			this.getApp().showWebServerEditor();
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}

@@ -26,7 +26,6 @@ import org.point85.domain.plant.PlantEntity;
 import org.point85.domain.script.EventResolver;
 import org.point85.domain.script.OeeEventType;
 import org.point85.domain.script.ResolverFunction;
-import org.point85.domain.web.WebSource;
 
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -302,17 +301,6 @@ public class EquipmentResolverController extends DesignerController {
 		tfUpdatePeriod.setText(String.valueOf(period));
 
 		btAddResolver.setText(UPDATE);
-
-		// web does not have a trend
-		if (selectedEventResolver.getDataSource() != null) {
-			DataSourceType type = selectedEventResolver.getDataSource().getDataSourceType();
-
-			if (type.equals(DataSourceType.WEB)) {
-				btRun.setDisable(true);
-			} else {
-				btRun.setDisable(false);
-			}
-		}
 	}
 
 	void showResolvers(Equipment equipment) throws Exception {
@@ -419,9 +407,6 @@ public class EquipmentResolverController extends DesignerController {
 		case OPC_UA:
 			buttonImage = ImageManager.instance().getImageView(Images.OPC_UA);
 			break;
-		case WEB:
-			buttonImage = ImageManager.instance().getImageView(Images.WEB);
-			break;
 		default:
 			break;
 		}
@@ -508,22 +493,8 @@ public class EquipmentResolverController extends DesignerController {
 				lbDataType.setText(String.class.getSimpleName());
 
 				setDefaultSourceId();
-			}
-			// Web server
-			else if (sourceType.equals(DataSourceType.WEB)) {
-				// show server editor
-				WebSource dataSource = getApp().showWebServerEditor();
-
-				if (dataSource == null) {
-					return;
-				}
-				tfServerId.setText(dataSource.getId());
-
-				getSelectedResolver().setDataSource(dataSource);
-
-				lbDataType.setText(String.class.getSimpleName());
-
-				setDefaultSourceId();
+			} else {
+				throw new Exception("Uhnknow data source type " + sourceType);
 			}
 
 		} catch (Exception e) {
