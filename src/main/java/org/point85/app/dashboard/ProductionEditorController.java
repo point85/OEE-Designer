@@ -36,6 +36,14 @@ public class ProductionEditorController extends EventEditorController {
 
 	public void initializeEditor(OeeEvent event) throws Exception {
 		productionEvent = event;
+		
+		equipmentMaterial = null;
+		rbGood.setSelected(false);
+		rbReject.setSelected(false);
+		rbStartup.setSelected(false);
+		tfAmount.clear();
+		tfAmount.setDisable(true);
+		lbUOM.setText(null);
 
 		// images for buttons
 		setImages();
@@ -121,7 +129,9 @@ public class ProductionEditorController extends EventEditorController {
 		}
 		productionEvent.setUOM(uom);
 		productionEvent.setEventType(type);
+		productionEvent.setMaterial(getEquipmentMaterial().getMaterial());
 
+		tfAmount.setDisable(false);
 		lbUOM.setText(uom.getSymbol());
 	}
 }

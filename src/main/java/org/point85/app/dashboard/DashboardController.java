@@ -833,23 +833,23 @@ public class DashboardController extends DialogController implements CategoryCli
 		// refresh
 		btRefresh.setGraphic(ImageManager.instance().getImageView(Images.REFRESH));
 		btRefresh.setContentDisplay(ContentDisplay.LEFT);
-		
+
 		// new availability
 		btNewAvailability.setGraphic(ImageManager.instance().getImageView(Images.ADD));
 		btNewAvailability.setContentDisplay(ContentDisplay.RIGHT);
-		
+
 		// new production
 		btNewProduction.setGraphic(ImageManager.instance().getImageView(Images.NEW));
 		btNewProduction.setContentDisplay(ContentDisplay.RIGHT);
-		
+
 		// new setup
 		btNewSetup.setGraphic(ImageManager.instance().getImageView(Images.IMPORT));
 		btNewSetup.setContentDisplay(ContentDisplay.RIGHT);
-		
+
 		// update event
 		btUpdateEvent.setGraphic(ImageManager.instance().getImageView(Images.UPDATE));
 		btUpdateEvent.setContentDisplay(ContentDisplay.RIGHT);
-		
+
 		// delete event
 		btDeleteEvent.setGraphic(ImageManager.instance().getImageView(Images.DELETE));
 		btDeleteEvent.setContentDisplay(ContentDisplay.RIGHT);
@@ -976,12 +976,11 @@ public class DashboardController extends DialogController implements CategoryCli
 			OeeEvent event = cellDataFeatures.getValue();
 			SimpleStringProperty property = null;
 
-			if (event.isAvailability()) {
-				Duration duration = event.getDuration();
-				if (duration != null) {
-					property = new SimpleStringProperty(DomainUtils.formatDuration(duration));
-				}
+			Duration duration = event.getDuration();
+			if (duration != null) {
+				property = new SimpleStringProperty(DomainUtils.formatDuration(duration));
 			}
+
 			return property;
 		});
 

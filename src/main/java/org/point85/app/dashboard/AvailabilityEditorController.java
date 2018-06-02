@@ -3,13 +3,16 @@ package org.point85.app.dashboard;
 import java.time.Duration;
 
 import org.point85.app.AppUtils;
+import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
-import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.reason.ReasonEditorController;
 import org.point85.domain.collector.OeeEvent;
 import org.point85.domain.persistence.PersistenceService;
+import org.point85.domain.plant.Equipment;
+import org.point85.domain.plant.Material;
 import org.point85.domain.plant.Reason;
+import org.point85.domain.script.OeeEventType;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -42,6 +45,12 @@ public class AvailabilityEditorController extends EventEditorController {
 	public void initializeEditor(OeeEvent event) throws Exception {
 		availabilityEvent = event;
 
+		reasonController = null;
+
+		lbReason.setText(null);
+		tfDuration.clear();
+		tfDuration.setDisable(true);
+
 		// images for buttons
 		setImages();
 
@@ -72,14 +81,27 @@ public class AvailabilityEditorController extends EventEditorController {
 		Duration duration = AppUtils.durationFromString(tfDuration.getText());
 		availabilityEvent.setDuration(duration);
 
+		// material
+		Equipment equipment = availabilityEvent.getEquipment();
+		OeeEvent lastSetup = PersistenceService.instance().fetchLastEvent(equipment, OeeEventType.MATL_CHANGE);
+
+		if (lastSetup == null) {
+			throw new Exception("No setup record found for equipment " + equipment.getName());
+		}
+
+		Material material = lastSetup.getMaterial();
+		availabilityEvent.setMaterial(material);
+
 		PersistenceService.instance().save(availabilityEvent);
 	}
 
 	private void displayReason() {
 		if (availabilityEvent.getReason() != null) {
 			lbReason.setText(availabilityEvent.getReason().getDisplayString());
+			tfDuration.setDisable(false);
 		} else {
 			lbReason.setText(null);
+			tfDuration.setDisable(true);
 		}
 	}
 
