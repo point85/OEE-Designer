@@ -262,7 +262,6 @@ public class OpcUaBrowserController extends OpcUaController {
 				clazzIsArray = value.getClass().isArray();
 
 				// data type
-				// nodeDataType = variant.getDataType().get();
 				Optional<NodeId> dataType = dataValue.getValue().getDataType();
 
 				if (dataType.isPresent()) {
