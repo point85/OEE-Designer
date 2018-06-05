@@ -173,7 +173,7 @@ public class ClientTestApplication implements MessageListener {
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			stop();
 		}
 	}
@@ -221,7 +221,7 @@ public class ClientTestApplication implements MessageListener {
 				entry.getValue().disconnect();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		System.exit(0);
 	}
@@ -718,7 +718,6 @@ public class ClientTestApplication implements MessageListener {
 
 	// display an error dialog
 	private void showErrorDialog(Exception e) {
-		e.printStackTrace();
 		String message = e.getMessage();
 
 		if (message == null) {

@@ -428,9 +428,10 @@ public class Helper {
 		final double POSITION = clamp(0d, 1d, POSITION_OF_COLOR);
 		final Color COLOR;
 		if (STOPS.size() == 1) {
-			//final Map<Double, Color> ONE_ENTRY = (Map<Double, Color>) STOPS.entrySet().iterator().next();
+			// final Map<Double, Color> ONE_ENTRY = (Map<Double, Color>)
+			// STOPS.entrySet().iterator().next();
 			final Map.Entry<Double, Stop> ONE_ENTRY = STOPS.entrySet().iterator().next();
-			//COLOR = STOPS.get(ONE_ENTRY.keySet().iterator().next()).getColor();
+			// COLOR = STOPS.get(ONE_ENTRY.keySet().iterator().next()).getColor();
 			COLOR = ONE_ENTRY.getValue().getColor();
 		} else {
 			Stop lowerBound = STOPS.get(0.0);
@@ -563,7 +564,8 @@ public class Helper {
 	private static final Properties readProperties(final String FILE_NAME) {
 		final ClassLoader LOADER = Thread.currentThread().getContextClassLoader();
 		final Properties PROPERTIES = new Properties();
-		try (InputStream resourceStream = LOADER.getResourceAsStream(FILE_NAME)) {
+		try {
+			InputStream resourceStream = LOADER.getResourceAsStream(FILE_NAME);
 			PROPERTIES.load(resourceStream);
 		} catch (IOException exception) {
 			exception.printStackTrace();

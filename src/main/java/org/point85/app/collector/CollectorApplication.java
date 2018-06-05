@@ -52,7 +52,7 @@ public class CollectorApplication {
 			primaryStage.getIcons().add(ImageManager.instance().getImage(Images.POINT85));
 			primaryStage.show();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			stop();
 		}
 	}
@@ -90,7 +90,7 @@ public class CollectorApplication {
 				collector.stopDataCollection();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 	}
 
@@ -114,8 +114,7 @@ public class CollectorApplication {
 			try {
 				onShutdown();
 			} catch (Exception e) {
-				logger.error(any.getMessage());
-				e.printStackTrace();
+				logger.error(e.getMessage());
 			}
 		}
 	};

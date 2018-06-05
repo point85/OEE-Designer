@@ -10,6 +10,8 @@ import org.point85.app.designer.DesignerDialogController;
 import org.point85.domain.schedule.Rotation;
 import org.point85.domain.schedule.Shift;
 import org.point85.domain.schedule.WorkSchedule;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -22,6 +24,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.text.Text;
 
 public class TemplateScheduleDialogController extends DesignerDialogController {
+	// logger
+	private static final Logger logger = LoggerFactory.getLogger(TemplateScheduleDialogController.class);
 
 	private WorkSchedule selectedSchedule;
 
@@ -48,9 +52,9 @@ public class TemplateScheduleDialogController extends DesignerDialogController {
 
 	@FXML
 	public void initialize() throws Exception {
-		
+
 		setImages();
-		
+
 		tvTemplates.setItems(scheduleList);
 
 		// name
@@ -89,7 +93,7 @@ public class TemplateScheduleDialogController extends DesignerDialogController {
 				Duration duration = cellDataFeatures.getValue().getTeams().get(0).getRotationDuration();
 				days = new SimpleObjectProperty<Long>(duration.toDays());
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage());
 			}
 			return days;
 		});
@@ -108,7 +112,7 @@ public class TemplateScheduleDialogController extends DesignerDialogController {
 		selectedSchedule = tvTemplates.getSelectionModel().getSelectedItem();
 		super.onOK();
 	}
-	
+
 	@FXML
 	@Override
 	protected void onCancel() {
@@ -572,8 +576,7 @@ public class TemplateScheduleDialogController extends DesignerDialogController {
 
 	private WorkSchedule createManufacturing() throws Exception {
 		// manufacturing company
-		WorkSchedule schedule = new WorkSchedule("Manufacturing Company",
-				"Four 12 hour alternating day/night shifts");
+		WorkSchedule schedule = new WorkSchedule("Manufacturing Company", "Four 12 hour alternating day/night shifts");
 
 		// day shift, start at 07:00 for 12 hours
 		Shift day = schedule.createShift("Day", "Day shift", LocalTime.of(7, 0, 0), Duration.ofHours(12));

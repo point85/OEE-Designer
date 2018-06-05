@@ -166,7 +166,7 @@ public class DesignerApplication {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			stop();
 		}
 	}
@@ -186,7 +186,7 @@ public class DesignerApplication {
 				getOpcUaClient().disconnect();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 	}
 

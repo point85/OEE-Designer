@@ -31,16 +31,13 @@ public class Fonts {
 	private static String latoBoldName;
 
 	static {
-		try {
-			latoLightName = Font.loadFont(Fonts.class.getResourceAsStream("/org/point85/tilesfx/fonts/Lato-Lig.otf"), 10)
-					.getName();
-			latoRegularName = Font
-					.loadFont(Fonts.class.getResourceAsStream("/org/point85/tilesfx/fonts/Lato-Reg.otf"), 10).getName();
-			latoBoldName = Font.loadFont(Fonts.class.getResourceAsStream("/org/point85/tilesfx/fonts/Lato-Bol.otf"), 10)
-					.getName();
-		} catch (Exception exception) {
-			exception.printStackTrace();
-		}
+		latoLightName = Font.loadFont(Fonts.class.getResourceAsStream("/org/point85/tilesfx/fonts/Lato-Lig.otf"), 10)
+				.getName();
+		latoRegularName = Font.loadFont(Fonts.class.getResourceAsStream("/org/point85/tilesfx/fonts/Lato-Reg.otf"), 10)
+				.getName();
+		latoBoldName = Font.loadFont(Fonts.class.getResourceAsStream("/org/point85/tilesfx/fonts/Lato-Bol.otf"), 10)
+				.getName();
+
 		LATO_LIGHT_NAME = latoLightName;
 		LATO_REGULAR_NAME = latoRegularName;
 		LATO_BOLD_NAME = latoBoldName;

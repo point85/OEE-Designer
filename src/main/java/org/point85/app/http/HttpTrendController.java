@@ -20,6 +20,8 @@ import org.point85.domain.http.HttpEventListener;
 import org.point85.domain.http.HttpSource;
 import org.point85.domain.http.OeeHttpServer;
 import org.point85.domain.script.EventResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 
@@ -38,6 +40,9 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
 
 public class HttpTrendController extends DesignerDialogController implements HttpEventListener, DataSubscriber {
+	// logger
+	private static final Logger logger = LoggerFactory.getLogger(HttpTrendController.class);
+
 	// http server
 	private OeeHttpServer httpServer;
 
@@ -177,7 +182,7 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 
 				if (t != null) {
 					// connection failed
-					t.printStackTrace();
+					logger.error(t.getMessage());
 				}
 			}
 		});

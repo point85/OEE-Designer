@@ -106,7 +106,7 @@ public class MessagingTrendController extends DesignerDialogController implement
 		try {
 			unsubscribeFromDataSource();
 		} catch (Exception e) {
-			e.printStackTrace();
+			AppUtils.showErrorDialog(e);
 		}
 	}
 
@@ -118,7 +118,7 @@ public class MessagingTrendController extends DesignerDialogController implement
 		try {
 			unsubscribeFromDataSource();
 		} catch (Exception e) {
-			e.printStackTrace();
+			AppUtils.showErrorDialog(e);
 		}
 	}
 
@@ -214,7 +214,7 @@ public class MessagingTrendController extends DesignerDialogController implement
 
 				if (t != null) {
 					// connection failed
-					t.printStackTrace();
+					AppUtils.showErrorDialog(t.getMessage());
 				}
 			}
 		});

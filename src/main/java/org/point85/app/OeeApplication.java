@@ -87,7 +87,7 @@ public class OeeApplication extends Application {
 				clientTestApp.stop();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		System.exit(0);
 	}

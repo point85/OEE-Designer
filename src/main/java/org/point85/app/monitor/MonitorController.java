@@ -197,13 +197,9 @@ public class MonitorController {
 		initializeStatusTable();
 
 		// select dashboard
-		try {
-			onSelectDashboard();
+		onSelectDashboard();
 
-			populateTopEntityNodes();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		populateTopEntityNodes();
 	}
 
 	private void initializeStatusTable() {

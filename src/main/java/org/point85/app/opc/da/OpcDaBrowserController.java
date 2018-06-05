@@ -21,6 +21,8 @@ import org.point85.domain.opc.da.OpcDaTagTreeBranch;
 import org.point85.domain.opc.da.OpcDaTreeBrowser;
 import org.point85.domain.opc.da.OpcDaVariant;
 import org.point85.domain.persistence.PersistenceService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -40,6 +42,8 @@ import javafx.scene.control.TreeView;
 import javafx.scene.image.ImageView;
 
 public class OpcDaBrowserController extends OpcDaController {
+	// logger
+	private static final Logger logger = LoggerFactory.getLogger(OpcDaBrowserController.class);
 
 	// selected tag
 	private OpcDaBrowserLeaf selectedTag;
@@ -179,7 +183,7 @@ public class OpcDaBrowserController extends OpcDaController {
 					try {
 						setGraphic(ImageManager.instance().getImageView(Images.TAG));
 					} catch (Exception e) {
-						e.printStackTrace();
+						logger.error(e.getMessage());
 					}
 				}
 			}

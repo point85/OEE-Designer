@@ -109,7 +109,6 @@ public abstract class AppUtils {
 
 	// display an error dialog
 	public static void showErrorDialog(Exception e) {
-		e.printStackTrace();
 		String message = e.getMessage();
 
 		if (message == null) {

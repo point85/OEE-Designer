@@ -150,11 +150,7 @@ public class EquipmentResolverController extends DesignerController {
 		setImages();
 
 		// class reasons
-		try {
-			initializeResolverTable();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		initializeResolverTable();
 	}
 
 	private void initializeResolverTable() throws Exception {
