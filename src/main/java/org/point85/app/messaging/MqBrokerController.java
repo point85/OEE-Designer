@@ -27,7 +27,7 @@ public class MqBrokerController extends DesignerDialogController {
 	private MessagingSource dataSource;
 
 	// list of brokers and ports
-	private ObservableList<MessagingSource> brokers = FXCollections.observableArrayList(new ArrayList<>());
+	private final ObservableList<MessagingSource> brokers = FXCollections.observableArrayList(new ArrayList<>());
 
 	@FXML
 	private TextField tfHost;

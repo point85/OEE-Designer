@@ -23,10 +23,10 @@ public class SampleChartController {
 	private int numberSamplesToDisplay = MAX_SAMPLES;
 
 	// chart data series, X = sample # and Y = value
-	private XYChart.Series<Integer, Number> dataSeries = new XYChart.Series<>();
+	private final XYChart.Series<Integer, Number> dataSeries = new XYChart.Series<>();
 
 	// legend for non-numerical points
-	private ObservableList<StringOrdinal> chartOrdinals = FXCollections.observableArrayList(new ArrayList<>());
+	private final ObservableList<StringOrdinal> chartOrdinals = FXCollections.observableArrayList(new ArrayList<>());
 
 	// sample number
 	private Integer sampleNumber = new Integer(0);

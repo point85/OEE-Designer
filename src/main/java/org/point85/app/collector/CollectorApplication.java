@@ -2,7 +2,7 @@ package org.point85.app.collector;
 
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
-import org.point85.domain.collector.CollectorServer;
+import org.point85.domain.collector.CollectorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +19,7 @@ public class CollectorApplication {
 	private static final Logger logger = LoggerFactory.getLogger(CollectorApplication.class);
 
 	// the collector
-	private CollectorServer collector;
+	private CollectorService collector;
 
 	@FXML
 	private Button btStartup;
@@ -37,7 +37,7 @@ public class CollectorApplication {
 	private Button btStartMonitoring;
 
 	public CollectorApplication() {
-
+		// nothing to initialize
 	}
 
 	public void start(Stage primaryStage) {
@@ -97,7 +97,7 @@ public class CollectorApplication {
 	@FXML
 	private void onStartup() {
 		// create the collector
-		collector = new CollectorServer();
+		collector = new CollectorService();
 
 		try {
 			// start collector

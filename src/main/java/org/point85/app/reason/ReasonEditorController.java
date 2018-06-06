@@ -43,7 +43,7 @@ import javafx.stage.FileChooser;
  */
 public class ReasonEditorController extends DesignerDialogController {
 	// list of edited reasons
-	private Set<TreeItem<ReasonNode>> editedReasonItems = new HashSet<>();
+	private final Set<TreeItem<ReasonNode>> editedReasonItems = new HashSet<>();
 
 	// Reason being edited or viewed
 	private TreeItem<ReasonNode> selectedReasonItem;

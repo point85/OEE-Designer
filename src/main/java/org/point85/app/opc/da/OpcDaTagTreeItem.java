@@ -27,7 +27,7 @@ public class OpcDaTagTreeItem extends TreeItem<OpcDaTagTreeBranch> {
 	// run.
 	private boolean isFirstTimeChildren = true;
 	private boolean isFirstTimeLeaf = true;
-	private OpcDaTreeBrowser treeBrowser;
+	private final OpcDaTreeBrowser treeBrowser;
 
 	public OpcDaTagTreeItem(OpcDaTagTreeBranch tagNode, OpcDaTreeBrowser browser) {
 		this.setValue(tagNode);

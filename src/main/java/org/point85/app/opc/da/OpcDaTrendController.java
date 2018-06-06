@@ -228,8 +228,7 @@ public class OpcDaTrendController extends OpcDaController implements OpcDaDataCh
 
 	private String createGroupName() throws Exception {
 		Equipment equipment = (Equipment) getApp().getPhysicalModelController().getSelectedEntity();
-		String name = equipment.getName() + '.' + trendChartController.getEventResolver().getSourceId();
-		return name;
+		return equipment.getName() + '.' + trendChartController.getEventResolver().getSourceId();
 	}
 
 	@Override
@@ -266,15 +265,15 @@ public class OpcDaTrendController extends OpcDaController implements OpcDaDataCh
 	// service class for callbacks on received data
 	private class ResolutionService extends Service<String> {
 
-		private OpcDaMonitoredItem item;
+		private final OpcDaMonitoredItem item;
 
-		public ResolutionService(OpcDaMonitoredItem item) {
+		private ResolutionService(OpcDaMonitoredItem item) {
 			this.item = item;
 		}
 
 		@Override
 		protected Task<String> createTask() {
-			Task<String> resolutionTask = new Task<String>() {
+			return new Task<String>() {
 
 				@Override
 				protected String call() throws Exception {
@@ -299,7 +298,6 @@ public class OpcDaTrendController extends OpcDaController implements OpcDaDataCh
 					return errorMessage;
 				}
 			};
-			return resolutionTask;
 		}
 	}
 }

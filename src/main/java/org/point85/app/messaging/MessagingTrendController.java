@@ -184,22 +184,15 @@ public class MessagingTrendController extends DesignerDialogController implement
 		}
 
 		// ack it now
-		try {
-			channel.basicAck(envelope.getDeliveryTag(), PublisherSubscriber.ACK_MULTIPLE);
-		} catch (Exception e) {
-			throw new Exception("Failed to ack message: " + e.getMessage());
-		}
+		channel.basicAck(envelope.getDeliveryTag(), PublisherSubscriber.ACK_MULTIPLE);
 
 		MessageType type = message.getMessageType();
 
-		switch (type) {
-		case EQUIPMENT_EVENT:
-			handleEquipmentEvent((EquipmentEventMessage) message);
-			break;
-
-		default:
+		if (!type.equals(MessageType.EQUIPMENT_EVENT)) {
 			throw new Exception("Received unknown message of type " + message);
 		}
+
+		handleEquipmentEvent((EquipmentEventMessage) message);
 	}
 
 	private void handleEquipmentEvent(EquipmentEventMessage message) throws Exception {
@@ -247,8 +240,8 @@ public class MessagingTrendController extends DesignerDialogController implement
 
 	// service class for callbacks on received data
 	private class ResolutionService extends Service<Void> {
-		private String dataValue;
-		private OffsetDateTime timestamp;
+		private final String dataValue;
+		private final OffsetDateTime timestamp;
 
 		public ResolutionService(String sourceId, String dataValue, OffsetDateTime timestamp) {
 			this.dataValue = dataValue;
@@ -257,7 +250,7 @@ public class MessagingTrendController extends DesignerDialogController implement
 
 		@Override
 		protected Task<Void> createTask() {
-			Task<Void> resolutionTask = new Task<Void>() {
+			return new Task<Void>() {
 
 				@Override
 				protected Void call() {
@@ -271,7 +264,6 @@ public class MessagingTrendController extends DesignerDialogController implement
 					return null;
 				}
 			};
-			return resolutionTask;
 		}
 	}
 

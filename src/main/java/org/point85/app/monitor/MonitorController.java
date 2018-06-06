@@ -51,13 +51,15 @@ public class MonitorController {
 	private static final int DEFAULT_MSGS_PER_PAGE = 20;
 
 	// list of notifications
-	private ObservableList<CollectorNotification> notifications = FXCollections.observableArrayList(new ArrayList<>());
+	private final ObservableList<CollectorNotification> notifications = FXCollections
+			.observableArrayList(new ArrayList<>());
 
 	// list of server status'
-	private ObservableList<CollectorServerStatus> serverStatus = FXCollections.observableArrayList(new ArrayList<>());
+	private final ObservableList<CollectorServerStatus> serverStatus = FXCollections
+			.observableArrayList(new ArrayList<>());
 
 	// list of data collectors
-	private ObservableList<DataCollector> serverCollectors = FXCollections.observableArrayList(new ArrayList<>());
+	private final ObservableList<DataCollector> serverCollectors = FXCollections.observableArrayList(new ArrayList<>());
 
 	// parent app
 	private MonitorApplication monitorApp;
@@ -99,7 +101,7 @@ public class MonitorController {
 	private AnchorPane apMessageTable;
 
 	// notification table (programmatic)
-	private TableView<CollectorNotification> tvNotifications = new TableView<>();
+	private final TableView<CollectorNotification> tvNotifications = new TableView<>();
 
 	// server status table
 	@FXML
@@ -149,7 +151,7 @@ public class MonitorController {
 	private Button btRestart;
 
 	public MonitorController() {
-
+		// nothing to initialize
 	}
 
 	// initialize app
@@ -340,7 +342,7 @@ public class MonitorController {
 	}
 
 	private void onSelectNotifications() throws Exception {
-
+		// place holder
 	}
 
 	private void onSelectCollectorStatus() {

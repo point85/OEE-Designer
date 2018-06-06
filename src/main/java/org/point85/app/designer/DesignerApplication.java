@@ -109,7 +109,7 @@ public class DesignerApplication {
 	private OeeContext appContext;
 
 	public DesignerApplication() {
-
+		// nothing to initialize
 	}
 
 	public void start(Stage primaryStage) {

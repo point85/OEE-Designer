@@ -56,16 +56,16 @@ public class TrendChartController extends DesignerController {
 	// the data provider
 	private DataSubscriber subscriber;
 
-	private EquipmentEventResolver equipmentResolver = new EquipmentEventResolver();
+	private final EquipmentEventResolver equipmentResolver = new EquipmentEventResolver();
 
 	// script resolver for input value
 	private EventResolver eventResolver;
 
 	// data for table view
-	private ObservableList<OeeEvent> resolvedItems = FXCollections.observableArrayList(new ArrayList<>());
+	private final ObservableList<OeeEvent> resolvedItems = FXCollections.observableArrayList(new ArrayList<>());
 
 	// how to interpolate the data points
-	private ObservableList<InterpolationType> interpolationTypes = FXCollections.observableArrayList(new ArrayList<>());
+	private final ObservableList<InterpolationType> interpolationTypes = FXCollections.observableArrayList(new ArrayList<>());
 
 	// controller for input values
 	private SampleChartController inputValueController;
@@ -257,11 +257,6 @@ public class TrendChartController extends DesignerController {
 		// clear trend
 		btResetTrend.setGraphic(ImageManager.instance().getImageView(Images.CLEAR));
 		btResetTrend.setContentDisplay(ContentDisplay.LEFT);
-	}
-
-	@FXML
-	protected void onOK() {
-
 	}
 
 	public void setProvider(DataSubscriber provider) {

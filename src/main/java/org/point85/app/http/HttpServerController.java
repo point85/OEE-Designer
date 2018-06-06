@@ -26,7 +26,7 @@ public class HttpServerController extends DialogController {
 	private HttpSource dataSource;
 
 	// list of servers and ports
-	private ObservableList<HttpSource> servers = FXCollections.observableArrayList(new ArrayList<>());
+	private final ObservableList<HttpSource> servers = FXCollections.observableArrayList(new ArrayList<>());
 
 	@FXML
 	private TextField tfHost;

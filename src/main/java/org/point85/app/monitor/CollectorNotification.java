@@ -5,8 +5,8 @@ import org.point85.domain.messaging.NotificationSeverity;
 
 public class CollectorNotification extends AbstractNotification {
 
-	private NotificationSeverity severity;
-	private String text;
+	private final NotificationSeverity severity;
+	private final String text;
 
 	public CollectorNotification(CollectorNotificationMessage message) {
 		super(message);

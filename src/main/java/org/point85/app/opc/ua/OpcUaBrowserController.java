@@ -53,10 +53,10 @@ public class OpcUaBrowserController extends OpcUaController {
 	private OpcUaTreeNode selectedTreeNode;
 
 	// list of servers and ports
-	private ObservableList<String> servers = FXCollections.observableArrayList(new ArrayList<>());
+	private final ObservableList<String> servers = FXCollections.observableArrayList(new ArrayList<>());
 
 	// list of OPC DA tags being monitored
-	private List<String> monitoredItemIds = new ArrayList<>();
+	private final List<String> monitoredItemIds = new ArrayList<>();
 
 	@FXML
 	private TextField tfConnectionName;

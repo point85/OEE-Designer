@@ -26,7 +26,6 @@ import org.point85.domain.persistence.PersistenceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.gson.Gson;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Envelope;
 
@@ -40,14 +39,8 @@ public class MonitorApplication implements MessageListener {
 	// logger
 	private static final Logger logger = LoggerFactory.getLogger(MonitorApplication.class);
 
-	// data collectors being monitored
-	private List<DataCollector> collectors;
-
-	// serializer
-	protected Gson gson = new Gson();
-
 	// RabbitMQ message publisher/subscriber
-	private List<PublisherSubscriber> monitorPubSubs = new ArrayList<>();
+	private final List<PublisherSubscriber> monitorPubSubs = new ArrayList<>();
 
 	// counter for pubsub queues
 	private int queueCounter = 0;
@@ -62,7 +55,7 @@ public class MonitorApplication implements MessageListener {
 	private String ip;
 
 	public MonitorApplication() {
-
+		// nothing to initialize
 	}
 
 	String getHostname() {
@@ -127,7 +120,8 @@ public class MonitorApplication implements MessageListener {
 		states.add(CollectorState.READY);
 		states.add(CollectorState.RUNNING);
 
-		collectors = PersistenceService.instance().fetchCollectorsByState(states);
+		// data collectors being monitored
+		List<DataCollector> collectors = PersistenceService.instance().fetchCollectorsByState(states);
 
 		// connect to notification brokers for consuming only
 		Map<String, PublisherSubscriber> pubSubs = new HashMap<>();
@@ -170,11 +164,7 @@ public class MonitorApplication implements MessageListener {
 		}
 
 		// ack it now
-		try {
-			channel.basicAck(envelope.getDeliveryTag(), PublisherSubscriber.ACK_MULTIPLE);
-		} catch (Exception e) {
-			throw new Exception("Failed to ack message: " + e.getMessage());
-		}
+		channel.basicAck(envelope.getDeliveryTag(), PublisherSubscriber.ACK_MULTIPLE);
 
 		MessageType type = message.getMessageType();
 
@@ -218,7 +208,7 @@ public class MonitorApplication implements MessageListener {
 		msg.setText("Monitor startup");
 
 		try {
-			if (monitorPubSubs.size() > 0) {
+			if (!monitorPubSubs.isEmpty()) {
 				PublisherSubscriber pubSub = monitorPubSubs.get(0);
 
 				pubSub.publish(msg, RoutingKey.NOTIFICATION_MESSAGE, 3600);

@@ -11,9 +11,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.point85.app.AppUtils;
+import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
-import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
 import org.point85.domain.oee.TimeLoss;
@@ -60,7 +60,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 	private TreeItem<ScheduleNode> selectedScheduleItem;
 
 	// list of edited schedules
-	private Set<TreeItem<ScheduleNode>> editedScheduleItems = new HashSet<>();
+	private final Set<TreeItem<ScheduleNode>> editedScheduleItems = new HashSet<>();
 
 	// current shift being edited
 	private Shift currentShift;
@@ -78,26 +78,28 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 	private NonWorkingPeriod currentPeriod;
 
 	// list of shifts associated with the work schedule being edited
-	private ObservableList<Shift> shiftList = FXCollections.observableArrayList(new ArrayList<>());
+	private final ObservableList<Shift> shiftList = FXCollections.observableArrayList(new ArrayList<>());
 
 	// list of shift names for the rotation segment starting shift choice
-	private ObservableList<String> shiftNames = FXCollections.observableArrayList(new ArrayList<>());
+	private final ObservableList<String> shiftNames = FXCollections.observableArrayList(new ArrayList<>());
 
 	// list of teams associated with the work schedule being edited
-	private ObservableList<Team> teamList = FXCollections.observableArrayList(new ArrayList<>());
+	private final ObservableList<Team> teamList = FXCollections.observableArrayList(new ArrayList<>());
 
 	// list of rotation names available for team assignment
-	private ObservableList<String> rotationNames = FXCollections.observableArrayList(new ArrayList<>());
+	private final ObservableList<String> rotationNames = FXCollections.observableArrayList(new ArrayList<>());
 
 	// list of rotations
-	private ObservableList<Rotation> rotationList = FXCollections.observableArrayList(new ArrayList<>());
+	private final ObservableList<Rotation> rotationList = FXCollections.observableArrayList(new ArrayList<>());
 
 	// list of rotation segments
-	private ObservableList<RotationSegment> rotationSegmentList = FXCollections.observableArrayList(new ArrayList<>());
+	private final ObservableList<RotationSegment> rotationSegmentList = FXCollections
+			.observableArrayList(new ArrayList<>());
 
 	// list of non-working periods associated with the work schedule
-	private ObservableList<NonWorkingPeriod> periodList = FXCollections.observableArrayList(new ArrayList<>());
+	private final ObservableList<NonWorkingPeriod> periodList = FXCollections.observableArrayList(new ArrayList<>());
 
+	// controller for template schedules
 	private TemplateScheduleDialogController templateController;
 
 	// work schedule
@@ -608,15 +610,12 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 
 		// check for previous edit
 		/*
-		if (oldItem != null) {
-			boolean isChanged = setAttributes(oldItem);
-
-			if (isChanged) {
-				oldItem.setGraphic(ImageManager.instance().getImageView(Images.CHANGED));
-				tvSchedules.refresh();
-			}
-		}
-		*/
+		 * if (oldItem != null) { boolean isChanged = setAttributes(oldItem);
+		 * 
+		 * if (isChanged) {
+		 * oldItem.setGraphic(ImageManager.instance().getImageView(Images.CHANGED));
+		 * tvSchedules.refresh(); } }
+		 */
 		selectedScheduleItem = newItem;
 
 		// new attributes
@@ -1237,10 +1236,10 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 			shiftNames.remove(shift.getName());
 			currentShift = null;
 			tvShifts.getSelectionModel().clearSelection();
-			
+
 			// add to edited schedules
 			addEditedSchedule(selectedScheduleItem);
-			
+
 			tvShifts.refresh();
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
@@ -1316,10 +1315,10 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 			Collections.sort(shiftList);
 			currentTeam = null;
 			tvTeams.getSelectionModel().clearSelection();
-			
+
 			// add to edited schedules
 			addEditedSchedule(selectedScheduleItem);
-			
+
 			tvTeams.refresh();
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
@@ -1394,10 +1393,10 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 			rotationList.remove(rotation);
 			currentRotation = null;
 			tvRotations.getSelectionModel().clearSelection();
-			
+
 			// add to edited schedules
 			addEditedSchedule(selectedScheduleItem);
-			
+
 			tvRotations.refresh();
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
@@ -1489,10 +1488,10 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 
 			currentRotationSegment = null;
 			tvRotationSegments.getSelectionModel().clearSelection();
-			
+
 			// add to edited schedules
 			addEditedSchedule(selectedScheduleItem);
-			
+
 			tvRotationSegments.refresh();
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
@@ -1592,10 +1591,10 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 			Collections.sort(periodList);
 			currentPeriod = null;
 			tvNonWorkingPeriods.getSelectionModel().clearSelection();
-			
+
 			// add to edited schedules
 			addEditedSchedule(selectedScheduleItem);
-			
+
 			tvNonWorkingPeriods.refresh();
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);

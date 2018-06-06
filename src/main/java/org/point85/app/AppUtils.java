@@ -42,8 +42,7 @@ public abstract class AppUtils {
 	// format an OffsetDateTime
 	public static String formatOffsetDateTime(OffsetDateTime odt) {
 		OffsetDateTime truncated = odt.truncatedTo(ChronoUnit.SECONDS);
-		String value = truncated.toString().replace('T', ' ');
-		return value;
+		return truncated.toString().replace('T', ' ');
 	}
 
 	// format a BigDecimal
@@ -56,7 +55,7 @@ public abstract class AppUtils {
 	}
 
 	public static String formatDate(Date date, TimeZone tz) {
-		DateFormat df = new SimpleDateFormat(DATE_FORMAT);
+		DateFormat df = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault());
 		String localTimeString = df.format(date);
 		StringBuilder sb = new StringBuilder();
 		sb.append(localTimeString);
@@ -195,9 +194,7 @@ public abstract class AppUtils {
 			throw new Exception("Both hours and minutes for the start time of day must be specified.");
 		}
 
-		LocalTime time = LocalTime.of(Integer.valueOf(fields[0]), Integer.valueOf(fields[1]));
-
-		return time;
+		return LocalTime.of(Integer.valueOf(fields[0]), Integer.valueOf(fields[1]));
 	}
 
 	public static String stringFromLocalTime(LocalTime time) {

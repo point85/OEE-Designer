@@ -62,7 +62,7 @@ public class CollectorServerStatus extends AbstractNotification {
 	@Override
 	public boolean equals(Object other) {
 
-		if (other == null || !(other instanceof CollectorServerStatus)) {
+		if (!(other instanceof CollectorServerStatus)) {
 			return false;
 		}
 		CollectorServerStatus otherResolver = (CollectorServerStatus) other;

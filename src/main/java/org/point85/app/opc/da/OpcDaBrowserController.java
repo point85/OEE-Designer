@@ -49,13 +49,13 @@ public class OpcDaBrowserController extends OpcDaController {
 	private OpcDaBrowserLeaf selectedTag;
 
 	// list of prog ids
-	private ObservableList<String> progIds = FXCollections.observableArrayList(new ArrayList<>());
+	private final ObservableList<String> progIds = FXCollections.observableArrayList(new ArrayList<>());
 
 	// list of all Opc items at a leaf node
-	private ObservableList<OpcDaBrowserLeaf> availableTags = FXCollections.observableArrayList();
+	private final ObservableList<OpcDaBrowserLeaf> availableTags = FXCollections.observableArrayList();
 
 	// list of OPC DA tags being monitored
-	private List<String> monitoredItemIds = new ArrayList<>();
+	private final List<String> monitoredItemIds = new ArrayList<>();
 
 	// tree browser
 	private OpcDaTreeBrowser treeBrowser;

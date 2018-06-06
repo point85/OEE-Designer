@@ -54,10 +54,10 @@ import javafx.scene.control.TextField;
  */
 public class UomConversionController extends DesignerDialogController {
 	// list of Prefixes
-	private ObservableList<String> prefixes = FXCollections.observableArrayList();
+	private final ObservableList<String> prefixes = FXCollections.observableArrayList();
 	
 	// list of UnitTypes
-	private ObservableList<String> unitTypes = FXCollections.observableArrayList();
+	private final ObservableList<String> unitTypes = FXCollections.observableArrayList();
 
 	@FXML
 	private ComboBox<String> cbUnitTypes;

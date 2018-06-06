@@ -6,13 +6,13 @@ import java.util.concurrent.ConcurrentMap;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class ImageManager {
+public final class ImageManager {
 	private static final String path = "/org/point85/images/";
 	
 	// standard image size LxW
 	private static final int DIM = 16;
 
-	private ConcurrentMap<Images, Image> imageCache;
+	private final ConcurrentMap<Images, Image> imageCache;
 
 	private static ImageManager imageManager;
 

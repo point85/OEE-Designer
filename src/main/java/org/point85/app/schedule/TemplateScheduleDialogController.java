@@ -27,10 +27,11 @@ public class TemplateScheduleDialogController extends DesignerDialogController {
 	// logger
 	private static final Logger logger = LoggerFactory.getLogger(TemplateScheduleDialogController.class);
 
+	// work schedule
 	private WorkSchedule selectedSchedule;
 
 	// list of schedules
-	private ObservableList<WorkSchedule> scheduleList = FXCollections.observableArrayList(new ArrayList<>());
+	private final ObservableList<WorkSchedule> scheduleList = FXCollections.observableArrayList(new ArrayList<>());
 
 	@FXML
 	private TableView<WorkSchedule> tvTemplates;
@@ -52,7 +53,6 @@ public class TemplateScheduleDialogController extends DesignerDialogController {
 
 	@FXML
 	public void initialize() throws Exception {
-
 		setImages();
 
 		tvTemplates.setItems(scheduleList);

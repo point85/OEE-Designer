@@ -79,13 +79,13 @@ public class UomEditorController extends DesignerDialogController {
 	private TreeItem<UomNode> selectedUomItem;
 
 	// list of edited UOMs
-	private List<TreeItem<UomNode>> editedUomItems = new ArrayList<>();
+	private final List<TreeItem<UomNode>> editedUomItems = new ArrayList<>();
 
 	// list of Prefixes
-	private ObservableList<String> prefixes = FXCollections.observableArrayList();
+	private final ObservableList<String> prefixes = FXCollections.observableArrayList();
 
 	// list of UnitTypes
-	private ObservableList<String> unitTypes = FXCollections.observableArrayList();
+	private final ObservableList<String> unitTypes = FXCollections.observableArrayList();
 
 	// tree view by category
 	@FXML

@@ -24,7 +24,7 @@ public class DataCollectorController extends DialogController {
 	private DataCollector dataCollector;
 
 	// list of collector names
-	private ObservableList<String> collectors = FXCollections.observableArrayList(new ArrayList<>());
+	private final ObservableList<String> collectors = FXCollections.observableArrayList(new ArrayList<>());
 
 	@FXML
 	private TextField tfName;

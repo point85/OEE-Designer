@@ -11,9 +11,9 @@ import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.StatusCode;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.ServerState;
 import org.point85.app.AppUtils;
+import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
-import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.charts.DataSubscriber;
 import org.point85.app.charts.TrendChartController;
 import org.point85.domain.DomainUtils;
@@ -42,10 +42,13 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 	// trend chart pane
 	private SplitPane spTrendChart;
 
+	// monitored node
 	private NodeId monitoredNodeId;
 
-	private ExtensionObject filter = null;
+	// filter is not being used
+	private final ExtensionObject filter = null;
 
+	// publishing interval
 	private double publishingInterval = (double) CollectorDataSource.DEFAULT_UPDATE_PERIOD_MSEC;
 
 	@FXML
@@ -83,6 +86,14 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 			setImages();
 		}
 		return spTrendChart;
+	}
+
+	public double getPublishingInterval() {
+		return publishingInterval;
+	}
+
+	public void setPublishingInterval(double interval) {
+		this.publishingInterval = interval;
 	}
 
 	public void setUpdatePeriodMsec(Integer millis) {
@@ -283,7 +294,7 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 	// service class for callbacks on received data
 	private class ResolutionService extends Service<String> {
 
-		private DataValue dataValue;
+		private final DataValue dataValue;
 
 		public ResolutionService(DataValue dataValue, UaMonitoredItem item) {
 			this.dataValue = dataValue;
@@ -291,7 +302,7 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 
 		@Override
 		protected Task<String> createTask() {
-			Task<String> resolutionTask = new Task<String>() {
+			return new Task<String>() {
 
 				@Override
 				protected String call() throws Exception {
@@ -314,7 +325,6 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 					return errorMessage;
 				}
 			};
-			return resolutionTask;
 		}
 	}
 }

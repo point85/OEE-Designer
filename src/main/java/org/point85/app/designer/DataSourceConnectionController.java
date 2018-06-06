@@ -121,7 +121,7 @@ public abstract class DataSourceConnectionController extends DesignerDialogContr
 			return;
 		}
 		Platform.runLater(() -> {
-			service.cancel();  
+			service.cancel();
 		});
 	}
 
@@ -130,13 +130,13 @@ public abstract class DataSourceConnectionController extends DesignerDialogContr
 	// class to connect to the OPC DA server
 	private class ConnectionService extends Service<String> {
 
-		public ConnectionService() {
-
+		private ConnectionService() {
+			// nothing to initialize
 		}
 
 		@Override
 		protected Task<String> createTask() {
-			Task<String> connectTask = new Task<String>() {
+			return new Task<String>() {
 
 				@Override
 				protected String call() throws Exception {
@@ -151,7 +151,6 @@ public abstract class DataSourceConnectionController extends DesignerDialogContr
 					return errorMessage;
 				}
 			};
-			return connectTask;
 		}
 	}
 

@@ -75,10 +75,13 @@ public class ClientTestApplication implements MessageListener {
 	private static final Logger logger = LoggerFactory.getLogger(ClientTestApplication.class);
 
 	// AMQP message publisher/subscriber
-	private Map<String, PublisherSubscriber> pubsubs = new HashMap<>();
+	private final Map<String, PublisherSubscriber> pubsubs = new HashMap<>();
 
 	// materials
-	private ObservableList<Material> materials = FXCollections.observableList(new ArrayList<>());
+	private final ObservableList<Material> materials = FXCollections.observableList(new ArrayList<>());
+
+	// JSON parser
+	private final Gson gson = new Gson();
 
 	// entities
 	@FXML
@@ -155,11 +158,8 @@ public class ClientTestApplication implements MessageListener {
 	@FXML
 	private Button btHttpGetEntities;
 
-	// JSON parser
-	private Gson gson = new Gson();
-
 	public ClientTestApplication() {
-
+		// nothing to initialize
 	}
 
 	public void start(Stage primaryStage) {

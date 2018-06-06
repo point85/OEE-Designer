@@ -109,7 +109,7 @@ abstract class EventEditorController extends DialogController {
 		if (schedule != null) {
 			List<ShiftInstance> shiftInstances = schedule.getShiftInstancesForTime(ldtStart);
 
-			if (shiftInstances.size() > 0) {
+			if (!shiftInstances.isEmpty()) {
 				// pick first one
 				shift = shiftInstances.get(0).getShift();
 			}

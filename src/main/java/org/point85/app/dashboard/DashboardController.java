@@ -130,10 +130,10 @@ public class DashboardController extends DialogController implements CategoryCli
 	private EquipmentLoss equipmentLoss;
 
 	// map of loss by equipment
-	private ConcurrentMap<String, EquipmentLoss> lossMap = new ConcurrentHashMap<>();
+	private final ConcurrentMap<String, EquipmentLoss> lossMap = new ConcurrentHashMap<>();
 
 	// possible materials
-	private Map<String, Material> materialMap = new HashMap<>();
+	private final Map<String, Material> materialMap = new HashMap<>();
 
 	// selection criteria
 	@FXML
@@ -181,13 +181,11 @@ public class DashboardController extends DialogController implements CategoryCli
 	private AnchorPane apTileLayout;
 
 	// production tile
-	private Tile tiProduction;
 	private LeaderBoardItem lbiGoodProduction;
 	private LeaderBoardItem lbiRejectProduction;
 	private LeaderBoardItem lbiStartupProduction;
 
 	// OEE tile
-	private Tile tiOee;
 	private BarChartItem bciOee;
 	private BarChartItem bciAvailability;
 	private BarChartItem bciPerformance;
@@ -200,78 +198,81 @@ public class DashboardController extends DialogController implements CategoryCli
 	private Tile tiJobMaterial;
 
 	// net times
-	private ObservableList<Data<Number, String>> netTimeList = FXCollections.observableArrayList(new ArrayList<>());
+	private final ObservableList<Data<Number, String>> netTimeList = FXCollections
+			.observableArrayList(new ArrayList<>());
 
 	// no demand loss
-	private ObservableList<Data<Number, String>> notScheduledList = FXCollections
+	private final ObservableList<Data<Number, String>> notScheduledList = FXCollections
 			.observableArrayList(new ArrayList<>());
 
 	// special events loss
-	private ObservableList<Data<Number, String>> unscheduledList = FXCollections.observableArrayList(new ArrayList<>());
+	private final ObservableList<Data<Number, String>> unscheduledList = FXCollections
+			.observableArrayList(new ArrayList<>());
 
 	// planned downtime
-	private ObservableList<Data<Number, String>> plannedDowntimeList = FXCollections
+	private final ObservableList<Data<Number, String>> plannedDowntimeList = FXCollections
 			.observableArrayList(new ArrayList<>());
 
 	// setup
-	private ObservableList<Data<Number, String>> setupList = FXCollections.observableArrayList(new ArrayList<>());
+	private final ObservableList<Data<Number, String>> setupList = FXCollections.observableArrayList(new ArrayList<>());
 
 	// unplanned downtime
-	private ObservableList<Data<Number, String>> unplannedDowntimeList = FXCollections
+	private final ObservableList<Data<Number, String>> unplannedDowntimeList = FXCollections
 			.observableArrayList(new ArrayList<>());
 
 	// minor stoppages loss
-	private ObservableList<Data<Number, String>> minorStoppageList = FXCollections
+	private final ObservableList<Data<Number, String>> minorStoppageList = FXCollections
 			.observableArrayList(new ArrayList<>());
 
 	// reduced speed loss
-	private ObservableList<Data<Number, String>> reducedSpeedList = FXCollections
+	private final ObservableList<Data<Number, String>> reducedSpeedList = FXCollections
 			.observableArrayList(new ArrayList<>());
 
 	// rejects and rework loss
-	private ObservableList<Data<Number, String>> rejectList = FXCollections.observableArrayList(new ArrayList<>());
+	private final ObservableList<Data<Number, String>> rejectList = FXCollections
+			.observableArrayList(new ArrayList<>());
 
 	// yield loss
-	private ObservableList<Data<Number, String>> yieldList = FXCollections.observableArrayList(new ArrayList<>());
+	private final ObservableList<Data<Number, String>> yieldList = FXCollections.observableArrayList(new ArrayList<>());
 
 	// times series net of the loss category
-	private XYChart.Series<Number, String> netTimeSeries = new XYChart.Series<>();
+	private final XYChart.Series<Number, String> netTimeSeries = new XYChart.Series<>();
 
 	// no demand series
-	private XYChart.Series<Number, String> notScheduledSeries = new XYChart.Series<>();
+	private final XYChart.Series<Number, String> notScheduledSeries = new XYChart.Series<>();
 
 	// special events series
-	private XYChart.Series<Number, String> unscheduledSeries = new XYChart.Series<>();
+	private final XYChart.Series<Number, String> unscheduledSeries = new XYChart.Series<>();
 
 	// planned downtime series
-	private XYChart.Series<Number, String> plannedDowntimeSeries = new XYChart.Series<>();
+	private final XYChart.Series<Number, String> plannedDowntimeSeries = new XYChart.Series<>();
 
 	// setup series
-	private XYChart.Series<Number, String> setupSeries = new XYChart.Series<>();
+	private final XYChart.Series<Number, String> setupSeries = new XYChart.Series<>();
 
 	// unplanned downtime series
-	private XYChart.Series<Number, String> unplannedDowntimeSeries = new XYChart.Series<>();
+	private final XYChart.Series<Number, String> unplannedDowntimeSeries = new XYChart.Series<>();
 
 	// minor stoppages series
-	private XYChart.Series<Number, String> minorStoppageSeries = new XYChart.Series<>();
+	private final XYChart.Series<Number, String> minorStoppageSeries = new XYChart.Series<>();
 
 	// reduced speed series
-	private XYChart.Series<Number, String> reducedSpeedSeries = new XYChart.Series<>();
+	private final XYChart.Series<Number, String> reducedSpeedSeries = new XYChart.Series<>();
 
 	// rejects series
-	private XYChart.Series<Number, String> rejectSeries = new XYChart.Series<>();
+	private final XYChart.Series<Number, String> rejectSeries = new XYChart.Series<>();
 
 	// yield series
-	private XYChart.Series<Number, String> yieldSeries = new XYChart.Series<>();
+	private final XYChart.Series<Number, String> yieldSeries = new XYChart.Series<>();
 
 	// title of chart
-	private String chartTitle = LOSS_CHART_TITLE;
+	private final String chartTitle = LOSS_CHART_TITLE;
 
 	// x-axis time unit
 	private Unit timeUnit = Unit.MINUTE;
 
 	// list of events
-	private ObservableList<OeeEvent> resolvedEvents = FXCollections.observableArrayList(new ArrayList<>());
+	private final ObservableList<OeeEvent> resolvedEvents = FXCollections.observableArrayList(new ArrayList<>());
 
 	private OeeEvent lastAvailability;
 	private OeeEvent lastMaterialSetup;
@@ -356,35 +357,27 @@ public class DashboardController extends DialogController implements CategoryCli
 
 	@FXML
 	private AnchorPane apLevel1Pareto;
-	private StackPane spLevel1Pareto;
 
 	@FXML
 	private AnchorPane apYieldPareto;
-	private StackPane spYieldPareto;
 
 	@FXML
 	private AnchorPane apRejectsPareto;
-	private StackPane spRejectsPareto;
 
 	@FXML
 	private AnchorPane apSpeedPareto;
-	private StackPane spSpeedPareto;
 
 	@FXML
 	private AnchorPane apMinorStoppagesPareto;
-	private StackPane spMinorStoppagesPareto;
 
 	@FXML
 	private AnchorPane apUnplannedDowntimePareto;
-	private StackPane spUnplannedDowntimePareto;
 
 	@FXML
 	private AnchorPane apSetupPareto;
-	private StackPane spSetupPareto;
 
 	@FXML
 	private AnchorPane apPlannedDowntimePareto;
-	private StackPane spPlannedDowntimePareto;
 
 	private float determineTimeUnits(Duration duration) {
 		float divisor = 1.0f;
@@ -435,7 +428,7 @@ public class DashboardController extends DialogController implements CategoryCli
 
 		Number divisor = equipmentLoss.getLoss(TimeLoss.MINOR_STOPPAGES).getSeconds();
 
-		spMinorStoppagesPareto = new StackPane();
+		StackPane spMinorStoppagesPareto = new StackPane();
 
 		AnchorPane.setBottomAnchor(spMinorStoppagesPareto, 0.0);
 		AnchorPane.setLeftAnchor(spMinorStoppagesPareto, 0.0);
@@ -454,7 +447,7 @@ public class DashboardController extends DialogController implements CategoryCli
 
 		Number divisor = equipmentLoss.getLoss(TimeLoss.REJECT_REWORK).getSeconds();
 
-		spRejectsPareto = new StackPane();
+		StackPane spRejectsPareto = new StackPane();
 
 		AnchorPane.setBottomAnchor(spRejectsPareto, 0.0);
 		AnchorPane.setLeftAnchor(spRejectsPareto, 0.0);
@@ -473,7 +466,7 @@ public class DashboardController extends DialogController implements CategoryCli
 
 		Number divisor = equipmentLoss.getLoss(TimeLoss.REDUCED_SPEED).getSeconds();
 
-		spSpeedPareto = new StackPane();
+		StackPane spSpeedPareto = new StackPane();
 
 		AnchorPane.setBottomAnchor(spSpeedPareto, 0.0);
 		AnchorPane.setLeftAnchor(spSpeedPareto, 0.0);
@@ -492,7 +485,7 @@ public class DashboardController extends DialogController implements CategoryCli
 
 		Number divisor = equipmentLoss.getLoss(TimeLoss.STARTUP_YIELD).getSeconds();
 
-		spYieldPareto = new StackPane();
+		StackPane spYieldPareto = new StackPane();
 
 		AnchorPane.setBottomAnchor(spYieldPareto, 0.0);
 		AnchorPane.setLeftAnchor(spYieldPareto, 0.0);
@@ -511,7 +504,7 @@ public class DashboardController extends DialogController implements CategoryCli
 
 		Number divisor = equipmentLoss.getLoss(TimeLoss.UNPLANNED_DOWNTIME).getSeconds();
 
-		spUnplannedDowntimePareto = new StackPane();
+		StackPane spUnplannedDowntimePareto = new StackPane();
 
 		AnchorPane.setBottomAnchor(spUnplannedDowntimePareto, 0.0);
 		AnchorPane.setLeftAnchor(spUnplannedDowntimePareto, 0.0);
@@ -531,7 +524,7 @@ public class DashboardController extends DialogController implements CategoryCli
 
 		Number divisor = equipmentLoss.getLoss(TimeLoss.SETUP).getSeconds();
 
-		spSetupPareto = new StackPane();
+		StackPane spSetupPareto = new StackPane();
 
 		AnchorPane.setBottomAnchor(spSetupPareto, 0.0);
 		AnchorPane.setLeftAnchor(spSetupPareto, 0.0);
@@ -550,7 +543,7 @@ public class DashboardController extends DialogController implements CategoryCli
 
 		Number divisor = equipmentLoss.getLoss(TimeLoss.PLANNED_DOWNTIME).getSeconds();
 
-		spPlannedDowntimePareto = new StackPane();
+		StackPane spPlannedDowntimePareto = new StackPane();
 
 		AnchorPane.setBottomAnchor(spPlannedDowntimePareto, 0.0);
 		AnchorPane.setLeftAnchor(spPlannedDowntimePareto, 0.0);
@@ -779,7 +772,7 @@ public class DashboardController extends DialogController implements CategoryCli
 		Duration availableTime = equipmentLoss.getAvailableTime();
 		Number divisor = equipmentLoss.convertSeconds(availableTime.getSeconds(), timeUnit);
 
-		spLevel1Pareto = new StackPane();
+		StackPane spLevel1Pareto = new StackPane();
 
 		AnchorPane.setBottomAnchor(spLevel1Pareto, 0.0);
 		AnchorPane.setLeftAnchor(spLevel1Pareto, 0.0);
@@ -1140,7 +1133,7 @@ public class DashboardController extends DialogController implements CategoryCli
 		bciQuality = new BarChartItem("Quality", 0, Tile.ORANGE);
 		bciQuality.setFormatString(OEE_FORMAT);
 
-		tiOee = TileBuilder.create().skinType(SkinType.BAR_CHART).prefSize(TILE_WIDTH, TILE_HEIGHT)
+		Tile tiOee = TileBuilder.create().skinType(SkinType.BAR_CHART).prefSize(TILE_WIDTH, TILE_HEIGHT)
 				.title("Overall Equipment Effectiveness").text("Current OEE")
 				.barChartItems(bciOee, bciAvailability, bciPerformance, bciQuality).decimals(0).sortedData(false)
 				.animated(false).build();
@@ -1152,7 +1145,7 @@ public class DashboardController extends DialogController implements CategoryCli
 
 		String productionText = "Change in Quantity";
 
-		tiProduction = TileBuilder.create().skinType(SkinType.LEADER_BOARD).prefSize(TILE_WIDTH, TILE_HEIGHT)
+		Tile tiProduction = TileBuilder.create().skinType(SkinType.LEADER_BOARD).prefSize(TILE_WIDTH, TILE_HEIGHT)
 				.title("Current Production").text(productionText)
 				.leaderBoardItems(lbiGoodProduction, lbiRejectProduction, lbiStartupProduction).sortedData(false)
 				.animated(false).build();
@@ -1306,7 +1299,7 @@ public class DashboardController extends DialogController implements CategoryCli
 				setups = PersistenceService.instance().fetchSetupsForPeriod(equipment, odtFrom, odtTo);
 			}
 
-			if (setups.size() == 0) {
+			if (setups.isEmpty()) {
 				throw new Exception(
 						"The material being produced must be specified for equipment " + equipment.getName());
 			}

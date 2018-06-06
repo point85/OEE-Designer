@@ -43,7 +43,7 @@ public class MaterialEditorController extends DesignerDialogController {
 	private TreeItem<MaterialNode> selectedMaterialItem;
 
 	// edited materials
-	private Set<TreeItem<MaterialNode>> editedMaterialItems = new HashSet<>();
+	private final Set<TreeItem<MaterialNode>> editedMaterialItems = new HashSet<>();
 
 	// material hierarchy by category
 	@FXML

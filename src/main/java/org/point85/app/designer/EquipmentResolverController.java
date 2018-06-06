@@ -43,7 +43,7 @@ import javafx.scene.image.ImageView;
 
 public class EquipmentResolverController extends DesignerController {
 	// equipment event resolvers
-	private ObservableList<EventResolver> eventResolvers = FXCollections.observableArrayList(new ArrayList<>());
+	private final ObservableList<EventResolver> eventResolvers = FXCollections.observableArrayList(new ArrayList<>());
 
 	// event resolver being edited
 	private EventResolver selectedEventResolver;
@@ -533,7 +533,7 @@ public class EquipmentResolverController extends DesignerController {
 		try {
 			PlantEntity entity = getApp().getPhysicalModelController().getSelectedEntity();
 
-			if (entity == null || !(entity instanceof Equipment)) {
+			if (!(entity instanceof Equipment)) {
 				throw new Exception("Equipment must be selected before editing a script.");
 			}
 

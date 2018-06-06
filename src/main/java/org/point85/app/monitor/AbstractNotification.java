@@ -8,7 +8,7 @@ public abstract class AbstractNotification {
 	protected String timestamp;
 	
 	protected AbstractNotification() {
-		
+		// nothing to initialize
 	}
 
 	protected AbstractNotification(ApplicationMessage message) {

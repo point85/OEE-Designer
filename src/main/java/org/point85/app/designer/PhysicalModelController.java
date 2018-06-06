@@ -51,7 +51,7 @@ import javafx.scene.layout.AnchorPane;
  */
 public class PhysicalModelController extends DesignerController {
 	// list of edited plant entities
-	private Set<TreeItem<EntityNode>> editedEntityItems = new HashSet<>();
+	private final Set<TreeItem<EntityNode>> editedEntityItems = new HashSet<>();
 
 	// entity being edited or viewed
 	private TreeItem<EntityNode> selectedEntityItem;
@@ -941,7 +941,7 @@ public class PhysicalModelController extends DesignerController {
 		}
 
 		// show materials
-		if (getSelectedEntity() != null && getSelectedEntity() instanceof Equipment) {
+		if (getSelectedEntity() instanceof Equipment) {
 			equipmentMaterialController.showMaterial((Equipment) getSelectedEntity());
 		} else {
 			equipmentMaterialController.clearEditor();

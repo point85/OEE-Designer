@@ -33,7 +33,7 @@ import javafx.scene.control.TextField;
 public class EquipmentMaterialController extends DesignerController {
 
 	// equipment materials
-	private ObservableList<EquipmentMaterial> equipmentMaterials = FXCollections.observableArrayList(new ArrayList<>());
+	private final ObservableList<EquipmentMaterial> equipmentMaterials = FXCollections.observableArrayList(new ArrayList<>());
 
 	// equipment material being edited
 	private EquipmentMaterial selectedEquipmentMaterial;

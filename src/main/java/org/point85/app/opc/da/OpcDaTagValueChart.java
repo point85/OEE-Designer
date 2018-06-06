@@ -13,15 +13,18 @@ public class OpcDaTagValueChart {
     public static final int LINEAR = 0;
     public static final int STAIR_STEP = 1;
     private static final int NUM_POINTS = 100;
-    private final String title = "Tag Value";
-    private final String yAxisLabel = "Value";
-    private final String xAxisLabel = "Sample Number";
-    private final String chartId = "tagValueChart";
-    private final String seriesName = "tagValueSeries";
-    private XYChart.Series<Number, Number> valueDataSeries = new XYChart.Series<>();
-    private NumberAxis xAxis = new NumberAxis(0, NUM_POINTS, NUM_POINTS / 10);
-    private NumberAxis yAxis = new NumberAxis();
-    private LineChart<Number, Number> tagValueChart = new LineChart<>(xAxis, yAxis);
+    
+    private static final String title = "Tag Value";
+    private static final String yAxisLabel = "Value";
+    private static final String xAxisLabel = "Sample Number";
+    private static final String chartId = "tagValueChart";
+    private static final String seriesName = "tagValueSeries";
+    
+    private final XYChart.Series<Number, Number> valueDataSeries = new XYChart.Series<>();
+    private final NumberAxis xAxis = new NumberAxis(0, NUM_POINTS, NUM_POINTS / 10);
+    private final NumberAxis yAxis = new NumberAxis();
+    private final LineChart<Number, Number> tagValueChart = new LineChart<>(xAxis, yAxis);
+    
     private Integer sampleNo = new Integer(-1);
     private int interpolation = OpcDaTagValueChart.LINEAR;
 

@@ -240,8 +240,8 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 
 	// service class for callbacks on received data
 	private class ResolutionService extends Service<Void> {
-		private String dataValue;
-		private OffsetDateTime timestamp;
+		private final String dataValue;
+		private final OffsetDateTime timestamp;
 
 		public ResolutionService(String sourceId, String dataValue, OffsetDateTime timestamp) {
 			this.dataValue = dataValue;
@@ -250,7 +250,7 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 
 		@Override
 		protected Task<Void> createTask() {
-			Task<Void> resolutionTask = new Task<Void>() {
+			return new Task<Void>() {
 
 				@Override
 				protected Void call() {
@@ -264,7 +264,6 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 					return null;
 				}
 			};
-			return resolutionTask;
 		}
 	}
 }
