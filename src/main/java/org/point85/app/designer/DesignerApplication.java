@@ -493,33 +493,31 @@ public class DesignerApplication {
 	}
 
 	void showOpcDaTrendDialog(EventResolver eventResolver) throws Exception {
-		if (opcDaTrendController == null) {
-			// Load the fxml file and create a new stage for the pop-up dialog.
-			FXMLLoader loader = FXMLLoaderFactory.opcDaTrendLoader();
-			AnchorPane page = (AnchorPane) loader.getRoot();
+		// Load the fxml file and create a new stage for the pop-up dialog.
+		FXMLLoader loader = FXMLLoaderFactory.opcDaTrendLoader();
+		AnchorPane page = (AnchorPane) loader.getRoot();
 
-			// Create the dialog Stage.
-			Stage dialogStage = new Stage(StageStyle.DECORATED);
-			dialogStage.setTitle("OPC DA Item Trend");
-			dialogStage.initModality(Modality.NONE);
-			Scene scene = new Scene(page);
-			dialogStage.setScene(scene);
+		// Create the dialog Stage.
+		Stage dialogStage = new Stage(StageStyle.DECORATED);
+		dialogStage.setTitle("OPC DA Item Trend");
+		dialogStage.initModality(Modality.NONE);
+		Scene scene = new Scene(page);
+		dialogStage.setScene(scene);
 
-			// get the controller
-			opcDaTrendController = loader.getController();
-			opcDaTrendController.setDialogStage(dialogStage);
-			opcDaTrendController.setApp(this);
+		// get the controller
+		opcDaTrendController = loader.getController();
+		opcDaTrendController.setDialogStage(dialogStage);
+		opcDaTrendController.setApp(this);
 
-			// add the trend chart
-			SplitPane chartPane = opcDaTrendController.initializeTrend();
+		// add the trend chart
+		SplitPane chartPane = opcDaTrendController.initializeTrend();
 
-			AnchorPane.setBottomAnchor(chartPane, 50.0);
-			AnchorPane.setLeftAnchor(chartPane, 5.0);
-			AnchorPane.setRightAnchor(chartPane, 5.0);
-			AnchorPane.setTopAnchor(chartPane, 50.0);
+		AnchorPane.setBottomAnchor(chartPane, 50.0);
+		AnchorPane.setLeftAnchor(chartPane, 5.0);
+		AnchorPane.setRightAnchor(chartPane, 5.0);
+		AnchorPane.setTopAnchor(chartPane, 50.0);
 
-			page.getChildren().add(0, chartPane);
-		}
+		page.getChildren().add(0, chartPane);
 
 		// set the script resolver
 		opcDaTrendController.setScriptResolver(eventResolver);
@@ -531,36 +529,34 @@ public class DesignerApplication {
 	}
 
 	void showOpcUaTrendDialog(EventResolver eventResolver) throws Exception {
-		if (opcUaTrendController == null) {
-			// Load the fxml file and create a new stage for the pop-up dialog.
-			FXMLLoader loader = FXMLLoaderFactory.opcUaTrendLoader();
-			AnchorPane page = (AnchorPane) loader.getRoot();
+		// Load the fxml file and create a new stage for the pop-up dialog.
+		FXMLLoader loader = FXMLLoaderFactory.opcUaTrendLoader();
+		AnchorPane page = (AnchorPane) loader.getRoot();
 
-			// Create the dialog Stage.
-			Stage dialogStage = new Stage(StageStyle.DECORATED);
-			dialogStage.setTitle("OPC UA Item Trend");
-			dialogStage.initModality(Modality.NONE);
-			// dialogStage.initOwner(primaryStage);
-			Scene scene = new Scene(page);
-			dialogStage.setScene(scene);
+		// Create the dialog Stage.
+		Stage dialogStage = new Stage(StageStyle.DECORATED);
+		dialogStage.setTitle("OPC UA Item Trend");
+		dialogStage.initModality(Modality.NONE);
+		// dialogStage.initOwner(primaryStage);
+		Scene scene = new Scene(page);
+		dialogStage.setScene(scene);
 
-			// get the controller
-			opcUaTrendController = loader.getController();
-			opcUaTrendController.setDialogStage(dialogStage);
-			opcUaTrendController.setApp(this);
+		// get the controller
+		opcUaTrendController = loader.getController();
+		opcUaTrendController.setDialogStage(dialogStage);
+		opcUaTrendController.setApp(this);
 
-			// add the trend chart
-			SplitPane chartPane = opcUaTrendController.initializeTrend();
+		// add the trend chart
+		SplitPane chartPane = opcUaTrendController.initializeTrend();
 
-			opcUaTrendController.setUpdatePeriodMsec(eventResolver.getUpdatePeriod());
+		opcUaTrendController.setUpdatePeriodMsec(eventResolver.getUpdatePeriod());
 
-			AnchorPane.setBottomAnchor(chartPane, 50.0);
-			AnchorPane.setLeftAnchor(chartPane, 5.0);
-			AnchorPane.setRightAnchor(chartPane, 5.0);
-			AnchorPane.setTopAnchor(chartPane, 50.0);
+		AnchorPane.setBottomAnchor(chartPane, 50.0);
+		AnchorPane.setLeftAnchor(chartPane, 5.0);
+		AnchorPane.setRightAnchor(chartPane, 5.0);
+		AnchorPane.setTopAnchor(chartPane, 50.0);
 
-			page.getChildren().add(0, chartPane);
-		}
+		page.getChildren().add(0, chartPane);
 
 		// set the script resolver
 		opcUaTrendController.setScriptResolver(eventResolver);
@@ -572,33 +568,31 @@ public class DesignerApplication {
 	}
 
 	void showHttpTrendDialog(EventResolver eventResolver) throws Exception {
-		if (httpTrendController == null) {
-			// Load the fxml file and create a new stage for the pop-up dialog.
-			FXMLLoader loader = FXMLLoaderFactory.httpTrendLoader();
-			AnchorPane page = (AnchorPane) loader.getRoot();
+		// Load the fxml file and create a new stage for the pop-up dialog.
+		FXMLLoader loader = FXMLLoaderFactory.httpTrendLoader();
+		AnchorPane page = (AnchorPane) loader.getRoot();
 
-			// Create the dialog Stage.
-			Stage dialogStage = new Stage(StageStyle.DECORATED);
-			dialogStage.setTitle("HTTP Event Trend");
-			dialogStage.initModality(Modality.NONE);
-			Scene scene = new Scene(page);
-			dialogStage.setScene(scene);
+		// Create the dialog Stage.
+		Stage dialogStage = new Stage(StageStyle.DECORATED);
+		dialogStage.setTitle("HTTP Event Trend");
+		dialogStage.initModality(Modality.NONE);
+		Scene scene = new Scene(page);
+		dialogStage.setScene(scene);
 
-			// get the controller
-			httpTrendController = loader.getController();
-			httpTrendController.setDialogStage(dialogStage);
-			httpTrendController.setApp(this);
+		// get the controller
+		httpTrendController = loader.getController();
+		httpTrendController.setDialogStage(dialogStage);
+		httpTrendController.setApp(this);
 
-			// add the trend chart
-			SplitPane chartPane = httpTrendController.initializeTrend();
+		// add the trend chart
+		SplitPane chartPane = httpTrendController.initializeTrend();
 
-			AnchorPane.setBottomAnchor(chartPane, 50.0);
-			AnchorPane.setLeftAnchor(chartPane, 5.0);
-			AnchorPane.setRightAnchor(chartPane, 5.0);
-			AnchorPane.setTopAnchor(chartPane, 50.0);
+		AnchorPane.setBottomAnchor(chartPane, 50.0);
+		AnchorPane.setLeftAnchor(chartPane, 5.0);
+		AnchorPane.setRightAnchor(chartPane, 5.0);
+		AnchorPane.setTopAnchor(chartPane, 50.0);
 
-			page.getChildren().add(0, chartPane);
-		}
+		page.getChildren().add(0, chartPane);
 
 		// set the script resolver
 		httpTrendController.setScriptResolver(eventResolver);
@@ -613,33 +607,31 @@ public class DesignerApplication {
 	}
 
 	void showMessagingTrendDialog(EventResolver eventResolver) throws Exception {
-		if (messagingTrendController == null) {
-			// Load the fxml file and create a new stage for the pop-up dialog.
-			FXMLLoader loader = FXMLLoaderFactory.messagingTrendLoader();
-			AnchorPane page = (AnchorPane) loader.getRoot();
+		// Load the fxml file and create a new stage for the pop-up dialog.
+		FXMLLoader loader = FXMLLoaderFactory.messagingTrendLoader();
+		AnchorPane page = (AnchorPane) loader.getRoot();
 
-			// Create the dialog Stage.
-			Stage dialogStage = new Stage(StageStyle.DECORATED);
-			dialogStage.setTitle("Messaging Event Trend");
-			dialogStage.initModality(Modality.NONE);
-			Scene scene = new Scene(page);
-			dialogStage.setScene(scene);
+		// Create the dialog Stage.
+		Stage dialogStage = new Stage(StageStyle.DECORATED);
+		dialogStage.setTitle("Messaging Event Trend");
+		dialogStage.initModality(Modality.NONE);
+		Scene scene = new Scene(page);
+		dialogStage.setScene(scene);
 
-			// get the controller
-			messagingTrendController = loader.getController();
-			messagingTrendController.setDialogStage(dialogStage);
-			messagingTrendController.setApp(this);
+		// get the controller
+		messagingTrendController = loader.getController();
+		messagingTrendController.setDialogStage(dialogStage);
+		messagingTrendController.setApp(this);
 
-			// add the trend chart
-			SplitPane chartPane = messagingTrendController.initializeTrend();
+		// add the trend chart
+		SplitPane chartPane = messagingTrendController.initializeTrend();
 
-			AnchorPane.setBottomAnchor(chartPane, 50.0);
-			AnchorPane.setLeftAnchor(chartPane, 5.0);
-			AnchorPane.setRightAnchor(chartPane, 5.0);
-			AnchorPane.setTopAnchor(chartPane, 50.0);
+		AnchorPane.setBottomAnchor(chartPane, 50.0);
+		AnchorPane.setLeftAnchor(chartPane, 5.0);
+		AnchorPane.setRightAnchor(chartPane, 5.0);
+		AnchorPane.setTopAnchor(chartPane, 50.0);
 
-			page.getChildren().add(0, chartPane);
-		}
+		page.getChildren().add(0, chartPane);
 
 		// set the script resolver
 		messagingTrendController.setEventResolver(eventResolver);

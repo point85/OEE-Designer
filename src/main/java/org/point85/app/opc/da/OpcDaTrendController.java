@@ -126,7 +126,6 @@ public class OpcDaTrendController extends OpcDaController implements OpcDaDataCh
 
 			// connect
 			updateConnectionStatus(ConnectionState.CONNECTING);
-
 			startConnectionService();
 
 		} catch (Exception e) {

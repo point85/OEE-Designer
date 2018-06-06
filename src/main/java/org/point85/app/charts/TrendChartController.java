@@ -17,8 +17,8 @@ import org.point85.domain.oee.TimeLoss;
 import org.point85.domain.plant.EquipmentEventResolver;
 import org.point85.domain.plant.Reason;
 import org.point85.domain.script.EventResolver;
-import org.point85.domain.script.OeeEventType;
 import org.point85.domain.script.OeeContext;
+import org.point85.domain.script.OeeEventType;
 
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
@@ -65,7 +65,8 @@ public class TrendChartController extends DesignerController {
 	private final ObservableList<OeeEvent> resolvedItems = FXCollections.observableArrayList(new ArrayList<>());
 
 	// how to interpolate the data points
-	private final ObservableList<InterpolationType> interpolationTypes = FXCollections.observableArrayList(new ArrayList<>());
+	private final ObservableList<InterpolationType> interpolationTypes = FXCollections
+			.observableArrayList(new ArrayList<>());
 
 	// controller for input values
 	private SampleChartController inputValueController;
@@ -189,7 +190,6 @@ public class TrendChartController extends DesignerController {
 				.addListener((observableValue, oldValue, newValue) -> {
 					try {
 						// TBD
-						System.out.print("Resolution selected");
 					} catch (Exception e) {
 						AppUtils.showErrorDialog(e);
 					}
@@ -370,6 +370,10 @@ public class TrendChartController extends DesignerController {
 			spUpdatePeriod.getValueFactory().setValue(millis / 1000);
 		}
 	}
+	
+	public void enableTrending(boolean enable) {
+		btToggleTrend.setDisable(!enable);
+	}
 
 	public void onStartTrending() {
 		try {
@@ -417,11 +421,18 @@ public class TrendChartController extends DesignerController {
 
 	@FXML
 	private void onResetTrending() {
-		this.resolvedItems.clear();
-		this.tvResolvedItems.refresh();
+		try {
+			// number of points to display
+			dataCount = Integer.valueOf(tfPointCount.getText());
 
-		inputValueController.reset(10, dataCount, 10, dataCount);
-		outputValueController.reset(10, dataCount, 1, TimeLoss.values().length + 1);
+			resolvedItems.clear();
+			tvResolvedItems.refresh();
+
+			inputValueController.reset(10, dataCount, 10, dataCount);
+			outputValueController.reset(10, dataCount, 1, TimeLoss.values().length + 1);
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
 	}
 
 	@FXML

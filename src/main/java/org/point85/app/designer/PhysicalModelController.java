@@ -739,6 +739,13 @@ public class PhysicalModelController extends DesignerController {
 			AppUtils.showErrorDialog(e);
 		}
 	}
+	
+	private void fillPersistenceContext(PlantEntity entity) {
+		// bring children into the persistence context
+		for (PlantEntity child : entity.getChildren()) {
+			fillPersistenceContext(child);
+		}
+	}
 
 	// Save button clicked
 	@FXML
@@ -751,14 +758,15 @@ public class PhysicalModelController extends DesignerController {
 				}
 			} else {
 				// update
-				if (getSelectedEntity().getKey() == null) {
-					throw new Exception("Entity to update does not have a primary key.");
-				}
 				setAttributes(selectedEntityItem);
 			}
 
 			// save modified entity
 			PlantEntity entity = getSelectedEntity();
+			
+			// bring children into persistence context
+			fillPersistenceContext(entity);
+						
 			PlantEntity saved = (PlantEntity) PersistenceService.instance().save(entity);
 
 			selectedEntityItem.getValue().setPlantEntity(saved);

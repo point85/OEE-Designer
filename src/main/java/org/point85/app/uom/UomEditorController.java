@@ -299,7 +299,7 @@ public class UomEditorController extends DesignerDialogController {
 
 		// import
 		btImport.setGraphic(ImageManager.instance().getImageView(Images.IMPORT));
-		btImport.setContentDisplay(ContentDisplay.RIGHT);
+		btImport.setContentDisplay(ContentDisplay.LEFT);
 
 		// context menu
 		miSaveAll.setGraphic(ImageManager.instance().getImageView(Images.SAVE_ALL));

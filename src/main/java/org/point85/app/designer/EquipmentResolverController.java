@@ -343,19 +343,19 @@ public class EquipmentResolverController extends DesignerController {
 	protected void setImages() throws Exception {
 		// new resolver
 		btNewResolver.setGraphic(ImageManager.instance().getImageView(Images.NEW));
-		btNewResolver.setContentDisplay(ContentDisplay.LEFT);
+		btNewResolver.setContentDisplay(ContentDisplay.RIGHT);
 
 		// add resolver
 		btAddResolver.setGraphic(ImageManager.instance().getImageView(Images.ADD));
-		btAddResolver.setContentDisplay(ContentDisplay.LEFT);
+		btAddResolver.setContentDisplay(ContentDisplay.RIGHT);
 
 		// remove resolver
 		btRemoveResolver.setGraphic(ImageManager.instance().getImageView(Images.REMOVE));
-		btRemoveResolver.setContentDisplay(ContentDisplay.LEFT);
+		btRemoveResolver.setContentDisplay(ContentDisplay.RIGHT);
 
-		// script execution
+		// watch script execution
 		btRun.setGraphic(ImageManager.instance().getImageView(Images.WATCH));
-		btRun.setContentDisplay(ContentDisplay.LEFT);
+		btRun.setContentDisplay(ContentDisplay.RIGHT);
 
 		// browse to data source
 		btBrowseSource.setGraphic(ImageManager.instance().getImageView(Images.SOURCE));

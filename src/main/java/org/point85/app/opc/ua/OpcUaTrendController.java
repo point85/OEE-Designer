@@ -17,7 +17,6 @@ import org.point85.app.Images;
 import org.point85.app.charts.DataSubscriber;
 import org.point85.app.charts.TrendChartController;
 import org.point85.domain.DomainUtils;
-import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.opc.ua.OpcUaAsynchListener;
 import org.point85.domain.opc.ua.OpcUaServerStatus;
 import org.point85.domain.opc.ua.OpcUaSource;
@@ -47,9 +46,6 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 
 	// filter is not being used
 	private final ExtensionObject filter = null;
-
-	// publishing interval
-	private double publishingInterval = (double) CollectorDataSource.DEFAULT_UPDATE_PERIOD_MSEC;
 
 	@FXML
 	private Button btConnect;
@@ -88,14 +84,6 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 		return spTrendChart;
 	}
 
-	public double getPublishingInterval() {
-		return publishingInterval;
-	}
-
-	public void setPublishingInterval(double interval) {
-		this.publishingInterval = interval;
-	}
-
 	public void setUpdatePeriodMsec(Integer millis) {
 		if (millis != null) {
 			trendChartController.setUpdatePeriodMsec(millis);
@@ -109,15 +97,15 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 
 		// connect
 		btConnect.setGraphic(ImageManager.instance().getImageView(Images.CONNECT));
-		btConnect.setContentDisplay(ContentDisplay.RIGHT);
+		btConnect.setContentDisplay(ContentDisplay.LEFT);
 
 		// disconnect
 		btDisconnect.setGraphic(ImageManager.instance().getImageView(Images.DISCONNECT));
-		btDisconnect.setContentDisplay(ContentDisplay.RIGHT);
+		btDisconnect.setContentDisplay(ContentDisplay.LEFT);
 
 		// cancel connect
 		btCancelConnect.setGraphic(ImageManager.instance().getImageView(Images.CANCEL));
-		btCancelConnect.setContentDisplay(ContentDisplay.RIGHT);
+		btCancelConnect.setContentDisplay(ContentDisplay.LEFT);
 	}
 
 	public void unsubscribeFromNode() throws Exception {
@@ -132,6 +120,8 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 
 	public void subscribeToDataSource() throws Exception {
 		getApp().getOpcUaClient().registerAsynchListener(this);
+
+		double publishingInterval = (double) trendChartController.getEventResolver().getUpdatePeriod();
 		getApp().getOpcUaClient().subscribe(getMonitoredNode(), publishingInterval, filter);
 	}
 
@@ -223,7 +213,6 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 
 			// connect
 			updateConnectionStatus(ConnectionState.CONNECTING);
-
 			startConnectionService();
 
 		} catch (Exception e) {
@@ -268,9 +257,11 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 				ServerState serverState = status.getState();
 				lbState.setText(serverState.toString());
 				lbState.setTextFill(CONNECTED_COLOR);
+				trendChartController.enableTrending(true);
 			} else {
 				lbState.setText(ConnectionState.DISCONNECTED.toString());
 				lbState.setTextFill(DISCONNECTED_COLOR);
+				trendChartController.enableTrending(false);
 			}
 			break;
 
@@ -278,12 +269,14 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 			piConnection.setVisible(true);
 			lbState.setText(ConnectionState.CONNECTING.toString());
 			lbState.setTextFill(CONNECTING_COLOR);
+			trendChartController.enableTrending(false);
 			break;
 
 		case DISCONNECTED:
 			piConnection.setVisible(false);
 			lbState.setText(ConnectionState.DISCONNECTED.toString());
 			lbState.setTextFill(DISCONNECTED_COLOR);
+			trendChartController.enableTrending(false);
 			break;
 
 		default:

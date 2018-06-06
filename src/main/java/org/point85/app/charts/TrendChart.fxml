@@ -21,7 +21,6 @@
          <children>
             <TableView fx:id="tvResolvedItems" layoutX="71.0" layoutY="-11.0" prefHeight="70.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="50.0">
                <columns>
-                  <TableColumn fx:id="tcNumber" prefWidth="50.0" text="No." />
                   <TableColumn fx:id="tcItem" prefWidth="200.0" text="Item" />
                   <TableColumn fx:id="tcInputValue" prefWidth="150.0" text="Input Value" />
                   <TableColumn fx:id="tcTimestamp" prefWidth="225.0" text="Timestamp" />
@@ -31,7 +30,7 @@
             </TableView>
             <HBox alignment="CENTER_LEFT" layoutX="73.0" layoutY="14.0" prefHeight="50.0" spacing="20.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <Button fx:id="btToggleTrend" mnemonicParsing="false" onAction="#onToggleTrending" prefWidth="100.0" text=" Start Trend">
+                  <Button fx:id="btToggleTrend" defaultButton="true" disable="true" mnemonicParsing="false" onAction="#onToggleTrending" prefWidth="100.0" text=" Start Trend">
                      <HBox.margin>
                         <Insets left="5.0" />
                      </HBox.margin>
