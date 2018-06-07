@@ -679,38 +679,37 @@ public class DesignerApplication {
 	void showDashboard() throws Exception {
 		PlantEntity entity = getPhysicalModelController().getSelectedEntity();
 
-		if (dashboardDialogController == null) {
-			FXMLLoader dialogLoader = FXMLLoaderFactory.dashboardDialogLoader();
-			AnchorPane pane = (AnchorPane) dialogLoader.getRoot();
+		FXMLLoader dialogLoader = FXMLLoaderFactory.dashboardDialogLoader();
+		AnchorPane pane = (AnchorPane) dialogLoader.getRoot();
 
-			// Create the dialog Stage.
-			Stage dialogStage = new Stage(StageStyle.DECORATED);
-			dialogStage.setTitle("OEE Dashboard for " + entity.getDisplayString());
-			dialogStage.initModality(Modality.NONE);
-			Scene scene = new Scene(pane);
-			dialogStage.setScene(scene);
+		// Create the dialog Stage.
+		Stage dialogStage = new Stage(StageStyle.DECORATED);
+		dialogStage.setTitle("OEE Dashboard for " + entity.getDisplayString());
+		dialogStage.initModality(Modality.NONE);
+		Scene scene = new Scene(pane);
+		dialogStage.setScene(scene);
 
-			// get the controller
-			dashboardDialogController = dialogLoader.getController();
-			dashboardDialogController.setDialogStage(dialogStage);
+		// get the controller
+		dashboardDialogController = dialogLoader.getController();
+		dashboardDialogController.setDialogStage(dialogStage);
 
-			// load the content
-			FXMLLoader dashboardLoader = FXMLLoaderFactory.dashboardLoader();
-			SplitPane spDashboard = (SplitPane) dashboardLoader.getRoot();
+		// load the content
+		FXMLLoader dashboardLoader = FXMLLoaderFactory.dashboardLoader();
+		SplitPane spDashboard = (SplitPane) dashboardLoader.getRoot();
 
-			pane.getChildren().add(0, spDashboard);
+		pane.getChildren().add(0, spDashboard);
 
-			AnchorPane.setTopAnchor(spDashboard, 0.0);
-			AnchorPane.setBottomAnchor(spDashboard, 50.0);
-			AnchorPane.setLeftAnchor(spDashboard, 0.0);
-			AnchorPane.setRightAnchor(spDashboard, 0.0);
+		AnchorPane.setTopAnchor(spDashboard, 0.0);
+		AnchorPane.setBottomAnchor(spDashboard, 50.0);
+		AnchorPane.setLeftAnchor(spDashboard, 0.0);
+		AnchorPane.setRightAnchor(spDashboard, 0.0);
 
-			DashboardController dashboardController = dashboardLoader.getController();
-			dashboardController.enableRefresh(true);
+		DashboardController dashboardController = dashboardLoader.getController();
+		dashboardController.enableRefresh(true);
 
-			dashboardDialogController.setDashboardController(dashboardController);
-		}
-		dashboardDialogController.getDashboardController().setupEquipmentLoss((Equipment) entity);
+		dashboardDialogController.setDashboardController(dashboardController);
+
+		dashboardController.setupEquipmentLoss((Equipment) entity);
 
 		// Show the dialog and wait until the user closes it
 		if (!dashboardDialogController.getDialogStage().isShowing()) {

@@ -167,9 +167,11 @@ public class OpcDaTrendController extends OpcDaController implements OpcDaDataCh
 				// state
 				lbState.setText(status.getServerState());
 				lbState.setTextFill(DataSourceConnectionController.CONNECTED_COLOR);
+				trendChartController.enableTrending(true);
 			} else {
 				lbState.setText(ConnectionState.DISCONNECTED.toString());
 				lbState.setTextFill(DataSourceConnectionController.DISCONNECTED_COLOR);
+				trendChartController.enableTrending(false);
 			}
 			break;
 
@@ -177,12 +179,14 @@ public class OpcDaTrendController extends OpcDaController implements OpcDaDataCh
 			piConnection.setVisible(true);
 			lbState.setText(ConnectionState.CONNECTING.toString());
 			lbState.setTextFill(DataSourceConnectionController.CONNECTING_COLOR);
+			trendChartController.enableTrending(false);
 			break;
 
 		case DISCONNECTED:
 			piConnection.setVisible(false);
 			lbState.setText(ConnectionState.DISCONNECTED.toString());
 			lbState.setTextFill(DataSourceConnectionController.DISCONNECTED_COLOR);
+			trendChartController.enableTrending(false);
 			break;
 
 		default:

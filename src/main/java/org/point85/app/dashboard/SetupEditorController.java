@@ -1,6 +1,7 @@
 package org.point85.app.dashboard;
 
 import java.time.Duration;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,7 +85,15 @@ public class SetupEditorController extends EventEditorController {
 				OeeEventType.MATL_CHANGE);
 
 		if (lastRecord != null) {
-			lastRecord.setEndTime(setupEvent.getStartTime());
+			OffsetDateTime newStart = setupEvent.getStartTime();
+			OffsetDateTime lastStart = lastRecord.getStartTime();
+
+			if (newStart.isBefore(lastStart)) {
+				throw new Exception("The new setup start time of " + newStart
+						+ " cannot be before the last start time of " + lastStart);
+			}
+
+			lastRecord.setEndTime(newStart);
 			Duration duration = Duration.between(lastRecord.getStartTime(), lastRecord.getEndTime());
 			lastRecord.setDuration(duration);
 

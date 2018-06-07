@@ -36,7 +36,7 @@ public class ProductionEditorController extends EventEditorController {
 
 	public void initializeEditor(OeeEvent event) throws Exception {
 		productionEvent = event;
-		
+
 		equipmentMaterial = null;
 		rbGood.setSelected(false);
 		rbReject.setSelected(false);
@@ -74,22 +74,20 @@ public class ProductionEditorController extends EventEditorController {
 	}
 
 	private EquipmentMaterial getEquipmentMaterial() throws Exception {
+		// get from equipment material
+		Equipment equipment = productionEvent.getEquipment();
+		OeeEvent lastSetup = PersistenceService.instance().fetchLastEvent(equipment, OeeEventType.MATL_CHANGE);
+
+		if (lastSetup == null) {
+			throw new Exception("No setup record found for equipment " + equipment.getName());
+		}
+
+		Material material = lastSetup.getMaterial();
+		equipmentMaterial = equipment.getEquipmentMaterial(material);
+
 		if (equipmentMaterial == null) {
-			// get from equipment material
-			Equipment equipment = productionEvent.getEquipment();
-			OeeEvent lastSetup = PersistenceService.instance().fetchLastEvent(equipment, OeeEventType.MATL_CHANGE);
-
-			if (lastSetup == null) {
-				throw new Exception("No setup record found for equipment " + equipment.getName());
-			}
-
-			Material material = lastSetup.getMaterial();
-			equipmentMaterial = equipment.getEquipmentMaterial(material);
-
-			if (equipmentMaterial == null) {
-				throw new Exception("No rate definition found for equipment " + equipment.getName() + " and material "
-						+ material.getDisplayString());
-			}
+			throw new Exception("No rate definition found for equipment " + equipment.getName() + " and material "
+					+ material.getDisplayString());
 		}
 		return equipmentMaterial;
 	}
