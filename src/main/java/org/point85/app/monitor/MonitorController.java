@@ -498,8 +498,10 @@ public class MonitorController {
 			dashboardController.setupEquipmentLoss((Equipment) selectedEntity);
 			dashboardController.enableRefresh(true);
 		} else {
+			dashboardController.setupEquipmentLoss(null);
 			dashboardController.enableRefresh(false);
 		}
+		dashboardController.onRefresh();
 	}
 
 	@FXML
@@ -576,7 +578,11 @@ public class MonitorController {
 	}
 
 	void updateDashboard(CollectorResolvedEventMessage message) throws Exception {
-		dashboardController.update((CollectorResolvedEventMessage) message);
+		TreeItem<EntityNode> entityItem = tvEntities.getSelectionModel().getSelectedItem();
+
+		if (entityItem != null && (entityItem.getValue().getPlantEntity() instanceof Equipment)) {
+			dashboardController.update((CollectorResolvedEventMessage) message);
+		}
 	}
 
 	@FXML

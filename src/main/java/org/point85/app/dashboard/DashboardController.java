@@ -34,7 +34,6 @@ import org.point85.domain.oee.TimeLoss;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Equipment;
 import org.point85.domain.plant.Material;
-import org.point85.domain.plant.PlantEntity;
 import org.point85.domain.plant.Reason;
 import org.point85.domain.script.OeeEventType;
 import org.point85.domain.uom.Quantity;
@@ -1178,6 +1177,12 @@ public class DashboardController extends DialogController implements CategoryCli
 	}
 
 	public void update(CollectorResolvedEventMessage message) throws Exception {
+		// check if this message is for the selected equipment
+		if (equipmentLoss != null && !equipmentLoss.getEquipment().getName().equals(message.getEquipmentName())) {
+			return;
+		}
+
+		// update the UI
 		OeeEventType resolverType = message.getResolverType();
 
 		switch (resolverType) {
@@ -1207,10 +1212,8 @@ public class DashboardController extends DialogController implements CategoryCli
 
 		case PROD_GOOD: {
 			// good production
-			UnitOfMeasure uom = DomainUtils.getUomBySymbol(message.getUom());
+			UnitOfMeasure uom = DomainUtils.getUomBySymbol(message.getUomSymbol());
 			Quantity delta = new Quantity(message.getAmount(), uom);
-
-			setCurrentEquipmentLoss(message.getEquipmentName());
 			Quantity good = equipmentLoss.incrementGoodQuantity(delta);
 			lbiGoodProduction.setValue(good.getAmount(), false);
 			break;
@@ -1218,10 +1221,8 @@ public class DashboardController extends DialogController implements CategoryCli
 
 		case PROD_REJECT: {
 			// reject and rework
-			UnitOfMeasure uom = DomainUtils.getUomBySymbol(message.getUom());
+			UnitOfMeasure uom = DomainUtils.getUomBySymbol(message.getUomSymbol());
 			Quantity delta = new Quantity(message.getAmount(), uom);
-
-			setCurrentEquipmentLoss(message.getEquipmentName());
 			Quantity reject = equipmentLoss.incrementRejectQuantity(delta);
 			lbiRejectProduction.setValue(reject.getAmount(), true);
 			break;
@@ -1229,9 +1230,8 @@ public class DashboardController extends DialogController implements CategoryCli
 
 		case PROD_STARTUP: {
 			// startup and yield
-			UnitOfMeasure uom = DomainUtils.getUomBySymbol(message.getUom());
+			UnitOfMeasure uom = DomainUtils.getUomBySymbol(message.getUomSymbol());
 			Quantity delta = new Quantity(message.getAmount(), uom);
-			setCurrentEquipmentLoss(message.getEquipmentName());
 			Quantity startup = equipmentLoss.incrementStartupQuantity(delta);
 			lbiStartupProduction.setValue(startup.getAmount(), true);
 			break;
@@ -1251,10 +1251,25 @@ public class DashboardController extends DialogController implements CategoryCli
 	}
 
 	@FXML
-	private void onRefresh() {
+	public void onRefresh() {
 		try {
 			// clear previous calculation
-			equipmentLoss.reset();
+			if (equipmentLoss != null) {
+				equipmentLoss.reset();
+			}
+
+			tiJobMaterial.setText("");
+			tiJobMaterial.setDescription("");
+
+			tiAvailability.setText("");
+			tiAvailability.setDescription("");
+
+			lbiGoodProduction.setFormatString(PROD_FORMAT + " ");
+			lbiGoodProduction.setValue(0.0d, false);
+			lbiRejectProduction.setFormatString(PROD_FORMAT + " ");
+			lbiRejectProduction.setValue(0.0d, false);
+			lbiStartupProduction.setFormatString(PROD_FORMAT + " ");
+			lbiStartupProduction.setValue(0.0d, false);
 
 			// time period
 			LocalDate from = dpStartDate.getValue();
@@ -1299,11 +1314,6 @@ public class DashboardController extends DialogController implements CategoryCli
 				setups = PersistenceService.instance().fetchSetupsForPeriod(equipment, odtFrom, odtTo);
 			}
 
-			if (setups.isEmpty()) {
-				throw new Exception(
-						"The material being produced must be specified for equipment " + equipment.getName());
-			}
-
 			// add setup events
 			equipmentLoss.getEventRecords().addAll(setups);
 
@@ -1337,10 +1347,11 @@ public class DashboardController extends DialogController implements CategoryCli
 			Collections.sort(cbMaterials.getItems());
 
 			// last setup
-			OeeEvent lastSetup = setups.get(setups.size() - 1);
-
-			tiJobMaterial.setDescription(lastSetup.getMaterial().getDisplayString());
-			tiJobMaterial.setText(lastSetup.getJob());
+			if (!setups.isEmpty()) {
+				OeeEvent lastSetup = setups.get(setups.size() - 1);
+				tiJobMaterial.setDescription(lastSetup.getMaterial().getDisplayString());
+				tiJobMaterial.setText(lastSetup.getJob());
+			}
 
 			// show the production
 			String symbol = null;
@@ -1588,19 +1599,14 @@ public class DashboardController extends DialogController implements CategoryCli
 	}
 
 	public void setupEquipmentLoss(Equipment equipment) {
-		if (lossMap.get(equipment.getName()) == null) {
-			lossMap.put(equipment.getName(), new EquipmentLoss(equipment));
-		}
-		equipmentLoss = lossMap.get(equipment.getName());
-	}
+		if (equipment == null) {
+			equipmentLoss = null;
+		} else {
+			equipmentLoss = lossMap.get(equipment.getName());
 
-	private synchronized void setCurrentEquipmentLoss(String equipmentName) {
-		if (lossMap.get(equipmentName) == null) {
-			// new equipment
-			PlantEntity entity = PersistenceService.instance().fetchPlantEntityByName(equipmentName);
-
-			if (entity instanceof Equipment) {
-				setupEquipmentLoss((Equipment) entity);
+			if (equipmentLoss == null) {
+				equipmentLoss = new EquipmentLoss(equipment);
+				lossMap.put(equipment.getName(), equipmentLoss);
 			}
 		}
 	}
