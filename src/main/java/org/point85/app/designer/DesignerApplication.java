@@ -145,25 +145,14 @@ public class DesignerApplication {
 				logger.info("Populating top entity nodes.");
 			}
 
-			int populate = 1;
-
-			if (populate == 1) {
-				Platform.runLater(() -> {
-					try {
-						physicalModelController.populateTopEntityNodes();
-					} catch (Exception e) {
-						AppUtils.showErrorDialog(
-								"Unable to fetch plant entities.  Check database connection.  " + e.getMessage());
-					}
-				});
-			} else if (populate == 2) {
+			Platform.runLater(() -> {
 				try {
 					physicalModelController.populateTopEntityNodes();
 				} catch (Exception e) {
 					AppUtils.showErrorDialog(
 							"Unable to fetch plant entities.  Check database connection.  " + e.getMessage());
 				}
-			}
+			});
 
 		} catch (Exception e) {
 			logger.error(e.getMessage());
