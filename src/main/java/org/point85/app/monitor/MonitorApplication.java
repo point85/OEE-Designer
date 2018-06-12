@@ -42,9 +42,6 @@ public class MonitorApplication implements MessageListener {
 	// RabbitMQ message publisher/subscriber
 	private final List<PublisherSubscriber> monitorPubSubs = new ArrayList<>();
 
-	// counter for pubsub queues
-	private int queueCounter = 0;
-
 	// status monitor
 	private MonitorController monitorController;
 
@@ -140,14 +137,14 @@ public class MonitorApplication implements MessageListener {
 					PublisherSubscriber pubsub = new PublisherSubscriber();
 
 					// connect to broker and listen for messages
-					String queueName = getClass().getSimpleName() + "_" + queueCounter++;
+					String queueName = getClass().getSimpleName() + "_" + System.currentTimeMillis();
 
 					List<RoutingKey> routingKeys = new ArrayList<>();
 					routingKeys.add(RoutingKey.NOTIFICATION_MESSAGE);
 					routingKeys.add(RoutingKey.NOTIFICATION_STATUS);
 					routingKeys.add(RoutingKey.RESOLVED_EVENT);
 
-					pubsub.connectAndSubscribe(brokerHostName, brokerPort, brokerUser, brokerPassword, queueName, false,
+					pubsub.connectAndSubscribe(brokerHostName, brokerPort, brokerUser, brokerPassword, queueName,
 							routingKeys, this);
 
 					pubSubs.put(key, pubsub);

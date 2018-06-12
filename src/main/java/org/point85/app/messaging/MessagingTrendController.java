@@ -38,8 +38,6 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
 
 public class MessagingTrendController extends DesignerDialogController implements MessageListener, DataSubscriber {
-	private static int queueCounter = 0;
-
 	// RabbitMQ message publisher/subscriber
 	private PublisherSubscriber pubsub;
 
@@ -147,9 +145,6 @@ public class MessagingTrendController extends DesignerDialogController implement
 
 	@Override
 	public void subscribeToDataSource() throws Exception {
-		String queueName = getClass().getSimpleName() + "_" + queueCounter;
-		queueCounter++;
-
 		if (pubsub == null) {
 			pubsub = new PublisherSubscriber();
 
@@ -157,8 +152,11 @@ public class MessagingTrendController extends DesignerDialogController implement
 
 			List<RoutingKey> keys = new ArrayList<>();
 			keys.add(RoutingKey.EQUIPMENT_SOURCE_EVENT);
+			
+			String queueName = getClass().getSimpleName() + "_" + System.currentTimeMillis();
+			
 			pubsub.connectAndSubscribe(source.getHost(), source.getPort(), source.getUserName(),
-					source.getUserPassword(), queueName, false, keys, this);
+					source.getUserPassword(), queueName, keys, this);
 
 			// start the trend
 			trendChartController.onStartTrending();
