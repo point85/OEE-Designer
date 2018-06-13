@@ -30,6 +30,7 @@ import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.SplitPane;
+import javafx.stage.WindowEvent;
 
 public class OpcDaTrendController extends OpcDaController implements OpcDaDataChangeListener, DataSubscriber {
 	// trend chart
@@ -77,6 +78,10 @@ public class OpcDaTrendController extends OpcDaController implements OpcDaDataCh
 			trendChartController.setProvider(this);
 
 			setImages();
+
+			getDialogStage().setOnCloseRequest((WindowEvent event1) -> {
+				onDisconnect();
+			});
 		}
 		return spTrendChart;
 	}
@@ -138,6 +143,7 @@ public class OpcDaTrendController extends OpcDaController implements OpcDaDataCh
 		try {
 			// disconnect
 			terminateConnectionService();
+			opcDaGroup = null;
 			updateConnectionStatus(ConnectionState.DISCONNECTED);
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);

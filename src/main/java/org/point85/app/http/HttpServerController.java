@@ -10,6 +10,7 @@ import org.point85.app.Images;
 import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.DataSourceType;
 import org.point85.domain.http.HttpSource;
+import org.point85.domain.http.OeeHttpServer;
 import org.point85.domain.persistence.PersistenceService;
 
 import javafx.collections.FXCollections;
@@ -18,7 +19,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
 public class HttpServerController extends DialogController {
@@ -30,12 +30,6 @@ public class HttpServerController extends DialogController {
 
 	@FXML
 	private TextField tfHost;
-
-	@FXML
-	private TextField tfUserName;
-
-	@FXML
-	private PasswordField pfPassword;
 
 	@FXML
 	private TextField tfPort;
@@ -99,9 +93,7 @@ public class HttpServerController extends DialogController {
 			dataSource = cbDataSources.getSelectionModel().getSelectedItem();
 
 			this.tfHost.setText(dataSource.getHost());
-			this.tfUserName.setText(dataSource.getUserName());
 			this.tfPort.setText(String.valueOf(dataSource.getPort()));
-			this.pfPassword.setText(dataSource.getUserPassword());
 			this.tfDescription.setText(dataSource.getDescription());
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
@@ -127,10 +119,8 @@ public class HttpServerController extends DialogController {
 	private void onNewDataSource() {
 		try {
 			this.tfHost.clear();
-			this.tfUserName.clear();
-			this.pfPassword.clear();
 			this.tfDescription.clear();
-			this.tfPort.clear();
+			this.tfPort.setText(String.valueOf(OeeHttpServer.DEFAULT_PORT));
 			this.cbDataSources.getSelectionModel().clearSelection();
 
 			this.setSource(null);
@@ -146,8 +136,6 @@ public class HttpServerController extends DialogController {
 			HttpSource dataSource = getSource();
 
 			dataSource.setHost(getHost());
-			dataSource.setUserName(getUserName());
-			dataSource.setPassword(getPassword());
 			dataSource.setPort(getPort());
 			dataSource.setDescription(getDescription());
 
@@ -187,14 +175,6 @@ public class HttpServerController extends DialogController {
 
 	String getHost() {
 		return this.tfHost.getText();
-	}
-
-	String getUserName() {
-		return this.tfUserName.getText();
-	}
-
-	String getPassword() {
-		return this.pfPassword.getText();
 	}
 
 	Integer getPort() {

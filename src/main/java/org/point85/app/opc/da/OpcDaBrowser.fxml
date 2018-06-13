@@ -106,7 +106,7 @@
                               <Insets />
                            </GridPane.margin>
                         </Label>
-                        <Label text="Prog Id" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+                        <Label text="ProgID" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
                            <GridPane.margin>
                               <Insets />
                            </GridPane.margin>
@@ -125,7 +125,7 @@
                         <Button fx:id="btNew" mnemonicParsing="false" onAction="#onNewDataSource" prefWidth="100.0" text="New" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                         <Button fx:id="btDelete" mnemonicParsing="false" onAction="#onDeleteDataSource" prefWidth="100.0" text="Delete" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
                         <Label text="or edit a connection " GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-                        <TextField fx:id="tfProgId" promptText="Enter Server Prog Id" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <TextField fx:id="tfProgId" promptText="Enter Server ProgID" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <Label text="Choose Saved" GridPane.halignment="RIGHT" />
                      </children>
                   </GridPane>

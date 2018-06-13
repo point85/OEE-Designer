@@ -160,12 +160,12 @@ public class TrendChartController extends DesignerController {
 		AnchorPane pane2 = (AnchorPane) loader.getRoot();
 		spCharts.getChildren().add(OUTPUT_VALUE_VIEW, pane2);
 		outputValueController = loader.getController();
-		outputValueController.setInterpolation(InterpolationType.STAIR_STEP);
 		outputValueController.getChart().setTitle("Output Value");
 		outputValueController.getChart().getYAxis().setLabel("Value");
 
 		cbInterpolationTypes.setItems(interpolationTypes);
 		interpolationTypes.addAll(InterpolationType.values());
+		cbInterpolationTypes.getSelectionModel().select(InterpolationType.LINEAR);
 
 		tfPointCount.setText(String.valueOf(dataCount));
 
@@ -318,14 +318,15 @@ public class TrendChartController extends DesignerController {
 		}
 
 		// add to table with limit
-		tvResolvedItems.setItems(null);
-		if (resolvedItems.size() > dataCount) {
-			resolvedItems.remove(0);
-		}
-		resolvedItems.add(resolvedItem);
+		synchronized (tvResolvedItems) {
+			if (resolvedItems.size() > dataCount) {
+				resolvedItems.remove(0);
+			}
+			resolvedItems.add(resolvedItem);
 
-		tvResolvedItems.setItems(resolvedItems);
-		tvResolvedItems.refresh();
+			tvResolvedItems.setItems(resolvedItems);
+			tvResolvedItems.refresh();
+		}
 
 		return resolvedItem;
 	}
@@ -371,7 +372,7 @@ public class TrendChartController extends DesignerController {
 			spUpdatePeriod.getValueFactory().setValue(millis / 1000);
 		}
 	}
-	
+
 	public void enableTrending(boolean enable) {
 		btToggleTrend.setDisable(!enable);
 	}
@@ -400,12 +401,7 @@ public class TrendChartController extends DesignerController {
 	}
 
 	private void onPlot() {
-		InterpolationType interpolation = this.cbInterpolationTypes.getSelectionModel().getSelectedItem();
-
-		// state is always stair-step
-		if (interpolation != null) {
-			inputValueController.setInterpolation(interpolation);
-		}
+		onSelectInterpolationType();
 	}
 
 	public void onStopTrending() {
@@ -439,7 +435,12 @@ public class TrendChartController extends DesignerController {
 	@FXML
 	private void onSelectInterpolationType() {
 		InterpolationType type = this.cbInterpolationTypes.getSelectionModel().getSelectedItem();
-		inputValueController.setInterpolation(type);
+
+		if (rbInputValue.isSelected()) {
+			inputValueController.setInterpolation(type);
+		} else {
+			outputValueController.setInterpolation(type);
+		}
 	}
 
 	@FXML

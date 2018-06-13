@@ -92,7 +92,7 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 
 		// loopback test
 		btLoopback.setGraphic(ImageManager.instance().getImageView(Images.EXECUTE));
-		btLoopback.setContentDisplay(ContentDisplay.RIGHT);
+		btLoopback.setContentDisplay(ContentDisplay.LEFT);
 	}
 
 	public void setScriptResolver(EventResolver eventResolver) throws Exception {
@@ -216,6 +216,10 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 			OutputStream os = conn.getOutputStream();
 			os.write(payload.getBytes());
 			os.flush();
+
+			if (logger.isInfoEnabled()) {
+				logger.info("Posted equipment event request to URL " + url + " with value " + value);
+			}
 
 			int codeGroup = conn.getResponseCode() / 100;
 

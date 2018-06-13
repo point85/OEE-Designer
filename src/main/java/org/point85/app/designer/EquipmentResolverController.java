@@ -372,12 +372,10 @@ public class EquipmentResolverController extends DesignerController {
 
 	@FXML
 	private void onSelectResolverType() {
-		if (getSelectedResolver() != null) {
-			OeeEventType type = this.cbResolverTypes.getSelectionModel().getSelectedItem();
+		OeeEventType type = this.cbResolverTypes.getSelectionModel().getSelectedItem();
 
-			if (type != null) {
-				getSelectedResolver().setType(type);
-			}
+		if (type != null && getSelectedResolver() != null) {
+			getSelectedResolver().setType(type);
 		}
 	}
 
@@ -605,7 +603,7 @@ public class EquipmentResolverController extends DesignerController {
 		this.tfUpdatePeriod.setText(null);
 
 		this.btAddResolver.setText(ADD);
-		
+
 		this.tvResolvers.getSelectionModel().clearSelection();
 	}
 

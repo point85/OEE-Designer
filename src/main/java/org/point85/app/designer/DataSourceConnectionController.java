@@ -1,8 +1,5 @@
 package org.point85.app.designer;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import org.point85.app.AppUtils;
 
 import javafx.application.Platform;
@@ -31,12 +28,6 @@ public abstract class DataSourceConnectionController extends DesignerDialogContr
 	public static final Color CONNECTING_COLOR = Color.BLUE;
 	public static final Color DISCONNECTED_COLOR = Color.BLACK;
 
-	// timer to check for long-running connection
-	private Timer connectionTimer;
-
-	// the long-running connection task
-	private ConnectionCancellerTask cancellerTask;
-
 	// OPC DA server connection service
 	private ConnectionService service;
 
@@ -57,11 +48,6 @@ public abstract class DataSourceConnectionController extends DesignerDialogContr
 	}
 
 	protected void startConnectionService() {
-		// start the timeout timer
-		cancellerTask = new ConnectionCancellerTask();
-		connectionTimer = new Timer();
-		connectionTimer.schedule(cancellerTask, MAX_WAIT_SECONDS * 1000);
-
 		// create connection service
 		service = new ConnectionService();
 
@@ -73,8 +59,6 @@ public abstract class DataSourceConnectionController extends DesignerDialogContr
 				if (value != null && value.equals(NO_ERROR)) {
 					try {
 						// successful connect
-						connectionTimer.cancel();
-
 						onConnectionSucceeded();
 
 					} catch (Exception e) {
@@ -151,18 +135,6 @@ public abstract class DataSourceConnectionController extends DesignerDialogContr
 					return errorMessage;
 				}
 			};
-		}
-	}
-
-	private class ConnectionCancellerTask extends TimerTask {
-		@Override
-		public void run() {
-			try {
-				onCancelConnect();
-				cancellerTask.cancel();
-			} catch (Exception e) {
-				// ignore
-			}
 		}
 	}
 }
