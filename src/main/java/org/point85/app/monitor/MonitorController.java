@@ -12,13 +12,10 @@ import org.point85.app.Images;
 import org.point85.app.dashboard.DashboardController;
 import org.point85.domain.collector.CollectorState;
 import org.point85.domain.collector.DataCollector;
-import org.point85.domain.messaging.CollectorCommandMessage;
 import org.point85.domain.messaging.CollectorNotificationMessage;
 import org.point85.domain.messaging.CollectorResolvedEventMessage;
 import org.point85.domain.messaging.CollectorServerStatusMessage;
 import org.point85.domain.messaging.NotificationSeverity;
-import org.point85.domain.messaging.PublisherSubscriber;
-import org.point85.domain.messaging.RoutingKey;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.EntityLevel;
 import org.point85.domain.plant.Equipment;
@@ -615,22 +612,12 @@ public class MonitorController {
 				return;
 			}
 
-			// create the message
-			CollectorCommandMessage message = new CollectorCommandMessage(monitorApp.getHostname(),
-					monitorApp.getIpAddress());
-			message.setCommand(CollectorCommandMessage.CMD_RESTART);
-
-			// publisher
-			PublisherSubscriber pubsub = new PublisherSubscriber();
-
 			if (collector.getBrokerHost() == null) {
-				throw new Exception("The collector does not have a messaging broker configured.");
+				throw new Exception("The collector " + collector.getDisplayString()
+						+ " does not have a messaging broker configured.");
 			}
 
-			pubsub.connect(collector.getBrokerHost(), collector.getBrokerPort(), collector.getBrokerUserName(),
-					collector.getBrokerUserPassword());
-
-			pubsub.publish(message, RoutingKey.COMMAND_MESSAGE, 30);
+			monitorApp.sendRestartCommand(collector);
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}

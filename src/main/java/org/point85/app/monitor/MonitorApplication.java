@@ -2,11 +2,11 @@ package org.point85.app.monitor;
 
 import java.net.InetAddress;
 import java.net.URL;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.point85.app.AppUtils;
 import org.point85.app.ImageManager;
@@ -14,6 +14,7 @@ import org.point85.app.Images;
 import org.point85.domain.collector.CollectorState;
 import org.point85.domain.collector.DataCollector;
 import org.point85.domain.messaging.ApplicationMessage;
+import org.point85.domain.messaging.CollectorCommandMessage;
 import org.point85.domain.messaging.CollectorNotificationMessage;
 import org.point85.domain.messaging.CollectorResolvedEventMessage;
 import org.point85.domain.messaging.CollectorServerStatusMessage;
@@ -36,11 +37,20 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class MonitorApplication implements MessageListener {
+	// sec for a command message to live in the queue
+	private static final int COMMAND_TTL_SEC = 30;
+
+	// notification message TTL
+	private static final int NOTIFICATION_TTL_SEC = 30;
+
 	// logger
 	private static final Logger logger = LoggerFactory.getLogger(MonitorApplication.class);
 
-	// RabbitMQ message publisher/subscriber
-	private final List<PublisherSubscriber> monitorPubSubs = new ArrayList<>();
+	// RabbitMQ message publisher/subscribers for incoming notifications
+	private final List<PublisherSubscriber> notificationPubSubs = new ArrayList<>();
+
+	// RMQ brokers for outgoing commands
+	private final Map<String, PublisherSubscriber> commandPubSubs = new HashMap<>();
 
 	// status monitor
 	private MonitorController monitorController;
@@ -104,8 +114,13 @@ public class MonitorApplication implements MessageListener {
 			PersistenceService.instance().close();
 
 			// disconnect from notification pubsubs
-			for (PublisherSubscriber pubSub : monitorPubSubs) {
+			for (PublisherSubscriber pubSub : notificationPubSubs) {
 				pubSub.disconnect();
+			}
+
+			// disconnect from command pubsubs
+			for (Entry<String, PublisherSubscriber> entry : commandPubSubs.entrySet()) {
+				entry.getValue().disconnect();
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
@@ -148,7 +163,7 @@ public class MonitorApplication implements MessageListener {
 							routingKeys, this);
 
 					pubSubs.put(key, pubsub);
-					monitorPubSubs.add(pubsub);
+					notificationPubSubs.add(pubsub);
 				}
 			}
 		}
@@ -197,7 +212,7 @@ public class MonitorApplication implements MessageListener {
 		}
 	}
 
-	void sendStartupNotification() throws UnknownHostException {
+	void sendStartupNotification() throws Exception {
 		// our host
 		CollectorNotificationMessage msg = new CollectorNotificationMessage(hostname, ip);
 
@@ -205,13 +220,34 @@ public class MonitorApplication implements MessageListener {
 		msg.setText("Monitor startup");
 
 		try {
-			if (!monitorPubSubs.isEmpty()) {
-				PublisherSubscriber pubSub = monitorPubSubs.get(0);
+			if (!notificationPubSubs.isEmpty()) {
+				PublisherSubscriber pubSub = notificationPubSubs.get(0);
 
-				pubSub.publish(msg, RoutingKey.NOTIFICATION_MESSAGE, 3600);
+				pubSub.publish(msg, RoutingKey.NOTIFICATION_MESSAGE, NOTIFICATION_TTL_SEC);
 			}
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}
+	}
+
+	void sendRestartCommand(DataCollector collector) throws Exception {
+		String key = collector.getBrokerHost() + ":" + collector.getBrokerPort();
+		PublisherSubscriber pubSub = commandPubSubs.get(key);
+
+		if (pubSub == null) {
+			// new publisher
+			pubSub = new PublisherSubscriber();
+
+			pubSub.connect(collector.getBrokerHost(), collector.getBrokerPort(), collector.getBrokerUserName(),
+					collector.getBrokerUserPassword());
+
+			commandPubSubs.put(key, pubSub);
+		}
+
+		// create the message
+		CollectorCommandMessage message = new CollectorCommandMessage(getHostname(), getIpAddress());
+		message.setCommand(CollectorCommandMessage.CMD_RESTART);
+
+		pubSub.publish(message, RoutingKey.COMMAND_MESSAGE, COMMAND_TTL_SEC);
 	}
 }

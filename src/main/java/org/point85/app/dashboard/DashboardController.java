@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -33,6 +34,7 @@ import org.point85.domain.oee.TimeCategory;
 import org.point85.domain.oee.TimeLoss;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Equipment;
+import org.point85.domain.plant.EquipmentMaterial;
 import org.point85.domain.plant.Material;
 import org.point85.domain.plant.Reason;
 import org.point85.domain.script.OeeEventType;
@@ -189,6 +191,9 @@ public class DashboardController extends DialogController implements CategoryCli
 	private BarChartItem bciAvailability;
 	private BarChartItem bciPerformance;
 	private BarChartItem bciQuality;
+
+	// OEE tile
+	private Tile tiOee;
 
 	// availability tile
 	private Tile tiAvailability;
@@ -765,6 +770,14 @@ public class DashboardController extends DialogController implements CategoryCli
 
 		float oee = equipmentLoss.calculateOeePercentage();
 		bciOee.setValue(oee);
+
+		// target OEE
+		EquipmentMaterial eqm = equipmentLoss.getEquipmentMaterial();
+
+		if (eqm != null) {
+			String targetOee = String.format(Locale.getDefault(), OEE_FORMAT, eqm.getOeeTarget());
+			tiOee.setText("Target OEE: " + targetOee);
+		}
 	}
 
 	private void onSelectFirstLevelPareto() throws Exception {
@@ -1132,8 +1145,8 @@ public class DashboardController extends DialogController implements CategoryCli
 		bciQuality = new BarChartItem("Quality", 0, Tile.ORANGE);
 		bciQuality.setFormatString(OEE_FORMAT);
 
-		Tile tiOee = TileBuilder.create().skinType(SkinType.BAR_CHART).prefSize(TILE_WIDTH, TILE_HEIGHT)
-				.title("Overall Equipment Effectiveness").text("Current OEE")
+		tiOee = TileBuilder.create().skinType(SkinType.BAR_CHART).prefSize(TILE_WIDTH, TILE_HEIGHT)
+				.title("Overall Equipment Effectiveness").text("OEE Target")
 				.barChartItems(bciOee, bciAvailability, bciPerformance, bciQuality).decimals(0).sortedData(false)
 				.animated(false).build();
 

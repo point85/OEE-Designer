@@ -226,7 +226,7 @@
                                                 <Insets />
                                              </GridPane.margin>
                                           </Label>
-                                          <PasswordField fx:id="pfPassword" promptText="Password" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                          <PasswordField fx:id="pfPassword" promptText="User Password" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                                           <Label text="Keystore" GridPane.halignment="RIGHT" />
                                           <Label text="Password" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
                                           <TextField fx:id="tfKeystoreFileName" promptText="Keystore file name" GridPane.columnIndex="1" />

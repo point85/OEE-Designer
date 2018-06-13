@@ -605,6 +605,8 @@ public class EquipmentResolverController extends DesignerController {
 		this.tfUpdatePeriod.setText(null);
 
 		this.btAddResolver.setText(ADD);
+		
+		this.tvResolvers.getSelectionModel().clearSelection();
 	}
 
 	@FXML

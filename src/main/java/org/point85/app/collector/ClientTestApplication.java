@@ -780,7 +780,7 @@ public class ClientTestApplication implements MessageListener {
 			msg.setSourceId(sourceId);
 			msg.setValue(value);
 
-			pubsub.publish(msg, RoutingKey.EQUIPMENT_SOURCE_EVENT);
+			pubsub.publish(msg, RoutingKey.EQUIPMENT_SOURCE_EVENT, 30);
 		} catch (Exception e) {
 			showErrorDialog(e);
 		}
