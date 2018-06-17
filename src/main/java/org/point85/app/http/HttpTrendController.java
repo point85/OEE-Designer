@@ -193,26 +193,36 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 
 	@FXML
 	private void onLoopbackTest() {
+		HttpURLConnection conn = null;
 		try {
-			// POST event
+			// get the HTTP data source
 			EventResolver eventResolver = trendChartController.getEventResolver();
 			HttpSource dataSource = (HttpSource) eventResolver.getDataSource();
 
+			// build the URL for an equipment event
 			URL url = new URL(
 					"http://" + dataSource.getHost() + ":" + dataSource.getPort() + '/' + OeeHttpServer.EVENT_EP);
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+			// create a connection for a JSON POST request
+			conn = (HttpURLConnection) url.openConnection();
 			conn.setDoOutput(true);
 			conn.setRequestMethod("POST");
 			conn.setRequestProperty("Content-Type", "application/json");
 
+			// the value to send (must match the configured resolver)
 			String value = tfLoopbackValue.getText();
 
+			// timestamp when sent
 			String timestamp = DomainUtils.offsetDateTimeToString(OffsetDateTime.now());
 
+			// create the data transfer event object
 			EquipmentEventRequestDto dto = new EquipmentEventRequestDto(eventResolver.getSourceId(), value, timestamp);
+
+			// serialize the body
 			Gson gson = new Gson();
 			String payload = gson.toJson(dto);
 
+			// make the request
 			OutputStream os = conn.getOutputStream();
 			os.write(payload.getBytes());
 			os.flush();
@@ -221,11 +231,11 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 				logger.info("Posted equipment event request to URL " + url + " with value " + value);
 			}
 
+			// check the response code
 			int codeGroup = conn.getResponseCode() / 100;
 
 			if (codeGroup != 2) {
-				String msg = "Failed : error code : " + conn.getResponseCode();
-				msg += "\nEquipment event response ...";
+				String msg = "Post failed, error code : " + conn.getResponseCode() + "\nEquipment event response ...";
 
 				BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
 				String output;
@@ -235,10 +245,10 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 				}
 				throw new Exception(msg);
 			}
-
-			conn.disconnect();
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
+		} finally {
+			conn.disconnect();
 		}
 	}
 

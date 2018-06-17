@@ -625,10 +625,6 @@ public class EquipmentResolverController extends DesignerController {
 	@FXML
 	private void onAddOrUpdateResolver() {
 		try {
-			if (selectedEventResolver == null) {
-				return;
-			}
-
 			PlantEntity plantEntity = getApp().getPhysicalModelController().getSelectedEntity();
 
 			if (!(plantEntity instanceof Equipment)) {
@@ -637,6 +633,9 @@ public class EquipmentResolverController extends DesignerController {
 
 			// equipment
 			Equipment equipment = (Equipment) plantEntity;
+			
+			// ensure that we have a resolver
+			getSelectedResolver();
 
 			// collector
 			selectedEventResolver.setCollector(cbCollectors.getSelectionModel().getSelectedItem());
