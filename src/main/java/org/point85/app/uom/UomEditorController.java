@@ -328,11 +328,11 @@ public class UomEditorController extends DesignerDialogController {
 			// Show the dialog and wait until the user closes it
 			uomImportController.getDialogStage().showAndWait();
 
-			UnitOfMeasure uom = uomImportController.getSelectedUom();
-
-			if (uom == null) {
+			if (uomImportController.isCancelled()) {
 				return;
 			}
+
+			UnitOfMeasure uom = uomImportController.getSelectedUom();
 
 			// make sure that there is a non-null category
 			uom.getCategory();

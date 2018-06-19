@@ -6,6 +6,8 @@ import javafx.scene.control.ContentDisplay;
 import javafx.stage.Stage;
 
 public abstract class DialogController {
+	private boolean isCancelled = false;
+	
 	@FXML
 	protected Button btOK;
 
@@ -28,12 +30,16 @@ public abstract class DialogController {
 
 	@FXML
 	protected void onOK() {
+		isCancelled = false;
+		
 		// close dialog
 		this.dialogStage.close();
 	}
 
 	@FXML
 	protected void onCancel() {
+		isCancelled = true;
+		
 		// close dialog
 		this.dialogStage.close();
 	}
@@ -52,5 +58,9 @@ public abstract class DialogController {
 			// just one button
 			btOK.setText("Done");
 		}
+	}
+	
+	public boolean isCancelled() {
+		return isCancelled;
 	}
 }

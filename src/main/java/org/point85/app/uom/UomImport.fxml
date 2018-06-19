@@ -28,7 +28,7 @@
               </rowConstraints>
                <children>
                   <ComboBox fx:id="cbAvailableUnits" maxWidth="1.7976931348623157E308" prefWidth="200.0" promptText="Choose unit" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" />
-                  <Label text="From Unit Of Measure" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                  <Label text="Unit Of Measure" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                      <padding>
                         <Insets right="5.0" />
                      </padding>
