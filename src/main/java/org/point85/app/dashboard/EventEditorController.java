@@ -40,14 +40,14 @@ abstract class EventEditorController extends DialogController {
 		if (event.getStartTime() != null) {
 			dpStartDate.setValue(event.getStartTime().toLocalDate());
 			int seconds = event.getStartTime().toLocalTime().toSecondOfDay();
-			tfStartTime.setText(AppUtils.stringFromDuration(Duration.ofSeconds(seconds)));
+			tfStartTime.setText(AppUtils.stringFromDuration(Duration.ofSeconds(seconds), true));
 		}
 
 		// end date and time
 		if (event.getEndTime() != null) {
 			dpEndDate.setValue(event.getEndTime().toLocalDate());
 			int seconds = event.getEndTime().toLocalTime().toSecondOfDay();
-			tfEndTime.setText(AppUtils.stringFromDuration(Duration.ofSeconds(seconds)));
+			tfEndTime.setText(AppUtils.stringFromDuration(Duration.ofSeconds(seconds), true));
 		}
 	}
 

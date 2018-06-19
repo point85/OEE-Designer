@@ -147,7 +147,7 @@ public class AvailabilityEditorController extends EventEditorController {
 
 		// duration
 		if (availabilityEvent.getDuration() != null) {
-			tfDuration.setText(AppUtils.stringFromDuration(availabilityEvent.getDuration()));
+			tfDuration.setText(AppUtils.stringFromDuration(availabilityEvent.getDuration(), true));
 		}
 	}
 }

@@ -201,13 +201,18 @@ public abstract class AppUtils {
 		return String.format("%02d", time.getHour()) + ":" + String.format("%02d", time.getMinute());
 	}
 
-	public static String stringFromDuration(Duration duration) {
+	public static String stringFromDuration(Duration duration, boolean withSeconds) {
 		long totalSeconds = duration.getSeconds();
 		long hours = totalSeconds / 3600;
 		long minutes = (totalSeconds - hours * 3600) / 60;
 		long seconds = totalSeconds - (hours * 3600) - (minutes * 60);
 
-		return String.format("%02d", hours) + ":" + String.format("%02d", minutes) + ":" + String.format("%02d", seconds);
+		String value = String.format("%02d", hours) + ":" + String.format("%02d", minutes);
+
+		if (withSeconds) {
+			value += ":" + String.format("%02d", seconds);
+		}
+		return value;
 	}
 
 	// get the UOM from cache first, then from the database if not found
@@ -275,7 +280,7 @@ public abstract class AppUtils {
 		}
 		return symbol;
 	}
-	
+
 	public static Double stringToDouble(String number) throws Exception {
 		try {
 			return Double.valueOf(number);
@@ -283,7 +288,7 @@ public abstract class AppUtils {
 			throw new Exception(number + " is not a number.");
 		}
 	}
-	
+
 	public static Long stringToLong(String number) throws Exception {
 		try {
 			return Long.valueOf(number);

@@ -310,19 +310,19 @@
                                           <TextField fx:id="tfPeriodName" maxWidth="1.7976931348623157E308" promptText="Name of the period" GridPane.columnIndex="1" />
                                           <TextField fx:id="tfPeriodDescription" promptText="Description of the period" GridPane.columnIndex="3" GridPane.columnSpan="3" />
                                           <Label text="Description" GridPane.columnIndex="2" GridPane.halignment="RIGHT" />
-                                          <Label text="Start" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                                          <Label text=" Start Date" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                                              <GridPane.margin>
                                                 <Insets />
                                              </GridPane.margin>
                                           </Label>
-                                          <Label text="Time of Day" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                                          <Label text="Time (HH:mm)" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                                              <GridPane.margin>
                                                 <Insets />
                                              </GridPane.margin>
                                           </Label>
                                           <DatePicker fx:id="dpPeriodStartDate" maxWidth="1.7976931348623157E308" promptText="Starting date" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                           <TextField fx:id="tfPeriodStartTime" promptText="HH:mm" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                                          <Label text="Duration" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                                          <Label text="Duration (hr:min)" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
                                           <TextField fx:id="tfPeriodDuration" promptText="hr:min" GridPane.columnIndex="5" GridPane.rowIndex="1" />
                                           <Label text="Loss Category" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
                                           <ComboBox fx:id="cbLosses" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="2" />

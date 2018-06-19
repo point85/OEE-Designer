@@ -377,7 +377,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 
 		// shift duration
 		shiftDurationColumn.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(AppUtils.stringFromDuration(cellDataFeatures.getValue().getDuration()));
+			return new SimpleStringProperty(AppUtils.stringFromDuration(cellDataFeatures.getValue().getDuration(), false));
 		});
 	}
 
@@ -423,7 +423,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 
 		// rotation duration
 		rotationDurationColumn.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(AppUtils.stringFromDuration(cellDataFeatures.getValue().getDuration()));
+			return new SimpleStringProperty(AppUtils.stringFromDuration(cellDataFeatures.getValue().getDuration(), false));
 		});
 
 		// rotation table view row selection listener
@@ -505,7 +505,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		// team average hours worked per week
 		teamAvgHoursColumn.setCellValueFactory(cellDataFeatures -> {
 			return new SimpleStringProperty(
-					AppUtils.stringFromDuration(cellDataFeatures.getValue().getHoursWorkedPerWeek()));
+					AppUtils.stringFromDuration(cellDataFeatures.getValue().getHoursWorkedPerWeek(), false));
 		});
 	}
 
@@ -543,7 +543,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 
 		// period duration
 		periodDurationColumn.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(AppUtils.stringFromDuration(cellDataFeatures.getValue().getDuration()));
+			return new SimpleStringProperty(AppUtils.stringFromDuration(cellDataFeatures.getValue().getDuration(), false));
 		});
 
 		// period loss
@@ -644,7 +644,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		this.tfShiftStart.setText(AppUtils.stringFromLocalTime(startTime));
 
 		Duration duration = shift.getDuration();
-		this.tfShiftDuration.setText(AppUtils.stringFromDuration(duration));
+		this.tfShiftDuration.setText(AppUtils.stringFromDuration(duration, false));
 	}
 
 	// called on team selection in table listener
@@ -718,7 +718,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		this.tfPeriodStartTime.setText(AppUtils.stringFromLocalTime(startTime));
 
 		// duration
-		this.tfPeriodDuration.setText(AppUtils.stringFromDuration(period.getDuration()));
+		this.tfPeriodDuration.setText(AppUtils.stringFromDuration(period.getDuration(), false));
 
 		// loss
 		this.cbLosses.getSelectionModel().select(period.getLossCategory());
@@ -808,7 +808,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		btRemoveRotationSegment.setContentDisplay(ContentDisplay.LEFT);
 
 		// new non-working period
-		btNewNonWorkingPeriod.setGraphic(ImageManager.instance().getImageView(Images.REMOVE));
+		btNewNonWorkingPeriod.setGraphic(ImageManager.instance().getImageView(Images.NEW));
 		btNewNonWorkingPeriod.setContentDisplay(ContentDisplay.LEFT);
 
 		// add non-working period

@@ -22,7 +22,7 @@
       </HBox>
       <TitledPane animated="false" collapsible="false" layoutX="121.0" layoutY="107.0" text="Choose Example Work Schedule" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+          <AnchorPane minHeight="0.0" minWidth="0.0">
                <children>
                   <TableView fx:id="tvTemplates" layoutX="182.0" layoutY="98.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <columns>
