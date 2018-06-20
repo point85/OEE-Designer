@@ -14,8 +14,8 @@ import org.point85.domain.plant.EquipmentEventResolver;
 import org.point85.domain.plant.Material;
 import org.point85.domain.plant.PlantEntity;
 import org.point85.domain.plant.Reason;
-import org.point85.domain.script.ResolverFunction;
 import org.point85.domain.script.EventResolver;
+import org.point85.domain.script.ResolverFunction;
 
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -31,15 +31,14 @@ import javafx.scene.input.KeyEvent;
 
 public class EventResolverController extends DesignerDialogController {
 
+	// the Nashorn script engine
 	private ScriptEngine scriptEngine;
 
+	// resolver for the event
 	private EventResolver eventResolver;
 
 	// test value
 	private Object value;
-
-	// last test value
-	protected Object lastValue;
 
 	@FXML
 	private Button btExecute;
@@ -193,17 +192,13 @@ public class EventResolverController extends DesignerDialogController {
 		ResolverFunction resolver = evaluateFunction(functionScript);
 
 		// invoke script function
-		result = resolver.invoke(scriptEngine, getApp().getAppContext(), value, lastValue);
+		result = resolver.invoke(scriptEngine, getApp().getAppContext(), value, eventResolver);
 
 		return result;
 	}
 
 	protected void setValue(Object value) {
 		this.value = value;
-	}
-
-	protected void setLastValue(Object value) {
-		this.lastValue = value;
 	}
 
 	public void showFunctionScript(EventResolver scriptResolver) throws Exception {
@@ -256,37 +251,37 @@ public class EventResolverController extends DesignerDialogController {
 				}
 				taResult.appendText(reason.toString() + '\n');
 				break;
-				
+
 			case PROD_GOOD:
 				if (result != null) {
 					taResult.appendText("Good Production: " + result.toString() + '\n');
 				}
 				break;
-				
+
 			case PROD_REJECT:
 				if (result != null) {
 					taResult.appendText("Reject and rework Production: " + result.toString() + '\n');
 				}
 				break;
-				
+
 			case PROD_STARTUP:
 				if (result != null) {
 					taResult.appendText("Startup and yield Production: " + result.toString() + '\n');
 				}
 				break;
-				
+
 			case JOB_CHANGE:
 				if (result != null) {
 					taResult.appendText("Job " + result.toString() + '\n');
 				}
 				break;
-				
+
 			case MATL_CHANGE:
 				if (result != null) {
 					taResult.appendText("Material: " + result.toString() + '\n');
 				}
 				break;
-				
+
 			default:
 				taResult.appendText(result.toString() + '\n');
 				break;
@@ -364,7 +359,7 @@ public class EventResolverController extends DesignerDialogController {
 			if (valueStr == null) {
 				return;
 			}
-			setLastValue(valueStr);
+			this.eventResolver.setLastValue(valueStr);
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}

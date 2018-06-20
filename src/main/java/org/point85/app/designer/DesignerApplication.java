@@ -647,6 +647,8 @@ public class DesignerApplication {
 
 		if (client == null) {
 			client = new DaOpcClient();
+			
+			// add to context
 			appContext.getOpcDaClients().add(client);
 		}
 		return client;
@@ -715,6 +717,8 @@ public class DesignerApplication {
 
 		if (client == null) {
 			client = new UaOpcClient();
+			
+			// add to context
 			appContext.getOpcUaClients().add(client);
 		}
 		return client;

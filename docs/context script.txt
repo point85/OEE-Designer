@@ -1,0 +1,16 @@
+var eq = resolver.getEquipment();
+var logger = context.getLogger();
+
+logger.info('Material: ' + context.getMaterial(eq));
+logger.info('Job: ' + context.getJob(eq));
+logger.info("Source id: " + resolver.getSourceId());
+logger.info("Last value: " + resolver.getLastValue());
+logger.info("Last timestamp: " + resolver.getLastTimestamp());
+logger.info(context.toString());
+
+var msg = Java.type("org.point85.domain.messaging.EquipmentEventMessage")
+var routingKey = Java.type("org.point85.domain.messaging.RoutingKey").EQUIPMENT_SOURCE_EVENT
+msg.setSourceId('Can Filler 1.MESSAGING.JOB_CHANGE');
+msg.setValue('Job100');
+
+context.getPublisherSubscriber().publish(msg, routingKey, 30);

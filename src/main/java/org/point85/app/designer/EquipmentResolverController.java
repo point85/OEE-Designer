@@ -549,13 +549,13 @@ public class EquipmentResolverController extends DesignerController {
 
 			if (eventResolver.getScript() == null || eventResolver.getScript().length() == 0) {
 				if (resolverType.isAvailability()) {
-					eventResolver.setScript(EventResolver.getPassthroughScript());
+					eventResolver.setScript(EventResolver.createDefaultAvailabilityFunction());
 				} else if (resolverType.isProduction()) {
-					eventResolver.setScript(EventResolver.getDefaultProductionScript());
+					eventResolver.setScript(EventResolver.createDefaultProductionFunction());
 				} else if (resolverType.isMaterial()) {
-					eventResolver.setScript(EventResolver.getDefaultMaterialScript());
+					eventResolver.setScript(EventResolver.createDefaultMaterialFunction());
 				} else if (resolverType.isJob()) {
-					eventResolver.setScript(EventResolver.getDefaultJobScript());
+					eventResolver.setScript(EventResolver.createDefaultJobFunction());
 				}
 			}
 

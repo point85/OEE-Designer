@@ -6,6 +6,8 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.OffsetDateTime;
+import java.util.Collection;
+import java.util.Iterator;
 
 import org.point85.app.AppUtils;
 import org.point85.app.FXMLLoaderFactory;
@@ -118,19 +120,34 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 	}
 
 	public void onStartServer() {
+		HttpSource dataSource = (HttpSource) trendChartController.getEventResolver().getDataSource();
+		int port = dataSource.getPort();
+		
+		// check to see if already started
+		Collection<OeeHttpServer> servers = getApp().getAppContext().getHttpServers();
+		
+		Iterator<OeeHttpServer> iter = servers.iterator();
+		
+		while (iter.hasNext()) {
+			OeeHttpServer server = iter.next();
+			if (server.getListeningPort() == port) {
+				httpServer = server;
+				break;
+			}
+		}
+		
 		try {
 			if (httpServer == null) {
 				piConnection.setVisible(true);
-
-				HttpSource dataSource = (HttpSource) trendChartController.getEventResolver().getDataSource();
-
-				int port = dataSource.getPort();
 
 				httpServer = new OeeHttpServer(port);
 				httpServer.setDataChangeListener(this);
 				httpServer.startup();
 				lbState.setText(httpServer.getState().toString());
 				lbState.setTextFill(STARTED_COLOR);
+				
+				// add to context
+				getApp().getAppContext().addHttpServer(httpServer);
 
 				// start the trend
 				trendChartController.onStartTrending();
@@ -148,6 +165,10 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 			trendChartController.onStopTrending();
 
 			httpServer.shutdown();
+			
+			// remove from context
+			getApp().getAppContext().removeHttpServer(httpServer);
+			
 			lbState.setText(httpServer.getState().toString());
 			lbState.setTextFill(STOPPED_COLOR);
 			httpServer = null;

@@ -39,7 +39,7 @@ import javafx.scene.control.TextField;
 
 public class MessagingTrendController extends DesignerDialogController implements MessageListener, DataSubscriber {
 	// RabbitMQ message publisher/subscriber
-	private PublisherSubscriber pubsub;
+	private PublisherSubscriber pubSub;
 
 	// trend chart
 	private TrendChartController trendChartController;
@@ -140,13 +140,13 @@ public class MessagingTrendController extends DesignerDialogController implement
 
 	@Override
 	public boolean isSubscribed() {
-		return pubsub != null ? true : false;
+		return pubSub != null ? true : false;
 	}
 
 	@Override
 	public void subscribeToDataSource() throws Exception {
-		if (pubsub == null) {
-			pubsub = new PublisherSubscriber();
+		if (pubSub == null) {
+			pubSub = new PublisherSubscriber();
 
 			MessagingSource source = (MessagingSource) trendChartController.getEventResolver().getDataSource();
 
@@ -155,8 +155,11 @@ public class MessagingTrendController extends DesignerDialogController implement
 			
 			String queueName = getClass().getSimpleName() + "_" + System.currentTimeMillis();
 			
-			pubsub.connectAndSubscribe(source.getHost(), source.getPort(), source.getUserName(),
+			pubSub.connectAndSubscribe(source.getHost(), source.getPort(), source.getUserName(),
 					source.getUserPassword(), queueName, keys, this);
+			
+			// add to context
+			getApp().getAppContext().addMessagingClient(pubSub);
 
 			// start the trend
 			trendChartController.onStartTrending();
@@ -165,11 +168,11 @@ public class MessagingTrendController extends DesignerDialogController implement
 
 	@Override
 	public void unsubscribeFromDataSource() throws Exception {
-		if (pubsub == null) {
+		if (pubSub == null) {
 			return;
 		}
-		pubsub.disconnect();
-		pubsub = null;
+		pubSub.disconnect();
+		pubSub = null;
 
 		// stop the trend
 		trendChartController.onStopTrending();
@@ -217,7 +220,7 @@ public class MessagingTrendController extends DesignerDialogController implement
 	@FXML
 	private void onLoopbackTest() {
 		try {
-			if (pubsub == null) {
+			if (pubSub == null) {
 				throw new Exception("The trend is not connected to an RMQ broker.");
 			}
 
@@ -230,7 +233,7 @@ public class MessagingTrendController extends DesignerDialogController implement
 			msg.setSourceId(sourceId);
 			msg.setValue(value);
 
-			pubsub.publish(msg, RoutingKey.EQUIPMENT_SOURCE_EVENT, 30);
+			pubSub.publish(msg, RoutingKey.EQUIPMENT_SOURCE_EVENT, 30);
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}
