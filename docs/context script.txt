@@ -1,16 +1,19 @@
-var eq = resolver.getEquipment();
-var logger = context.getLogger();
+var eq = resolver.getEquipment()
+var logger = context.getLogger()
 
-logger.info('Material: ' + context.getMaterial(eq));
-logger.info('Job: ' + context.getJob(eq));
-logger.info("Source id: " + resolver.getSourceId());
-logger.info("Last value: " + resolver.getLastValue());
-logger.info("Last timestamp: " + resolver.getLastTimestamp());
-logger.info(context.toString());
+logger.info('Material: ' + context.getMaterial(eq))
+logger.info('Job: ' + context.getJob(eq))
+logger.info("Source id: " + resolver.getSourceId())
+logger.info("Last value: " + resolver.getLastValue())
+logger.info("Last timestamp: " + resolver.getLastTimestamp())
+logger.info(context.toString())
 
-var msg = Java.type("org.point85.domain.messaging.EquipmentEventMessage")
-var routingKey = Java.type("org.point85.domain.messaging.RoutingKey").EQUIPMENT_SOURCE_EVENT
-msg.setSourceId('Can Filler 1.MESSAGING.JOB_CHANGE');
-msg.setValue('Job100');
+var CollectorNotificationMessage = Java.type("org.point85.domain.messaging.CollectorNotificationMessage")
+var routingKey = Java.type("org.point85.domain.messaging.RoutingKey").NOTIFICATION_MESSAGE
+var severity = Java.type("org.point85.domain.messaging.NotificationSeverity").INFO
 
-context.getPublisherSubscriber().publish(msg, routingKey, 30);
+var msg = new CollectorNotificationMessage("localhost", "192.168.0.8")
+msg.setText("This is a notification")
+msg.setSeverity(severity)
+
+context.getPublisherSubscriber().publish(msg, routingKey, 30)

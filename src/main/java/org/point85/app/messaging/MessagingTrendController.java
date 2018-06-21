@@ -159,7 +159,7 @@ public class MessagingTrendController extends DesignerDialogController implement
 					source.getUserPassword(), queueName, keys, this);
 			
 			// add to context
-			getApp().getAppContext().addMessagingClient(pubSub);
+			getApp().getAppContext().addPublisherSubscriber(pubSub);
 
 			// start the trend
 			trendChartController.onStartTrending();
@@ -172,6 +172,9 @@ public class MessagingTrendController extends DesignerDialogController implement
 			return;
 		}
 		pubSub.disconnect();
+		
+		// remove from app context
+		getApp().getAppContext().removePublisherSubscriber(pubSub);
 		pubSub = null;
 
 		// stop the trend
