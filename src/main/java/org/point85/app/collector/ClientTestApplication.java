@@ -34,7 +34,7 @@ import org.point85.domain.messaging.ApplicationMessage;
 import org.point85.domain.messaging.EquipmentEventMessage;
 import org.point85.domain.messaging.MessageListener;
 import org.point85.domain.messaging.MessagingSource;
-import org.point85.domain.messaging.PublisherSubscriber;
+import org.point85.domain.messaging.MessagingClient;
 import org.point85.domain.messaging.RoutingKey;
 import org.point85.domain.oee.TimeLoss;
 import org.point85.domain.persistence.PersistenceService;
@@ -75,7 +75,7 @@ public class ClientTestApplication implements MessageListener {
 	private static final Logger logger = LoggerFactory.getLogger(ClientTestApplication.class);
 
 	// AMQP message publisher/subscriber
-	private final Map<String, PublisherSubscriber> pubsubs = new HashMap<>();
+	private final Map<String, MessagingClient> pubsubs = new HashMap<>();
 
 	// materials
 	private final ObservableList<Material> materials = FXCollections.observableList(new ArrayList<>());
@@ -217,7 +217,7 @@ public class ClientTestApplication implements MessageListener {
 	public void stop() {
 		// disconnect RMQ brokers
 		try {
-			for (Entry<String, PublisherSubscriber> entry : pubsubs.entrySet()) {
+			for (Entry<String, MessagingClient> entry : pubsubs.entrySet()) {
 				entry.getValue().disconnect();
 			}
 		} catch (Exception e) {
@@ -763,10 +763,10 @@ public class ClientTestApplication implements MessageListener {
 
 			String hostPort = source.getHost() + ":" + source.getPort();
 
-			PublisherSubscriber pubsub = pubsubs.get(hostPort);
+			MessagingClient pubsub = pubsubs.get(hostPort);
 
 			if (pubsub == null) {
-				pubsub = new PublisherSubscriber();
+				pubsub = new MessagingClient();
 				pubsubs.put(hostPort, pubsub);
 
 				pubsub.connect(source.getHost(), source.getPort(), source.getUserName(), source.getUserPassword());

@@ -21,7 +21,7 @@ import org.point85.domain.messaging.CollectorServerStatusMessage;
 import org.point85.domain.messaging.MessageListener;
 import org.point85.domain.messaging.MessageType;
 import org.point85.domain.messaging.NotificationSeverity;
-import org.point85.domain.messaging.PublisherSubscriber;
+import org.point85.domain.messaging.MessagingClient;
 import org.point85.domain.messaging.RoutingKey;
 import org.point85.domain.persistence.PersistenceService;
 import org.slf4j.Logger;
@@ -47,10 +47,10 @@ public class MonitorApplication implements MessageListener {
 	private static final Logger logger = LoggerFactory.getLogger(MonitorApplication.class);
 
 	// RabbitMQ message publisher/subscribers for incoming notifications
-	private final List<PublisherSubscriber> notificationPubSubs = new ArrayList<>();
+	private final List<MessagingClient> notificationPubSubs = new ArrayList<>();
 
 	// RMQ brokers for outgoing commands
-	private final Map<String, PublisherSubscriber> commandPubSubs = new HashMap<>();
+	private final Map<String, MessagingClient> commandPubSubs = new HashMap<>();
 
 	// status monitor
 	private MonitorController monitorController;
@@ -114,12 +114,12 @@ public class MonitorApplication implements MessageListener {
 			PersistenceService.instance().close();
 
 			// disconnect from notification pubsubs
-			for (PublisherSubscriber pubSub : notificationPubSubs) {
+			for (MessagingClient pubSub : notificationPubSubs) {
 				pubSub.disconnect();
 			}
 
 			// disconnect from command pubsubs
-			for (Entry<String, PublisherSubscriber> entry : commandPubSubs.entrySet()) {
+			for (Entry<String, MessagingClient> entry : commandPubSubs.entrySet()) {
 				entry.getValue().disconnect();
 			}
 		} catch (Exception e) {
@@ -136,7 +136,7 @@ public class MonitorApplication implements MessageListener {
 		List<DataCollector> collectors = PersistenceService.instance().fetchCollectorsByState(states);
 
 		// connect to notification brokers for consuming only
-		Map<String, PublisherSubscriber> pubSubs = new HashMap<>();
+		Map<String, MessagingClient> pubSubs = new HashMap<>();
 
 		for (DataCollector collector : collectors) {
 			String brokerHostName = collector.getBrokerHost();
@@ -149,7 +149,7 @@ public class MonitorApplication implements MessageListener {
 
 				if (pubSubs.get(key) == null) {
 					// new publisher
-					PublisherSubscriber pubsub = new PublisherSubscriber();
+					MessagingClient pubsub = new MessagingClient();
 
 					// connect to broker and listen for messages
 					String queueName = getClass().getSimpleName() + "_" + System.currentTimeMillis();
@@ -176,7 +176,7 @@ public class MonitorApplication implements MessageListener {
 		}
 
 		// ack it now
-		channel.basicAck(envelope.getDeliveryTag(), PublisherSubscriber.ACK_MULTIPLE);
+		channel.basicAck(envelope.getDeliveryTag(), MessagingClient.ACK_MULTIPLE);
 
 		MessageType type = message.getMessageType();
 
@@ -221,7 +221,7 @@ public class MonitorApplication implements MessageListener {
 
 		try {
 			if (!notificationPubSubs.isEmpty()) {
-				PublisherSubscriber pubSub = notificationPubSubs.get(0);
+				MessagingClient pubSub = notificationPubSubs.get(0);
 
 				pubSub.publish(msg, RoutingKey.NOTIFICATION_MESSAGE, NOTIFICATION_TTL_SEC);
 			}
@@ -232,11 +232,11 @@ public class MonitorApplication implements MessageListener {
 
 	void sendRestartCommand(DataCollector collector) throws Exception {
 		String key = collector.getBrokerHost() + ":" + collector.getBrokerPort();
-		PublisherSubscriber pubSub = commandPubSubs.get(key);
+		MessagingClient pubSub = commandPubSubs.get(key);
 
 		if (pubSub == null) {
 			// new publisher
-			pubSub = new PublisherSubscriber();
+			pubSub = new MessagingClient();
 
 			pubSub.connect(collector.getBrokerHost(), collector.getBrokerPort(), collector.getBrokerUserName(),
 					collector.getBrokerUserPassword());

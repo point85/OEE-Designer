@@ -17,7 +17,7 @@ import org.point85.domain.messaging.EquipmentEventMessage;
 import org.point85.domain.messaging.MessageListener;
 import org.point85.domain.messaging.MessageType;
 import org.point85.domain.messaging.MessagingSource;
-import org.point85.domain.messaging.PublisherSubscriber;
+import org.point85.domain.messaging.MessagingClient;
 import org.point85.domain.messaging.RoutingKey;
 import org.point85.domain.script.EventResolver;
 
@@ -39,7 +39,7 @@ import javafx.scene.control.TextField;
 
 public class MessagingTrendController extends DesignerDialogController implements MessageListener, DataSubscriber {
 	// RabbitMQ message publisher/subscriber
-	private PublisherSubscriber pubSub;
+	private MessagingClient pubSub;
 
 	// trend chart
 	private TrendChartController trendChartController;
@@ -146,7 +146,7 @@ public class MessagingTrendController extends DesignerDialogController implement
 	@Override
 	public void subscribeToDataSource() throws Exception {
 		if (pubSub == null) {
-			pubSub = new PublisherSubscriber();
+			pubSub = new MessagingClient();
 
 			MessagingSource source = (MessagingSource) trendChartController.getEventResolver().getDataSource();
 
@@ -159,7 +159,7 @@ public class MessagingTrendController extends DesignerDialogController implement
 					source.getUserPassword(), queueName, keys, this);
 			
 			// add to context
-			getApp().getAppContext().addPublisherSubscriber(pubSub);
+			getApp().getAppContext().addMessagingClient(pubSub);
 
 			// start the trend
 			trendChartController.onStartTrending();
@@ -174,7 +174,7 @@ public class MessagingTrendController extends DesignerDialogController implement
 		pubSub.disconnect();
 		
 		// remove from app context
-		getApp().getAppContext().removePublisherSubscriber(pubSub);
+		getApp().getAppContext().removeMessagingClient(pubSub);
 		pubSub = null;
 
 		// stop the trend
@@ -188,7 +188,7 @@ public class MessagingTrendController extends DesignerDialogController implement
 		}
 
 		// ack it now
-		channel.basicAck(envelope.getDeliveryTag(), PublisherSubscriber.ACK_MULTIPLE);
+		channel.basicAck(envelope.getDeliveryTag(), MessagingClient.ACK_MULTIPLE);
 
 		MessageType type = message.getMessageType();
 

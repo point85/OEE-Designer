@@ -1,13 +1,15 @@
 var eq = resolver.getEquipment()
 var logger = context.getLogger()
 
-logger.info('Material: ' + context.getMaterial(eq))
-logger.info('Job: ' + context.getJob(eq))
+// log info
+logger.info("Material: " + context.getMaterial(eq))
+logger.info("Job: " + context.getJob(eq))
 logger.info("Source id: " + resolver.getSourceId())
 logger.info("Last value: " + resolver.getLastValue())
 logger.info("Last timestamp: " + resolver.getLastTimestamp())
 logger.info(context.toString())
 
+// send RMQ message
 var CollectorNotificationMessage = Java.type("org.point85.domain.messaging.CollectorNotificationMessage")
 var routingKey = Java.type("org.point85.domain.messaging.RoutingKey").NOTIFICATION_MESSAGE
 var severity = Java.type("org.point85.domain.messaging.NotificationSeverity").INFO
@@ -16,4 +18,8 @@ var msg = new CollectorNotificationMessage("localhost", "192.168.0.8")
 msg.setText("This is a notification")
 msg.setSeverity(severity)
 
-context.getPublisherSubscriber().publish(msg, routingKey, 30)
+context.getMessagingClient().publish(msg, routingKey, 30)
+
+// OPC DA read
+variant = context.getOpcDaClient().synchRead("Saw-toothed Waves.Int2")
+logger.info("Value: " +  variant.getValueAsNumber())	
