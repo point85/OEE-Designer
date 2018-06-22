@@ -1,5 +1,8 @@
-var eq = resolver.getEquipment()
+// logger
 var logger = context.getLogger()
+
+// equipment
+var eq = resolver.getEquipment()
 
 // log info
 logger.info("Material: " + context.getMaterial(eq))
@@ -21,5 +24,39 @@ msg.setSeverity(severity)
 context.getMessagingClient().publish(msg, routingKey, 30)
 
 // OPC DA read
-variant = context.getOpcDaClient().synchRead("Saw-toothed Waves.Int2")
-logger.info("Value: " +  variant.getValueAsNumber())	
+var variant = context.getOpcDaClient().readSynch("Saw-toothed Waves.Int2")
+logger.info("Value: " +  variant.getValueAsNumber())
+
+// OPC DA write
+var OpcDaVariant = Java.type("org.point85.domain.opc.da.OpcDaVariant")
+var variant = new OpcDaVariant(100)
+context.getOpcDaClient().writeSynch("Data Type Examples.16 Bit Device.K Registers.Short1", variant)
+
+// OPC UA read current server time
+var NodeId = Java.type("org.eclipse.milo.opcua.stack.core.types.builtin.NodeId")
+var nodeId = new NodeId(0, 2258)
+var dataValue = context.getOpcUaClient().readSynch(nodeId)
+logger.info(dataValue.getValue().getValue())
+
+// OPC UA write integer value
+var NodeId = Java.type("org.eclipse.milo.opcua.stack.core.types.builtin.NodeId")
+var Variant = Java.type("org.eclipse.milo.opcua.stack.core.types.builtin.Variant")
+var nodeId = new NodeId(3, "Int32DataItem")
+var value = new Variant(100)
+code = context.getOpcUaClient().writeSynch(nodeId, value)
+
+if (code.isBad()) {
+	logger.error("Write failed, code = " + code.getValue())
+}
+
+// database query
+var service = Java.type("org.point85.domain.persistence.PersistenceService").instance()
+
+var sql = "Select top 10 EVENT_TYPE, JOB from OEE_EVENT order by START_TIME desc"
+var rows = service.getEntityManager().createNativeQuery(sql).getResultList()
+
+for (i = 0; i < rows.size(); i++) { 
+	var row = rows.get(i)
+	logger.info("Type: " + row[0] + ", Job: " + row[1])
+}
+

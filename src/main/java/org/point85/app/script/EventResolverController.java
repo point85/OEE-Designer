@@ -227,13 +227,9 @@ public class EventResolverController extends DesignerDialogController {
 	@FXML
 	private void onExecute() {
 		try {
-			if (eventResolver.getType() == null) {
-				throw new Exception("The script resolver type is null");
-			}
-
 			Object result = executeScript();
 
-			if (result == null) {
+			if (result == null || eventResolver.getType() == null) {
 				return;
 			}
 
