@@ -230,11 +230,10 @@ public class ClientTestApplication implements MessageListener {
 
 		// add the table view listener
 		ttvEntities.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
-			if (newValue == null) {
-				return;
-			}
 			try {
-				onSelectEntity(newValue.getValue());
+				if (newValue != null) {
+					onSelectEntity(newValue.getValue());
+				}
 			} catch (Exception e) {
 				showErrorDialog(e);
 			}
@@ -267,7 +266,9 @@ public class ClientTestApplication implements MessageListener {
 		// add the table view listener
 		ttvReasons.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
 			try {
-				onSelectReason(newValue.getValue());
+				if (newValue != null) {
+					onSelectReason(newValue.getValue());
+				}
 			} catch (Exception e) {
 				showErrorDialog(e);
 			}
@@ -310,7 +311,9 @@ public class ClientTestApplication implements MessageListener {
 		// add the table view listener for reason resolver selection
 		tvMaterials.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
 			try {
-				onSelectMaterial(newValue);
+				if (newValue != null) {
+					onSelectMaterial(newValue);
+				}
 			} catch (Exception e) {
 				showErrorDialog(e);
 			}
@@ -461,13 +464,17 @@ public class ClientTestApplication implements MessageListener {
 	}
 
 	private void onSelectMaterial(Material material) {
-		tfHttpValue.setText(material.getName());
-		tfRmqValue.setText(material.getName());
+		if (material != null) {
+			tfHttpValue.setText(material.getName());
+			tfRmqValue.setText(material.getName());
+		}
 	}
 
 	private void onSelectReason(Reason reason) {
-		tfHttpValue.setText(reason.getName());
-		tfRmqValue.setText(reason.getName());
+		if (reason != null) {
+			tfHttpValue.setText(reason.getName());
+			tfRmqValue.setText(reason.getName());
+		}
 	}
 
 	@FXML

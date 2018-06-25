@@ -61,8 +61,8 @@ public class OeeApplication extends Application {
 		final Task<String> startTask = new Task<String>() {
 			@Override
 			protected String call() throws Exception {
-				// wait for a database connection
-				PersistenceService.instance().getEntityManagerFactory();
+				// wait for a database connection by requesting an EntityManager
+				PersistenceService.instance().getEntityManager();
 				return "OK";
 			}
 		};
