@@ -84,7 +84,7 @@ public class SetupEditorController extends EventEditorController {
 		OeeEvent lastRecord = PersistenceService.instance().fetchLastEvent(setupEvent.getEquipment(),
 				OeeEventType.MATL_CHANGE);
 
-		if (lastRecord != null) {
+		if (lastRecord != null && !(lastRecord.getKey().equals(setupEvent.getKey()))) {
 			OffsetDateTime newStart = setupEvent.getStartTime();
 			OffsetDateTime lastStart = lastRecord.getStartTime();
 

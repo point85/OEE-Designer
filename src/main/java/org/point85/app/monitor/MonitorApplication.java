@@ -101,6 +101,10 @@ public class MonitorApplication implements MessageListener {
 			InetAddress address = InetAddress.getLocalHost();
 			hostname = address.getHostName();
 			ip = address.getHostAddress();
+			
+			if (logger.isInfoEnabled()) {
+				logger.info("Starting monitor on host " + hostname + " (" + ip + ")");
+			}
 
 			sendStartupNotification();
 		} catch (Exception e) {

@@ -66,16 +66,24 @@ public class CollectorServerStatus extends AbstractNotification {
 			return false;
 		}
 		CollectorServerStatus otherResolver = (CollectorServerStatus) other;
+		
+		String thisHost = getCollectorHost() ;
 
-		if (getCollectorHost() == null) {
-			return true;
-		}
-
-		if (!getCollectorHost().equalsIgnoreCase(otherResolver.getCollectorHost())) {
+		if (thisHost == null) {
 			return false;
 		}
 
-		return true;
+		// compare host names
+		if (thisHost.equalsIgnoreCase(otherResolver.getCollectorHost())) {
+			return true;
+		} else {
+			// compare host name (possible IP address) to other IP
+			if (thisHost.equalsIgnoreCase(otherResolver.getCollectorIpAddress())) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 }
