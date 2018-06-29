@@ -198,6 +198,9 @@ public class DashboardController extends DialogController implements CategoryCli
 	// availability tile
 	private Tile tiAvailability;
 
+	// production tile
+	private Tile tiProduction;
+
 	// job and material tile
 	private Tile tiJobMaterial;
 
@@ -777,6 +780,10 @@ public class DashboardController extends DialogController implements CategoryCli
 		if (eqm != null) {
 			String targetOee = String.format(Locale.getDefault(), OEE_FORMAT, eqm.getOeeTarget());
 			tiOee.setText("Target OEE: " + targetOee);
+			
+			Quantity actualSpeed = equipmentLoss.calculateActualSpeed(eqm.getRunRate());
+			String speed = String.format(Locale.getDefault(), PROD_FORMAT, actualSpeed.getAmount());
+			tiProduction.setText("Actual Speed: " + speed + " " + actualSpeed.getUOM().getSymbol());
 		}
 	}
 
@@ -1146,7 +1153,7 @@ public class DashboardController extends DialogController implements CategoryCli
 		bciQuality.setFormatString(OEE_FORMAT);
 
 		tiOee = TileBuilder.create().skinType(SkinType.BAR_CHART).prefSize(TILE_WIDTH, TILE_HEIGHT)
-				.title("Overall Equipment Effectiveness").text("OEE Target")
+				.title("Overall Equipment Effectiveness")
 				.barChartItems(bciOee, bciAvailability, bciPerformance, bciQuality).decimals(0).sortedData(false)
 				.animated(false).build();
 
@@ -1157,7 +1164,7 @@ public class DashboardController extends DialogController implements CategoryCli
 
 		String productionText = "Change in Quantity";
 
-		Tile tiProduction = TileBuilder.create().skinType(SkinType.LEADER_BOARD).prefSize(TILE_WIDTH, TILE_HEIGHT)
+		tiProduction = TileBuilder.create().skinType(SkinType.LEADER_BOARD).prefSize(TILE_WIDTH, TILE_HEIGHT)
 				.title("Current Production").text(productionText)
 				.leaderBoardItems(lbiGoodProduction, lbiRejectProduction, lbiStartupProduction).sortedData(false)
 				.animated(false).build();
@@ -1276,6 +1283,8 @@ public class DashboardController extends DialogController implements CategoryCli
 
 			tiAvailability.setText("");
 			tiAvailability.setDescription("");
+			
+			tiProduction.setText("");
 
 			lbiGoodProduction.setFormatString(PROD_FORMAT + " ");
 			lbiGoodProduction.setValue(0.0d, false);

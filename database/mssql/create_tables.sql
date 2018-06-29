@@ -330,6 +330,7 @@ CREATE TABLE [dbo].[OEE_EVENT](
 	[START_TIME] [datetimeoffset](3) NOT NULL,
 	[END_TIME] [datetimeoffset](3) NULL,
 	[SHIFT_KEY] [bigint] NULL,
+	[TEAM_KEY] [bigint] NULL,
 	[REASON_KEY] [bigint] NULL,
 	[DURATION] [bigint] NULL,
 	[EVENT_TYPE] [nvarchar](16) NOT NULL,

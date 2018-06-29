@@ -7,6 +7,7 @@ import org.point85.app.Images;
 import org.point85.app.charts.DataSubscriber;
 import org.point85.app.charts.TrendChartController;
 import org.point85.app.designer.DataSourceConnectionController;
+import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.opc.da.OpcDaDataChangeListener;
 import org.point85.domain.opc.da.OpcDaMonitoredGroup;
 import org.point85.domain.opc.da.OpcDaMonitoredItem;
@@ -249,9 +250,9 @@ public class OpcDaTrendController extends OpcDaController implements OpcDaDataCh
 	public void subscribeToDataSource() throws Exception {
 		if (opcDaGroup == null) {
 			// new group using equipment name
-			int updatePeriod = trendChartController.getEventResolver().getUpdatePeriod();
+			Integer updatePeriod = trendChartController.getEventResolver().getUpdatePeriod();
 			TagGroupInfo tagGroup = new TagGroupInfo(createGroupName());
-			tagGroup.setUpdatePeriod(updatePeriod);
+			tagGroup.setUpdatePeriod(updatePeriod != null ? updatePeriod.intValue() : CollectorDataSource.DEFAULT_UPDATE_PERIOD_MSEC);
 			tagGroup.addTagItem(monitoredTag);
 
 			// register for data change events

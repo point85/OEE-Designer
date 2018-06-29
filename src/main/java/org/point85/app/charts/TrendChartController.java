@@ -189,7 +189,6 @@ public class TrendChartController extends DesignerController {
 		tvResolvedItems.getSelectionModel().selectedItemProperty()
 				.addListener((observableValue, oldValue, newValue) -> {
 					try {
-						// TBD
 					} catch (Exception e) {
 						AppUtils.showErrorDialog(e);
 					}
@@ -216,7 +215,7 @@ public class TrendChartController extends DesignerController {
 			Object outputValue = cellDataFeatures.getValue().getOutputValue();
 
 			if (outputValue == null) {
-				outputValue = "";
+				outputValue = "null";
 			}
 			return new SimpleStringProperty(outputValue.toString());
 		});

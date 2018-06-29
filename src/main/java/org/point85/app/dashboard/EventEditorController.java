@@ -13,6 +13,7 @@ import org.point85.domain.DomainUtils;
 import org.point85.domain.collector.OeeEvent;
 import org.point85.domain.schedule.Shift;
 import org.point85.domain.schedule.ShiftInstance;
+import org.point85.domain.schedule.Team;
 import org.point85.domain.schedule.WorkSchedule;
 
 import javafx.fxml.FXML;
@@ -104,6 +105,7 @@ abstract class EventEditorController extends DialogController {
 
 		// set shift
 		Shift shift = null;
+		Team team = null;
 		WorkSchedule schedule = event.getEquipment().findWorkSchedule();
 
 		if (schedule != null) {
@@ -112,9 +114,11 @@ abstract class EventEditorController extends DialogController {
 			if (!shiftInstances.isEmpty()) {
 				// pick first one
 				shift = shiftInstances.get(0).getShift();
+				team = shiftInstances.get(0).getTeam();
 			}
 		}
 		event.setShift(shift);
+		event.setTeam(team);
 	}
 
 	@FXML
