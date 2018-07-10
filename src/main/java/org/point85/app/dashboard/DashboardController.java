@@ -77,6 +77,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
@@ -141,7 +142,13 @@ public class DashboardController extends DialogController implements CategoryCli
 	private DatePicker dpStartDate;
 
 	@FXML
+	private TextField tfStartTime;
+
+	@FXML
 	private DatePicker dpEndDate;
+
+	@FXML
+	private TextField tfEndTime;
 
 	@FXML
 	private ComboBox<String> cbMaterials;
@@ -299,6 +306,9 @@ public class DashboardController extends DialogController implements CategoryCli
 
 	@FXML
 	private TableColumn<OeeEvent, String> tcShift;
+
+	@FXML
+	private TableColumn<OeeEvent, String> tcTeam;
 
 	@FXML
 	private TableColumn<OeeEvent, String> tcReason;
@@ -780,7 +790,7 @@ public class DashboardController extends DialogController implements CategoryCli
 		if (eqm != null) {
 			String targetOee = String.format(Locale.getDefault(), OEE_FORMAT, eqm.getOeeTarget());
 			tiOee.setText("Target OEE: " + targetOee);
-			
+
 			Quantity actualSpeed = equipmentLoss.calculateActualSpeed(eqm.getRunRate());
 			String speed = String.format(Locale.getDefault(), PROD_FORMAT, actualSpeed.getAmount());
 			tiProduction.setText("Actual Speed: " + speed + " " + actualSpeed.getUOM().getSymbol());
@@ -1003,6 +1013,17 @@ public class DashboardController extends DialogController implements CategoryCli
 
 			if (event.getShift() != null) {
 				property = new SimpleStringProperty(event.getShift().getName());
+			}
+			return property;
+		});
+
+		// team
+		tcTeam.setCellValueFactory(cellDataFeatures -> {
+			OeeEvent event = cellDataFeatures.getValue();
+			SimpleStringProperty property = null;
+
+			if (event.getTeam() != null) {
+				property = new SimpleStringProperty(event.getTeam().getName());
 			}
 			return property;
 		});
@@ -1283,7 +1304,7 @@ public class DashboardController extends DialogController implements CategoryCli
 
 			tiAvailability.setText("");
 			tiAvailability.setDescription("");
-			
+
 			tiProduction.setText("");
 
 			lbiGoodProduction.setFormatString(PROD_FORMAT + " ");
@@ -1293,29 +1314,44 @@ public class DashboardController extends DialogController implements CategoryCli
 			lbiStartupProduction.setFormatString(PROD_FORMAT + " ");
 			lbiStartupProduction.setValue(0.0d, false);
 
-			// time period
-			LocalDate from = dpStartDate.getValue();
+			// start date and time
+			LocalDate startDate = dpStartDate.getValue();
 
-			if (from == null) {
-				return;
+			if (startDate == null) {
+				startDate = LocalDate.now();
 			}
 
-			LocalDateTime ldtFrom = LocalDateTime.of(from, LocalTime.MIN);
+			Duration startSeconds = null;
+			if (tfStartTime.getText() != null && tfStartTime.getText().trim().length() > 0) {
+				startSeconds = AppUtils.durationFromString(tfStartTime.getText().trim());
+			} else {
+				startSeconds = Duration.ZERO;
+			}
+			LocalTime startTime = LocalTime.ofSecondOfDay(startSeconds.getSeconds());
+			LocalDateTime ldtStart = LocalDateTime.of(startDate, startTime);
+			OffsetDateTime odtStart = DomainUtils.fromLocalDateTime(ldtStart);
 
-			LocalDate to = dpEndDate.getValue();
+			// end date and time
+			LocalDate endDate = dpEndDate.getValue();
 
-			if (to == null) {
-				to = LocalDate.now();
+			if (endDate == null) {
+				endDate = LocalDate.now();
 			}
 
-			LocalDateTime ldtTo = LocalDateTime.of(to, LocalTime.MAX);
+			Duration endSeconds = null;
+			if (tfEndTime.getText() != null && tfEndTime.getText().trim().length() > 0) {
+				endSeconds = AppUtils.durationFromString(tfEndTime.getText().trim());
+			} else {
+				endSeconds = Duration.ZERO;
+			}
+			LocalTime endTime = LocalTime.ofSecondOfDay(endSeconds.getSeconds());
+			LocalDateTime ldtEnd = LocalDateTime.of(endDate, endTime);
 
-			if (ldtTo.isBefore(ldtFrom)) {
-				throw new Exception("The starting time " + ldtFrom + " must be before the ending time " + ldtTo);
+			if (ldtEnd.isBefore(ldtStart)) {
+				throw new Exception("The starting time " + ldtStart + " must be before the ending time " + ldtEnd);
 			}
 
-			OffsetDateTime odtFrom = DomainUtils.fromLocalDateTime(ldtFrom);
-			OffsetDateTime odtTo = DomainUtils.fromLocalDateTime(ldtTo);
+			OffsetDateTime odtEnd = DomainUtils.fromLocalDateTime(ldtEnd);
 
 			// equipment
 			Equipment equipment = equipmentLoss.getEquipment();
@@ -1329,11 +1365,11 @@ public class DashboardController extends DialogController implements CategoryCli
 
 			if (materialId != null && !materialId.equals(ALL_MATERIALS)) {
 				// filter for a specific material
-				setups = PersistenceService.instance().fetchSetupsForPeriodAndMaterial(equipment, odtFrom, odtTo,
+				setups = PersistenceService.instance().fetchSetupsForPeriodAndMaterial(equipment, odtStart, odtEnd,
 						materialMap.get(materialId));
 			} else {
 				// material and job during this period from setups
-				setups = PersistenceService.instance().fetchSetupsForPeriod(equipment, odtFrom, odtTo);
+				setups = PersistenceService.instance().fetchSetupsForPeriod(equipment, odtStart, odtEnd);
 			}
 
 			// add setup events
@@ -1353,14 +1389,14 @@ public class DashboardController extends DialogController implements CategoryCli
 				// calculate the time losses over the setup period
 				OffsetDateTime periodStart = setup.getStartTime();
 
-				if (periodStart.compareTo(odtFrom) < 0) {
-					periodStart = odtFrom;
+				if (periodStart.compareTo(odtStart) < 0) {
+					periodStart = odtStart;
 				}
 
 				OffsetDateTime periodEnd = setup.getEndTime();
 
-				if (periodEnd == null || (periodEnd.compareTo(odtTo) > 0)) {
-					periodEnd = odtTo;
+				if (periodEnd == null || (periodEnd.compareTo(odtEnd) > 0)) {
+					periodEnd = odtEnd;
 				}
 
 				EquipmentLossManager.calculateEquipmentLoss(equipmentLoss, periodStart, periodEnd);

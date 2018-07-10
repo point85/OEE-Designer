@@ -15,6 +15,7 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -29,12 +30,16 @@
                <children>
                   <GridPane hgap="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0">
                     <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="12.0" prefWidth="100.0" />
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="12.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="12.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="7.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="7.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="8.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="12.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="7.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="7.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="8.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="8.0" prefWidth="100.0" />
                     </columnConstraints>
@@ -42,14 +47,18 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Label text="From midnight on" GridPane.halignment="RIGHT" />
+                        <Label text="From" GridPane.halignment="RIGHT" />
                         <DatePicker fx:id="dpStartDate" maxWidth="1.7976931348623157E308" onAction="#clearMaterials" promptText="Choose starting date" GridPane.columnIndex="1" />
-                        <Label text="To end of day" GridPane.columnIndex="2" GridPane.halignment="RIGHT" />
-                        <DatePicker fx:id="dpEndDate" maxWidth="1.7976931348623157E308" onAction="#clearMaterials" promptText="Choose ending date" GridPane.columnIndex="3" />
-                        <Button fx:id="btRefresh" disable="true" mnemonicParsing="false" onAction="#onRefresh" text="Refresh" GridPane.columnIndex="6" GridPane.halignment="CENTER" />
-                        <ComboBox fx:id="cbMaterials" maxWidth="1.7976931348623157E308" promptText="Choose material" GridPane.columnIndex="5" />
-                        <Label text="Material" GridPane.columnIndex="4" GridPane.halignment="RIGHT" />
-                        <CheckBox fx:id="cbAutoRefresh" disable="true" mnemonicParsing="false" onAction="#onToggleRefresh" text="Auto" GridPane.columnIndex="7" />
+                        <Label text="To" GridPane.columnIndex="4" GridPane.halignment="RIGHT" />
+                        <DatePicker fx:id="dpEndDate" maxWidth="1.7976931348623157E308" onAction="#clearMaterials" promptText="Choose ending date" GridPane.columnIndex="5" />
+                        <Button fx:id="btRefresh" disable="true" mnemonicParsing="false" onAction="#onRefresh" text="Refresh" GridPane.columnIndex="10" GridPane.halignment="CENTER" />
+                        <ComboBox fx:id="cbMaterials" maxWidth="1.7976931348623157E308" promptText="Choose material" GridPane.columnIndex="9" />
+                        <Label text="Material" GridPane.columnIndex="8" GridPane.halignment="RIGHT" />
+                        <CheckBox fx:id="cbAutoRefresh" disable="true" mnemonicParsing="false" onAction="#onToggleRefresh" text="Auto" GridPane.columnIndex="11" />
+                        <TextField fx:id="tfStartTime" GridPane.columnIndex="2" />
+                        <Label text="(HH:MM)" GridPane.columnIndex="3" />
+                        <TextField fx:id="tfEndTime" GridPane.columnIndex="6" />
+                        <Label text="(HH:MM)" GridPane.columnIndex="7" />
                      </children>
                   </GridPane>
                   <AnchorPane fx:id="apTileLayout" layoutY="30.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0" />
@@ -67,18 +76,19 @@
                            <children>
                               <TableView fx:id="tvResolvedEvents" layoutX="407.0" layoutY="83.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="50.0">
                                 <columns>
-                                  <TableColumn fx:id="tcTimestamp" prefWidth="200.0" text="Time" />
-                                    <TableColumn fx:id="tcShift" prefWidth="75.0" text="Shift" />
-                                    <TableColumn fx:id="tcProdType" prefWidth="125.0" text="Event" />
-                                    <TableColumn fx:id="tcDuration" prefWidth="75.0" text="Duration" />
-                                  <TableColumn fx:id="tcAvailability" prefWidth="20.0" />
-                                    <TableColumn fx:id="tcReason" prefWidth="175.0" text="Reason" />
-                                    <TableColumn fx:id="tcLossCategory" prefWidth="150.0" text="Loss Category" />
-                                    <TableColumn fx:id="tcLostTime" prefWidth="75.0" text="Lost Time" />
-                                    <TableColumn fx:id="tcProdAmount" prefWidth="75.0" text="Amount" />
-                                    <TableColumn fx:id="tcProdUnit" prefWidth="75.0" text="UOM" />
-                                    <TableColumn fx:id="tcMaterial" prefWidth="150.0" text="Material" />
-                                    <TableColumn fx:id="tcJob" prefWidth="100.0" text="Job" />
+                                  <TableColumn fx:id="tcTimestamp" editable="false" prefWidth="200.0" text="Time" />
+                                    <TableColumn fx:id="tcShift" editable="false" prefWidth="75.0" text="Shift" />
+                                    <TableColumn fx:id="tcTeam" editable="false" prefWidth="75.0" text="Team" />
+                                    <TableColumn fx:id="tcProdType" editable="false" prefWidth="125.0" text="Event" />
+                                    <TableColumn fx:id="tcDuration" editable="false" prefWidth="75.0" text="Duration" />
+                                  <TableColumn fx:id="tcAvailability" editable="false" prefWidth="20.0" />
+                                    <TableColumn fx:id="tcReason" editable="false" prefWidth="175.0" text="Reason" />
+                                    <TableColumn fx:id="tcLossCategory" editable="false" prefWidth="150.0" text="Loss Category" />
+                                    <TableColumn fx:id="tcLostTime" editable="false" prefWidth="75.0" text="Lost Time" />
+                                    <TableColumn fx:id="tcProdAmount" editable="false" prefWidth="75.0" text="Amount" />
+                                    <TableColumn fx:id="tcProdUnit" editable="false" prefWidth="75.0" text="UOM" />
+                                    <TableColumn fx:id="tcMaterial" editable="false" prefWidth="150.0" text="Material" />
+                                    <TableColumn fx:id="tcJob" editable="false" prefWidth="100.0" text="Job" />
                                 </columns>
                               </TableView>
                               <ButtonBar layoutX="71.0" layoutY="-6.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="50.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">

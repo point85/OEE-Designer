@@ -108,6 +108,8 @@ public class OeeApplication extends Application {
 				fadeSplash.play();
 
 				initCompletionHandler.complete();
+			} else if (newState == Worker.State.FAILED || newState == Worker.State.CANCELLED){
+				stage.hide();
 			}
 		});
 

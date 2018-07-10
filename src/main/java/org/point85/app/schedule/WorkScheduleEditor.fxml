@@ -315,15 +315,15 @@
                                                 <Insets />
                                              </GridPane.margin>
                                           </Label>
-                                          <Label text="Time (HH:mm)" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                                          <Label text="Time (HH:MM)" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                                              <GridPane.margin>
                                                 <Insets />
                                              </GridPane.margin>
                                           </Label>
                                           <DatePicker fx:id="dpPeriodStartDate" maxWidth="1.7976931348623157E308" promptText="Starting date" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                          <TextField fx:id="tfPeriodStartTime" promptText="HH:mm" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                                          <TextField fx:id="tfPeriodStartTime" promptText="time" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                                           <Label text="Duration (hr:min)" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-                                          <TextField fx:id="tfPeriodDuration" promptText="hr:min" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                                          <TextField fx:id="tfPeriodDuration" promptText="duration" GridPane.columnIndex="5" GridPane.rowIndex="1" />
                                           <Label text="Loss Category" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
                                           <ComboBox fx:id="cbLosses" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                        </children>
