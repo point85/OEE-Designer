@@ -69,6 +69,10 @@ public class AvailabilityEditorController extends EventEditorController {
 
 	@Override
 	protected void saveRecord() throws Exception {
+		// duration
+		Duration duration = AppUtils.durationFromString(tfDuration.getText());
+		availabilityEvent.setDuration(duration);
+		
 		// time period
 		setTimePeriod(availabilityEvent);
 
@@ -76,10 +80,6 @@ public class AvailabilityEditorController extends EventEditorController {
 		if (availabilityEvent.getReason() == null) {
 			throw new Exception("A reason must be specified.");
 		}
-
-		// duration
-		Duration duration = AppUtils.durationFromString(tfDuration.getText());
-		availabilityEvent.setDuration(duration);
 
 		// material
 		Equipment equipment = availabilityEvent.getEquipment();

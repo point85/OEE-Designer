@@ -41,6 +41,9 @@ public abstract class AppUtils {
 
 	// format an OffsetDateTime
 	public static String formatOffsetDateTime(OffsetDateTime odt) {
+		if (odt == null) {
+			return "";
+		}
 		OffsetDateTime truncated = odt.truncatedTo(ChronoUnit.SECONDS);
 		return truncated.toString().replace('T', ' ');
 	}

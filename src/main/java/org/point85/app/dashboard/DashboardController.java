@@ -299,7 +299,10 @@ public class DashboardController extends DialogController implements CategoryCli
 	private TableColumn<OeeEvent, Reason> tcAvailability;
 
 	@FXML
-	private TableColumn<OeeEvent, String> tcTimestamp;
+	private TableColumn<OeeEvent, String> tcStartTime;
+	
+	@FXML
+	private TableColumn<OeeEvent, String> tcEndTime;
 
 	@FXML
 	private TableColumn<OeeEvent, String> tcDuration;
@@ -988,9 +991,14 @@ public class DashboardController extends DialogController implements CategoryCli
 
 		});
 
-		// time
-		tcTimestamp.setCellValueFactory(cellDataFeatures -> {
+		// start time
+		tcStartTime.setCellValueFactory(cellDataFeatures -> {
 			return new SimpleStringProperty(AppUtils.formatOffsetDateTime(cellDataFeatures.getValue().getStartTime()));
+		});
+		
+		// end time
+		tcEndTime.setCellValueFactory(cellDataFeatures -> {
+			return new SimpleStringProperty(AppUtils.formatOffsetDateTime(cellDataFeatures.getValue().getEndTime()));
 		});
 
 		// duration
