@@ -37,7 +37,7 @@
                   </AnchorPane>
             </content>
           </Tab>
-          <Tab fx:id="tbNotifications" text="Notifications">
+          <Tab fx:id="tbNotifications" text="Collector Notifications">
             <content>
               <AnchorPane fx:id="apMessageTable" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>

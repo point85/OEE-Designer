@@ -68,7 +68,7 @@
       </VBox>
     <AnchorPane minHeight="0.0" minWidth="0.0">
          <children>
-            <TabPane fx:id="tpParetoCharts" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0">
+            <TabPane fx:id="tpParetoCharts" disable="true" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0">
                <tabs>
                   <Tab fx:id="tbEvents" closable="false" text="Events">
                     <content>

@@ -514,7 +514,8 @@ public class MonitorController {
 		for (int i = 0; i < serverStatus.size(); i++) {
 			CollectorServerStatus status = serverStatus.get(i);
 
-			if (status.getCollectorHost().equalsIgnoreCase(message.getSenderHostName())) {
+			if (status.getCollectorHost().equalsIgnoreCase(message.getSenderHostName())
+					|| status.getCollectorHost().equalsIgnoreCase(message.getSenderHostAddress())) {
 				serverStatus.remove(i);
 				break;
 			}

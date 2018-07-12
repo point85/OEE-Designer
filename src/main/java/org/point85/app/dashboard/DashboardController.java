@@ -300,7 +300,7 @@ public class DashboardController extends DialogController implements CategoryCli
 
 	@FXML
 	private TableColumn<OeeEvent, String> tcStartTime;
-	
+
 	@FXML
 	private TableColumn<OeeEvent, String> tcEndTime;
 
@@ -795,8 +795,13 @@ public class DashboardController extends DialogController implements CategoryCli
 			tiOee.setText("Target OEE: " + targetOee);
 
 			Quantity actualSpeed = equipmentLoss.calculateActualSpeed(eqm.getRunRate());
-			String speed = String.format(Locale.getDefault(), PROD_FORMAT, actualSpeed.getAmount());
-			tiProduction.setText("Actual Speed: " + speed + " " + actualSpeed.getUOM().getSymbol());
+
+			if (actualSpeed != null) {
+				String speed = String.format(Locale.getDefault(), PROD_FORMAT, actualSpeed.getAmount());
+				tiProduction.setText("Actual Speed: " + speed + " " + actualSpeed.getUOM().getSymbol());
+			} else {
+				tiProduction.setText("");
+			}
 		}
 	}
 
@@ -995,7 +1000,7 @@ public class DashboardController extends DialogController implements CategoryCli
 		tcStartTime.setCellValueFactory(cellDataFeatures -> {
 			return new SimpleStringProperty(AppUtils.formatOffsetDateTime(cellDataFeatures.getValue().getStartTime()));
 		});
-		
+
 		// end time
 		tcEndTime.setCellValueFactory(cellDataFeatures -> {
 			return new SimpleStringProperty(AppUtils.formatOffsetDateTime(cellDataFeatures.getValue().getEndTime()));
@@ -1303,9 +1308,10 @@ public class DashboardController extends DialogController implements CategoryCli
 	public void onRefresh() {
 		try {
 			// clear previous calculation
-			if (equipmentLoss != null) {
-				equipmentLoss.reset();
+			if (equipmentLoss == null) {
+				return;
 			}
+			equipmentLoss.reset();
 
 			tiJobMaterial.setText("");
 			tiJobMaterial.setDescription("");
