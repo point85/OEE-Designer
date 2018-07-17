@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 	<project name="oee-apps" default="build-all" basedir="."  xmlns:fx="javafx:com.sun.javafx.tools.ant">
 		
-		<!-- folders -->
-		<property name="repo.dir" value="C:\Users\Kent\.m2\repository"/>
-		<property name="source.dir" value="C:\dev\OEE-Designer"/>
-		
-		<property name="dist.dir" value="dist"/>
-		<property name="archive.dir" value="archive"/>		
-		<property name="external.dir" value="externalLibs"/>
-		<property name="project.dir" value="project"/>
-		<property name="project.refs.dir" value="projectRefs"/>
-		<property name="build.dir" value="build"/>
-
+	<!-- folders -->
+	<property name="repo.dir" value="C:\Users\Kent\.m2\repository"/>
+	<property name="source.dir" value="C:\dev\OEE-Designer"/>
+	<property name="dist.dir" value="build_dist"/>
+	<property name="archive.dir" value="dist"/>		
+	<property name="external.dir" value="externalLibs"/>
+	<property name="project.dir" value="project"/>
+	<property name="project.refs.dir" value="projectRefs"/>
+	<property name="build.dir" value="build"/>
 		
 	<!-- get ant's JavaFX jars -->	
 	<target name="init">
@@ -34,6 +32,13 @@
 		<delete dir="${project.refs.dir}" />
 	
 		<mkdir dir="${external.dir}" />
+		
+		<!-- domain jar -->
+		<copy todir="${external.dir}">
+			<fileset dir="${repo.dir}\org\point85\oee-domain\1.0.0">
+				<filename name="oee-domain-1.0.0.jar"/>
+			</fileset>
+		</copy>
 	
 		<copy todir="${external.dir}">
 			<fileset dir="${repo.dir}\com\google\code\findbugs\jsr305\3.0.1">
@@ -48,11 +53,6 @@
 		<copy todir="${external.dir}">
 			<fileset dir="${repo.dir}\org\openscada\utgard\1.4">
 				<filename name="utgard-1.4.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\org\point85\oee-domain\1.0.0">
-				<filename name="oee-domain-1.0.0.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="${external.dir}">
@@ -275,8 +275,6 @@
 			</fileset>
 		</copy>
 	
-		<!-- Copy project references -->
-	
 		<!-- Copy project sources  -->
 		<copy todir="${build.dir}/src">
 			<fileset dir="${project.dir}/src/test/java">
@@ -364,24 +362,16 @@
 	</target>
 		
 		
-	<!-- Stage files for zip -->
+	<!-- Copy files for zip -->
 	<target name="copy-files">		
-			
-		<!-- copy wrapper files -->
-		<copy todir="${dist.dir}">
-			<fileset dir="../wrapper">
-				<include name="**/*" />
-			</fileset>
-		</copy>
-		
 		<!-- copy database files -->
-		<copy todir="${dist.dir}">
+		<copy todir="${dist.dir}/database">
 			<fileset dir="../database">
 				<include name="**/*" />
 			</fileset>
 		</copy>
 			
-		<copy file="../log4j.properties" todir="${dist.dir}/conf"/>
+		<copy file="../config/logging/log4j.properties" todir="${dist.dir}/config/logging"/>
 		<copy file="../run-designer-app.bat" todir="${dist.dir}/bin"/>
 		<copy file="../run-monitor-app.bat" todir="${dist.dir}/bin"/>
 		<copy file="../run-collector-app.bat" todir="${dist.dir}/bin"/>
@@ -396,7 +386,7 @@
 	</target>	
 		
 	<!-- build everything -->
-	<target name="build-all" depends="stage, compile, jfx-apps, copy-files, zip">
+	<target name="build-all" depends="clean, stage, compile, jfx-apps, copy-files, zip">
 	</target>
 
 	<!-- clean up -->

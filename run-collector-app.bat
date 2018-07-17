@@ -1,1 +1,2 @@
-start javaw.exe -Dlog4j=../conf/log4j.properties -jar ../oee-apps-1.0.0.jar COLLECTOR jdbc:sqlserver://localhost:1433;databaseName=OEE Point85 Point85 
+rem Launch the Collector application
+start javaw.exe -Dlog4j=./fxbuild/dist/config/logging/log4j.properties -jar ./fxbuild/dist/oee-apps-1.0.0.jar COLLECTOR jdbc:sqlserver://localhost:1433;databaseName=OEE Point85 Point85 
