@@ -5,7 +5,6 @@ import org.point85.app.collector.ClientTestApplication;
 import org.point85.app.collector.CollectorApplication;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.monitor.MonitorApplication;
-import org.point85.domain.DomainUtils;
 import org.point85.domain.persistence.PersistenceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -108,7 +107,7 @@ public class OeeApplication extends Application {
 				fadeSplash.play();
 
 				initCompletionHandler.complete();
-			} else if (newState == Worker.State.FAILED || newState == Worker.State.CANCELLED){
+			} else if (newState == Worker.State.FAILED || newState == Worker.State.CANCELLED) {
 				stage.hide();
 			}
 		});
@@ -175,11 +174,8 @@ public class OeeApplication extends Application {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// configuration folder
-		String configDir = System.getProperty(DomainUtils.CONFIG_DIR);
-
 		// configure log4j
-		PropertyConfigurator.configure(configDir + "/logging/log4j.properties");
+		PropertyConfigurator.configure("config/logging/log4j.properties");
 
 		// create the EMF
 		if (logger.isInfoEnabled()) {

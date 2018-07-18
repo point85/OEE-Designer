@@ -10,6 +10,7 @@
 	<property name="external.dir" value="external_libs"/>
 	<property name="project.dir" value="project"/>
 	<property name="build.dir" value="build"/>
+	<property name="domain.dir" value="..\..\OEE-Domain\target"/>
 		
 	<!-- get ant's JavaFX jars -->	
 	<target name="init">
@@ -25,7 +26,7 @@
 			classpathref="fxant"/>
 	</target>
 		
-	<!-- copy repo jars, source and resources -->	
+	<!-- copy dependent jars -->	
 	<target name="stage">
 		<delete dir="${external.dir}" />
 		<delete dir="${project.dir}" />
@@ -35,213 +36,32 @@
 		
 		<!-- domain jar -->
 		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\org\point85\oee-domain\1.0.0">
+			<fileset dir="${domain.dir}">
 				<filename name="oee-domain-1.0.0.jar"/>
 			</fileset>
 		</copy>
 	
-		<!-- dependent jars -->
+		<!-- domain dependent jars -->
 		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\com\google\code\findbugs\jsr305\3.0.1">
-				<filename name="jsr305-3.0.1.jar"/>
+			<fileset dir="${domain.dir}\lib">
+				<filename name="**\*.jar"/>
 			</fileset>
 		</copy>
-		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\org\jboss\spec\javax\transaction\jboss-transaction-api_1.2_spec\1.0.1.Final">
-				<filename name="jboss-transaction-api_1.2_spec-1.0.1.Final.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\org\openscada\utgard\1.4">
-				<filename name="utgard-1.4.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\org\hibernate\hibernate-hikaricp\5.2.13.Final">
-				<filename name="hibernate-hikaricp-5.2.13.Final.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\javax\xml\bind\jaxb-api\2.2.7">
-				<filename name="jaxb-api-2.2.7.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\org\openscada\jinterop-deps\1.1.0.v20130529">
-				<filename name="jinterop-deps-1.1.0.v20130529.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\org\slf4j\jul-to-slf4j\1.7.25">
-				<filename name="jul-to-slf4j-1.7.25.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\org\eclipse\milo\stack-client\0.2.1">
-				<filename name="stack-client-0.2.1.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\dom4j\dom4j\1.6.1">
-				<filename name="dom4j-1.6.1.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\org\nanohttpd\nanohttpd\2.3.0">
-				<filename name="nanohttpd-2.3.0.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\org\jboss\jandex\2.0.3.Final">
-				<filename name="jandex-2.0.3.Final.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\org\eclipse\milo\bsd-parser-core\0.2.1">
-				<filename name="bsd-parser-core-0.2.1.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\org\openscada\jinterop-core\1.1.0.v20130529">
-				<filename name="jinterop-core-1.1.0.v20130529.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\io\netty\netty-codec\4.0.36.Final">
-				<filename name="netty-codec-4.0.36.Final.jar"/>
-			</fileset>
-		</copy>
+
+		<!-- SQL Server JDBC driver -->
 		<copy todir="${external.dir}">
 			<fileset dir="${repo.dir}\com\microsoft\sqlserver\mssql-jdbc\6.2.2.jre8">
 				<filename name="mssql-jdbc-6.2.2.jre8.jar"/>
 			</fileset>
 		</copy>
+		
+		<!-- Oracle JDBC driver -->
 		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\io\netty\netty-common\4.0.36.Final">
-				<filename name="netty-common-4.0.36.Final.jar"/>
+			<fileset dir="${repo.dir}\com\oracle\jdbc\ojdbc8\8.0">
+				<filename name="ojdbc8-8.0.jar"/>
 			</fileset>
 		</copy>
-		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\org\slf4j\slf4j-log4j12\1.7.25">
-				<filename name="slf4j-log4j12-1.7.25.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\org\javassist\javassist\3.22.0-GA">
-				<filename name="javassist-3.22.0-GA.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\org\hibernate\common\hibernate-commons-annotations\5.0.1.Final">
-				<filename name="hibernate-commons-annotations-5.0.1.Final.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\log4j\log4j\1.2.17">
-				<filename name="log4j-1.2.17.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\org\eclipse\milo\sdk-core\0.2.1">
-				<filename name="sdk-core-0.2.1.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\com\fasterxml\classmate\1.3.0">
-				<filename name="classmate-1.3.0.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\org\eclipse\milo\sdk-client\0.2.1">
-				<filename name="sdk-client-0.2.1.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\org\eclipse\milo\stack-core\0.2.1">
-				<filename name="stack-core-0.2.1.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\com\codepoetics\protonpack\1.8">
-				<filename name="protonpack-1.8.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\com\zaxxer\HikariCP\2.5.1">
-				<filename name="HikariCP-2.5.1.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\jcifs\jcifs\1.3.17">
-				<filename name="jcifs-1.3.17.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\javax\servlet\servlet-api\2.4">
-				<filename name="servlet-api-2.4.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\io\netty\netty-transport\4.0.36.Final">
-				<filename name="netty-transport-4.0.36.Final.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\com\rabbitmq\amqp-client\5.1.1">
-				<filename name="amqp-client-5.1.1.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\io\netty\netty-buffer\4.0.36.Final">
-				<filename name="netty-buffer-4.0.36.Final.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\antlr\antlr\2.7.7">
-				<filename name="antlr-2.7.7.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\io\netty\netty-handler\4.0.36.Final">
-				<filename name="netty-handler-4.0.36.Final.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\org\hibernate\javax\persistence\hibernate-jpa-2.1-api\1.0.0.Final">
-				<filename name="hibernate-jpa-2.1-api-1.0.0.Final.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\org\hibernate\hibernate-core\5.2.13.Final">
-				<filename name="hibernate-core-5.2.13.Final.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\com\google\code\gson\gson\2.8.2">
-				<filename name="gson-2.8.2.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\org\slf4j\slf4j-api\1.7.25">
-				<filename name="slf4j-api-1.7.25.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\org\jboss\logging\jboss-logging\3.3.1.Final">
-				<filename name="jboss-logging-3.3.1.Final.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\com\google\guava\guava\19.0">
-				<filename name="guava-19.0.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\org\jooq\jool\0.9.10">
-				<filename name="jool-0.9.10.jar"/>
-			</fileset>
-		</copy>
-	
+		
 		<!-- Designer code -->
 		<copy todir="${project.dir}">
 			<fileset dir="${source.dir}">
@@ -358,10 +178,13 @@
 		</copy>
 			
 		<copy file="../config/logging/log4j.properties" todir="${dist.dir}/config/logging"/>
-		<copy file="../run-designer-app.bat" todir="${dist.dir}/bin"/>
-		<copy file="../run-monitor-app.bat" todir="${dist.dir}/bin"/>
-		<copy file="../run-collector-app.bat" todir="${dist.dir}/bin"/>
-		<copy file="../run-tester-app.bat" todir="${dist.dir}/bin"/>
+		<copy file="../run-designer-app.bat" todir="${dist.dir}"/>
+		<copy file="../run-monitor-app.bat" todir="${dist.dir}"/>
+		<copy file="../run-collector-app.bat" todir="${dist.dir}"/>
+		<copy file="../run-tester-app.bat" todir="${dist.dir}"/>
+		
+		<!-- create a logging folder -->
+		<mkdir dir="${dist.dir}/log" />
 	</target>
 		
 	<!-- Zip files -->
