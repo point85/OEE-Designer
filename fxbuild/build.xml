@@ -5,10 +5,10 @@
 	<property name="repo.dir" value="C:\Users\Kent\.m2\repository"/>
 	<property name="source.dir" value="C:\dev\OEE-Designer"/>
 	<property name="dist.dir" value="build_dist"/>
+	<property name="collector_dist.dir" value="..\..\OEE-Collector\collector_build\build_dist"/>
 	<property name="archive.dir" value="dist"/>		
-	<property name="external.dir" value="externalLibs"/>
+	<property name="external.dir" value="external_libs"/>
 	<property name="project.dir" value="project"/>
-	<property name="project.refs.dir" value="projectRefs"/>
 	<property name="build.dir" value="build"/>
 		
 	<!-- get ant's JavaFX jars -->	
@@ -29,9 +29,9 @@
 	<target name="stage">
 		<delete dir="${external.dir}" />
 		<delete dir="${project.dir}" />
-		<delete dir="${project.refs.dir}" />
 	
 		<mkdir dir="${external.dir}" />
+		<mkdir dir="${project.dir}" />
 		
 		<!-- domain jar -->
 		<copy todir="${external.dir}">
@@ -40,6 +40,7 @@
 			</fileset>
 		</copy>
 	
+		<!-- dependent jars -->
 		<copy todir="${external.dir}">
 			<fileset dir="${repo.dir}\com\google\code\findbugs\jsr305\3.0.1">
 				<filename name="jsr305-3.0.1.jar"/>
@@ -241,7 +242,7 @@
 			</fileset>
 		</copy>
 	
-		<mkdir dir="${project.dir}" />
+		<!-- Designer code -->
 		<copy todir="${project.dir}">
 			<fileset dir="${source.dir}">
 				<include name="src\main\resources/**" />
@@ -249,16 +250,9 @@
 		</copy>
 		<copy todir="${project.dir}">
 			<fileset dir="${source.dir}">
-				<include name="src\test\java/**" />
-			</fileset>
-		</copy>
-		<copy todir="${project.dir}">
-			<fileset dir="${source.dir}">
 				<include name="src\main\java/**" />
 			</fileset>
 		</copy>
-	
-		<mkdir dir="${project.refs.dir}" />
 	</target>
 		
 	<!-- compile -->
@@ -268,7 +262,7 @@
 		<mkdir dir="${build.dir}/lib" />
 		<mkdir dir="${build.dir}/classes" />
 	
-		<!-- Copy project-libs jars -->
+		<!-- Copy external jars -->
 		<copy todir="${build.dir}/lib">
 			<fileset dir="${external.dir}">
 				<include name="**/*"/>
@@ -276,11 +270,6 @@
 		</copy>
 	
 		<!-- Copy project sources  -->
-		<copy todir="${build.dir}/src">
-			<fileset dir="${project.dir}/src/test/java">
-				<include name="**/*"/>
-			</fileset>
-		</copy>
 		<copy todir="${build.dir}/src">
 			<fileset dir="${project.dir}/src/main/resources">
 				<include name="**/*"/>
@@ -303,9 +292,6 @@
 	
 		<!-- Copy over non Java-Files -->
 		<copy todir="${build.dir}/classes">
-		<fileset dir="${project.dir}/src/test/java">
-			<exclude name="**/*.java"/>
-		</fileset>
 		<fileset dir="${project.dir}/src/main/resources">
 			<exclude name="**/*.java"/>
 		</fileset>
@@ -375,6 +361,7 @@
 		<copy file="../run-designer-app.bat" todir="${dist.dir}/bin"/>
 		<copy file="../run-monitor-app.bat" todir="${dist.dir}/bin"/>
 		<copy file="../run-collector-app.bat" todir="${dist.dir}/bin"/>
+		<copy file="../run-tester-app.bat" todir="${dist.dir}/bin"/>
 	</target>
 		
 	<!-- Zip files -->
@@ -382,11 +369,14 @@
 		<delete dir="${archive.dir}" />	
 		<mkdir dir="${archive.dir}" />	
 		
-		<zip destfile="${archive.dir}/oee-apps.zip" basedir="${dist.dir}/"/>
+		<zip destfile="${archive.dir}/oee.zip" >
+			<fileset dir="${dist.dir}" />
+			<fileset dir="${collector_dist.dir}" />
+		</zip>
 	</target>	
 		
 	<!-- build everything -->
-	<target name="build-all" depends="clean, stage, compile, jfx-apps, copy-files, zip">
+	<target name="build-all" depends="clean, stage, compile, jfx-apps, copy-files">
 	</target>
 
 	<!-- clean up -->
@@ -395,7 +385,5 @@
 		<delete dir="${dist.dir}" />
 		<delete dir="${external.dir}" />
 		<delete dir="${project.dir}" />
-		<delete dir="${project.refs.dir}" />
-		<delete dir="${archive.dir}" />
 	</target>	
 </project>
