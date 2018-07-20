@@ -153,7 +153,7 @@
 		<mkdir dir="${build.dir}/classes/META-INF" />
 		
 		<!-- apps jar -->
-		<fx:jar destfile="${dist.dir}/${dist.zip">
+		<fx:jar destfile="${dist.dir}/${dist.zip}">
 			<fx:application refid="fxApplication"/>
 			<fileset dir="${build.dir}/classes">
 			</fileset>
@@ -194,10 +194,10 @@
 		
 	<!-- Zip files -->
 	<target name="zip">
-		<delete dir="${archive.dir}" />	
-		<mkdir dir="${archive.dir}" />	
+		<delete dir="..\${archive.dir}" />	
+		<mkdir dir="..\${archive.dir}" />	
 		
-		<zip destfile="${archive.dir}/oee.zip" >
+		<zip destfile="..\${archive.dir}/oee.zip" >
 			<!-- Designer files -->
 			<fileset dir="${dist.dir}" />
 			
