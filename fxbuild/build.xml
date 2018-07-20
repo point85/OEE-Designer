@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 	<project name="oee-apps" default="build-all" basedir="."  xmlns:fx="javafx:com.sun.javafx.tools.ant">
+	
+	<!-- distribution archive -->
+	<property name="dist.zip" value="oee-apps-1.0.0.jar"/>
+	<property name="domain.jar" value="oee-domain-1.0.0.jar"/>
+	<property name="collector.jar" value="oee-collector-1.0.0.jar"/>
 		
 	<!-- folders -->
 	<property name="repo.dir" value="C:\Users\Kent\.m2\repository"/>
 	<property name="source.dir" value="C:\dev\OEE-Designer"/>
 	<property name="dist.dir" value="build_dist"/>
-	<property name="collector_dist.dir" value="..\..\OEE-Collector\collector_build\build_dist"/>
+	<property name="collector.dir" value="..\..\OEE-Collector"/>
 	<property name="archive.dir" value="dist"/>		
 	<property name="external.dir" value="external_libs"/>
 	<property name="project.dir" value="project"/>
 	<property name="build.dir" value="build"/>
-	<property name="domain.dir" value="..\..\OEE-Domain\target"/>
+	<property name="domain.dir" value="..\..\OEE-Domain"/>
 		
 	<!-- get ant's JavaFX jars -->	
 	<target name="init">
@@ -36,14 +41,14 @@
 		
 		<!-- domain jar -->
 		<copy todir="${external.dir}">
-			<fileset dir="${domain.dir}">
-				<filename name="oee-domain-1.0.0.jar"/>
+			<fileset dir="${domain.dir}\target">
+				<filename name="${domain.jar}"/>
 			</fileset>
 		</copy>
 	
 		<!-- domain dependent jars -->
 		<copy todir="${external.dir}">
-			<fileset dir="${domain.dir}\lib">
+			<fileset dir="${domain.dir}\target\lib">
 				<filename name="**\*.jar"/>
 			</fileset>
 		</copy>
@@ -148,7 +153,7 @@
 		<mkdir dir="${build.dir}/classes/META-INF" />
 		
 		<!-- apps jar -->
-		<fx:jar destfile="${dist.dir}/oee-apps-1.0.0.jar">
+		<fx:jar destfile="${dist.dir}/${dist.zip">
 			<fx:application refid="fxApplication"/>
 			<fileset dir="${build.dir}/classes">
 			</fileset>
@@ -193,8 +198,17 @@
 		<mkdir dir="${archive.dir}" />	
 		
 		<zip destfile="${archive.dir}/oee.zip" >
+			<!-- Designer files -->
 			<fileset dir="${dist.dir}" />
-			<fileset dir="${collector_dist.dir}" />
+			
+			<!-- Collector files -->
+			<fileset dir="${collector.dir}\target">
+				<filename name="${collector.jar}"/>
+			</fileset>
+			
+			<fileset dir="${collector.dir}">
+				<include name="\wrapper\**\*" />
+			</fileset>
 		</zip>
 	</target>	
 		
