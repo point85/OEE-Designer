@@ -805,6 +805,11 @@ public class ClientTestApplication implements MessageListener {
 			for (CollectorDataSource dataSource : dataSources) {
 				items.add((HttpSource) dataSource);
 			}
+			
+			// bug?
+			for (int i = 0; i < dataSources.size(); i++) {
+				cbHttpHostPort.getSelectionModel().select(i);
+			}
 
 			cbHttpSourceId.getSelectionModel().clearSelection();
 			cbHttpSourceId.getItems().clear();
