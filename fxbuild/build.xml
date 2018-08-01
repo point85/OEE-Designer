@@ -106,8 +106,8 @@
 			</fileset>
 		</copy>
 	
-		<!-- run java compiler -->
-		<javac includeantruntime="false" source="1.8" target="1.8" srcdir="${build.dir}/src" destdir="${build.dir}/classes" encoding="UTF-8">
+		<!-- run java compiler.  Remove debug switches for release jar -->
+		<javac includeantruntime="false" source="1.8" target="1.8" srcdir="${build.dir}/src" destdir="${build.dir}/classes" encoding="UTF-8" debug="on" debuglevel="lines" >
 			<classpath>
 				<fileset dir="${build.dir}/lib">
 					<include name="*"/>
