@@ -45,7 +45,7 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 	private NodeId monitoredNodeId;
 
 	// filter is not being used
-	private final ExtensionObject filter = null;
+	private ExtensionObject filter;
 
 	@FXML
 	private Button btConnect;
@@ -165,10 +165,12 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 
 	@Override
 	public void onOpcUaRead(List<DataValue> dataValues) {
+		// nothing to do
 	}
 
 	@Override
 	public void onOpcUaWrite(List<StatusCode> statusCodes) {
+		// nothing to do
 	}
 
 	// on background thread

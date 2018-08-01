@@ -90,21 +90,6 @@ public class DesignerApplication {
 	// UOM conversion controller
 	private UomConversionController uomConversionController;
 
-	// OEE dashboard controller
-	private DashboardDialogController dashboardDialogController;
-
-	// OPC DA trend
-	private OpcDaTrendController opcDaTrendController;
-
-	// OPC UA trend
-	private OpcUaTrendController opcUaTrendController;
-
-	// HTTP trend
-	private HttpTrendController httpTrendController;
-
-	// RMA messaging trend
-	private MessagingTrendController messagingTrendController;
-
 	// script execution context
 	private OeeContext appContext;
 
@@ -494,7 +479,7 @@ public class DesignerApplication {
 		dialogStage.setScene(scene);
 
 		// get the controller
-		opcDaTrendController = loader.getController();
+		OpcDaTrendController opcDaTrendController = loader.getController();
 		opcDaTrendController.setDialogStage(dialogStage);
 		opcDaTrendController.setApp(this);
 
@@ -512,9 +497,7 @@ public class DesignerApplication {
 		opcDaTrendController.setScriptResolver(eventResolver);
 
 		// show the window
-		if (!opcDaTrendController.getDialogStage().isShowing()) {
-			opcDaTrendController.getDialogStage().show();
-		}
+		opcDaTrendController.getDialogStage().show();
 	}
 
 	void showOpcUaTrendDialog(EventResolver eventResolver) throws Exception {
@@ -531,7 +514,7 @@ public class DesignerApplication {
 		dialogStage.setScene(scene);
 
 		// get the controller
-		opcUaTrendController = loader.getController();
+		OpcUaTrendController opcUaTrendController = loader.getController();
 		opcUaTrendController.setDialogStage(dialogStage);
 		opcUaTrendController.setApp(this);
 
@@ -551,9 +534,7 @@ public class DesignerApplication {
 		opcUaTrendController.setScriptResolver(eventResolver);
 
 		// show the window
-		if (!opcUaTrendController.getDialogStage().isShowing()) {
-			opcUaTrendController.getDialogStage().show();
-		}
+		opcUaTrendController.getDialogStage().show();
 	}
 
 	void showHttpTrendDialog(EventResolver eventResolver) throws Exception {
@@ -569,7 +550,7 @@ public class DesignerApplication {
 		dialogStage.setScene(scene);
 
 		// get the controller
-		httpTrendController = loader.getController();
+		HttpTrendController httpTrendController = loader.getController();
 		httpTrendController.setDialogStage(dialogStage);
 		httpTrendController.setApp(this);
 
@@ -590,9 +571,7 @@ public class DesignerApplication {
 		httpTrendController.onStartServer();
 
 		// show the trend
-		if (!httpTrendController.getDialogStage().isShowing()) {
-			httpTrendController.getDialogStage().show();
-		}
+		httpTrendController.getDialogStage().show();
 	}
 
 	void showMessagingTrendDialog(EventResolver eventResolver) throws Exception {
@@ -608,7 +587,7 @@ public class DesignerApplication {
 		dialogStage.setScene(scene);
 
 		// get the controller
-		messagingTrendController = loader.getController();
+		MessagingTrendController messagingTrendController = loader.getController();
 		messagingTrendController.setDialogStage(dialogStage);
 		messagingTrendController.setApp(this);
 
@@ -629,9 +608,7 @@ public class DesignerApplication {
 		messagingTrendController.subscribeToDataSource();
 
 		// show the window
-		if (!messagingTrendController.getDialogStage().isShowing()) {
-			messagingTrendController.getDialogStage().show();
-		}
+		messagingTrendController.getDialogStage().show();
 	}
 
 	public PhysicalModelController getPhysicalModelController() {
@@ -647,7 +624,7 @@ public class DesignerApplication {
 
 		if (client == null) {
 			client = new DaOpcClient();
-			
+
 			// add to context
 			appContext.getOpcDaClients().add(client);
 		}
@@ -681,7 +658,7 @@ public class DesignerApplication {
 		dialogStage.setScene(scene);
 
 		// get the controller
-		dashboardDialogController = dialogLoader.getController();
+		DashboardDialogController dashboardDialogController = dialogLoader.getController();
 		dashboardDialogController.setDialogStage(dialogStage);
 
 		// load the content
@@ -703,9 +680,7 @@ public class DesignerApplication {
 		dashboardController.setupEquipmentLoss((Equipment) entity);
 
 		// Show the dialog and wait until the user closes it
-		if (!dashboardDialogController.getDialogStage().isShowing()) {
-			dashboardDialogController.getDialogStage().showAndWait();
-		}
+		dashboardDialogController.getDialogStage().showAndWait();
 	}
 
 	public UaOpcClient getOpcUaClient() {
@@ -717,7 +692,7 @@ public class DesignerApplication {
 
 		if (client == null) {
 			client = new UaOpcClient();
-			
+
 			// add to context
 			appContext.getOpcUaClients().add(client);
 		}
