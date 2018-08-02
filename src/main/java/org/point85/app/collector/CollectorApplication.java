@@ -123,6 +123,12 @@ public class CollectorApplication {
 	private void onShutdown() throws Exception {
 		if (collector != null) {
 			collector.shutdown();
+			
+			// disable buttons
+			btShutdown.setDisable(true);
+			btStartMonitoring.setDisable(true);
+			btStopMonitoring.setDisable(true);
+			btRestart.setDisable(true);
 		}
 	}
 

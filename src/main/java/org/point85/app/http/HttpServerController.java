@@ -91,6 +91,10 @@ public class HttpServerController extends DialogController {
 	private void onSelectDataSource() {
 		try {
 			dataSource = cbDataSources.getSelectionModel().getSelectedItem();
+			
+			if (dataSource == null) {
+				return;
+			}
 
 			this.tfHost.setText(dataSource.getHost());
 			this.tfPort.setText(String.valueOf(dataSource.getPort()));
@@ -144,7 +148,8 @@ public class HttpServerController extends DialogController {
 			dataSource.setName(name);
 
 			// save data source
-			PersistenceService.instance().save(dataSource);
+			HttpSource saved = (HttpSource) PersistenceService.instance().save(dataSource);
+			setSource(saved);
 
 			// update list
 			if (dataSource.getKey() == null) {

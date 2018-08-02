@@ -159,13 +159,15 @@ public class MqBrokerController extends DesignerDialogController {
 			dataSource.setName(name);
 
 			// save data source
-			PersistenceService.instance().save(dataSource);
+			MessagingSource saved = (MessagingSource) PersistenceService.instance().save(dataSource);
 
 			// update list
 			if (dataSource.getKey() == null) {
 				// new source
 				cbDataSources.getItems().add(dataSource);
 			}
+			
+			this.dataSource = saved;
 
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);

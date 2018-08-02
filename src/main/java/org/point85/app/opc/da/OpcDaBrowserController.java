@@ -470,7 +470,8 @@ public class OpcDaBrowserController extends OpcDaController {
 			dataSource.setProgId(getProgId());
 			dataSource.setDescription(getDescription());
 
-			PersistenceService.instance().save(dataSource);
+			OpcDaSource savedSource = (OpcDaSource) PersistenceService.instance().save(dataSource);
+			setSource(savedSource);
 
 			populateDataSources();
 
