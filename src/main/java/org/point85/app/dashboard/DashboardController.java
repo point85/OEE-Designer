@@ -120,7 +120,7 @@ public class DashboardController extends DialogController implements CategoryCli
 	private static final String PROD_FORMAT = "%.1f ";
 
 	// time between auto refresh
-	private static final long REFRESH_SEC = 300;
+	private static final long REFRESH_SEC = 60;
 
 	// auto refresh timer
 	private Timer refreshTimer;
@@ -1384,6 +1384,10 @@ public class DashboardController extends DialogController implements CategoryCli
 			} else {
 				// material and job during this period from setups
 				setups = PersistenceService.instance().fetchSetupsForPeriod(equipment, odtStart, odtEnd);
+			}
+
+			if (setups.isEmpty()) {
+				throw new Exception("No material setup has been defined.");
 			}
 
 			// add setup events

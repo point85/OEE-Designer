@@ -108,6 +108,11 @@ public abstract class AppUtils {
 	public static void showErrorDialog(String message) {
 		showAlert(AlertType.ERROR, "Application Error", "Exception", message);
 	}
+	
+	// display a warning dialog
+	public static void showWarningDialog(String message) {
+		showAlert(AlertType.WARNING, "Application Warning", "Warning", message);
+	}
 
 	// display an error dialog
 	public static void showErrorDialog(Exception e) {

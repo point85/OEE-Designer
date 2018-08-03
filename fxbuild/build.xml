@@ -106,7 +106,15 @@
 			</fileset>
 		</copy>
 	
-		<!-- run java compiler.  Remove debug switches for release jar -->
+		<!-- run java compiler.  Do not use debug switches for release jar -->
+		<javac includeantruntime="false" source="1.8" target="1.8" srcdir="${build.dir}/src" destdir="${build.dir}/classes" encoding="UTF-8" >
+			<classpath>
+				<fileset dir="${build.dir}/lib">
+					<include name="*"/>
+				</fileset>
+			</classpath>
+		</javac>
+		<!--
 		<javac includeantruntime="false" source="1.8" target="1.8" srcdir="${build.dir}/src" destdir="${build.dir}/classes" encoding="UTF-8" debug="on" debuglevel="lines" >
 			<classpath>
 				<fileset dir="${build.dir}/lib">
@@ -114,7 +122,7 @@
 				</fileset>
 			</classpath>
 		</javac>
-	
+		-->
 		<!-- Copy over non Java-Files -->
 		<copy todir="${build.dir}/classes">
 		<fileset dir="${project.dir}/src/main/resources">
