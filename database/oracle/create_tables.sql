@@ -224,7 +224,7 @@ CREATE TABLE "SYSTEM"."WORK_SCHEDULE"
     "WS_KEY" NUMBER(19,0), 
 	"VERSION" NUMBER(10,0), 
 	"NAME" NVARCHAR2(64), 
-	"DESCRIPTION" NVARCHAR2(256)
+	"DESCRIPTION" NVARCHAR2(512)
    ) TABLESPACE "SYSTEM" ;
 /   
 --------------------------------------------------------

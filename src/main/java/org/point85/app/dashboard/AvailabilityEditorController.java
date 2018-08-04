@@ -70,9 +70,11 @@ public class AvailabilityEditorController extends EventEditorController {
 	@Override
 	protected void saveRecord() throws Exception {
 		// duration
-		Duration duration = AppUtils.durationFromString(tfDuration.getText());
-		availabilityEvent.setDuration(duration);
-		
+		if (tfDuration.getText() != null && tfDuration.getText().length() > 0) {
+			Duration duration = AppUtils.durationFromString(tfDuration.getText());
+			availabilityEvent.setDuration(duration);
+		}
+
 		// time period
 		setTimePeriod(availabilityEvent);
 

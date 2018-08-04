@@ -104,7 +104,13 @@ abstract class EventEditorController extends DialogController {
 
 		OffsetDateTime odtEnd = DomainUtils.fromLocalDateTime(ldtEnd);
 
+		// start time
 		event.setStartTime(odtStart);
+		
+		// end time
+		if (odtEnd == null) {
+			odtEnd = odtStart.plus(event.getDuration());
+		}
 		event.setEndTime(odtEnd);
 
 		// set shift
