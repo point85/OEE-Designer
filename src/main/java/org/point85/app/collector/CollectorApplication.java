@@ -1,5 +1,6 @@
 package org.point85.app.collector;
 
+import org.point85.app.AppUtils;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
 import org.point85.domain.collector.CollectorService;
@@ -52,6 +53,7 @@ public class CollectorApplication {
 			primaryStage.getIcons().add(ImageManager.instance().getImage(Images.POINT85));
 			primaryStage.show();
 		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
 			logger.error(e.getMessage());
 			stop();
 		}
@@ -90,6 +92,7 @@ public class CollectorApplication {
 				collector.stopDataCollection();
 			}
 		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
 			logger.error(e.getMessage());
 		}
 	}
@@ -110,10 +113,12 @@ public class CollectorApplication {
 			btRestart.setDisable(false);
 
 		} catch (Exception any) {
+			AppUtils.showErrorDialog(any);
 			collector.onException("Failed to start collector.", any);
 			try {
 				onShutdown();
 			} catch (Exception e) {
+				AppUtils.showErrorDialog(e);
 				logger.error(e.getMessage());
 			}
 		}
@@ -123,7 +128,7 @@ public class CollectorApplication {
 	private void onShutdown() throws Exception {
 		if (collector != null) {
 			collector.shutdown();
-			
+
 			// disable buttons
 			btShutdown.setDisable(true);
 			btStartMonitoring.setDisable(true);

@@ -197,7 +197,7 @@
 		<copy file="../run-tester-app.bat" todir="${dist.dir}"/>
 		
 		<!-- create a logging folder -->
-		<mkdir dir="${dist.dir}/log" />
+		<mkdir dir="${dist.dir}/logs" />
 	</target>
 		
 	<!-- Zip files -->

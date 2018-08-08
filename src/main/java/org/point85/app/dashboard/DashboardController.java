@@ -1395,6 +1395,10 @@ public class DashboardController extends DialogController implements CategoryCli
 
 			// step through each setup period since materials could have changed
 			for (OeeEvent setup : setups) {
+				if (setup.getMaterial() == null) {
+					continue;
+				}
+
 				String id = setup.getMaterial().getDisplayString();
 
 				if (materialMap.get(id) == null) {
