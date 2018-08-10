@@ -2,9 +2,9 @@
 
 ## Overview
 The Point85 Overall Equipment Effectiveness (OEE) applications enable:
-* collection of equipment data from multiple sources to support OEE calculations , 
+* collection of equipment data from multiple sources to support OEE calculations
 * resolution of a collected data value into an availability reason or produced material quantity to provide input to the performance, availability and quality components of OEE
-* calculation of the OEE key performance indicator (KPI) for the equipment using an optional  work schedule for defining the scheduled production time
+* calculation of the OEE key performance indicator (KPI) for the equipment using an optional work schedule for defining the scheduled production time
 * monitoring of equipment availability, performance and quality events
 
 Sources of equipment availability, performance and quality event data include:
@@ -15,7 +15,7 @@ Sources of equipment availability, performance and quality event data include:
 * Messaging:  an equipment event message received via a RabbitMQ message broker
 
 The Point85 applications supporting OEE are:
-* Designer:  a GUI application for defining the plant equipment, data sources, event resolution scripts, manufacturing work schedule, availability reasons, produced materials and units of measure for data collectors.  * The designer also includes a dashboard and trending capabilities.
+* Designer:  a GUI application for defining the plant equipment, data sources, event resolution scripts, manufacturing work schedule, availability reasons, produced materials and units of measure for data collectors.  The designer also includes a dashboard and trending capabilities.
 * Collector:  a Windows service or Unix deamon to collect the equipment event data and store it in a relational database
 * Monitor:  a GUI application with a dashboard to view the current equipment OEE and status
 * Operator:  a web-application for manual entry of equipment events
