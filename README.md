@@ -1,5 +1,4 @@
 # OEE-Designer
-The OEE-Designer project is the design-time environment for creating an OEE application.  The Designer is a GUI application for defining the plant equipment entities, data sources, event resolution scripts, manufacturing work schedule, availability reasons, produced materials and units of measure for the data collectors.  The Designer also includes a dashboard and trending capabilities.
 
 ## Overview
 The Point85 Overall Equipment Effectiveness (OEE) applications enable:
@@ -26,7 +25,7 @@ In addition, two GUI test applications assist in the development of an OEE solut
 * Front end GUI for a data collector
 
 ## OEE Calculations
-OEE is the product of equipment availability, performance and quality each expressed as a percentage.  The time-loss model is used to accumulate time in loss categories (or “no loss” if the equipment is running normally).  See [Kennedy] for details.  A data source provides an input value to a data collector’s resolver JavaScript function that maps that input value to an output value (reason or production count).
+OEE is the product of equipment availability, performance and quality each expressed as a percentage.  The time-loss model is used to accumulate time in loss categories (or “no loss” if the equipment is running normally).  A data source provides an input value to a data collector’s resolver JavaScript function that maps that input value to an output value (reason or production count).
 
 For availability and performance, the output value is a reason that is assigned to one of the following loss categories:
 * Value Adding:  the “no loss” or “running OK” category.
@@ -44,14 +43,45 @@ The OEE applications can be grouped by design-time and run-time.  The design-tim
 
 An automated run-time data collector receives an input value from an OPC DA, OPC UA, HTTP or messaging source and executes a JavaScript resolver on this input to calculate an output value.  The output value is a reason (mapped to an OEE loss category) for an availability event, a new production count (good, reject/rework or startup) for performance and quality events or a material/job change event.  The event data is stored in a relational database where it is available for OEE calculations.  Both Microsoft SQL Server and Oracle are currently supported.
 
-A web-based manual data collector records the OEE events based on information entered by an operator.  Similar to the automated collector, this data is also stored in the relational database.
+A web-based manual data collector running in a web server records the OEE events based on information entered by an operator.  Similar to the automated collector, this data is also stored in the relational database.
 If the system is configured for messaging, the event data is also sent to a RabbitMQ message broker to which a run-time monitor application can subscribe.  A monitor displays a dashboard for viewing equipment OEE events.  It also displays collector notifications and status information.
 
 ## Designer Application
 The Designer is focused on configuring all aspects of equipment in order to enable OEE calculations.  It has editors for defining the plant model.  For example, the plant entity editor is:
 ![Plant Entity Editor](https://github.com/point85/OEE-Designer/blob/master/docs/designer-plant-entities.png)
 
-The designer has a trending capability to observe the input and output values of a configured data source.  For example, an OPC DA variable trend is:
+The Designer has a trending capability to observe the input and output values of a configured data source.  For example, an OPC DA variable trend is:
 ![OPC DA Trend](https://github.com/point85/OEE-Designer/blob/master/docs/designer-opc-da-trend.png)
+
+## Collector Application
+The Collector application runs as a Windows service or Unix daemon on the configured host computer.  A Collector executes equipment event resolver scripts upon receipt of an input value and stores the availability, production, material or job change event data in the database.  This data is used for OEE calculations.
+
+## Monitor Application
+The Monitor application has three main functions, to observe:
+* Equipment performance via metrics available in the dashboard.  
+* Notifications from the data collectors for abnormal conditions
+* Data collector status.
+
+An example dashboard is:
+![Dashboard](https://github.com/point85/OEE-Designer/blob/master/docs/dashboard.png)
+
+The time-losses tab shows a bar chart of the OEE loss categories:
+![Time Losses](https://github.com/point85/OEE-Designer/blob/master/docs/dashboard-time-losses.png)
+
+A first-level Pareto chart show the time losses in percentage terms, for example:
+![First Level Pareto](https://github.com/point85/OEE-Designer/blob/master/docs/dashboard-first-level-pareto.png)
+
+A second-level Pareto displays the reasons for an availability category, for example:
+![Second Level Pareto](https://github.com/point85/OEE-Designer/blob/master/docs/dashboard-second-level-pareto.png)
+
+## Operator Application
+The Operator application is browser-based and allows a user to enter availability, performance, production, material change and job events.  The events can be recorded in chronological order as they happened (“By Event”) or in summary form (“Summarized”) over a period of time by duration of event.  Value adding time is assumed in summary form for availability.
+
+For example, the screen for entering a summarized availability is:
+![Operator Availability](https://github.com/point85/OEE-Designer/blob/master/docs/operator-availability.png)
+
+## Database
+The Java Persistence 2.0 API (JPA) as implemented by the Hibernate ORM framework together with the Hikari connection pool is used to persist OEE information to the database. 
+Hibernate and JPA abstract-away database specific aspects of inserting, updating, reading and deleting records in the tables.  The API is designed to work with any relational database supported by Hibernate.  
 
 For more information about the Designer and other OEE applications, please refer to the *Overall Equipment Effectiveness Applications User Guide* in the docs folder.
