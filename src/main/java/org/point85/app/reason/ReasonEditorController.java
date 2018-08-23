@@ -119,17 +119,17 @@ public class ReasonEditorController extends DesignerDialogController {
 		// fill in the top-level reason nodes
 		populateTopReasonNodes();
 
-		// availability and performance loss categories
+		// loss categories
 		List<TimeLoss> losses = new ArrayList<>();
-		losses.addAll(TimeLoss.getAvailabilityLosses());
-		losses.addAll(TimeLoss.getPerformanceLosses());
-		losses.add(TimeLoss.UNSCHEDULED);
-		losses.add(TimeLoss.NO_LOSS);
+		
+		for (TimeLoss loss : TimeLoss.values()) {
+			losses.add(loss);
+		}
 
 		Collections.sort(losses, new Comparator<TimeLoss>() {
 			@Override
 			public int compare(TimeLoss o1, TimeLoss o2) {
-				return o1.name().compareTo(o2.name());
+				return o1.toString().compareTo(o2.toString());
 			}
 		});
 

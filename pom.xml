@@ -4,7 +4,7 @@
 
   <groupId>org.point85</groupId>
   <artifactId>oee-apps</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <packaging>jar</packaging>
   
   <name>Point85 OEE JavaFX Applications</name>
@@ -137,14 +137,6 @@
     <artifactId>mssql-jdbc</artifactId>
     <version>6.2.2.jre8</version>
 </dependency>
-
-<!-- OEE Domain jar
-<dependency>
-    <groupId>org.point85</groupId>
-    <artifactId>oee-domain</artifactId>
-    <version>1.0.0</version>
-</dependency>
--->
 
 </dependencies>
 </project>

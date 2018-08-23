@@ -36,7 +36,8 @@ For availability and performance, the output value is a reason that is assigned 
 * Setup:  working time when the equipment is being changed over in order to run new material.
 * Stoppages: minor or short periods of time when the equipment is not producing as expected (such as a blocked or starved condition).
 * Reduced Speed:  the equipment is producing, but not at its design speed or ideal run rate.
-For quality or  yield, the data source provides a production count in the good, reject/rework or startup & yield categories in the defined units of measure for the material being produced.
+
+For quality or  yield, the data source provides a production count in the good, reject/rework or startup & yield categories in the defined units of measure for the material being produced.  This count has an equivalent time loss calculation by using the defined ideal or nominal speed.
 
 ## Architecture
 The OEE applications can be grouped by design-time and run-time.  The design-time Designer application is used to define the plant equipment, data sources, event resolution scripts, manufacturing work schedule, availability reasons, produced materials and units of measure for data collectors.  The designer also includes a dashboard and trending capabilities.

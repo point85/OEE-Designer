@@ -1046,8 +1046,8 @@ public class DashboardController extends DialogController implements CategoryCli
 			OeeEvent event = cellDataFeatures.getValue();
 			SimpleStringProperty property = null;
 
-			if (event.isAvailability()) {
-				property = new SimpleStringProperty(event.getReason().getName());
+			if (event.getReason() != null) {
+				property = new SimpleStringProperty(event.getReason().getDisplayString());
 			}
 			return property;
 		});
@@ -1056,9 +1056,9 @@ public class DashboardController extends DialogController implements CategoryCli
 		tcLossCategory.setCellValueFactory(cellDataFeatures -> {
 			OeeEvent event = cellDataFeatures.getValue();
 			SimpleObjectProperty<Text> lossProperty = null;
+			Reason reason = event.getReason();
 
-			if (event.isAvailability()) {
-				Reason reason = event.getReason();
+			if (reason != null) {
 				Color color = reason.getLossCategory().getColor();
 				Text text = new Text(reason.getLossCategory().toString());
 				text.setFill(color);
@@ -1429,7 +1429,9 @@ public class DashboardController extends DialogController implements CategoryCli
 			// last setup
 			if (!setups.isEmpty()) {
 				OeeEvent lastSetup = setups.get(setups.size() - 1);
-				tiJobMaterial.setDescription(lastSetup.getMaterial().getDisplayString());
+				if (lastSetup.getMaterial() != null) {
+					tiJobMaterial.setDescription(lastSetup.getMaterial().getDisplayString());
+				}
 				tiJobMaterial.setText(lastSetup.getJob());
 			}
 

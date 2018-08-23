@@ -2,9 +2,9 @@
 	<project name="oee-apps" default="build-all" basedir="."  xmlns:fx="javafx:com.sun.javafx.tools.ant">
 	
 	<!-- distribution archive -->
-	<property name="dist.zip" value="oee-apps-1.0.0.jar"/>
-	<property name="domain.jar" value="oee-domain-1.0.0.jar"/>
-	<property name="collector.jar" value="oee-collector-1.0.0.jar"/>
+	<property name="dist.zip" value="oee-apps-1.0.1.jar"/>
+	<property name="domain.jar" value="oee-domain-1.0.1.jar"/>
+	<property name="collector.jar" value="oee-collector-1.0.1.jar"/>
 		
 	<!-- folders -->
 	<property name="repo.dir" value="C:\Users\Kent\.m2\repository"/>
@@ -170,7 +170,7 @@
 			<manifest>
 				<attribute name="Implementation-Vendor" value="Point85.org"/>
 				<attribute name="Implementation-Title" value="OEE Applications"/>
-				<attribute name="Implementation-Version" value="1.0.0"/>
+				<attribute name="Implementation-Version" value="1.0.1"/>
 				<attribute name="JavaFX-Feature-Proxy" value="None"/>
 			</manifest>
 		</fx:jar>
