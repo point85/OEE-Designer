@@ -1,0 +1,12 @@
+							Point85 OEE
+						   RELEASE NOTES
+
+(1)  1.0.0, August 8, 2018:  
+	- Initial functionality
+(2)  1.0.1, August 23, 2018:  
+	- Added capability to specify a reason for rework and startup production quantities
+(3)  1.1.0, September 12, 2018:  
+	- Added a custom event type for non-OEE use
+	- Saved the input value to the resolver script in the OEE_EVENT table as the new IN_VALUE varchar(64) column
+	- Added executeUpdate() and executeQuery() methods to PersistenceService to execute a SQL insert, update, delete or query
+	- Added an About dialog to the Designer application

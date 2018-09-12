@@ -24,6 +24,8 @@ import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 public class OeeApplication extends Application {
+	public static final String VERSION_INFO = "Version 1.1.0, September 12, 2018";
+	
 	// JFX applications
 	private static final String DESIGNER_APP = "DESIGNER";
 	private static final String MONITOR_APP = "MONITOR";
@@ -171,7 +173,7 @@ public class OeeApplication extends Application {
 	/**
 	 * Main entry point
 	 * 
-	 * @param args
+	 * @param args Program arguments
 	 */
 	public static void main(String[] args) {
 		// configure log4j

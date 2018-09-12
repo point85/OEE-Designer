@@ -289,11 +289,8 @@ public class TrendChartController extends DesignerController {
 			break;
 		}
 
-		case JOB_CHANGE: {
-			plotData(resolvedItem.getInputValue(), resolvedItem.getOutputValue());
-			break;
-		}
-
+		case CUSTOM:
+		case JOB_CHANGE:
 		case MATL_CHANGE: {
 			plotData(resolvedItem.getInputValue(), resolvedItem.getOutputValue());
 			break;
@@ -312,6 +309,7 @@ public class TrendChartController extends DesignerController {
 			plotData(plottedValue, resolvedItem.getAmount());
 			break;
 		}
+		
 		default:
 			break;
 		}

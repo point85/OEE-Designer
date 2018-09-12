@@ -337,7 +337,8 @@ CREATE TABLE [dbo].[OEE_EVENT](
 	[AMOUNT] [float] NULL,
 	[UOM_KEY] [bigint] NULL,
 	[MATL_KEY] [bigint] NULL,
-	[JOB] [nvarchar](64) NULL
+	[JOB] [nvarchar](64) NULL,
+	[IN_VALUE] [nvarchar](64) NULL
 ) ON [PRIMARY]
 GO
 

@@ -8,7 +8,7 @@ import javafx.scene.image.ImageView;
 
 public final class ImageManager {
 	private static final String path = "/org/point85/images/";
-	
+
 	// standard image size LxW
 	private static final int DIM = 16;
 
@@ -40,6 +40,9 @@ public final class ImageManager {
 
 		// create it
 		switch (id) {
+		case ABOUT:
+			image = new Image(path + "About.png", DIM, DIM, true, true);
+			break;
 		case ADD:
 			image = new Image(path + "Add.png", DIM, DIM, true, true);
 			break;

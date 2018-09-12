@@ -138,6 +138,8 @@
             <Button fx:id="btUomConverter" mnemonicParsing="false" onAction="#onShowUomConverter" prefHeight="16.0" prefWidth="16.0" />
             <Separator orientation="VERTICAL" />
             <Button fx:id="btScriptEditor" mnemonicParsing="false" onAction="#onShowScriptEditor" prefHeight="16.0" prefWidth="16.0" />
+            <Separator orientation="VERTICAL" />
+            <Button fx:id="btAboutDialog" mnemonicParsing="false" onAction="#onShowAboutDialog" prefHeight="16.0" prefWidth="16.0" />
         </items>
       </ToolBar>
    </children>

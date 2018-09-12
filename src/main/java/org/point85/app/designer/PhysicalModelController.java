@@ -101,6 +101,9 @@ public class PhysicalModelController extends DesignerController {
 
 	@FXML
 	private Button btScriptEditor;
+	
+	@FXML
+	private Button btAboutDialog;
 
 	// entity section
 	@FXML
@@ -337,6 +340,9 @@ public class PhysicalModelController extends DesignerController {
 
 		btScriptEditor.setGraphic(ImageManager.instance().getImageView(Images.SCRIPT));
 		btScriptEditor.setTooltip(new Tooltip("Display Script Editor."));
+		
+		btAboutDialog.setGraphic(ImageManager.instance().getImageView(Images.ABOUT));
+		btAboutDialog.setTooltip(new Tooltip("Display about dialog."));
 	}
 
 	// images for editor buttons
@@ -471,6 +477,15 @@ public class PhysicalModelController extends DesignerController {
 	private void onShowUomConverter() {
 		try {
 			this.getApp().showUomConverter();
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+	
+	@FXML
+	private void onShowAboutDialog() {
+		try {
+			this.getApp().showAboutDialog();
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}

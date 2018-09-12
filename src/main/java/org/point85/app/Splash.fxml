@@ -32,7 +32,7 @@
          </VBox.margin></Label>
       <HBox alignment="TOP_RIGHT">
          <children>
-            <Label text="Point85 version 1.0.0">
+            <Label fx:id="lbVersion" text="Point85 version">
                <HBox.margin>
                   <Insets right="10.0" />
                </HBox.margin>

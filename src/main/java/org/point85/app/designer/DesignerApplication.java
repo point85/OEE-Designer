@@ -6,6 +6,7 @@ import org.point85.app.AppUtils;
 import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
+import org.point85.app.OeeApplication;
 import org.point85.app.dashboard.DashboardController;
 import org.point85.app.dashboard.DashboardDialogController;
 import org.point85.app.http.HttpServerController;
@@ -44,6 +45,8 @@ import org.slf4j.LoggerFactory;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
@@ -464,6 +467,16 @@ public class DesignerApplication {
 		if (!uomConversionController.getDialogStage().isShowing()) {
 			uomConversionController.getDialogStage().showAndWait();
 		}
+	}
+
+	void showAboutDialog() throws Exception {
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle("About");
+		alert.setHeaderText("Point85 Overall Equipment Effectiveness");
+		alert.setContentText(OeeApplication.VERSION_INFO);
+		alert.setResizable(true);
+
+		alert.showAndWait();
 	}
 
 	void showOpcDaTrendDialog(EventResolver eventResolver) throws Exception {

@@ -17,6 +17,9 @@ public class SplashController {
 
 	@FXML
 	private ImageView ivSplash;
+	
+	@FXML
+	private Label lbVersion;
 
 	void initialize() throws Exception {
 		// Point85
@@ -24,6 +27,9 @@ public class SplashController {
 
 		// main image
 		ivSplash.setImage(ImageManager.instance().getImage(Images.SPLASH));
+		
+		// version info
+		lbVersion.setText(OeeApplication.VERSION_INFO);
 	}
 
 	void setSplashText(String text) {
