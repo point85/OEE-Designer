@@ -4,7 +4,7 @@
 
   <groupId>org.point85</groupId>
   <artifactId>oee-apps</artifactId>
-  <version>1.1.0</version>
+  <version>1.1.1</version>
   <packaging>jar</packaging>
   
   <name>Point85 OEE JavaFX Applications</name>
@@ -81,7 +81,7 @@
 <dependency>
     <groupId>org.eclipse.milo</groupId>
     <artifactId>sdk-client</artifactId>
-    <version>0.2.1</version>
+    <version>0.2.4</version>
 </dependency>
 
 <!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk15on -->
@@ -97,7 +97,7 @@
 <dependency>
     <groupId>org.hibernate</groupId>
     <artifactId>hibernate-hikaricp</artifactId>
-    <version>5.3.1.Final</version>
+    <version>5.3.7.Final</version>
 </dependency>
 
 <!-- LOGGING -->
@@ -127,7 +127,7 @@
 <dependency>
     <groupId>com.rabbitmq</groupId>
     <artifactId>amqp-client</artifactId>
-    <version>5.2.0</version>
+    <version>5.5.0</version>
 </dependency>
 
 <!-- DATABASE -->

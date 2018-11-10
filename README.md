@@ -24,6 +24,8 @@ In addition, two GUI test applications assist in the development of an OEE solut
 * HTTP requester and RabbitMQ message publisher
 * Front end GUI for a data collector
 
+For more information about the Designer and other OEE applications, please refer to the *Overall Equipment Effectiveness Applications User Guide* in the docs folder.
+
 ## OEE Calculations
 OEE is the product of equipment availability, performance and quality each expressed as a percentage.  The time-loss model is used to accumulate time in loss categories (or “no loss” if the equipment is running normally).  A data source provides an input value to a data collector’s resolver JavaScript function that maps that input value to an output value (reason or production count).
 
@@ -84,5 +86,3 @@ For example, the screen for entering a summarized availability is:
 ## Database
 The Java Persistence 2.0 API (JPA) as implemented by the Hibernate ORM framework together with the Hikari connection pool is used to persist OEE information to the database. 
 Hibernate and JPA abstract-away database specific aspects of inserting, updating, reading and deleting records in the tables.  The API is designed to work with any relational database supported by Hibernate.  
-
-For more information about the Designer and other OEE applications, please refer to the *Overall Equipment Effectiveness Applications User Guide* in the docs folder.
