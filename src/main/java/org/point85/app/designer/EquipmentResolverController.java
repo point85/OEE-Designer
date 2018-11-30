@@ -14,6 +14,7 @@ import org.point85.app.opc.ua.OpcUaTreeNode;
 import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.DataCollector;
 import org.point85.domain.collector.DataSourceType;
+import org.point85.domain.db.DatabaseEventSource;
 import org.point85.domain.http.HttpSource;
 import org.point85.domain.messaging.MessagingSource;
 import org.point85.domain.opc.da.OpcDaBrowserLeaf;
@@ -401,6 +402,9 @@ public class EquipmentResolverController extends DesignerController {
 		case OPC_UA:
 			buttonImage = ImageManager.instance().getImageView(Images.OPC_UA);
 			break;
+		case DATABASE:
+			buttonImage = ImageManager.instance().getImageView(Images.DB);
+			break;
 		default:
 			break;
 		}
@@ -480,6 +484,16 @@ public class EquipmentResolverController extends DesignerController {
 			} else if (sourceType.equals(DataSourceType.MESSAGING)) {
 				// show RabbitMQ broker editor
 				MessagingSource dataSource = getApp().showRmqBrokerEditor();
+				tfServerId.setText(dataSource.getId());
+
+				getSelectedResolver().setDataSource(dataSource);
+
+				lbDataType.setText(String.class.getSimpleName());
+
+				setDefaultSourceId();
+			} else if (sourceType.equals(DataSourceType.DATABASE)) {
+				// show database server editor
+				DatabaseEventSource dataSource = getApp().showDatabaseServerEditor();
 				tfServerId.setText(dataSource.getId());
 
 				getSelectedResolver().setDataSource(dataSource);
@@ -701,6 +715,8 @@ public class EquipmentResolverController extends DesignerController {
 				getApp().showHttpTrendDialog(selectedEventResolver);
 			} else if (type.equals(DataSourceType.MESSAGING)) {
 				getApp().showMessagingTrendDialog(selectedEventResolver);
+			}else if (type.equals(DataSourceType.DATABASE)) {
+				getApp().showDatabaseTrendDialog(selectedEventResolver);
 			}
 
 		} catch (Exception e) {

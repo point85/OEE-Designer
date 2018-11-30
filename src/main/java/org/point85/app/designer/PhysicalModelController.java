@@ -94,6 +94,9 @@ public class PhysicalModelController extends DesignerController {
 	private Button btRmqBrokerEditor;
 
 	@FXML
+	private Button btDatabaseServerEditor;
+
+	@FXML
 	private Button btCollectorEditor;
 
 	@FXML
@@ -101,7 +104,7 @@ public class PhysicalModelController extends DesignerController {
 
 	@FXML
 	private Button btScriptEditor;
-	
+
 	@FXML
 	private Button btAboutDialog;
 
@@ -332,6 +335,9 @@ public class PhysicalModelController extends DesignerController {
 		btRmqBrokerEditor.setGraphic(ImageManager.instance().getImageView(Images.RMQ));
 		btRmqBrokerEditor.setTooltip(new Tooltip("Display RabbitMQ broker editor."));
 
+		btDatabaseServerEditor.setGraphic(ImageManager.instance().getImageView(Images.DB));
+		btDatabaseServerEditor.setTooltip(new Tooltip("Display database server editor."));
+
 		btCollectorEditor.setGraphic(ImageManager.instance().getImageView(Images.COLLECTOR));
 		btCollectorEditor.setTooltip(new Tooltip("Display collector configuration editor."));
 
@@ -340,7 +346,7 @@ public class PhysicalModelController extends DesignerController {
 
 		btScriptEditor.setGraphic(ImageManager.instance().getImageView(Images.SCRIPT));
 		btScriptEditor.setTooltip(new Tooltip("Display Script Editor."));
-		
+
 		btAboutDialog.setGraphic(ImageManager.instance().getImageView(Images.ABOUT));
 		btAboutDialog.setTooltip(new Tooltip("Display about dialog."));
 	}
@@ -403,6 +409,15 @@ public class PhysicalModelController extends DesignerController {
 	private void onShowRmqBrokerEditor() {
 		try {
 			this.getApp().showRmqBrokerEditor();
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+
+	@FXML
+	private void onShowDatabaseServerEditor() {
+		try {
+			this.getApp().showDatabaseServerEditor();
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}
@@ -481,7 +496,7 @@ public class PhysicalModelController extends DesignerController {
 			AppUtils.showErrorDialog(e);
 		}
 	}
-	
+
 	@FXML
 	private void onShowAboutDialog() {
 		try {
@@ -754,7 +769,7 @@ public class PhysicalModelController extends DesignerController {
 			AppUtils.showErrorDialog(e);
 		}
 	}
-	
+
 	private void fillPersistenceContext(PlantEntity entity) {
 		// bring children into the persistence context
 		for (PlantEntity child : entity.getChildren()) {
@@ -778,10 +793,10 @@ public class PhysicalModelController extends DesignerController {
 
 			// save modified entity
 			PlantEntity entity = getSelectedEntity();
-			
+
 			// bring children into persistence context
 			fillPersistenceContext(entity);
-						
+
 			PlantEntity saved = (PlantEntity) PersistenceService.instance().save(entity);
 
 			selectedEntityItem.getValue().setPlantEntity(saved);

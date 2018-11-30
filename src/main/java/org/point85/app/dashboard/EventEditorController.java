@@ -108,7 +108,7 @@ abstract class EventEditorController extends DialogController {
 		event.setStartTime(odtStart);
 		
 		// end time
-		if (odtEnd == null) {
+		if (odtEnd == null && event.getDuration() != null) {
 			odtEnd = odtStart.plus(event.getDuration());
 		}
 		event.setEndTime(odtEnd);

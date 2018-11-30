@@ -148,7 +148,7 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 
 	public void setScriptResolver(EventResolver eventResolver) throws Exception {
 		eventResolver.setWatchMode(true);
-		trendChartController.setScriptResolver(eventResolver);
+		trendChartController.setEventResolver(eventResolver);
 
 		OpcUaSource dataSource = (OpcUaSource) eventResolver.getDataSource();
 		setSource(dataSource);

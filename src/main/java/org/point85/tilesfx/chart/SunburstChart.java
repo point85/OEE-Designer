@@ -230,7 +230,7 @@ public class SunburstChart extends Region {
     public VisibleData getVisibleData() { return null == visibleData ? _visibleData : visibleData.get(); }
     /**
      * Defines the data that should be visualized in the chart segments
-     * @param VISIBLE_DATA
+     * @param VISIBLE_DATA visible data
      */
     public void setVisibleData(final VisibleData VISIBLE_DATA) {
         if (null == visibleData) {
@@ -259,7 +259,7 @@ public class SunburstChart extends Region {
     public TextOrientation getTextOrientation() { return null == textOrientation ? _textOrientation : textOrientation.get(); }
     /**
      * Defines the orientation the text will be drawn in the segments
-     * @param ORIENTATION
+     * @param ORIENTATION orientation
      */
     public void setTextOrientation(final TextOrientation ORIENTATION) {
         if (null == textOrientation) {
@@ -288,7 +288,7 @@ public class SunburstChart extends Region {
     public Color getBackgroundColor() { return null == backgroundColor ? _backgroundColor : backgroundColor.get(); }
     /**
      * Defines the color that will be used to fill the background of the chart
-     * @param COLOR
+     * @param COLOR color
      */
     public void setBackgroundColor(final Color COLOR) {
         if (null == backgroundColor) {
@@ -317,7 +317,7 @@ public class SunburstChart extends Region {
     public Color getTextColor() { return null == textColor ? _textColor : textColor.get(); }
     /**
      * Defines the color that will be used to draw text in segments if useChartDataTextColor == false
-     * @param COLOR
+     * @param COLOR color
      */
     public void setTextColor(final Color COLOR) {
         if (null == textColor) {
@@ -340,15 +340,15 @@ public class SunburstChart extends Region {
     }
 
     /**
-     * Returns true if the color of all chart segments in one group should be filled with the color
+     * @return Returns true if the color of all chart segments in one group should be filled with the color
      * of the groups root node or by the color defined in the chart data elements
-     * @return
+     * 
      */
     public boolean getUseColorFromParent() { return null == useColorFromParent ? _useColorFromParent : useColorFromParent.get(); }
     /**
-     * Defines if tthe color of all chart segments in one group should be filled with the color
+     * Defines if the color of all chart segments in one group should be filled with the color
      * of the groups root node or by the color defined in the chart data elements
-     * @param USE
+     * @param USE If true, use color from parent
      */
     public void setUseColorFromParent(final boolean USE) {
         if (null == useColorFromParent) {
@@ -370,13 +370,13 @@ public class SunburstChart extends Region {
     }
 
     /**
-     * Returns the number of decimals that will be used to format the values in the tooltip
-     * @return
+     *  @return Returns the number of decimals that will be used to format the values in the tooltip
+     *
      */
     public int getDecimals() { return null == decimals ? _decimals : decimals.get(); }
     /**
      * Defines the number of decimals that will be used to format the values in the tooltip
-     * @param DECIMALS
+     * @param DECIMALS number of decimals
      */
     public void setDecimals(final int DECIMALS) {
         if (null == decimals) {
@@ -403,14 +403,14 @@ public class SunburstChart extends Region {
     }
 
     /**
-     * Returns true if the chart is drawn using Path elements, fire ChartDataEvents and show tooltips on segments.
-     * @return
+     * @return Returns true if the chart is drawn using Path elements, fire ChartDataEvents and show tooltips on segments.
+     * 
      */
     public boolean isInteractive() { return null == interactive ? _interactive : interactive.get(); }
     /**
      * Defines if the chart should be drawn using Path elements, fire ChartDataEvents and shows tooltips on segments or
      * if the the chart should be drawn using one Canvas node.
-     * @param INTERACTIVE
+     * @param INTERACTIVE If true, user interactive mode
      */
     public void setInteractive(final boolean INTERACTIVE) {
         if (null == interactive) {
@@ -439,7 +439,7 @@ public class SunburstChart extends Region {
     public boolean isAutoTextColor() { return null == autoTextColor ? _autoTextColor : autoTextColor.get(); }
     /**
      * Defines if the text color of the chart data should be adjusted according to the chart data fill color
-     * @param AUTOMATIC
+     * @param AUTOMATIC If true, use auto text color
      */
     public void setAutoTextColor(final boolean AUTOMATIC) {
         if (null == autoTextColor) {
@@ -472,7 +472,7 @@ public class SunburstChart extends Region {
 
     /**
      * Defines the color that will be used by the autoTextColor feature as the bright text on dark segment fill colors
-     * @param COLOR
+     * @param COLOR Color to use
      */
     public void setBrightTextColor(final Color COLOR) {
         if (null == brightTextColor) {
@@ -509,7 +509,7 @@ public class SunburstChart extends Region {
     public Color getDarkTextColor() { return null == darkTextColor ? _darkTextColor : darkTextColor.get(); }
     /**
      * Defines the color that will be used by the autoTextColor feature as the dark text on bright segment fill colors
-     * @param COLOR
+     * @param COLOR Color to use
      */
     public void setDarkTextColor(final Color COLOR) {
         if (null == darkTextColor) {
@@ -547,7 +547,7 @@ public class SunburstChart extends Region {
     public boolean getUseChartDataTextColor() { return null == useChartDataTextColor ? _useChartDataTextColor : useChartDataTextColor.get(); }
     /**
      * Defines if the text color of the segments should be taken from the ChartData elements
-     * @param USE
+     * @param USE If true, chart data text color
      */
     public void setUseChartDataTextColor(final boolean USE) {
         if (null == useChartDataTextColor) {
@@ -570,7 +570,7 @@ public class SunburstChart extends Region {
 
     /**
      * Defines the root element of the tree
-     * @param TREE
+     * @param TREE Tree node
      */
     public void setTree(final TreeNode TREE) {
         if (null != tree) { tree.flattened().forEach(node -> node.removeAllTreeNodeEventListeners()); }

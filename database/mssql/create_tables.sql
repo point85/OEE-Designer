@@ -115,7 +115,7 @@ CREATE TABLE [dbo].[DATA_SOURCE](
 	[NAME] [nvarchar](64) NOT NULL,
 	[DESCRIPTION] [nvarchar](128) NULL,
 	[TYPE] [nvarchar](16) NOT NULL,
-	[HOST] [nvarchar](64) NULL,
+	[HOST] [nvarchar](128) NULL,
 	[USER_NAME] [nvarchar](64) NULL,
 	[PASSWORD] [nvarchar](64) NULL,
 	[PORT] [int] NULL,

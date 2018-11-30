@@ -266,9 +266,9 @@ public class TrendChartController extends DesignerController {
 		return this.eventResolver;
 	}
 
-	public void setScriptResolver(EventResolver scriptResolver) throws Exception {
-		this.eventResolver = scriptResolver;
-		this.setUpdatePeriodMsec(scriptResolver.getUpdatePeriod());
+	public void setEventResolver(EventResolver eventResolver) throws Exception {
+		this.eventResolver = eventResolver;
+		this.setUpdatePeriodMsec(eventResolver.getUpdatePeriod());
 	}
 
 	public OeeEvent invokeResolver(OeeContext context, Object sourceValue, OffsetDateTime dateTime) throws Exception {

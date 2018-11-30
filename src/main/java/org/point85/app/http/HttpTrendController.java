@@ -99,7 +99,7 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 
 	public void setScriptResolver(EventResolver eventResolver) throws Exception {
 		eventResolver.setWatchMode(true);
-		trendChartController.setScriptResolver(eventResolver);
+		trendChartController.setEventResolver(eventResolver);
 
 		lbSourceId.setText(
 				"Equipment: " + eventResolver.getEquipment().getName() + ", Source Id: " + eventResolver.getSourceId());

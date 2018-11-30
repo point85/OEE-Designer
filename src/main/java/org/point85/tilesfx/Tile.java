@@ -1278,8 +1278,10 @@ public class Tile extends Control {
      * @return true if the averaging functionality is enabled
      */
     public boolean isAveragingEnabled() { return null == averagingEnabled ? _averagingEnabled : averagingEnabled.get(); }
+    
     /**
      * Defines if the averaging functionality will be enabled.
+     * @param ENABLED If true, enable
      */
     public void setAveragingEnabled(final boolean ENABLED) {
         if (null == averagingEnabled) {

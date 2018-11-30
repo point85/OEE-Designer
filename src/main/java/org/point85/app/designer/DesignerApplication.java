@@ -9,6 +9,8 @@ import org.point85.app.Images;
 import org.point85.app.OeeApplication;
 import org.point85.app.dashboard.DashboardController;
 import org.point85.app.dashboard.DashboardDialogController;
+import org.point85.app.db.DatabaseServerController;
+import org.point85.app.db.DatabaseTrendController;
 import org.point85.app.http.HttpServerController;
 import org.point85.app.http.HttpTrendController;
 import org.point85.app.material.MaterialEditorController;
@@ -25,6 +27,7 @@ import org.point85.app.script.EventResolverController;
 import org.point85.app.uom.UomConversionController;
 import org.point85.app.uom.UomEditorController;
 import org.point85.domain.collector.DataCollector;
+import org.point85.domain.db.DatabaseEventSource;
 import org.point85.domain.http.HttpSource;
 import org.point85.domain.messaging.MessagingSource;
 import org.point85.domain.opc.da.DaOpcClient;
@@ -83,6 +86,9 @@ public class DesignerApplication {
 
 	// RabbitMQ broker editor
 	private MqBrokerController mqBrokerController;
+
+	// Database server editor
+	private DatabaseServerController databaseServerController;
 
 	// data collection definition
 	private DataCollectorController dataCollectorController;
@@ -419,6 +425,32 @@ public class DesignerApplication {
 		return mqBrokerController.getSource();
 	}
 
+	DatabaseEventSource showDatabaseServerEditor() throws Exception {
+		if (databaseServerController == null) {
+			FXMLLoader loader = FXMLLoaderFactory.databaseEventLoader();
+			AnchorPane page = (AnchorPane) loader.getRoot();
+
+			// Create the dialog Stage.
+			Stage dialogStage = new Stage(StageStyle.DECORATED);
+			dialogStage.setTitle("Edit Database Servers");
+			dialogStage.initModality(Modality.WINDOW_MODAL);
+			Scene scene = new Scene(page);
+			dialogStage.setScene(scene);
+
+			// get the controller
+			databaseServerController = loader.getController();
+			databaseServerController.setDialogStage(dialogStage);
+			databaseServerController.initialize(this);
+		}
+
+		// Show the dialog and wait until the user closes it
+		if (!databaseServerController.getDialogStage().isShowing()) {
+			databaseServerController.getDialogStage().showAndWait();
+		}
+
+		return databaseServerController.getSource();
+	}
+
 	DataCollector showCollectorEditor() throws Exception {
 		if (dataCollectorController == null) {
 			FXMLLoader loader = FXMLLoaderFactory.dataCollectorLoader();
@@ -622,6 +654,43 @@ public class DesignerApplication {
 
 		// show the window
 		messagingTrendController.getDialogStage().show();
+	}
+
+	void showDatabaseTrendDialog(EventResolver eventResolver) throws Exception {
+		// Load the fxml file and create a new stage for the pop-up dialog.
+		FXMLLoader loader = FXMLLoaderFactory.databaseTrendLoader();
+		AnchorPane page = (AnchorPane) loader.getRoot();
+
+		// Create the dialog Stage.
+		Stage dialogStage = new Stage(StageStyle.DECORATED);
+		dialogStage.setTitle("Database Event Trend");
+		dialogStage.initModality(Modality.NONE);
+		Scene scene = new Scene(page);
+		dialogStage.setScene(scene);
+
+		// get the controller
+		DatabaseTrendController databaseTrendController = loader.getController();
+		databaseTrendController.setDialogStage(dialogStage);
+		databaseTrendController.setApp(this);
+
+		// add the trend chart
+		SplitPane chartPane = databaseTrendController.initializeTrend();
+
+		AnchorPane.setBottomAnchor(chartPane, 50.0);
+		AnchorPane.setLeftAnchor(chartPane, 5.0);
+		AnchorPane.setRightAnchor(chartPane, 5.0);
+		AnchorPane.setTopAnchor(chartPane, 50.0);
+
+		page.getChildren().add(0, chartPane);
+
+		// set the script resolver
+		databaseTrendController.setEventResolver(eventResolver);
+
+		// connect to the database server
+		databaseTrendController.subscribeToDataSource();
+
+		// show the window
+		databaseTrendController.getDialogStage().show();
 	}
 
 	public PhysicalModelController getPhysicalModelController() {

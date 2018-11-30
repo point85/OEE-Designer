@@ -100,6 +100,10 @@ public class MqBrokerController extends DesignerDialogController {
 	private void onSelectDataSource() {
 		try {
 			dataSource = cbDataSources.getSelectionModel().getSelectedItem();
+			
+			if (dataSource == null) {
+				return;
+			}
 
 			this.tfHost.setText(dataSource.getHost());
 			this.tfUserName.setText(dataSource.getUserName());
@@ -160,15 +164,13 @@ public class MqBrokerController extends DesignerDialogController {
 
 			// save data source
 			MessagingSource saved = (MessagingSource) PersistenceService.instance().save(dataSource);
+			setSource(saved);
 
 			// update list
 			if (dataSource.getKey() == null) {
 				// new source
 				cbDataSources.getItems().add(dataSource);
 			}
-			
-			this.dataSource = saved;
-
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}
