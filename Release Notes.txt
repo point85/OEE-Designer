@@ -10,3 +10,12 @@
 	- Saved the input value to the resolver script in the OEE_EVENT table as the new IN_VALUE varchar(64) column
 	- Added executeUpdate() and executeQuery() methods to PersistenceService to execute a SQL insert, update, delete or query
 	- Added an About dialog to the Designer application
+(4) 1.1.1, November 15, 2018:
+	- Technology refresh, some minor bug fixes
+(5) 1.2.0, November 30, 2018:
+	- Added a database interface table as a source of OEE events
+(6) 1.3.0, December 18, 2018:
+	- Added a file share server as a source of OEE events
+	- Minor bug fixes
+
+Please send comments and suggestions to point85.llc@gmail.com.

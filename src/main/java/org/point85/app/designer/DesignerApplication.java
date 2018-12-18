@@ -11,6 +11,8 @@ import org.point85.app.dashboard.DashboardController;
 import org.point85.app.dashboard.DashboardDialogController;
 import org.point85.app.db.DatabaseServerController;
 import org.point85.app.db.DatabaseTrendController;
+import org.point85.app.file.FileShareController;
+import org.point85.app.file.FileTrendController;
 import org.point85.app.http.HttpServerController;
 import org.point85.app.http.HttpTrendController;
 import org.point85.app.material.MaterialEditorController;
@@ -28,6 +30,7 @@ import org.point85.app.uom.UomConversionController;
 import org.point85.app.uom.UomEditorController;
 import org.point85.domain.collector.DataCollector;
 import org.point85.domain.db.DatabaseEventSource;
+import org.point85.domain.file.FileEventSource;
 import org.point85.domain.http.HttpSource;
 import org.point85.domain.messaging.MessagingSource;
 import org.point85.domain.opc.da.DaOpcClient;
@@ -89,6 +92,9 @@ public class DesignerApplication {
 
 	// Database server editor
 	private DatabaseServerController databaseServerController;
+
+	// file share editor
+	private FileShareController fileShareController;
 
 	// data collection definition
 	private DataCollectorController dataCollectorController;
@@ -426,22 +432,20 @@ public class DesignerApplication {
 	}
 
 	DatabaseEventSource showDatabaseServerEditor() throws Exception {
-		if (databaseServerController == null) {
-			FXMLLoader loader = FXMLLoaderFactory.databaseEventLoader();
-			AnchorPane page = (AnchorPane) loader.getRoot();
+		FXMLLoader loader = FXMLLoaderFactory.databaseServerLoader();
+		AnchorPane page = (AnchorPane) loader.getRoot();
 
-			// Create the dialog Stage.
-			Stage dialogStage = new Stage(StageStyle.DECORATED);
-			dialogStage.setTitle("Edit Database Servers");
-			dialogStage.initModality(Modality.WINDOW_MODAL);
-			Scene scene = new Scene(page);
-			dialogStage.setScene(scene);
+		// Create the dialog Stage.
+		Stage dialogStage = new Stage(StageStyle.DECORATED);
+		dialogStage.setTitle("Edit Database Servers");
+		dialogStage.initModality(Modality.WINDOW_MODAL);
+		Scene scene = new Scene(page);
+		dialogStage.setScene(scene);
 
-			// get the controller
-			databaseServerController = loader.getController();
-			databaseServerController.setDialogStage(dialogStage);
-			databaseServerController.initialize(this);
-		}
+		// get the controller
+		databaseServerController = loader.getController();
+		databaseServerController.setDialogStage(dialogStage);
+		databaseServerController.initialize(this);
 
 		// Show the dialog and wait until the user closes it
 		if (!databaseServerController.getDialogStage().isShowing()) {
@@ -449,6 +453,30 @@ public class DesignerApplication {
 		}
 
 		return databaseServerController.getSource();
+	}
+
+	FileEventSource showFileShareEditor() throws Exception {
+		FXMLLoader loader = FXMLLoaderFactory.fileShareLoader();
+		AnchorPane page = (AnchorPane) loader.getRoot();
+
+		// Create the dialog Stage.
+		Stage dialogStage = new Stage(StageStyle.DECORATED);
+		dialogStage.setTitle("Edit File Shares");
+		dialogStage.initModality(Modality.WINDOW_MODAL);
+		Scene scene = new Scene(page);
+		dialogStage.setScene(scene);
+
+		// get the controller
+		fileShareController = loader.getController();
+		fileShareController.setDialogStage(dialogStage);
+		fileShareController.initialize(this);
+
+		// Show the dialog and wait until the user closes it
+		if (!fileShareController.getDialogStage().isShowing()) {
+			fileShareController.getDialogStage().showAndWait();
+		}
+
+		return fileShareController.getSource();
 	}
 
 	DataCollector showCollectorEditor() throws Exception {
@@ -691,6 +719,43 @@ public class DesignerApplication {
 
 		// show the window
 		databaseTrendController.getDialogStage().show();
+	}
+
+	void showFileTrendDialog(EventResolver eventResolver) throws Exception {
+		// Load the fxml file and create a new stage for the pop-up dialog.
+		FXMLLoader loader = FXMLLoaderFactory.fileTrendLoader();
+		AnchorPane page = (AnchorPane) loader.getRoot();
+
+		// Create the dialog Stage.
+		Stage dialogStage = new Stage(StageStyle.DECORATED);
+		dialogStage.setTitle("File Event Trend");
+		dialogStage.initModality(Modality.NONE);
+		Scene scene = new Scene(page);
+		dialogStage.setScene(scene);
+
+		// get the controller
+		FileTrendController fileTrendController = loader.getController();
+		fileTrendController.setDialogStage(dialogStage);
+		fileTrendController.setApp(this);
+
+		// add the trend chart
+		SplitPane chartPane = fileTrendController.initializeTrend();
+
+		AnchorPane.setBottomAnchor(chartPane, 50.0);
+		AnchorPane.setLeftAnchor(chartPane, 5.0);
+		AnchorPane.setRightAnchor(chartPane, 5.0);
+		AnchorPane.setTopAnchor(chartPane, 50.0);
+
+		page.getChildren().add(0, chartPane);
+
+		// set the script resolver
+		fileTrendController.setEventResolver(eventResolver);
+
+		// connect to the database server
+		fileTrendController.subscribeToDataSource();
+
+		// show the window
+		fileTrendController.getDialogStage().show();
 	}
 
 	public PhysicalModelController getPhysicalModelController() {

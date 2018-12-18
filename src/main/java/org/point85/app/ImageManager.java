@@ -144,7 +144,10 @@ public final class ImageManager {
 			break;
 		case DB:
 			image = new Image(path + "DatabaseSource.png", DIM, DIM, true, true);
-			break;			
+			break;
+		case FILE:
+			image = new Image(path + "FileSource.png", DIM, DIM, true, true);
+			break;
 		case SAVE:
 			image = new Image(path + "Save.png", DIM, DIM, true, true);
 			break;
@@ -196,6 +199,9 @@ public final class ImageManager {
 			break;
 		case WEB:
 			image = new Image(path + "WebSource.png", DIM, DIM, true, true);
+			break;
+		case CHOOSE_FILE:
+			image = new Image(path + "ChooseFile.png", DIM, DIM, true, true);
 			break;
 		default:
 			image = new Image(path + "Folder.png", DIM, DIM, true, true);

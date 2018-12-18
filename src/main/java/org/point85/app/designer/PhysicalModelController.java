@@ -97,6 +97,9 @@ public class PhysicalModelController extends DesignerController {
 	private Button btDatabaseServerEditor;
 
 	@FXML
+	private Button btFileShareEditor;
+
+	@FXML
 	private Button btCollectorEditor;
 
 	@FXML
@@ -338,6 +341,9 @@ public class PhysicalModelController extends DesignerController {
 		btDatabaseServerEditor.setGraphic(ImageManager.instance().getImageView(Images.DB));
 		btDatabaseServerEditor.setTooltip(new Tooltip("Display database server editor."));
 
+		btFileShareEditor.setGraphic(ImageManager.instance().getImageView(Images.FILE));
+		btFileShareEditor.setTooltip(new Tooltip("Display file share editor."));
+
 		btCollectorEditor.setGraphic(ImageManager.instance().getImageView(Images.COLLECTOR));
 		btCollectorEditor.setTooltip(new Tooltip("Display collector configuration editor."));
 
@@ -418,6 +424,15 @@ public class PhysicalModelController extends DesignerController {
 	private void onShowDatabaseServerEditor() {
 		try {
 			this.getApp().showDatabaseServerEditor();
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+
+	@FXML
+	private void onShowFileShareEditor() {
+		try {
+			this.getApp().showFileShareEditor();
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}

@@ -15,6 +15,7 @@ import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.DataCollector;
 import org.point85.domain.collector.DataSourceType;
 import org.point85.domain.db.DatabaseEventSource;
+import org.point85.domain.file.FileEventSource;
 import org.point85.domain.http.HttpSource;
 import org.point85.domain.messaging.MessagingSource;
 import org.point85.domain.opc.da.OpcDaBrowserLeaf;
@@ -405,6 +406,9 @@ public class EquipmentResolverController extends DesignerController {
 		case DATABASE:
 			buttonImage = ImageManager.instance().getImageView(Images.DB);
 			break;
+		case FILE:
+			buttonImage = ImageManager.instance().getImageView(Images.FILE);
+			break;
 		default:
 			break;
 		}
@@ -491,6 +495,7 @@ public class EquipmentResolverController extends DesignerController {
 				lbDataType.setText(String.class.getSimpleName());
 
 				setDefaultSourceId();
+				// Database
 			} else if (sourceType.equals(DataSourceType.DATABASE)) {
 				// show database server editor
 				DatabaseEventSource dataSource = getApp().showDatabaseServerEditor();
@@ -501,8 +506,20 @@ public class EquipmentResolverController extends DesignerController {
 				lbDataType.setText(String.class.getSimpleName());
 
 				setDefaultSourceId();
+			}
+			// file
+			else if (sourceType.equals(DataSourceType.FILE)) {
+				// show file share editor
+				FileEventSource dataSource = getApp().showFileShareEditor();
+				tfServerId.setText(dataSource.getId());
+
+				getSelectedResolver().setDataSource(dataSource);
+
+				lbDataType.setText(String.class.getSimpleName());
+
+				setDefaultSourceId();
 			} else {
-				throw new Exception("Uhnknow data source type " + sourceType);
+				throw new Exception("Unknown data source type " + sourceType);
 			}
 
 		} catch (Exception e) {
@@ -647,7 +664,7 @@ public class EquipmentResolverController extends DesignerController {
 
 			// equipment
 			Equipment equipment = (Equipment) plantEntity;
-			
+
 			// ensure that we have a resolver
 			getSelectedResolver();
 
@@ -715,8 +732,10 @@ public class EquipmentResolverController extends DesignerController {
 				getApp().showHttpTrendDialog(selectedEventResolver);
 			} else if (type.equals(DataSourceType.MESSAGING)) {
 				getApp().showMessagingTrendDialog(selectedEventResolver);
-			}else if (type.equals(DataSourceType.DATABASE)) {
+			} else if (type.equals(DataSourceType.DATABASE)) {
 				getApp().showDatabaseTrendDialog(selectedEventResolver);
+			} else if (type.equals(DataSourceType.FILE)) {
+				getApp().showFileTrendDialog(selectedEventResolver);
 			}
 
 		} catch (Exception e) {

@@ -14,6 +14,7 @@ Sources of equipment availability, performance and quality event data include:
 * HTTP: invocation of a web service via an HTTP request 
 * Messaging:  an equipment event message received via a RabbitMQ message broker
 * Database Interface Table:  a pre-defined table for inserting OEE events
+* File Share:  a server hosting OEE event files
 
 The Point85 applications supporting OEE are:
 * Designer:  a GUI application for defining the plant equipment, data sources, event resolution scripts, manufacturing work schedule, availability reasons, produced materials and units of measure for data collectors.  The designer also includes a dashboard and trending capabilities.

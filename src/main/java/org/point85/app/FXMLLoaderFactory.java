@@ -12,6 +12,8 @@ import org.point85.app.db.DatabaseTrendController;
 import org.point85.app.designer.DataCollectorController;
 import org.point85.app.designer.EquipmentMaterialController;
 import org.point85.app.designer.EquipmentResolverController;
+import org.point85.app.file.FileShareController;
+import org.point85.app.file.FileTrendController;
 import org.point85.app.http.HttpServerController;
 import org.point85.app.http.HttpTrendController;
 import org.point85.app.material.MaterialEditorController;
@@ -105,8 +107,14 @@ public class FXMLLoaderFactory {
 		return fxmlLoader;
 	}
 	
-	public static FXMLLoader databaseEventLoader() throws Exception {
+	public static FXMLLoader databaseServerLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(DatabaseServerController.class.getResource("DatabaseServer.fxml"));
+		fxmlLoader.load();
+		return fxmlLoader;
+	}
+	
+	public static FXMLLoader fileShareLoader() throws Exception {
+		FXMLLoader fxmlLoader = new FXMLLoader(FileShareController.class.getResource("FileShare.fxml"));
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
@@ -149,6 +157,12 @@ public class FXMLLoaderFactory {
 	
 	public static FXMLLoader databaseTrendLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(DatabaseTrendController.class.getResource("DatabaseTrend.fxml"));
+		fxmlLoader.load();
+		return fxmlLoader;
+	}
+	
+	public static FXMLLoader fileTrendLoader() throws Exception {
+		FXMLLoader fxmlLoader = new FXMLLoader(FileTrendController.class.getResource("FileTrend.fxml"));
 		fxmlLoader.load();
 		return fxmlLoader;
 	}

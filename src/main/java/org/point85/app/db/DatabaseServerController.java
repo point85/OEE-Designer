@@ -146,22 +146,22 @@ public class DatabaseServerController extends DesignerDialogController {
 	private void onSaveDataSource() {
 		// set attributes
 		try {
-			DatabaseEventSource dataSource = getSource();
+			DatabaseEventSource eventSource = getSource();
 
-			dataSource.setHost(getHost());
-			dataSource.setUserName(getUserName());
-			dataSource.setPassword(getPassword());
-			dataSource.setDescription(getDescription());
+			eventSource.setHost(getHost());
+			eventSource.setUserName(getUserName());
+			eventSource.setPassword(getPassword());
+			eventSource.setDescription(getDescription());
 
 			// name is JDBC connection string
-			dataSource.setName(getHost());
+			eventSource.setName(getHost());
 
 			// save data source
-			DatabaseEventSource saved = (DatabaseEventSource) PersistenceService.instance().save(dataSource);
+			DatabaseEventSource saved = (DatabaseEventSource) PersistenceService.instance().save(eventSource);
 			setSource(saved);
 
 			// update list
-			if (dataSource.getKey() == null) {
+			if (eventSource.getKey() == null) {
 				// new source
 				cbDataSources.getItems().add(dataSource);
 			}

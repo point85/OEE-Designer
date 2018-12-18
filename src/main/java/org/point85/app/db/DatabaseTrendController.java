@@ -138,7 +138,6 @@ public class DatabaseTrendController extends DesignerDialogController implements
 		getApp().getAppContext().addDatabaseEventClient(databaseClient);
 
 		// start the trend
-		// trendChartController.onStartTrending();
 		trendChartController.enableTrending(true);
 
 		// start polling for events
@@ -228,9 +227,24 @@ public class DatabaseTrendController extends DesignerDialogController implements
 				@Override
 				protected Void call() {
 					try {
+						// set to processing status
+						databaseEvent.setStatus(DatabaseEventStatus.PROCESSING);
+						databaseEvent.setError(null);
+
+						try {
+							dbClient.save(databaseEvent);
+						} catch (Exception ex) {
+							Platform.runLater(() -> {
+								AppUtils.showErrorDialog(ex);
+							});
+							return null;
+						}
+
+						// execute script
 						trendChartController.invokeResolver(getApp().getAppContext(), databaseEvent.getInputValue(),
 								databaseEvent.getTime());
 
+						// passed
 						databaseEvent.setStatus(DatabaseEventStatus.PASS);
 						databaseEvent.setError(null);
 					} catch (Exception e) {
@@ -245,7 +259,9 @@ public class DatabaseTrendController extends DesignerDialogController implements
 						try {
 							dbClient.save(databaseEvent);
 						} catch (Exception ex) {
-							// ignore
+							Platform.runLater(() -> {
+								AppUtils.showErrorDialog(ex);
+							});
 						}
 					}
 					return null;

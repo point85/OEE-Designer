@@ -572,6 +572,11 @@ public class ClientTestApplication implements MessageListener {
 		try {
 			// GET plant entities
 			String urlString = buildHttpUrl(OeeHttpServer.ENTITY_EP);
+
+			if (logger.isInfoEnabled()) {
+				logger.info("Opening connection to " + urlString);
+			}
+
 			URL url = new URL(urlString);
 
 			conn = (HttpURLConnection) url.openConnection();
@@ -805,7 +810,7 @@ public class ClientTestApplication implements MessageListener {
 			for (CollectorDataSource dataSource : dataSources) {
 				items.add((HttpSource) dataSource);
 			}
-			
+
 			// bug?
 			for (int i = 0; i < dataSources.size(); i++) {
 				cbHttpHostPort.getSelectionModel().select(i);
