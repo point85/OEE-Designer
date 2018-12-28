@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Spinner?>
@@ -15,11 +16,11 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 
-<SplitPane dividerPositions="0.5" minHeight="600.0" minWidth="1000.0" orientation="VERTICAL" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.charts.TrendChartController">
+<SplitPane dividerPositions="0.5" minHeight="600.0" minWidth="1100.0" orientation="VERTICAL" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.charts.TrendChartController">
    <items>
       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
          <children>
-            <TableView fx:id="tvResolvedItems" layoutX="71.0" layoutY="-11.0" prefHeight="70.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="50.0">
+            <TableView fx:id="tvResolvedItems" layoutX="71.0" layoutY="-11.0" prefHeight="70.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="100.0">
                <columns>
                   <TableColumn fx:id="tcItem" prefWidth="200.0" text="Item" />
                   <TableColumn fx:id="tcInputValue" prefWidth="150.0" text="Input Value" />
@@ -28,7 +29,7 @@
                   <TableColumn fx:id="tcLossCategory" prefWidth="200.0" text="OEE Loss" />
                </columns>
             </TableView>
-            <HBox alignment="CENTER_LEFT" layoutX="73.0" layoutY="14.0" prefHeight="50.0" spacing="20.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <HBox alignment="CENTER_LEFT" layoutX="73.0" layoutY="14.0" prefHeight="50.0" spacing="20.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
                <children>
                   <Button fx:id="btToggleTrend" defaultButton="true" disable="true" mnemonicParsing="false" onAction="#onToggleTrending" prefWidth="100.0" text=" Start Trend">
                      <HBox.margin>
@@ -48,6 +49,23 @@
                   <Label text="Max Points" />
                   <TextField fx:id="tfPointCount" prefWidth="75.0" />
                   <Button fx:id="btResetTrend" mnemonicParsing="false" onAction="#onResetTrending" prefWidth="100.0" text="Reset" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" layoutX="14.0" layoutY="-25.0" prefHeight="50.0" spacing="20.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <Label text="From">
+                     <HBox.margin>
+                        <Insets left="5.0" />
+                     </HBox.margin>
+                  </Label>
+                  <DatePicker fx:id="dpStartDate" maxWidth="1.7976931348623157E308" promptText="Choose starting date" />
+                  <TextField fx:id="tfStartTime" prefWidth="75.0" />
+                  <Label text="(HH:MM)" />
+                  <Label text="To" />
+                  <DatePicker fx:id="dpEndDate" maxWidth="1.7976931348623157E308" promptText="Choose ending date" />
+                  <TextField fx:id="tfEndTime" prefWidth="75.0" />
+                  <Label text="(HH:MM)" />
+                  <Button fx:id="btRefresh" mnemonicParsing="false" onAction="#onRefresh" prefWidth="100.0" text="Refresh" />
                </children>
             </HBox>
          </children>

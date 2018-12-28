@@ -1,8 +1,13 @@
 package org.point85.app.charts;
 
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.point85.app.AppUtils;
@@ -14,6 +19,7 @@ import org.point85.app.designer.DesignerController;
 import org.point85.domain.DomainUtils;
 import org.point85.domain.collector.OeeEvent;
 import org.point85.domain.oee.TimeLoss;
+import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.EquipmentEventResolver;
 import org.point85.domain.plant.Reason;
 import org.point85.domain.script.EventResolver;
@@ -30,6 +36,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
@@ -127,6 +134,22 @@ public class TrendChartController extends DesignerController {
 	@FXML
 	private ToggleGroup tgWhichChart;
 
+	// date range selection criteria
+	@FXML
+	private DatePicker dpStartDate;
+
+	@FXML
+	private TextField tfStartTime;
+
+	@FXML
+	private DatePicker dpEndDate;
+
+	@FXML
+	private TextField tfEndTime;
+
+	@FXML
+	private Button btRefresh;
+
 	public void initialize(DesignerApplication app) throws Exception {
 		setApp(app);
 
@@ -201,7 +224,12 @@ public class TrendChartController extends DesignerController {
 
 		// input value
 		tcInputValue.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(cellDataFeatures.getValue().getInputValue().toString());
+			Object inputValue = cellDataFeatures.getValue().getInputValue();
+
+			if (inputValue == null) {
+				inputValue = "";
+			}
+			return new SimpleStringProperty(inputValue.toString());
 		});
 
 		// timestamp
@@ -215,7 +243,7 @@ public class TrendChartController extends DesignerController {
 			Object outputValue = cellDataFeatures.getValue().getOutputValue();
 
 			if (outputValue == null) {
-				outputValue = "null";
+				outputValue = "";
 			}
 			return new SimpleStringProperty(outputValue.toString());
 		});
@@ -256,6 +284,10 @@ public class TrendChartController extends DesignerController {
 		// clear trend
 		btResetTrend.setGraphic(ImageManager.instance().getImageView(Images.CLEAR));
 		btResetTrend.setContentDisplay(ContentDisplay.LEFT);
+
+		// refresh
+		btRefresh.setGraphic(ImageManager.instance().getImageView(Images.REFRESH));
+		btRefresh.setContentDisplay(ContentDisplay.LEFT);
 	}
 
 	public void setProvider(DataSubscriber provider) {
@@ -309,23 +341,25 @@ public class TrendChartController extends DesignerController {
 			plotData(plottedValue, resolvedItem.getAmount());
 			break;
 		}
-		
+
 		default:
 			break;
 		}
 
 		// add to table with limit
-		synchronized (tvResolvedItems) {
-			if (resolvedItems.size() > dataCount) {
-				resolvedItems.remove(0);
-			}
-			resolvedItems.add(resolvedItem);
-
-			tvResolvedItems.setItems(resolvedItems);
-			tvResolvedItems.refresh();
-		}
+		addEvent(resolvedItem);
 
 		return resolvedItem;
+	}
+
+	private synchronized void addEvent(OeeEvent event) {
+		if (resolvedItems.size() > dataCount) {
+			resolvedItems.remove(0);
+		}
+		resolvedItems.add(event);
+
+		tvResolvedItems.setItems(resolvedItems);
+		tvResolvedItems.refresh();
 	}
 
 	private void plotData(final Object inputValue, final Object plottedValue) throws Exception {
@@ -450,6 +484,97 @@ public class TrendChartController extends DesignerController {
 	private void onSelectOutputValueChart() {
 		spCharts.getChildren().get(INPUT_VALUE_VIEW).setVisible(false);
 		spCharts.getChildren().get(OUTPUT_VALUE_VIEW).setVisible(true);
+	}
+
+	@FXML
+	public void onRefresh() {
+		try {
+			onResetTrending();
+			
+			OffsetDateTime odtStart = null;
+			OffsetDateTime odtEnd = null;
+
+			// start date and time
+			LocalDate startDate = dpStartDate.getValue();
+
+			if (startDate != null) {
+				Duration startSeconds = null;
+				if (tfStartTime.getText() != null && tfStartTime.getText().trim().length() > 0) {
+					startSeconds = AppUtils.durationFromString(tfStartTime.getText().trim());
+				} else {
+					startSeconds = Duration.ZERO;
+				}
+
+				LocalTime startTime = LocalTime.ofSecondOfDay(startSeconds.getSeconds());
+				LocalDateTime ldtStart = LocalDateTime.of(startDate, startTime);
+				odtStart = DomainUtils.fromLocalDateTime(ldtStart);
+			}
+
+			// end date and time
+			LocalDate endDate = dpEndDate.getValue();
+
+			if (endDate != null) {
+				Duration endSeconds = null;
+				if (tfEndTime.getText() != null && tfEndTime.getText().trim().length() > 0) {
+					endSeconds = AppUtils.durationFromString(tfEndTime.getText().trim());
+				} else {
+					endSeconds = Duration.ZERO;
+				}
+
+				LocalTime endTime = LocalTime.ofSecondOfDay(endSeconds.getSeconds());
+				LocalDateTime ldtEnd = LocalDateTime.of(endDate, endTime);
+				odtEnd = DomainUtils.fromLocalDateTime(ldtEnd);
+			}
+
+			if (odtStart != null && odtEnd != null && odtEnd.isBefore(odtStart)) {
+				throw new Exception("The starting time " + odtStart + " must be before the ending time " + odtEnd);
+			}
+
+			List<OeeEvent> events = PersistenceService.instance().fetchEvents(eventResolver.getEquipment(),
+					eventResolver.getType(), odtStart, odtEnd);
+
+			for (OeeEvent event : events) {
+				// plot values
+				Object plottedValue = null;
+
+				switch (eventResolver.getType()) {
+				case AVAILABILITY:
+					plottedValue = event.getReason().getName();
+					break;
+
+				case CUSTOM:
+					break;
+
+				case JOB_CHANGE:
+					plottedValue = event.getJob();
+					break;
+
+				case MATL_CHANGE:
+					plottedValue = event.getMaterial().getName();
+					break;
+
+				case PROD_GOOD:
+				case PROD_REJECT:
+				case PROD_STARTUP:
+					plottedValue = event.getAmount();
+					break;
+
+				default:
+					break;
+				}
+				
+				// add event to table
+				event.setItemId(eventResolver.getSourceId());
+				event.setOutputValue(plottedValue);
+				addEvent(event);
+
+				// plot it
+				plotData(event.getInputValue(), plottedValue);
+			}
+
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
 	}
 
 }
