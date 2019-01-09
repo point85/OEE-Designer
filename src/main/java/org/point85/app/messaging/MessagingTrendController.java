@@ -5,138 +5,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.point85.app.AppUtils;
-import org.point85.app.FXMLLoaderFactory;
-import org.point85.app.ImageManager;
-import org.point85.app.Images;
 import org.point85.app.charts.DataSubscriber;
-import org.point85.app.charts.TrendChartController;
-import org.point85.app.designer.DesignerDialogController;
 import org.point85.domain.DomainUtils;
 import org.point85.domain.messaging.ApplicationMessage;
 import org.point85.domain.messaging.EquipmentEventMessage;
 import org.point85.domain.messaging.MessageListener;
 import org.point85.domain.messaging.MessageType;
-import org.point85.domain.messaging.MessagingSource;
 import org.point85.domain.messaging.MessagingClient;
+import org.point85.domain.messaging.MessagingSource;
 import org.point85.domain.messaging.RoutingKey;
 import org.point85.domain.script.EventResolver;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Envelope;
 
-import javafx.application.Platform;
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Button;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.Label;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.TextField;
 
-public class MessagingTrendController extends DesignerDialogController implements MessageListener, DataSubscriber {
+public class MessagingTrendController extends BaseMessagingTrendController implements MessageListener, DataSubscriber {
 	// RabbitMQ message publisher/subscriber
 	private MessagingClient pubSub;
-
-	// trend chart
-	private TrendChartController trendChartController;
-
-	// trend chart pane
-	private SplitPane spTrendChart;
-
-	@FXML
-	private Label lbSourceId;
-
-	@FXML
-	private Label lbBroker;
-
-	@FXML
-	private TextField tfLoopbackValue;
-
-	@FXML
-	private Button btLoopback;
-
-	public SplitPane initializeTrend() throws Exception {
-		if (trendChartController == null) {
-			// Load the fxml file and create the anchor pane
-			FXMLLoader loader = FXMLLoaderFactory.trendChartLoader();
-			spTrendChart = (SplitPane) loader.getRoot();
-
-			trendChartController = loader.getController();
-			trendChartController.initialize(getApp());
-
-			// data provider
-			trendChartController.setProvider(this);
-
-			setImages();
-
-			lbBroker.setText("");
-		}
-		return spTrendChart;
-	}
-
-	// images for buttons
-	@Override
-	protected void setImages() throws Exception {
-		super.setImages();
-
-		// loopback test
-		btLoopback.setGraphic(ImageManager.instance().getImageView(Images.EXECUTE));
-		btLoopback.setContentDisplay(ContentDisplay.LEFT);
-	}
-
-	public void setEventResolver(EventResolver eventResolver) throws Exception {
-		eventResolver.setWatchMode(true);
-		trendChartController.setEventResolver(eventResolver);
-
-		lbSourceId.setText(
-				"Equipment: " + eventResolver.getEquipment().getName() + ", Source Id: " + eventResolver.getSourceId());
-		lbBroker.setText(eventResolver.getDataSource().getId());
-	}
-
-	@Override
-	@FXML
-	protected void onOK() {
-		super.onOK();
-		try {
-			unsubscribeFromDataSource();
-		} catch (Exception e) {
-			AppUtils.showErrorDialog(e);
-		}
-	}
-
-	@Override
-	@FXML
-	protected void onCancel() {
-		super.onCancel();
-
-		try {
-			unsubscribeFromDataSource();
-		} catch (Exception e) {
-			AppUtils.showErrorDialog(e);
-		}
-	}
-
-	@FXML
-	private void onSubscribe() {
-		try {
-			subscribeToDataSource();
-		} catch (Exception e) {
-			AppUtils.showErrorDialog(e);
-		}
-	}
-
-	@FXML
-	private void onUnsubscribe() {
-		try {
-			unsubscribeFromDataSource();
-		} catch (Exception e) {
-			AppUtils.showErrorDialog(e);
-		}
-	}
 
 	@Override
 	public boolean isSubscribed() {
@@ -145,25 +34,26 @@ public class MessagingTrendController extends DesignerDialogController implement
 
 	@Override
 	public void subscribeToDataSource() throws Exception {
-		if (pubSub == null) {
-			pubSub = new MessagingClient();
-
-			MessagingSource source = (MessagingSource) trendChartController.getEventResolver().getDataSource();
-
-			List<RoutingKey> keys = new ArrayList<>();
-			keys.add(RoutingKey.EQUIPMENT_SOURCE_EVENT);
-			
-			String queueName = getClass().getSimpleName() + "_" + System.currentTimeMillis();
-			
-			pubSub.connectAndSubscribe(source.getHost(), source.getPort(), source.getUserName(),
-					source.getUserPassword(), queueName, keys, this);
-			
-			// add to context
-			getApp().getAppContext().addMessagingClient(pubSub);
-
-			// start the trend
-			trendChartController.onStartTrending();
+		if (pubSub != null) {
+			return;
 		}
+		pubSub = new MessagingClient();
+
+		MessagingSource source = (MessagingSource) trendChartController.getEventResolver().getDataSource();
+
+		List<RoutingKey> keys = new ArrayList<>();
+		keys.add(RoutingKey.EQUIPMENT_SOURCE_EVENT);
+
+		String queueName = getClass().getSimpleName() + "_" + System.currentTimeMillis();
+
+		pubSub.connectAndSubscribe(source.getHost(), source.getPort(), source.getUserName(), source.getUserPassword(),
+				queueName, keys, this);
+
+		// add to context
+		getApp().getAppContext().addMessagingClient(pubSub);
+
+		// start the trend
+		trendChartController.onStartTrending();
 	}
 
 	@Override
@@ -172,7 +62,7 @@ public class MessagingTrendController extends DesignerDialogController implement
 			return;
 		}
 		pubSub.disconnect();
-		
+
 		// remove from app context
 		getApp().getAppContext().removeMessagingClient(pubSub);
 		pubSub = null;
@@ -230,7 +120,7 @@ public class MessagingTrendController extends DesignerDialogController implement
 			EventResolver eventResolver = trendChartController.getEventResolver();
 
 			String sourceId = eventResolver.getSourceId();
-			String value = tfLoopbackValue.getText();
+			String value = getLoopbackValue();
 
 			EquipmentEventMessage msg = new EquipmentEventMessage();
 			msg.setSourceId(sourceId);
@@ -241,34 +131,4 @@ public class MessagingTrendController extends DesignerDialogController implement
 			AppUtils.showErrorDialog(e);
 		}
 	}
-
-	// service class for callbacks on received data
-	private class ResolutionService extends Service<Void> {
-		private final String dataValue;
-		private final OffsetDateTime timestamp;
-
-		public ResolutionService(String sourceId, String dataValue, OffsetDateTime timestamp) {
-			this.dataValue = dataValue;
-			this.timestamp = timestamp;
-		}
-
-		@Override
-		protected Task<Void> createTask() {
-			return new Task<Void>() {
-
-				@Override
-				protected Void call() {
-					try {
-						trendChartController.invokeResolver(getApp().getAppContext(), dataValue, timestamp);
-					} catch (Exception e) {
-						Platform.runLater(() -> {
-							AppUtils.showErrorDialog(e);
-						});
-					}
-					return null;
-				}
-			};
-		}
-	}
-
 }

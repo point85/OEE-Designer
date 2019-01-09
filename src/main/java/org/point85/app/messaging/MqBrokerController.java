@@ -10,6 +10,7 @@ import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
 import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.DataSourceType;
+import org.point85.domain.jms.JMSSource;
 import org.point85.domain.messaging.MessagingSource;
 import org.point85.domain.persistence.PersistenceService;
 
@@ -24,10 +25,13 @@ import javafx.scene.control.TextField;
 
 public class MqBrokerController extends DesignerDialogController {
 	// current source
-	private MessagingSource dataSource;
+	private CollectorDataSource dataSource;
+
+	// source type
+	private DataSourceType sourceType;
 
 	// list of brokers and ports
-	private final ObservableList<MessagingSource> brokers = FXCollections.observableArrayList(new ArrayList<>());
+	private final ObservableList<CollectorDataSource> brokers = FXCollections.observableArrayList(new ArrayList<>());
 
 	@FXML
 	private TextField tfHost;
@@ -42,7 +46,7 @@ public class MqBrokerController extends DesignerDialogController {
 	private TextField tfPort;
 
 	@FXML
-	private ComboBox<MessagingSource> cbDataSources;
+	private ComboBox<CollectorDataSource> cbDataSources;
 
 	@FXML
 	private TextField tfDescription;
@@ -56,7 +60,10 @@ public class MqBrokerController extends DesignerDialogController {
 	@FXML
 	private Button btDelete;
 
-	public void initialize(DesignerApplication app) throws Exception {
+	public void initialize(DesignerApplication app, DataSourceType type) throws Exception {
+		// set source
+		this.sourceType = type;
+
 		// main app
 		setApp(app);
 
@@ -85,14 +92,19 @@ public class MqBrokerController extends DesignerDialogController {
 		btDelete.setContentDisplay(ContentDisplay.LEFT);
 	}
 
-	public MessagingSource getSource() {
+	public CollectorDataSource getSource() {
+		// set source
 		if (dataSource == null) {
-			dataSource = new MessagingSource();
+			if (sourceType.equals(DataSourceType.MESSAGING)) {
+				dataSource = new MessagingSource();
+			} else {
+				dataSource = new JMSSource();
+			}
 		}
 		return dataSource;
 	}
 
-	protected void setSource(MessagingSource source) {
+	protected void setSource(CollectorDataSource source) {
 		this.dataSource = source;
 	}
 
@@ -100,7 +112,7 @@ public class MqBrokerController extends DesignerDialogController {
 	private void onSelectDataSource() {
 		try {
 			dataSource = cbDataSources.getSelectionModel().getSelectedItem();
-			
+
 			if (dataSource == null) {
 				return;
 			}
@@ -150,7 +162,7 @@ public class MqBrokerController extends DesignerDialogController {
 	private void onSaveDataSource() {
 		// set attributes
 		try {
-			MessagingSource dataSource = getSource();
+			CollectorDataSource dataSource = getSource();
 
 			dataSource.setHost(getHost());
 			dataSource.setUserName(getUserName());
@@ -163,7 +175,7 @@ public class MqBrokerController extends DesignerDialogController {
 			dataSource.setName(name);
 
 			// save data source
-			MessagingSource saved = (MessagingSource) PersistenceService.instance().save(dataSource);
+			CollectorDataSource saved = (CollectorDataSource) PersistenceService.instance().save(dataSource);
 			setSource(saved);
 
 			// update list
@@ -178,11 +190,11 @@ public class MqBrokerController extends DesignerDialogController {
 
 	private void populateDataSources() {
 		// fetch the server ids
-		List<CollectorDataSource> sources = PersistenceService.instance().fetchDataSources(DataSourceType.MESSAGING);
+		List<CollectorDataSource> sources = PersistenceService.instance().fetchDataSources(sourceType);
 
 		brokers.clear();
 		for (CollectorDataSource source : sources) {
-			brokers.add((MessagingSource) source);
+			brokers.add(source);
 		}
 		cbDataSources.setItems(brokers);
 

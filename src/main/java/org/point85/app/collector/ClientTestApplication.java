@@ -30,10 +30,11 @@ import org.point85.domain.http.PlantEntityResponseDto;
 import org.point85.domain.http.ReasonDto;
 import org.point85.domain.http.ReasonResponseDto;
 import org.point85.domain.http.SourceIdResponseDto;
+import org.point85.domain.jms.JMSClient;
+import org.point85.domain.jms.JMSListener;
 import org.point85.domain.messaging.ApplicationMessage;
 import org.point85.domain.messaging.EquipmentEventMessage;
 import org.point85.domain.messaging.MessageListener;
-import org.point85.domain.messaging.MessagingSource;
 import org.point85.domain.messaging.MessagingClient;
 import org.point85.domain.messaging.RoutingKey;
 import org.point85.domain.oee.TimeLoss;
@@ -61,6 +62,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -70,12 +72,15 @@ import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-public class ClientTestApplication implements MessageListener {
+public class ClientTestApplication implements MessageListener, JMSListener {
 	// logger
 	private static final Logger logger = LoggerFactory.getLogger(ClientTestApplication.class);
 
-	// AMQP message publisher/subscriber
+	// RMQ message publisher/subscriber
 	private final Map<String, MessagingClient> pubsubs = new HashMap<>();
+
+	// AMQ message publisher/subscriber
+	private final Map<String, JMSClient> jmsClients = new HashMap<>();
 
 	// materials
 	private final ObservableList<Material> materials = FXCollections.observableList(new ArrayList<>());
@@ -122,32 +127,34 @@ public class ClientTestApplication implements MessageListener {
 	@FXML
 	private TableColumn<Material, String> tcMaterialCategory;
 
+	// HTTP
 	@FXML
 	private ComboBox<HttpSource> cbHttpHostPort;
-
-	@FXML
-	private ComboBox<MessagingSource> cbRmqHostPort;
 
 	@FXML
 	private Button btHttpPost;
 
 	@FXML
-	private Button btRmqSend;
-
-	@FXML
-	private Button btReset;
-
-	@FXML
 	private ComboBox<String> cbHttpSourceId;
-
-	@FXML
-	private ComboBox<String> cbRmqSourceId;
 
 	@FXML
 	private TextField tfHttpValue;
 
+	// Messaging
 	@FXML
-	private TextField tfRmqValue;
+	private ComboBox<CollectorDataSource> cbMsgHostPort;
+
+	@FXML
+	private ComboBox<String> cbMsgSourceId;
+
+	@FXML
+	private TextField tfMsgValue;
+
+	@FXML
+	private Button btMsgSend;
+
+	@FXML
+	private Button btReset;
 
 	@FXML
 	private Button btHttpGetMaterials;
@@ -157,6 +164,12 @@ public class ClientTestApplication implements MessageListener {
 
 	@FXML
 	private Button btHttpGetEntities;
+
+	@FXML
+	private RadioButton rbRMQ;
+
+	@FXML
+	private RadioButton rbAMQ;
 
 	public ClientTestApplication() {
 		// nothing to initialize
@@ -196,8 +209,8 @@ public class ClientTestApplication implements MessageListener {
 		btHttpPost.setContentDisplay(ContentDisplay.LEFT);
 
 		// send
-		btRmqSend.setGraphic(ImageManager.instance().getImageView(Images.RMQ));
-		btRmqSend.setContentDisplay(ContentDisplay.LEFT);
+		btMsgSend.setGraphic(ImageManager.instance().getImageView(Images.RMQ));
+		btMsgSend.setContentDisplay(ContentDisplay.LEFT);
 
 		// reset
 		btReset.setGraphic(ImageManager.instance().getImageView(Images.REFRESH_ALL));
@@ -210,20 +223,34 @@ public class ClientTestApplication implements MessageListener {
 		initializeEntityTable();
 		initializeMaterialTable();
 		initializeReasonTable();
+
 		populateHttpSourceIds();
-		populateRmqSourceIds();
+	}
+
+	@FXML
+	private void onSelectBrokerType() {
+		if (rbRMQ.isSelected()) {
+			populateMsgSourceIds(DataSourceType.MESSAGING);
+		} else {
+			populateMsgSourceIds(DataSourceType.JMS);
+		}
 	}
 
 	public void stop() {
-		// disconnect RMQ brokers
 		try {
+			// disconnect RMQ brokers
 			for (Entry<String, MessagingClient> entry : pubsubs.entrySet()) {
 				entry.getValue().disconnect();
 			}
+			pubsubs.clear();
+
+			for (Entry<String, JMSClient> entry : jmsClients.entrySet()) {
+				entry.getValue().disconnect();
+			}
+			jmsClients.clear();
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
-		System.exit(0);
 	}
 
 	private void initializeEntityTable() {
@@ -406,13 +433,18 @@ public class ClientTestApplication implements MessageListener {
 		}
 	}
 
-	private void populateRmqSourceIds(PlantEntity entity) throws Exception {
+	private void populateMessagingSourceIds(PlantEntity entity) throws Exception {
 		HttpURLConnection conn = null;
 		try {
-			// refresh list of RMQ source Ids
+			// refresh list of RMQ or AMQ source Ids
 			String urlString = buildHttpUrl(OeeHttpServer.SOURCE_ID_EP);
 			urlString = addQueryParameter(urlString, OeeHttpServer.EQUIP_ATTRIB, entity.getName());
-			urlString = addQueryParameter(urlString, OeeHttpServer.DS_TYPE_ATTRIB, DataSourceType.MESSAGING.name());
+
+			String messagingType = DataSourceType.MESSAGING.name();
+			if (rbAMQ.isSelected()) {
+				messagingType = DataSourceType.JMS.name();
+			}
+			urlString = addQueryParameter(urlString, OeeHttpServer.DS_TYPE_ATTRIB, messagingType);
 
 			URL url = new URL(urlString);
 
@@ -438,10 +470,10 @@ public class ClientTestApplication implements MessageListener {
 
 			List<String> sources = idDto.getSourceIds();
 
-			cbRmqSourceId.getSelectionModel().clearSelection();
+			cbMsgSourceId.getSelectionModel().clearSelection();
 
-			cbRmqSourceId.getItems().clear();
-			cbRmqSourceId.getItems().addAll(sources);
+			cbMsgSourceId.getItems().clear();
+			cbMsgSourceId.getItems().addAll(sources);
 		} finally {
 			if (conn != null) {
 				conn.disconnect();
@@ -456,7 +488,8 @@ public class ClientTestApplication implements MessageListener {
 			}
 
 			populateHttpSourceIds(entity);
-			populateRmqSourceIds(entity);
+
+			populateMessagingSourceIds(entity);
 
 		} catch (Exception e) {
 			showErrorDialog(e);
@@ -466,14 +499,14 @@ public class ClientTestApplication implements MessageListener {
 	private void onSelectMaterial(Material material) {
 		if (material != null) {
 			tfHttpValue.setText(material.getName());
-			tfRmqValue.setText(material.getName());
+			tfMsgValue.setText(material.getName());
 		}
 	}
 
 	private void onSelectReason(Reason reason) {
 		if (reason != null) {
 			tfHttpValue.setText(reason.getName());
-			tfRmqValue.setText(reason.getName());
+			tfMsgValue.setText(reason.getName());
 		}
 	}
 
@@ -760,39 +793,53 @@ public class ClientTestApplication implements MessageListener {
 
 	@Override
 	public void onMessage(Channel channel, Envelope envelope, ApplicationMessage message) {
-		// execute on worker thread
-		logger.info("Received message: " + message.toString());
+		logger.info("Received RMQ message: " + message.toString());
 	}
 
 	@FXML
 	private void onSendEquipmentEventMsg() {
 		try {
-			MessagingSource source = cbRmqHostPort.getSelectionModel().getSelectedItem();
+			CollectorDataSource source = cbMsgHostPort.getSelectionModel().getSelectedItem();
 
 			if (source == null) {
 				throw new Exception("A messaging source must be specified");
 			}
 
-			String hostPort = source.getHost() + ":" + source.getPort();
+			String sourceId = (String) cbMsgSourceId.getSelectionModel().getSelectedItem();
 
-			MessagingClient pubsub = pubsubs.get(hostPort);
-
-			if (pubsub == null) {
-				pubsub = new MessagingClient();
-				pubsubs.put(hostPort, pubsub);
-
-				pubsub.connect(source.getHost(), source.getPort(), source.getUserName(), source.getUserPassword());
-			}
-
-			String sourceId = (String) cbRmqSourceId.getSelectionModel().getSelectedItem();
-
-			String value = tfRmqValue.getText();
+			String value = tfMsgValue.getText();
 
 			EquipmentEventMessage msg = new EquipmentEventMessage();
 			msg.setSourceId(sourceId);
 			msg.setValue(value);
 
-			pubsub.publish(msg, RoutingKey.EQUIPMENT_SOURCE_EVENT, 30);
+			String hostPort = source.getHost() + ":" + source.getPort();
+
+			if (rbRMQ.isSelected()) {
+
+				MessagingClient pubsub = pubsubs.get(hostPort);
+
+				if (pubsub == null) {
+					pubsub = new MessagingClient();
+					pubsubs.put(hostPort, pubsub);
+
+					pubsub.connect(source.getHost(), source.getPort(), source.getUserName(), source.getUserPassword());
+
+					pubsub.publish(msg, RoutingKey.EQUIPMENT_SOURCE_EVENT, 30);
+				}
+			} else {
+				JMSClient jmsClient = jmsClients.get(hostPort);
+
+				if (jmsClient == null) {
+					jmsClient = new JMSClient();
+					jmsClients.put(hostPort, jmsClient);
+
+					jmsClient.connect(source.getHost(), source.getPort(), source.getUserName(),
+							source.getUserPassword());
+
+					jmsClient.sendToQueue(msg, JMSClient.DEFAULT_QUEUE, 30);
+				}
+			}
 		} catch (Exception e) {
 			showErrorDialog(e);
 		}
@@ -828,27 +875,26 @@ public class ClientTestApplication implements MessageListener {
 		}
 	}
 
-	private void populateRmqSourceIds() {
+	private void populateMsgSourceIds(DataSourceType type) {
 		try {
 			// query db
-			List<CollectorDataSource> dataSources = PersistenceService.instance()
-					.fetchDataSources(DataSourceType.MESSAGING);
+			List<CollectorDataSource> dataSources = PersistenceService.instance().fetchDataSources(type);
 
-			cbRmqHostPort.getSelectionModel().clearSelection();
-			ObservableList<MessagingSource> items = cbRmqHostPort.getItems();
+			cbMsgHostPort.getSelectionModel().clearSelection();
+			ObservableList<CollectorDataSource> items = cbMsgHostPort.getItems();
 			items.clear();
 
 			for (CollectorDataSource dataSource : dataSources) {
 				// data sources
-				items.add((MessagingSource) dataSource);
+				items.add(dataSource);
 			}
 
-			cbRmqSourceId.getSelectionModel().clearSelection();
-			cbRmqSourceId.getItems().clear();
-			tfRmqValue.clear();
+			cbMsgSourceId.getSelectionModel().clearSelection();
+			cbMsgSourceId.getItems().clear();
+			tfMsgValue.clear();
 
 			if (items.size() == 1) {
-				cbRmqHostPort.getSelectionModel().select(0);
+				cbMsgHostPort.getSelectionModel().select(0);
 			}
 		} catch (Exception e) {
 			showErrorDialog(e);
@@ -859,7 +905,7 @@ public class ClientTestApplication implements MessageListener {
 	private void onReset() {
 		try {
 			populateHttpSourceIds();
-			populateRmqSourceIds();
+			onSelectBrokerType();
 
 			tvMaterials.getSelectionModel().clearSelection();
 			ttvEntities.getSelectionModel().clearSelection();
@@ -867,5 +913,11 @@ public class ClientTestApplication implements MessageListener {
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}
+	}
+
+	@Override
+	public void onEquipmentEvent(EquipmentEventMessage message) {
+		logger.info("Received AMQ message: " + message.toString());
+
 	}
 }

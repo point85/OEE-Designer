@@ -142,6 +142,9 @@ public final class ImageManager {
 		case RMQ:
 			image = new Image(path + "RMQSource.png", DIM, DIM, true, true);
 			break;
+		case JMS:
+			image = new Image(path + "JMSSource.png", DIM, DIM, true, true);
+			break;
 		case DB:
 			image = new Image(path + "DatabaseSource.png", DIM, DIM, true, true);
 			break;

@@ -16,6 +16,7 @@ import org.point85.app.file.FileTrendController;
 import org.point85.app.http.HttpServerController;
 import org.point85.app.http.HttpTrendController;
 import org.point85.app.material.MaterialEditorController;
+import org.point85.app.messaging.JMSTrendController;
 import org.point85.app.messaging.MessagingTrendController;
 import org.point85.app.messaging.MqBrokerController;
 import org.point85.app.opc.da.OpcDaBrowserController;
@@ -28,11 +29,12 @@ import org.point85.app.schedule.WorkScheduleEditorController;
 import org.point85.app.script.EventResolverController;
 import org.point85.app.uom.UomConversionController;
 import org.point85.app.uom.UomEditorController;
+import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.DataCollector;
+import org.point85.domain.collector.DataSourceType;
 import org.point85.domain.db.DatabaseEventSource;
 import org.point85.domain.file.FileEventSource;
 import org.point85.domain.http.HttpSource;
-import org.point85.domain.messaging.MessagingSource;
 import org.point85.domain.opc.da.DaOpcClient;
 import org.point85.domain.opc.da.OpcDaBrowserLeaf;
 import org.point85.domain.opc.ua.UaOpcClient;
@@ -405,23 +407,21 @@ public class DesignerApplication {
 		return httpServerController.getSource();
 	}
 
-	MessagingSource showRmqBrokerEditor() throws Exception {
-		if (mqBrokerController == null) {
-			FXMLLoader loader = FXMLLoaderFactory.mqBrokerLoader();
-			AnchorPane page = (AnchorPane) loader.getRoot();
+	CollectorDataSource showMQBrokerEditor(DataSourceType type) throws Exception {
+		FXMLLoader loader = FXMLLoaderFactory.mqBrokerLoader();
+		AnchorPane page = (AnchorPane) loader.getRoot();
 
-			// Create the dialog Stage.
-			Stage dialogStage = new Stage(StageStyle.DECORATED);
-			dialogStage.setTitle("Edit RabbitMQ Brokers");
-			dialogStage.initModality(Modality.WINDOW_MODAL);
-			Scene scene = new Scene(page);
-			dialogStage.setScene(scene);
+		// Create the dialog Stage.
+		Stage dialogStage = new Stage(StageStyle.DECORATED);
+		dialogStage.setTitle("Edit Messaging Brokers");
+		dialogStage.initModality(Modality.WINDOW_MODAL);
+		Scene scene = new Scene(page);
+		dialogStage.setScene(scene);
 
-			// get the controller
-			mqBrokerController = loader.getController();
-			mqBrokerController.setDialogStage(dialogStage);
-			mqBrokerController.initialize(this);
-		}
+		// get the controller
+		mqBrokerController = loader.getController();
+		mqBrokerController.setDialogStage(dialogStage);
+		mqBrokerController.initialize(this, type);
 
 		// Show the dialog and wait until the user closes it
 		if (!mqBrokerController.getDialogStage().isShowing()) {
@@ -648,7 +648,7 @@ public class DesignerApplication {
 	}
 
 	void showMessagingTrendDialog(EventResolver eventResolver) throws Exception {
-		// Load the fxml file and create a new stage for the pop-up dialog.
+		// Load the fxml file
 		FXMLLoader loader = FXMLLoaderFactory.messagingTrendLoader();
 		AnchorPane page = (AnchorPane) loader.getRoot();
 
@@ -682,6 +682,43 @@ public class DesignerApplication {
 
 		// show the window
 		messagingTrendController.getDialogStage().show();
+	}
+
+	void showJMSTrendDialog(EventResolver eventResolver) throws Exception {
+		// Load the fxml file
+		FXMLLoader loader = FXMLLoaderFactory.jmsTrendLoader();
+		AnchorPane page = (AnchorPane) loader.getRoot();
+
+		// Create the dialog Stage.
+		Stage dialogStage = new Stage(StageStyle.DECORATED);
+		dialogStage.setTitle("JMS Event Trend");
+		dialogStage.initModality(Modality.NONE);
+		Scene scene = new Scene(page);
+		dialogStage.setScene(scene);
+
+		// get the controller
+		JMSTrendController jmsTrendController = loader.getController();
+		jmsTrendController.setDialogStage(dialogStage);
+		jmsTrendController.setApp(this);
+
+		// add the trend chart
+		SplitPane chartPane = jmsTrendController.initializeTrend();
+
+		AnchorPane.setBottomAnchor(chartPane, 50.0);
+		AnchorPane.setLeftAnchor(chartPane, 5.0);
+		AnchorPane.setRightAnchor(chartPane, 5.0);
+		AnchorPane.setTopAnchor(chartPane, 50.0);
+
+		page.getChildren().add(0, chartPane);
+
+		// set the script resolver
+		jmsTrendController.setEventResolver(eventResolver);
+
+		// subscribe to broker
+		jmsTrendController.subscribeToDataSource();
+
+		// show the window
+		jmsTrendController.getDialogStage().show();
 	}
 
 	void showDatabaseTrendDialog(EventResolver eventResolver) throws Exception {

@@ -11,6 +11,7 @@ import org.point85.app.AppUtils;
 import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
+import org.point85.domain.collector.DataSourceType;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Area;
 import org.point85.domain.plant.Enterprise;
@@ -92,6 +93,9 @@ public class PhysicalModelController extends DesignerController {
 
 	@FXML
 	private Button btRmqBrokerEditor;
+	
+	@FXML
+	private Button btJMSBrokerEditor;
 
 	@FXML
 	private Button btDatabaseServerEditor;
@@ -337,6 +341,9 @@ public class PhysicalModelController extends DesignerController {
 
 		btRmqBrokerEditor.setGraphic(ImageManager.instance().getImageView(Images.RMQ));
 		btRmqBrokerEditor.setTooltip(new Tooltip("Display RabbitMQ broker editor."));
+		
+		btJMSBrokerEditor.setGraphic(ImageManager.instance().getImageView(Images.JMS));
+		btJMSBrokerEditor.setTooltip(new Tooltip("Display JMS broker editor."));
 
 		btDatabaseServerEditor.setGraphic(ImageManager.instance().getImageView(Images.DB));
 		btDatabaseServerEditor.setTooltip(new Tooltip("Display database server editor."));
@@ -414,7 +421,16 @@ public class PhysicalModelController extends DesignerController {
 	@FXML
 	private void onShowRmqBrokerEditor() {
 		try {
-			this.getApp().showRmqBrokerEditor();
+			this.getApp().showMQBrokerEditor(DataSourceType.MESSAGING);
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+	
+	@FXML
+	private void onShowJMSBrokerEditor() {
+		try {
+			this.getApp().showMQBrokerEditor(DataSourceType.JMS);
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}

@@ -17,7 +17,6 @@ import org.point85.domain.collector.DataSourceType;
 import org.point85.domain.db.DatabaseEventSource;
 import org.point85.domain.file.FileEventSource;
 import org.point85.domain.http.HttpSource;
-import org.point85.domain.messaging.MessagingSource;
 import org.point85.domain.opc.da.OpcDaBrowserLeaf;
 import org.point85.domain.opc.da.OpcDaSource;
 import org.point85.domain.opc.da.OpcDaVariant;
@@ -397,6 +396,9 @@ public class EquipmentResolverController extends DesignerController {
 		case MESSAGING:
 			buttonImage = ImageManager.instance().getImageView(Images.RMQ);
 			break;
+		case JMS:
+			buttonImage = ImageManager.instance().getImageView(Images.JMS);
+			break;
 		case OPC_DA:
 			buttonImage = ImageManager.instance().getImageView(Images.OPC_DA);
 			break;
@@ -429,7 +431,6 @@ public class EquipmentResolverController extends DesignerController {
 				throw new Exception("A data source must be selected");
 			}
 
-			// OPC DA
 			if (sourceType.equals(DataSourceType.OPC_DA)) {
 
 				OpcDaBrowserLeaf sourceTag = getApp().showOpcDaDataSourceBrowser();
@@ -451,7 +452,6 @@ public class EquipmentResolverController extends DesignerController {
 				Class<?> javaType = nodeDataType.getDataType().getJavaClass();
 				lbDataType.setText(javaType.getSimpleName());
 
-				// OPC UA
 			} else if (sourceType.equals(DataSourceType.OPC_UA)) {
 				OpcUaTreeNode node = getApp().showOpcUaDataSourceBrowser();
 
@@ -472,7 +472,6 @@ public class EquipmentResolverController extends DesignerController {
 				Class<?> javaType = BuiltinDataType.getBackingClass(nodeDataType);
 				lbDataType.setText(javaType.getSimpleName());
 
-				// HTTP
 			} else if (sourceType.equals(DataSourceType.HTTP)) {
 				// show HTTP server editor
 				HttpSource dataSource = getApp().showHttpServerEditor();
@@ -484,10 +483,9 @@ public class EquipmentResolverController extends DesignerController {
 
 				setDefaultSourceId();
 
-				// Messaging
-			} else if (sourceType.equals(DataSourceType.MESSAGING)) {
-				// show RabbitMQ broker editor
-				MessagingSource dataSource = getApp().showRmqBrokerEditor();
+			} else if (sourceType.equals(DataSourceType.MESSAGING) || sourceType.equals(DataSourceType.JMS)) {
+				// show MQ broker editor
+				CollectorDataSource dataSource = getApp().showMQBrokerEditor(sourceType);
 				tfServerId.setText(dataSource.getId());
 
 				getSelectedResolver().setDataSource(dataSource);
@@ -495,7 +493,7 @@ public class EquipmentResolverController extends DesignerController {
 				lbDataType.setText(String.class.getSimpleName());
 
 				setDefaultSourceId();
-				// Database
+
 			} else if (sourceType.equals(DataSourceType.DATABASE)) {
 				// show database server editor
 				DatabaseEventSource dataSource = getApp().showDatabaseServerEditor();
@@ -506,9 +504,8 @@ public class EquipmentResolverController extends DesignerController {
 				lbDataType.setText(String.class.getSimpleName());
 
 				setDefaultSourceId();
-			}
-			// file
-			else if (sourceType.equals(DataSourceType.FILE)) {
+
+			} else if (sourceType.equals(DataSourceType.FILE)) {
 				// show file share editor
 				FileEventSource dataSource = getApp().showFileShareEditor();
 				tfServerId.setText(dataSource.getId());
@@ -518,6 +515,7 @@ public class EquipmentResolverController extends DesignerController {
 				lbDataType.setText(String.class.getSimpleName());
 
 				setDefaultSourceId();
+
 			} else {
 				throw new Exception("Unknown data source type " + sourceType);
 			}
@@ -732,6 +730,8 @@ public class EquipmentResolverController extends DesignerController {
 				getApp().showHttpTrendDialog(selectedEventResolver);
 			} else if (type.equals(DataSourceType.MESSAGING)) {
 				getApp().showMessagingTrendDialog(selectedEventResolver);
+			} else if (type.equals(DataSourceType.JMS)) {
+				getApp().showJMSTrendDialog(selectedEventResolver);
 			} else if (type.equals(DataSourceType.DATABASE)) {
 				getApp().showDatabaseTrendDialog(selectedEventResolver);
 			} else if (type.equals(DataSourceType.FILE)) {

@@ -12,7 +12,8 @@ Sources of equipment availability, performance and quality event data include:
 * OPC DA:  classic OLE for Process Control (OPC) Data Acquisition (DA)
 * OPC UA:  OLE for Process Control Unified Architecture (UA)
 * HTTP: invocation of a web service via an HTTP request 
-* Messaging:  an equipment event message received via a RabbitMQ message broker
+* RMQ Messaging:  an equipment event message received via a RabbitMQ message broker
+* JMS Messaging:  an equipment event message received via an ActiveMQ message broker
 * Database Interface Table:  a pre-defined table for inserting OEE events
 * File Share:  a server hosting OEE event files
 
@@ -23,7 +24,7 @@ The Point85 applications supporting OEE are:
 * Operator:  a web-application for manual entry of equipment events
 
 In addition, two GUI test applications assist in the development of an OEE solution:
-* HTTP requester and RabbitMQ message publisher
+* HTTP requester and RabbitMQ/ActiveMQ message publisher
 * Front end GUI for a data collector
 
 For more information about the Designer and other OEE applications, please refer to the *Overall Equipment Effectiveness Applications User Guide* in the docs folder.
@@ -44,9 +45,9 @@ For availability and performance, the output value is a reason that is assigned 
 For quality or  yield, the data source provides a production count in the good, reject/rework or startup & yield categories in the defined units of measure for the material being produced.  This count has an equivalent time loss calculation by using the defined ideal or nominal speed.
 
 ## Architecture
-The OEE applications can be grouped by design-time and run-time.  The design-time Designer application is used to define the plant equipment, data sources, event resolution scripts, manufacturing work schedule, availability reasons, produced materials and units of measure for data collectors.  The designer also includes a dashboard and trending capabilities.
+The OEE applications can be grouped into design-time and run-time.  The design-time Designer application is used to define the plant equipment, data sources, event resolution scripts, manufacturing work schedule, availability reasons, produced materials and units of measure for data collectors.  The designer also includes a dashboard and trending capabilities.
 
-An automated run-time data collector receives an input value from an OPC DA, OPC UA, HTTP, messaging or database source and executes a JavaScript resolver on this input to calculate an output value.  The output value is a reason (mapped to an OEE loss category) for an availability event, a new production count (good, reject/rework or startup) for performance and quality events or a material/job change event.  For the case of a custom event, the output value is ignored.  The event data is stored in a relational database where it is available for OEE calculations.  Both Microsoft SQL Server and Oracle are currently supported.
+An automated run-time data collector receives an input value from a data source source and executes a JavaScript resolver on this input to calculate an output value.  The output value is a reason (mapped to an OEE loss category) for an availability event, a new production count (good, reject/rework or startup) for performance and quality events or a material/job change event.  For the case of a custom event, the output value is ignored.  The event data is stored in a relational database where it is available for OEE calculations.  Both Microsoft SQL Server and Oracle are currently supported.
 
 A web-based manual data collector running in a web server records the OEE events based on information entered by an operator.  Similar to the automated collector, this data is also stored in the relational database.
 If the system is configured for messaging, the event data is also sent to a RabbitMQ message broker to which a run-time monitor application can subscribe.  A monitor displays a dashboard for viewing equipment OEE events.  It also displays collector notifications and status information.

@@ -3,12 +3,14 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.control.TreeTableColumn?>
 <?import javafx.scene.control.TreeTableView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -78,9 +80,10 @@
       <GridPane hgap="5.0" layoutX="91.0" layoutY="25.0" vgap="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="5.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="35.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="8.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="7.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="35.0" prefWidth="100.0" />
         </columnConstraints>
         <rowConstraints>
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -96,26 +99,32 @@
             <TextField fx:id="tfHttpValue" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <Label text="Host:Port" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
             <ComboBox fx:id="cbHttpSourceId" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <Label GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+            <Label GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
             <ComboBox fx:id="cbHttpHostPort" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <Label text="RMQ Broker" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-            <Label text="HTTP" textAlignment="CENTER" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+            <Label text="Broker" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+            <Label text="HTTP" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <Label text="MESSAGING" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+            <Label text="MESSAGING" GridPane.columnIndex="4" GridPane.halignment="CENTER">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
             <Label text="Source Id" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
-            <ComboBox fx:id="cbRmqHostPort" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-            <ComboBox fx:id="cbRmqSourceId" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-            <Button fx:id="btRmqSend" mnemonicParsing="false" onAction="#onSendEquipmentEventMsg" text="Send" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+            <ComboBox fx:id="cbMsgHostPort" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+            <ComboBox fx:id="cbMsgSourceId" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+            <Button fx:id="btMsgSend" mnemonicParsing="false" onAction="#onSendEquipmentEventMsg" text="Send" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
             <Label text="Value" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
-            <TextField fx:id="tfRmqValue" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="4" />
-            <Button fx:id="btReset" mnemonicParsing="false" onAction="#onReset" text="Reset" GridPane.halignment="CENTER" />
+            <TextField fx:id="tfMsgValue" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="4" />
+            <Button fx:id="btReset" mnemonicParsing="false" onAction="#onReset" text="Reset" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+            <RadioButton fx:id="rbRMQ" mnemonicParsing="false" onAction="#onSelectBrokerType" text="RMQ" GridPane.columnIndex="2" GridPane.rowIndex="1">
+               <toggleGroup>
+                  <ToggleGroup fx:id="Broker" />
+               </toggleGroup>
+            </RadioButton>
+            <RadioButton fx:id="rbAMQ" mnemonicParsing="false" onAction="#onSelectBrokerType" text="JMS" toggleGroup="$Broker" GridPane.columnIndex="3" GridPane.rowIndex="1" />
          </children>
       </GridPane>
    </children>
