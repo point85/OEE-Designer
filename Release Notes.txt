@@ -22,5 +22,8 @@
 	- Added a time range filter to the trend chart
 (9) 1.4.0, January 9, 2019:
 	- Added a JMS message broker as a source of OEE events	
+(10) 1.4.1, January 11, 2019:
+	- Changed hibernate version back to 5.3.7.Final
+	- Bug fix in HTTp server editor
 
 Please send comments and suggestions to point85.llc@gmail.com.

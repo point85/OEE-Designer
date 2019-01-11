@@ -50,7 +50,6 @@ public class HttpServerController extends DialogController {
 	private Button btDelete;
 
 	public void initializeServer() throws Exception {
-
 		// button images
 		setImages();
 
@@ -137,26 +136,25 @@ public class HttpServerController extends DialogController {
 	private void onSaveDataSource() {
 		// set attributes
 		try {
-			HttpSource dataSource = getSource();
+			HttpSource eventSource = getSource();
 
-			dataSource.setHost(getHost());
-			dataSource.setPort(getPort());
-			dataSource.setDescription(getDescription());
+			eventSource.setHost(getHost());
+			eventSource.setPort(getPort());
+			eventSource.setDescription(getDescription());
 
 			// name is URL
 			String name = getHost() + ":" + getPort();
-			dataSource.setName(name);
+			eventSource.setName(name);
 
 			// save data source
-			HttpSource saved = (HttpSource) PersistenceService.instance().save(dataSource);
+			HttpSource saved = (HttpSource) PersistenceService.instance().save(eventSource);
 			setSource(saved);
 
 			// update list
-			if (dataSource.getKey() == null) {
+			if (eventSource.getKey() == null) {
 				// new source
-				cbDataSources.getItems().add(dataSource);
+				cbDataSources.getItems().add(eventSource);
 			}
-
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}

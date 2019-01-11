@@ -384,22 +384,20 @@ public class DesignerApplication {
 	}
 
 	HttpSource showHttpServerEditor() throws Exception {
-		if (httpServerController == null) {
-			FXMLLoader loader = FXMLLoaderFactory.httpServerLoader();
-			AnchorPane page = (AnchorPane) loader.getRoot();
+		FXMLLoader loader = FXMLLoaderFactory.httpServerLoader();
+		AnchorPane page = (AnchorPane) loader.getRoot();
 
-			// Create the dialog Stage.
-			Stage dialogStage = new Stage(StageStyle.DECORATED);
-			dialogStage.setTitle("Edit HTTP Servers");
-			dialogStage.initModality(Modality.WINDOW_MODAL);
-			Scene scene = new Scene(page);
-			dialogStage.setScene(scene);
+		// Create the dialog Stage.
+		Stage dialogStage = new Stage(StageStyle.DECORATED);
+		dialogStage.setTitle("Edit HTTP Servers");
+		dialogStage.initModality(Modality.WINDOW_MODAL);
+		Scene scene = new Scene(page);
+		dialogStage.setScene(scene);
 
-			// get the controller
-			httpServerController = loader.getController();
-			httpServerController.setDialogStage(dialogStage);
-			httpServerController.initializeServer();
-		}
+		// get the controller
+		httpServerController = loader.getController();
+		httpServerController.setDialogStage(dialogStage);
+		httpServerController.initializeServer();
 
 		// Show the dialog and wait until the user closes it
 		httpServerController.getDialogStage().showAndWait();

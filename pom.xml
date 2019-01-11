@@ -4,7 +4,7 @@
 
   <groupId>org.point85</groupId>
   <artifactId>oee-apps</artifactId>
-  <version>1.4.0</version>
+  <version>1.4.1</version>
   <packaging>jar</packaging>
   
   <name>Point85 OEE JavaFX Applications</name>
@@ -97,7 +97,7 @@
 <dependency>
     <groupId>org.hibernate</groupId>
     <artifactId>hibernate-hikaricp</artifactId>
-    <version>5.4.0.Final</version>
+    <version>5.3.7.Final</version>
 </dependency>
 
 <!-- LOGGING -->
