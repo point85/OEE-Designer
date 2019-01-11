@@ -1123,7 +1123,10 @@ public class DashboardController extends DialogController implements CategoryCli
 				// use last setup
 				material = lastMaterialSetup.getMaterial();
 			}
-			property = new SimpleStringProperty(material.getName());
+
+			if (material != null) {
+				property = new SimpleStringProperty(material.getName());
+			}
 			return property;
 		});
 

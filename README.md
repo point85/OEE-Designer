@@ -27,7 +27,7 @@ In addition, two GUI test applications assist in the development of an OEE solut
 * HTTP requester and RabbitMQ/ActiveMQ message publisher
 * Front end GUI for a data collector
 
-For more information about the Designer and other OEE applications, please refer to the *Overall Equipment Effectiveness Applications User Guide* in the docs folder.
+For more information about the Designer and other OEE applications, please refer to the *Point85 OEE User Guide* in the docs folder.  A getting started tutorial, *Point85 OEE Getting Started Guide*, is also available in the docs folder.
 
 ## OEE Calculations
 OEE is the product of equipment availability, performance and quality each expressed as a percentage.  The time-loss model is used to accumulate time in loss categories (or “no loss” if the equipment is running normally).  A data source provides an input value to a data collector’s resolver JavaScript function that maps that input value to an output value (reason or production count).

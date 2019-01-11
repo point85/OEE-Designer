@@ -25,5 +25,6 @@
 (10) 1.4.1, January 11, 2019:
 	- Changed hibernate version back to 5.3.7.Final
 	- Bug fix in HTTp server editor
+	- Added a getting started guide
 
 Please send comments and suggestions to point85.llc@gmail.com.
