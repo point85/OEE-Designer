@@ -824,9 +824,8 @@ public class ClientTestApplication implements MessageListener, JMSListener {
 					pubsubs.put(hostPort, pubsub);
 
 					pubsub.connect(source.getHost(), source.getPort(), source.getUserName(), source.getUserPassword());
-
-					pubsub.publish(msg, RoutingKey.EQUIPMENT_SOURCE_EVENT, 30);
 				}
+				pubsub.publish(msg, RoutingKey.EQUIPMENT_SOURCE_EVENT, 30);
 			} else {
 				JMSClient jmsClient = jmsClients.get(hostPort);
 
@@ -836,9 +835,8 @@ public class ClientTestApplication implements MessageListener, JMSListener {
 
 					jmsClient.connect(source.getHost(), source.getPort(), source.getUserName(),
 							source.getUserPassword());
-
-					jmsClient.sendToQueue(msg, JMSClient.DEFAULT_QUEUE, 30);
 				}
+				jmsClient.sendToQueue(msg, JMSClient.DEFAULT_QUEUE, 30);
 			}
 		} catch (Exception e) {
 			showErrorDialog(e);
