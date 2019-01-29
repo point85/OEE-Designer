@@ -286,6 +286,17 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 		}
 	}
 
+	@Override
+	@FXML
+	protected void onOK() {
+		super.onOK();
+		try {
+			unsubscribeFromDataSource();
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+
 	// service class for callbacks on received data
 	private class ResolutionService extends Service<String> {
 

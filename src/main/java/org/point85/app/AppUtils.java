@@ -1,21 +1,16 @@
 package org.point85.app;
 
-import java.text.DateFormat;
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalTime;
-import java.time.OffsetDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.TimeZone;
 
+import org.point85.domain.DomainUtils;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.uom.MeasurementSystem;
 import org.point85.domain.uom.Prefix;
@@ -29,8 +24,6 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 
 public abstract class AppUtils {
-	// date format
-	protected static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
 	// max and min number of decimal places to show
 	private static final int MAX_DIGITS = 9;
@@ -39,15 +32,6 @@ public abstract class AppUtils {
 	// no text
 	public static final String EMPTY_STRING = "";
 
-	// format an OffsetDateTime
-	public static String formatOffsetDateTime(OffsetDateTime odt) {
-		if (odt == null) {
-			return "";
-		}
-		OffsetDateTime truncated = odt.truncatedTo(ChronoUnit.SECONDS);
-		return truncated.toString().replace('T', ' ');
-	}
-
 	// format a BigDecimal
 	public static String formatDouble(double decimal) {
 		NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.getDefault());
@@ -55,33 +39,6 @@ public abstract class AppUtils {
 		numberFormat.setMaximumFractionDigits(MAX_DIGITS);
 		numberFormat.setMinimumFractionDigits(MIN_DIGITS);
 		return numberFormat.format(decimal);
-	}
-
-	public static String formatDate(Date date, TimeZone tz) {
-		DateFormat df = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault());
-		String localTimeString = df.format(date);
-		StringBuilder sb = new StringBuilder();
-		sb.append(localTimeString);
-
-		if (tz != null) {
-			// calculate the time zone offset in hours and minutes
-			int secsOffset = tz.getOffset(new Date().getTime()) / 1000;
-			int hours = Math.abs(secsOffset) / 3600;
-			int minutes = (Math.abs(secsOffset) % 3600) / 60;
-
-			String hrFormatted = String.format("%02d", hours);
-			String minFormatted = String.format("%02d", minutes);
-
-			// append offset to ISO string
-			if (secsOffset < 0) {
-				sb.append('-');
-			} else {
-				sb.append('+');
-			}
-			sb.append(hrFormatted).append(':').append(minFormatted);
-		}
-
-		return sb.toString();
 	}
 
 	// display a general alert
@@ -108,7 +65,7 @@ public abstract class AppUtils {
 	public static void showErrorDialog(String message) {
 		showAlert(AlertType.ERROR, "Application Error", "Exception", message);
 	}
-	
+
 	// display a warning dialog
 	public static void showWarningDialog(String message) {
 		showAlert(AlertType.WARNING, "Application Warning", "Warning", message);
@@ -116,11 +73,7 @@ public abstract class AppUtils {
 
 	// display an error dialog
 	public static void showErrorDialog(Exception e) {
-		String message = e.getMessage();
-
-		if (message == null) {
-			message = e.getClass().getSimpleName();
-		}
+		String message = DomainUtils.formatException(e);
 		showAlert(AlertType.ERROR, "Application Error", "Exception", message);
 	}
 

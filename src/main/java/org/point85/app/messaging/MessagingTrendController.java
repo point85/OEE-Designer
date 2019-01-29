@@ -1,12 +1,10 @@
 package org.point85.app.messaging;
 
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.point85.app.AppUtils;
 import org.point85.app.charts.DataSubscriber;
-import org.point85.domain.DomainUtils;
 import org.point85.domain.messaging.ApplicationMessage;
 import org.point85.domain.messaging.EquipmentEventMessage;
 import org.point85.domain.messaging.MessageListener;
@@ -46,7 +44,7 @@ public class MessagingTrendController extends BaseMessagingTrendController imple
 
 		String queueName = getClass().getSimpleName() + "_" + System.currentTimeMillis();
 
-		pubSub.connectAndSubscribe(source.getHost(), source.getPort(), source.getUserName(), source.getUserPassword(),
+		pubSub.startUp(source.getHost(), source.getPort(), source.getUserName(), source.getUserPassword(),
 				queueName, keys, this);
 
 		// add to context
@@ -61,7 +59,7 @@ public class MessagingTrendController extends BaseMessagingTrendController imple
 		if (pubSub == null) {
 			return;
 		}
-		pubSub.disconnect();
+		pubSub.shutDown();
 
 		// remove from app context
 		getApp().getAppContext().removeMessagingClient(pubSub);
@@ -90,9 +88,8 @@ public class MessagingTrendController extends BaseMessagingTrendController imple
 	}
 
 	private void handleEquipmentEvent(EquipmentEventMessage message) throws Exception {
-
-		OffsetDateTime odt = DomainUtils.offsetDateTimeFromString(message.getTimestamp());
-		ResolutionService service = new ResolutionService(message.getSourceId(), message.getValue(), odt);
+		ResolutionService service = new ResolutionService(message.getSourceId(), message.getValue(),
+				message.getDateTime());
 
 		service.setOnFailed(new EventHandler<WorkerStateEvent>() {
 			@Override

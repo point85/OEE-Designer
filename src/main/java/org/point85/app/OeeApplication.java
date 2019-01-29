@@ -24,7 +24,7 @@ import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 public class OeeApplication extends Application {
-	public static final String VERSION_INFO = "Version 1.4.1, January 11, 2019";
+	public static final String VERSION_INFO = "Version 1.5.0, January 30, 2019";
 	
 	// JFX applications
 	private static final String DESIGNER_APP = "DESIGNER";

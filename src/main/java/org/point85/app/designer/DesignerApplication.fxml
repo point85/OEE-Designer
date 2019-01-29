@@ -130,6 +130,7 @@
             <Button fx:id="btDatabaseServerEditor" mnemonicParsing="false" onAction="#onShowDatabaseServerEditor" prefHeight="16.0" prefWidth="16.0" />
             <Button fx:id="btFileShareEditor" mnemonicParsing="false" onAction="#onShowFileShareEditor" prefHeight="16.0" prefWidth="16.0" />
             <Button fx:id="btJMSBrokerEditor" mnemonicParsing="false" onAction="#onShowJMSBrokerEditor" prefHeight="16.0" prefWidth="16.0" />
+            <Button fx:id="btMQTTBrokerEditor" mnemonicParsing="false" onAction="#onShowMQTTBrokerEditor" prefHeight="16.0" prefWidth="16.0" />
             <Separator orientation="VERTICAL" />
             <Button fx:id="btUomEditor" mnemonicParsing="false" onAction="#onShowUomEditor" prefHeight="16.0" prefWidth="16.0" />
           <Button fx:id="btScheduleEditor" mnemonicParsing="false" onAction="#onShowScheduleEditor" prefHeight="16.0" prefWidth="16.0" />

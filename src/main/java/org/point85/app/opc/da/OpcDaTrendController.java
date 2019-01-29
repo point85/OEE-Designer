@@ -144,8 +144,19 @@ public class OpcDaTrendController extends OpcDaController implements OpcDaDataCh
 		try {
 			// disconnect
 			terminateConnectionService();
-			opcDaGroup = null;
+			unsubscribeFromDataSource();
 			updateConnectionStatus(ConnectionState.DISCONNECTED);
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+	
+	@Override
+	@FXML
+	protected void onOK() {
+		super.onOK();
+		try {
+			unsubscribeFromDataSource();
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}

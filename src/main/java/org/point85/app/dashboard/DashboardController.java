@@ -998,12 +998,14 @@ public class DashboardController extends DialogController implements CategoryCli
 
 		// start time
 		tcStartTime.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(AppUtils.formatOffsetDateTime(cellDataFeatures.getValue().getStartTime()));
+			return new SimpleStringProperty(DomainUtils.offsetDateTimeToString(
+					cellDataFeatures.getValue().getStartTime(), DomainUtils.OFFSET_DATE_TIME_PATTERN));
 		});
 
 		// end time
 		tcEndTime.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(AppUtils.formatOffsetDateTime(cellDataFeatures.getValue().getEndTime()));
+			return new SimpleStringProperty(DomainUtils.offsetDateTimeToString(cellDataFeatures.getValue().getEndTime(),
+					DomainUtils.OFFSET_DATE_TIME_PATTERN));
 		});
 
 		// duration

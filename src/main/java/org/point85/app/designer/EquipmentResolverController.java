@@ -389,6 +389,7 @@ public class EquipmentResolverController extends DesignerController {
 		}
 
 		ImageView buttonImage = null;
+		boolean setUpdatePeriod = false;
 		switch (sourceType) {
 		case HTTP:
 			buttonImage = ImageManager.instance().getImageView(Images.HTTP);
@@ -399,23 +400,36 @@ public class EquipmentResolverController extends DesignerController {
 		case JMS:
 			buttonImage = ImageManager.instance().getImageView(Images.JMS);
 			break;
+		case MQTT:
+			buttonImage = ImageManager.instance().getImageView(Images.MQTT);
+			break;
 		case OPC_DA:
 			buttonImage = ImageManager.instance().getImageView(Images.OPC_DA);
+			setUpdatePeriod = true;
 			break;
 		case OPC_UA:
 			buttonImage = ImageManager.instance().getImageView(Images.OPC_UA);
+			setUpdatePeriod = true;
 			break;
 		case DATABASE:
 			buttonImage = ImageManager.instance().getImageView(Images.DB);
+			setUpdatePeriod = true;
 			break;
 		case FILE:
 			buttonImage = ImageManager.instance().getImageView(Images.FILE);
+			setUpdatePeriod = true;
 			break;
 		default:
 			break;
 		}
 		btBrowseSource.setGraphic(buttonImage);
-	}
+		
+		if (setUpdatePeriod) {
+			tfUpdatePeriod.setText(String.valueOf(CollectorDataSource.DEFAULT_UPDATE_PERIOD_MSEC));
+		} else {
+			tfUpdatePeriod.clear();
+		}
+	} 
 
 	// browse to data source
 	@FXML
@@ -483,7 +497,8 @@ public class EquipmentResolverController extends DesignerController {
 
 				setDefaultSourceId();
 
-			} else if (sourceType.equals(DataSourceType.MESSAGING) || sourceType.equals(DataSourceType.JMS)) {
+			} else if (sourceType.equals(DataSourceType.MESSAGING) || sourceType.equals(DataSourceType.JMS)
+					|| sourceType.equals(DataSourceType.MQTT)) {
 				// show MQ broker editor
 				CollectorDataSource dataSource = getApp().showMQBrokerEditor(sourceType);
 				tfServerId.setText(dataSource.getId());
@@ -732,6 +747,8 @@ public class EquipmentResolverController extends DesignerController {
 				getApp().showMessagingTrendDialog(selectedEventResolver);
 			} else if (type.equals(DataSourceType.JMS)) {
 				getApp().showJMSTrendDialog(selectedEventResolver);
+			} else if (type.equals(DataSourceType.MQTT)) {
+				getApp().showMQTTTrendDialog(selectedEventResolver);
 			} else if (type.equals(DataSourceType.DATABASE)) {
 				getApp().showDatabaseTrendDialog(selectedEventResolver);
 			} else if (type.equals(DataSourceType.FILE)) {

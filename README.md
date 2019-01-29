@@ -14,6 +14,7 @@ Sources of equipment availability, performance and quality event data include:
 * HTTP: invocation of a web service via an HTTP request 
 * RMQ Messaging:  an equipment event message received via a RabbitMQ message broker
 * JMS Messaging:  an equipment event message received via an ActiveMQ message broker
+* MQTT Messaging:  an equipment event message received via an MQTT message server
 * Database Interface Table:  a pre-defined table for inserting OEE events
 * File Share:  a server hosting OEE event files
 
@@ -24,7 +25,7 @@ The Point85 applications supporting OEE are:
 * Operator:  a web-application for manual entry of equipment events
 
 In addition, two GUI test applications assist in the development of an OEE solution:
-* HTTP requester and RabbitMQ/ActiveMQ message publisher
+* HTTP requester and message publisher
 * Front end GUI for a data collector
 
 For more information about the Designer and other OEE applications, please refer to the *Point85 OEE User Guide* in the docs folder.  A getting started tutorial, *Point85 OEE Getting Started Guide*, is also available in the docs folder.  In addition, a document in this folder titled *PackML and Point85 OEE* describes a possible implementation the Point85 Overall Equipment Effectiveness (OEE) solution for equipment with a PackML interface. 

@@ -119,12 +119,12 @@ public class MonitorApplication implements MessageListener {
 
 			// disconnect from notification pubsubs
 			for (MessagingClient pubSub : notificationPubSubs) {
-				pubSub.disconnect();
+				pubSub.shutDown();
 			}
 
 			// disconnect from command pubsubs
 			for (Entry<String, MessagingClient> entry : commandPubSubs.entrySet()) {
-				entry.getValue().disconnect();
+				entry.getValue().shutDown();
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
@@ -163,7 +163,7 @@ public class MonitorApplication implements MessageListener {
 					routingKeys.add(RoutingKey.NOTIFICATION_STATUS);
 					routingKeys.add(RoutingKey.RESOLVED_EVENT);
 
-					pubsub.connectAndSubscribe(brokerHostName, brokerPort, brokerUser, brokerPassword, queueName,
+					pubsub.startUp(brokerHostName, brokerPort, brokerUser, brokerPassword, queueName,
 							routingKeys, this);
 
 					pubSubs.put(key, pubsub);

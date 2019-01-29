@@ -145,6 +145,9 @@ public final class ImageManager {
 		case JMS:
 			image = new Image(path + "JMSSource.png", DIM, DIM, true, true);
 			break;
+		case MQTT:
+			image = new Image(path + "MQTTSource.png", DIM, DIM, true, true);
+			break;
 		case DB:
 			image = new Image(path + "DatabaseSource.png", DIM, DIM, true, true);
 			break;

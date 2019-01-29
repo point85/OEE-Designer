@@ -69,6 +69,7 @@ public class ProductionEditorController extends EventEditorController {
 			throw new Exception("An amount must be specified.");
 		}
 		productionEvent.setAmount(amount);
+		productionEvent.setInputValue(String.valueOf(amount));
 
 		PersistenceService.instance().save(productionEvent);
 	}
@@ -78,16 +79,22 @@ public class ProductionEditorController extends EventEditorController {
 		Equipment equipment = productionEvent.getEquipment();
 		OeeEvent lastSetup = PersistenceService.instance().fetchLastEvent(equipment, OeeEventType.MATL_CHANGE);
 
+		Material material = null;
 		if (lastSetup == null) {
-			throw new Exception("No setup record found for equipment " + equipment.getName());
+			material = equipment.getDefaultEquipmentMaterial().getMaterial();
+		} else {
+			material = lastSetup.getMaterial();
 		}
 
-		Material material = lastSetup.getMaterial();
+		if (material == null) {
+			throw new Exception("No material found for equipment " + equipment.getName());
+		}
+
 		equipmentMaterial = equipment.getEquipmentMaterial(material);
 
 		if (equipmentMaterial == null) {
-			throw new Exception("No rate definition found for equipment " + equipment.getName() + " and material "
-					+ material.getDisplayString());
+			throw new Exception("No design speed definition found for equipment " + equipment.getName()
+					+ " and material " + material.getDisplayString());
 		}
 		return equipmentMaterial;
 	}
@@ -109,27 +116,31 @@ public class ProductionEditorController extends EventEditorController {
 	}
 
 	@FXML
-	private void onSelectProductionType() throws Exception {
-		UnitOfMeasure uom = null;
-		OeeEventType type = null;
-		if (rbGood.isSelected()) {
-			// good production
-			uom = getEquipmentMaterial().getRunRateUOM().getDividend();
-			type = OeeEventType.PROD_GOOD;
-		} else if (rbReject.isSelected()) {
-			// reject or rework production
-			uom = getEquipmentMaterial().getRejectUOM();
-			type = OeeEventType.PROD_REJECT;
-		} else {
-			// startup loss
-			uom = getEquipmentMaterial().getRunRateUOM().getDividend();
-			type = OeeEventType.PROD_STARTUP;
-		}
-		productionEvent.setUOM(uom);
-		productionEvent.setEventType(type);
-		productionEvent.setMaterial(getEquipmentMaterial().getMaterial());
+	private void onSelectProductionType() {
+		try {
+			UnitOfMeasure uom = null;
+			OeeEventType type = null;
+			if (rbGood.isSelected()) {
+				// good production
+				uom = getEquipmentMaterial().getRunRateUOM().getDividend();
+				type = OeeEventType.PROD_GOOD;
+			} else if (rbReject.isSelected()) {
+				// reject or rework production
+				uom = getEquipmentMaterial().getRejectUOM();
+				type = OeeEventType.PROD_REJECT;
+			} else {
+				// startup loss
+				uom = getEquipmentMaterial().getRunRateUOM().getDividend();
+				type = OeeEventType.PROD_STARTUP;
+			}
+			productionEvent.setUOM(uom);
+			productionEvent.setEventType(type);
+			productionEvent.setMaterial(getEquipmentMaterial().getMaterial());
 
-		tfAmount.setDisable(false);
-		lbUOM.setText(uom.getSymbol());
+			tfAmount.setDisable(false);
+			lbUOM.setText(uom.getSymbol());
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
 	}
 }

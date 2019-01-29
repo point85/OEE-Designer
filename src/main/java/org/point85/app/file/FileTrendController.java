@@ -29,11 +29,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.stage.FileChooser;
 
 public class FileTrendController extends DesignerDialogController implements FileEventListener, DataSubscriber {
 	// polling client
 	private FileEventClient fileClient;
+
+	// folder to start browing from
+	private File initialDirectory;
 
 	// trend chart
 	private TrendChartController trendChartController;
@@ -48,10 +52,13 @@ public class FileTrendController extends DesignerDialogController implements Fil
 	private Label lbHost;
 
 	@FXML
-	private TextArea taTestValue;
+	private TextField tfFilePath;
 
 	@FXML
 	private Button btTest;
+
+	@FXML
+	private Button btFileBrowser;
 
 	public SplitPane initializeTrend() throws Exception {
 		if (trendChartController == null) {
@@ -80,6 +87,10 @@ public class FileTrendController extends DesignerDialogController implements Fil
 		// write test
 		btTest.setGraphic(ImageManager.instance().getImageView(Images.EXECUTE));
 		btTest.setContentDisplay(ContentDisplay.LEFT);
+		
+		// file browser
+		btFileBrowser.setGraphic(ImageManager.instance().getImageView(Images.IMPORT));
+		btFileBrowser.setContentDisplay(ContentDisplay.LEFT);
 	}
 
 	public void setEventResolver(EventResolver eventResolver) throws Exception {
@@ -210,16 +221,39 @@ public class FileTrendController extends DesignerDialogController implements Fil
 			EventResolver eventResolver = trendChartController.getEventResolver();
 
 			String sourceId = eventResolver.getSourceId();
-			String inputValue = taTestValue.getText();
+			File selectedFile = (File) tfFilePath.getUserData();
 
-			// write the file
+			if (selectedFile == null) {
+				throw new Exception("The file to test must be selected first.");
+			}
+
+			// move the file to READY folder
 			FileEventSource source = (FileEventSource) eventResolver.getDataSource();
 
-			fileClient.writeFile(source, sourceId, FileEventClient.READY_FOLDER, inputValue);
+			fileClient.moveFile(selectedFile, source, sourceId, FileEventClient.READY_FOLDER);
 
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}
+	}
+
+	@FXML
+	private void onBrowseFile() {
+		// show file chooser
+		FileChooser fileChooser = new FileChooser();
+
+		if (initialDirectory != null) {
+			fileChooser.setInitialDirectory(initialDirectory);
+		}
+		File selectedFile = fileChooser.showOpenDialog(null);
+
+		if (selectedFile == null) {
+			return;
+		}
+		initialDirectory = selectedFile.getParentFile();
+
+		tfFilePath.setUserData(selectedFile);
+		tfFilePath.setText(selectedFile.getAbsolutePath());
 	}
 
 	// service class for callbacks on received events

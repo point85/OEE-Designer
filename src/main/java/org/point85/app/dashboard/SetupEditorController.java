@@ -138,6 +138,7 @@ public class SetupEditorController extends EventEditorController {
 
 			Material material = materialController.getSelectedMaterial();
 			setupEvent.setMaterial(material);
+			setupEvent.setInputValue(material.getName());
 			displayMaterial();
 
 		} catch (Exception e) {

@@ -17,7 +17,6 @@ import java.util.Optional;
 import org.point85.app.AppUtils;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
-import org.point85.domain.DomainUtils;
 import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.DataSourceType;
 import org.point85.domain.http.EquipmentEventRequestDto;
@@ -31,12 +30,15 @@ import org.point85.domain.http.ReasonDto;
 import org.point85.domain.http.ReasonResponseDto;
 import org.point85.domain.http.SourceIdResponseDto;
 import org.point85.domain.jms.JMSClient;
-import org.point85.domain.jms.JMSListener;
+import org.point85.domain.jms.JMSEquipmentEventListener;
 import org.point85.domain.messaging.ApplicationMessage;
 import org.point85.domain.messaging.EquipmentEventMessage;
 import org.point85.domain.messaging.MessageListener;
 import org.point85.domain.messaging.MessagingClient;
 import org.point85.domain.messaging.RoutingKey;
+import org.point85.domain.mqtt.MQTTClient;
+import org.point85.domain.mqtt.MQTTEquipmentEventListener;
+import org.point85.domain.mqtt.QualityOfService;
 import org.point85.domain.oee.TimeLoss;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.EntityLevel;
@@ -72,15 +74,18 @@ import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-public class ClientTestApplication implements MessageListener, JMSListener {
+public class ClientTestApplication implements MessageListener, JMSEquipmentEventListener, MQTTEquipmentEventListener {
 	// logger
 	private static final Logger logger = LoggerFactory.getLogger(ClientTestApplication.class);
 
 	// RMQ message publisher/subscriber
 	private final Map<String, MessagingClient> pubsubs = new HashMap<>();
 
-	// AMQ message publisher/subscriber
+	// JMS message publisher/subscriber
 	private final Map<String, JMSClient> jmsClients = new HashMap<>();
+
+	// MQTT message publisher/subscriber
+	private final Map<String, MQTTClient> mqttClients = new HashMap<>();
 
 	// materials
 	private final ObservableList<Material> materials = FXCollections.observableList(new ArrayList<>());
@@ -142,7 +147,7 @@ public class ClientTestApplication implements MessageListener, JMSListener {
 
 	// Messaging
 	@FXML
-	private ComboBox<CollectorDataSource> cbMsgHostPort;
+	private ComboBox<CollectorDataSource> cbMsgHost;
 
 	@FXML
 	private ComboBox<String> cbMsgSourceId;
@@ -169,7 +174,10 @@ public class ClientTestApplication implements MessageListener, JMSListener {
 	private RadioButton rbRMQ;
 
 	@FXML
-	private RadioButton rbAMQ;
+	private RadioButton rbJMS;
+
+	@FXML
+	private RadioButton rbMQTT;
 
 	public ClientTestApplication() {
 		// nothing to initialize
@@ -231,8 +239,10 @@ public class ClientTestApplication implements MessageListener, JMSListener {
 	private void onSelectBrokerType() {
 		if (rbRMQ.isSelected()) {
 			populateMsgSourceIds(DataSourceType.MESSAGING);
-		} else {
+		} else if (rbJMS.isSelected()) {
 			populateMsgSourceIds(DataSourceType.JMS);
+		} else if (rbMQTT.isSelected()) {
+			populateMsgSourceIds(DataSourceType.MQTT);
 		}
 	}
 
@@ -240,14 +250,22 @@ public class ClientTestApplication implements MessageListener, JMSListener {
 		try {
 			// disconnect RMQ brokers
 			for (Entry<String, MessagingClient> entry : pubsubs.entrySet()) {
-				entry.getValue().disconnect();
+				entry.getValue().shutDown();
 			}
 			pubsubs.clear();
 
+			// disconnect JMS brokers
 			for (Entry<String, JMSClient> entry : jmsClients.entrySet()) {
-				entry.getValue().disconnect();
+				entry.getValue().shutDown();
 			}
 			jmsClients.clear();
+
+			// disconnect MQTT brokers
+			for (Entry<String, MQTTClient> entry : mqttClients.entrySet()) {
+				entry.getValue().shutDown();
+			}
+			mqttClients.clear();
+
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
@@ -440,10 +458,20 @@ public class ClientTestApplication implements MessageListener, JMSListener {
 			String urlString = buildHttpUrl(OeeHttpServer.SOURCE_ID_EP);
 			urlString = addQueryParameter(urlString, OeeHttpServer.EQUIP_ATTRIB, entity.getName());
 
-			String messagingType = DataSourceType.MESSAGING.name();
-			if (rbAMQ.isSelected()) {
-				messagingType = DataSourceType.JMS.name();
+			DataSourceType sourceType = null;
+
+			if (this.rbRMQ.isSelected()) {
+				sourceType = DataSourceType.MESSAGING;
+			} else if (rbJMS.isSelected()) {
+				sourceType = DataSourceType.JMS;
+			} else if (rbMQTT.isSelected()) {
+				sourceType = DataSourceType.MQTT;
+			} else {
+				return;
 			}
+
+			String messagingType = sourceType.name();
+
 			urlString = addQueryParameter(urlString, OeeHttpServer.DS_TYPE_ATTRIB, messagingType);
 
 			URL url = new URL(urlString);
@@ -474,7 +502,9 @@ public class ClientTestApplication implements MessageListener, JMSListener {
 
 			cbMsgSourceId.getItems().clear();
 			cbMsgSourceId.getItems().addAll(sources);
-		} finally {
+		} finally
+
+		{
 			if (conn != null) {
 				conn.disconnect();
 			}
@@ -531,9 +561,9 @@ public class ClientTestApplication implements MessageListener, JMSListener {
 			String sourceId = (String) cbHttpSourceId.getSelectionModel().getSelectedItem();
 			String value = tfHttpValue.getText();
 
-			String timestamp = DomainUtils.offsetDateTimeToString(OffsetDateTime.now());
+			EquipmentEventRequestDto dto = new EquipmentEventRequestDto(sourceId, value);
+			dto.setDateTime(OffsetDateTime.now());
 
-			EquipmentEventRequestDto dto = new EquipmentEventRequestDto(sourceId, value, timestamp);
 			Gson gson = new Gson();
 			String payload = gson.toJson(dto);
 
@@ -799,7 +829,8 @@ public class ClientTestApplication implements MessageListener, JMSListener {
 	@FXML
 	private void onSendEquipmentEventMsg() {
 		try {
-			CollectorDataSource source = cbMsgHostPort.getSelectionModel().getSelectedItem();
+			int selectedIndex = cbMsgHost.getSelectionModel().getSelectedIndex();
+			CollectorDataSource source = cbMsgHost.getItems().get(selectedIndex);
 
 			if (source == null) {
 				throw new Exception("A messaging source must be specified");
@@ -826,7 +857,7 @@ public class ClientTestApplication implements MessageListener, JMSListener {
 					pubsub.connect(source.getHost(), source.getPort(), source.getUserName(), source.getUserPassword());
 				}
 				pubsub.publish(msg, RoutingKey.EQUIPMENT_SOURCE_EVENT, 30);
-			} else {
+			} else if (rbJMS.isSelected()) {
 				JMSClient jmsClient = jmsClients.get(hostPort);
 
 				if (jmsClient == null) {
@@ -837,6 +868,19 @@ public class ClientTestApplication implements MessageListener, JMSListener {
 							source.getUserPassword());
 				}
 				jmsClient.sendToQueue(msg, JMSClient.DEFAULT_QUEUE, 30);
+			} else if (rbMQTT.isSelected()) {
+				MQTTClient mqttClient = mqttClients.get(hostPort);
+
+				if (mqttClient == null) {
+					mqttClient = new MQTTClient();
+					mqttClients.put(hostPort, mqttClient);
+
+					mqttClient.connect(source.getHost(), source.getPort(), source.getUserName(),
+							source.getUserPassword());
+				}
+				mqttClient.publish(msg, QualityOfService.AT_MOST_ONCE);
+			} else {
+				return;
 			}
 		} catch (Exception e) {
 			showErrorDialog(e);
@@ -878,8 +922,8 @@ public class ClientTestApplication implements MessageListener, JMSListener {
 			// query db
 			List<CollectorDataSource> dataSources = PersistenceService.instance().fetchDataSources(type);
 
-			cbMsgHostPort.getSelectionModel().clearSelection();
-			ObservableList<CollectorDataSource> items = cbMsgHostPort.getItems();
+			cbMsgHost.getSelectionModel().clearSelection();
+			ObservableList<CollectorDataSource> items = cbMsgHost.getItems();
 			items.clear();
 
 			for (CollectorDataSource dataSource : dataSources) {
@@ -892,7 +936,7 @@ public class ClientTestApplication implements MessageListener, JMSListener {
 			tfMsgValue.clear();
 
 			if (items.size() == 1) {
-				cbMsgHostPort.getSelectionModel().select(0);
+				cbMsgHost.getSelectionModel().select(0);
 			}
 		} catch (Exception e) {
 			showErrorDialog(e);
@@ -914,8 +958,12 @@ public class ClientTestApplication implements MessageListener, JMSListener {
 	}
 
 	@Override
-	public void onEquipmentEvent(EquipmentEventMessage message) {
+	public void onJMSEquipmentEvent(EquipmentEventMessage message) {
 		logger.info("Received AMQ message: " + message.toString());
+	}
 
+	@Override
+	public void onMQTTEquipmentEvent(EquipmentEventMessage message) {
+		logger.info("Received MQTT message: " + message.toString());
 	}
 }

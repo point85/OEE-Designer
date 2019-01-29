@@ -284,7 +284,7 @@ public class OpcDaBrowserController extends OpcDaController {
 				String serverState = status.getServerState();
 				lbState.setText(serverState);
 				lbState.setTextFill(CONNECTED_COLOR);
-				String formatted = DomainUtils.offsetDateTimeToString(status.getStartTime());
+				String formatted = DomainUtils.offsetDateTimeToString(status.getStartTime(), DomainUtils.OFFSET_DATE_TIME_PATTERN);
 				lbStartTime.setText(formatted);
 				lbVendor.setText(status.getVendorInfo());
 				lbVersion.setText(status.getVersion());

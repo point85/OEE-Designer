@@ -10,6 +10,7 @@ import org.point85.app.Images;
 import org.point85.app.charts.DataSubscriber;
 import org.point85.app.charts.TrendChartController;
 import org.point85.app.designer.DesignerDialogController;
+import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.db.DatabaseEvent;
 import org.point85.domain.db.DatabaseEventClient;
 import org.point85.domain.db.DatabaseEventListener;
@@ -125,10 +126,16 @@ public class DatabaseTrendController extends DesignerDialogController implements
 		if (databaseClient != null) {
 			return;
 		}
-
-		DatabaseEventSource source = (DatabaseEventSource) trendChartController.getEventResolver().getDataSource();
-		int period = trendChartController.getEventResolver().getUpdatePeriod();
-		String sourceId = trendChartController.getEventResolver().getSourceId();
+		
+		EventResolver eventResolver = trendChartController.getEventResolver();
+		DatabaseEventSource source = (DatabaseEventSource)eventResolver.getDataSource();
+		
+		Integer period = eventResolver.getUpdatePeriod();
+		if (period == null) {
+			period = CollectorDataSource.DEFAULT_UPDATE_PERIOD_MSEC;
+		}
+		
+		String sourceId = eventResolver.getSourceId();
 
 		databaseClient = new DatabaseEventClient(this, period);
 		databaseClient.setSourceId(sourceId);

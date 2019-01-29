@@ -87,11 +87,17 @@ public class AvailabilityEditorController extends EventEditorController {
 		Equipment equipment = availabilityEvent.getEquipment();
 		OeeEvent lastSetup = PersistenceService.instance().fetchLastEvent(equipment, OeeEventType.MATL_CHANGE);
 
+		Material material = null;
 		if (lastSetup == null) {
-			throw new Exception("No setup record found for equipment " + equipment.getName());
+			material = equipment.getDefaultEquipmentMaterial().getMaterial();
+		} else {
+			material = lastSetup.getMaterial();
 		}
 
-		Material material = lastSetup.getMaterial();
+		if (material == null) {
+			throw new Exception("No material found for equipment " + equipment.getName());
+		}
+
 		availabilityEvent.setMaterial(material);
 
 		PersistenceService.instance().save(availabilityEvent);
@@ -133,6 +139,7 @@ public class AvailabilityEditorController extends EventEditorController {
 
 			Reason reason = reasonController.getSelectedReason();
 			availabilityEvent.setReason(reason);
+			availabilityEvent.setInputValue(reason.getName());
 			displayReason();
 
 		} catch (Exception e) {

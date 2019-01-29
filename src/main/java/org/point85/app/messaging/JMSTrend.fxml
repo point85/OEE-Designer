@@ -23,7 +23,7 @@
             </Label>
             <Separator orientation="VERTICAL" prefHeight="200.0" />
             <Label text="Loopback Test Value" />
-            <TextField fx:id="tfLoopbackValue" promptText="Enter value" />
+            <TextField fx:id="tfLoopbackValue" onAction="#onLoopbackTest" promptText="Enter value" />
             <Button fx:id="btLoopback" mnemonicParsing="false" onAction="#onLoopbackTest" text="Test" />
          </children>
       </HBox>

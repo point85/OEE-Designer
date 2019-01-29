@@ -4,9 +4,8 @@ import java.time.OffsetDateTime;
 
 import org.point85.app.AppUtils;
 import org.point85.app.charts.DataSubscriber;
-import org.point85.domain.DomainUtils;
+import org.point85.domain.jms.JMSEquipmentEventListener;
 import org.point85.domain.jms.JMSClient;
-import org.point85.domain.jms.JMSListener;
 import org.point85.domain.jms.JMSSource;
 import org.point85.domain.messaging.EquipmentEventMessage;
 import org.point85.domain.script.EventResolver;
@@ -15,7 +14,7 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 
-public class JMSTrendController extends BaseMessagingTrendController implements JMSListener, DataSubscriber {
+public class JMSTrendController extends BaseMessagingTrendController implements JMSEquipmentEventListener, DataSubscriber {
 	// AMQ JMS client
 	private JMSClient jmsClient;
 
@@ -34,7 +33,7 @@ public class JMSTrendController extends BaseMessagingTrendController implements 
 
 		JMSSource source = (JMSSource) trendChartController.getEventResolver().getDataSource();
 
-		jmsClient.connectAndConsume(source.getHost(), source.getPort(), source.getUserName(), source.getUserPassword(),
+		jmsClient.startUp(source.getHost(), source.getPort(), source.getUserName(), source.getUserPassword(),
 				this);
 
 		// add to context
@@ -49,7 +48,7 @@ public class JMSTrendController extends BaseMessagingTrendController implements 
 		if (jmsClient == null) {
 			return;
 		}
-		jmsClient.disconnect();
+		jmsClient.shutDown();
 
 		// remove from app context
 		getApp().getAppContext().removeJMSClient(jmsClient);
@@ -60,9 +59,9 @@ public class JMSTrendController extends BaseMessagingTrendController implements 
 	}
 
 	@Override
-	public void onEquipmentEvent(EquipmentEventMessage message) {
-		OffsetDateTime odt = DomainUtils.offsetDateTimeFromString(message.getTimestamp());
-		ResolutionService service = new ResolutionService(message.getSourceId(), message.getValue(), odt);
+	public void onJMSEquipmentEvent(EquipmentEventMessage message) {
+		ResolutionService service = new ResolutionService(message.getSourceId(), message.getValue(),
+				message.getDateTime());
 
 		service.setOnFailed(new EventHandler<WorkerStateEvent>() {
 			@Override
@@ -95,6 +94,7 @@ public class JMSTrendController extends BaseMessagingTrendController implements 
 			EquipmentEventMessage msg = new EquipmentEventMessage();
 			msg.setSourceId(sourceId);
 			msg.setValue(value);
+			msg.setDateTime(OffsetDateTime.now());
 
 			jmsClient.sendToQueue(msg, JMSClient.DEFAULT_QUEUE, 30);
 		} catch (Exception e) {

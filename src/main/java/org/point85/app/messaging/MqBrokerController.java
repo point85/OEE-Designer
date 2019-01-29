@@ -12,6 +12,7 @@ import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.DataSourceType;
 import org.point85.domain.jms.JMSSource;
 import org.point85.domain.messaging.MessagingSource;
+import org.point85.domain.mqtt.MQTTSource;
 import org.point85.domain.persistence.PersistenceService;
 
 import javafx.collections.FXCollections;
@@ -97,8 +98,10 @@ public class MqBrokerController extends DesignerDialogController {
 		if (dataSource == null) {
 			if (sourceType.equals(DataSourceType.MESSAGING)) {
 				dataSource = new MessagingSource();
-			} else {
+			} else if (sourceType.equals(DataSourceType.JMS)) {
 				dataSource = new JMSSource();
+			} else if (sourceType.equals(DataSourceType.MQTT)) {
+				dataSource = new MQTTSource();
 			}
 		}
 		return dataSource;

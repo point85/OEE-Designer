@@ -17,6 +17,7 @@ import org.point85.app.http.HttpServerController;
 import org.point85.app.http.HttpTrendController;
 import org.point85.app.material.MaterialEditorController;
 import org.point85.app.messaging.JMSTrendController;
+import org.point85.app.messaging.MQTTTrendController;
 import org.point85.app.messaging.MessagingTrendController;
 import org.point85.app.messaging.MqBrokerController;
 import org.point85.app.opc.da.OpcDaBrowserController;
@@ -85,18 +86,6 @@ public class DesignerApplication {
 
 	// OPC UA data source browser
 	private OpcUaBrowserController opcUaBrowserController;
-
-	// HTTP server editor
-	private HttpServerController httpServerController;
-
-	// RabbitMQ broker editor
-	private MqBrokerController mqBrokerController;
-
-	// Database server editor
-	private DatabaseServerController databaseServerController;
-
-	// file share editor
-	private FileShareController fileShareController;
 
 	// data collection definition
 	private DataCollectorController dataCollectorController;
@@ -395,7 +384,7 @@ public class DesignerApplication {
 		dialogStage.setScene(scene);
 
 		// get the controller
-		httpServerController = loader.getController();
+		HttpServerController httpServerController = loader.getController();
 		httpServerController.setDialogStage(dialogStage);
 		httpServerController.initializeServer();
 
@@ -417,7 +406,7 @@ public class DesignerApplication {
 		dialogStage.setScene(scene);
 
 		// get the controller
-		mqBrokerController = loader.getController();
+		MqBrokerController mqBrokerController = loader.getController();
 		mqBrokerController.setDialogStage(dialogStage);
 		mqBrokerController.initialize(this, type);
 
@@ -441,7 +430,7 @@ public class DesignerApplication {
 		dialogStage.setScene(scene);
 
 		// get the controller
-		databaseServerController = loader.getController();
+		DatabaseServerController databaseServerController = loader.getController();
 		databaseServerController.setDialogStage(dialogStage);
 		databaseServerController.initialize(this);
 
@@ -465,7 +454,7 @@ public class DesignerApplication {
 		dialogStage.setScene(scene);
 
 		// get the controller
-		fileShareController = loader.getController();
+		FileShareController fileShareController = loader.getController();
 		fileShareController.setDialogStage(dialogStage);
 		fileShareController.initialize(this);
 
@@ -717,6 +706,43 @@ public class DesignerApplication {
 
 		// show the window
 		jmsTrendController.getDialogStage().show();
+	}
+
+	void showMQTTTrendDialog(EventResolver eventResolver) throws Exception {
+		// Load the fxml file
+		FXMLLoader loader = FXMLLoaderFactory.mqttTrendLoader();
+		AnchorPane page = (AnchorPane) loader.getRoot();
+
+		// Create the dialog Stage.
+		Stage dialogStage = new Stage(StageStyle.DECORATED);
+		dialogStage.setTitle("MQTT Event Trend");
+		dialogStage.initModality(Modality.NONE);
+		Scene scene = new Scene(page);
+		dialogStage.setScene(scene);
+
+		// get the controller
+		MQTTTrendController mqttTrendController = loader.getController();
+		mqttTrendController.setDialogStage(dialogStage);
+		mqttTrendController.setApp(this);
+
+		// add the trend chart
+		SplitPane chartPane = mqttTrendController.initializeTrend();
+
+		AnchorPane.setBottomAnchor(chartPane, 50.0);
+		AnchorPane.setLeftAnchor(chartPane, 5.0);
+		AnchorPane.setRightAnchor(chartPane, 5.0);
+		AnchorPane.setTopAnchor(chartPane, 50.0);
+
+		page.getChildren().add(0, chartPane);
+
+		// set the script resolver
+		mqttTrendController.setEventResolver(eventResolver);
+
+		// subscribe to broker
+		mqttTrendController.subscribeToDataSource();
+
+		// show the window
+		mqttTrendController.getDialogStage().show();
 	}
 
 	void showDatabaseTrendDialog(EventResolver eventResolver) throws Exception {

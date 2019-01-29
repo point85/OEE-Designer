@@ -18,6 +18,7 @@ import org.point85.app.http.HttpServerController;
 import org.point85.app.http.HttpTrendController;
 import org.point85.app.material.MaterialEditorController;
 import org.point85.app.messaging.JMSTrendController;
+import org.point85.app.messaging.MQTTTrendController;
 import org.point85.app.messaging.MessagingTrendController;
 import org.point85.app.messaging.MqBrokerController;
 import org.point85.app.opc.da.OpcDaBrowserController;
@@ -158,6 +159,12 @@ public class FXMLLoaderFactory {
 
 	public static FXMLLoader jmsTrendLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(JMSTrendController.class.getResource("JMSTrend.fxml"));
+		fxmlLoader.load();
+		return fxmlLoader;
+	}
+	
+	public static FXMLLoader mqttTrendLoader() throws Exception {
+		FXMLLoader fxmlLoader = new FXMLLoader(MQTTTrendController.class.getResource("MQTTTrend.fxml"));
 		fxmlLoader.load();
 		return fxmlLoader;
 	}

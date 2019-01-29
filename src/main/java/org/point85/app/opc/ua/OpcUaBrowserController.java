@@ -371,7 +371,7 @@ public class OpcUaBrowserController extends OpcUaController {
 
 				// start time
 				OffsetDateTime start = DomainUtils.utcTimeFromDateTime(status.getStartTime());
-				lbStartTime.setText(DomainUtils.offsetDateTimeToString(start));
+				lbStartTime.setText(DomainUtils.offsetDateTimeToString(start, DomainUtils.OFFSET_DATE_TIME_PATTERN));
 
 				// product & manufacturer
 				BuildInfo info = status.getBuildInfo();

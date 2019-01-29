@@ -12,6 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
@@ -36,6 +37,9 @@ public class CollectorApplication {
 
 	@FXML
 	private Button btStartMonitoring;
+
+	@FXML
+	private TextArea taNotification;
 
 	public CollectorApplication() {
 		// nothing to initialize
@@ -97,8 +101,14 @@ public class CollectorApplication {
 		}
 	}
 
+	private void postNotification(String notification) {
+		taNotification.clear();
+		taNotification.setText(notification);
+	}
+
 	@FXML
 	private void onStartup() {
+		postNotification("Starting collector");
 		// create the collector
 		collector = new CollectorService();
 
@@ -111,10 +121,13 @@ public class CollectorApplication {
 			btStartMonitoring.setDisable(false);
 			btStopMonitoring.setDisable(false);
 			btRestart.setDisable(false);
+			postNotification("Started the collector");
 
 		} catch (Exception any) {
 			AppUtils.showErrorDialog(any);
-			collector.onException("Failed to start collector.", any);
+			collector.onException("Failed to start collector", any);
+			postNotification("Failed to start collector.  Shutting down.");
+
 			try {
 				onShutdown();
 			} catch (Exception e) {
@@ -134,6 +147,8 @@ public class CollectorApplication {
 			btStartMonitoring.setDisable(true);
 			btStopMonitoring.setDisable(true);
 			btRestart.setDisable(true);
+
+			postNotification("Shut down the collector");
 		}
 	}
 
@@ -141,6 +156,7 @@ public class CollectorApplication {
 	private void onRestart() throws Exception {
 		if (collector != null) {
 			collector.restartDataCollection();
+			postNotification("Restarted the collector");
 		}
 	}
 
@@ -148,6 +164,7 @@ public class CollectorApplication {
 	private void onStopMonitoring() throws Exception {
 		if (collector != null) {
 			collector.unsubscribeFromDataSource();
+			postNotification("Stopped monitoring events");
 		}
 	}
 
@@ -155,6 +172,7 @@ public class CollectorApplication {
 	private void onStartMonitoring() throws Exception {
 		if (collector != null) {
 			collector.subscribeToDataSource();
+			postNotification("Started monitoring events");
 		}
 	}
 }

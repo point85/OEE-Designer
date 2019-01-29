@@ -38,7 +38,7 @@
             <ProgressIndicator fx:id="piConnection" prefHeight="32.0" prefWidth="32.0" visible="false" />
             <Separator orientation="VERTICAL" prefHeight="200.0" />
             <Label text="Loopback Test Value" />
-            <TextField fx:id="tfLoopbackValue" promptText="Enter value" />
+            <TextField fx:id="tfLoopbackValue" onAction="#onLoopbackTest" promptText="Enter value" />
             <Button fx:id="btLoopback" mnemonicParsing="false" onAction="#onLoopbackTest" prefWidth="75.0" text="Test" />
          </children>
       </HBox>

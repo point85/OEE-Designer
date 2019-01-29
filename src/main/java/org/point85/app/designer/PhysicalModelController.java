@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import org.point85.app.AppUtils;
@@ -93,9 +94,12 @@ public class PhysicalModelController extends DesignerController {
 
 	@FXML
 	private Button btRmqBrokerEditor;
-	
+
 	@FXML
 	private Button btJMSBrokerEditor;
+
+	@FXML
+	private Button btMQTTBrokerEditor;
 
 	@FXML
 	private Button btDatabaseServerEditor;
@@ -341,9 +345,12 @@ public class PhysicalModelController extends DesignerController {
 
 		btRmqBrokerEditor.setGraphic(ImageManager.instance().getImageView(Images.RMQ));
 		btRmqBrokerEditor.setTooltip(new Tooltip("Display RabbitMQ broker editor."));
-		
+
 		btJMSBrokerEditor.setGraphic(ImageManager.instance().getImageView(Images.JMS));
 		btJMSBrokerEditor.setTooltip(new Tooltip("Display JMS broker editor."));
+
+		btMQTTBrokerEditor.setGraphic(ImageManager.instance().getImageView(Images.MQTT));
+		btMQTTBrokerEditor.setTooltip(new Tooltip("Display MQTT server editor."));
 
 		btDatabaseServerEditor.setGraphic(ImageManager.instance().getImageView(Images.DB));
 		btDatabaseServerEditor.setTooltip(new Tooltip("Display database server editor."));
@@ -426,11 +433,20 @@ public class PhysicalModelController extends DesignerController {
 			AppUtils.showErrorDialog(e);
 		}
 	}
-	
+
 	@FXML
 	private void onShowJMSBrokerEditor() {
 		try {
 			this.getApp().showMQBrokerEditor(DataSourceType.JMS);
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+
+	@FXML
+	private void onShowMQTTBrokerEditor() {
+		try {
+			this.getApp().showMQBrokerEditor(DataSourceType.MQTT);
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}
@@ -1082,6 +1098,22 @@ public class PhysicalModelController extends DesignerController {
 
 		private void setPlantEntity(PlantEntity entity) {
 			this.entity = entity;
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(entity.getName());
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (obj instanceof EntityNode) {
+				EntityNode other = (EntityNode) obj;
+				if (entity.getName().equals(other.entity.getName())) {
+					return true;
+				}
+			}
+			return false;
 		}
 
 		@Override

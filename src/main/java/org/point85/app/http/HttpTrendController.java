@@ -16,7 +16,6 @@ import org.point85.app.Images;
 import org.point85.app.charts.DataSubscriber;
 import org.point85.app.charts.TrendChartController;
 import org.point85.app.designer.DesignerDialogController;
-import org.point85.domain.DomainUtils;
 import org.point85.domain.http.EquipmentEventRequestDto;
 import org.point85.domain.http.HttpEventListener;
 import org.point85.domain.http.HttpSource;
@@ -122,12 +121,12 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 	public void onStartServer() {
 		HttpSource dataSource = (HttpSource) trendChartController.getEventResolver().getDataSource();
 		int port = dataSource.getPort();
-		
+
 		// check to see if already started
 		Collection<OeeHttpServer> servers = getApp().getAppContext().getHttpServers();
-		
+
 		Iterator<OeeHttpServer> iter = servers.iterator();
-		
+
 		while (iter.hasNext()) {
 			OeeHttpServer server = iter.next();
 			if (server.getListeningPort() == port) {
@@ -135,7 +134,7 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 				break;
 			}
 		}
-		
+
 		try {
 			if (httpServer == null) {
 				piConnection.setVisible(true);
@@ -145,7 +144,7 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 				httpServer.startup();
 				lbState.setText(httpServer.getState().toString());
 				lbState.setTextFill(STARTED_COLOR);
-				
+
 				// add to context
 				getApp().getAppContext().addHttpServer(httpServer);
 
@@ -165,10 +164,10 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 			trendChartController.onStopTrending();
 
 			httpServer.shutdown();
-			
+
 			// remove from context
 			getApp().getAppContext().removeHttpServer(httpServer);
-			
+
 			lbState.setText(httpServer.getState().toString());
 			lbState.setTextFill(STOPPED_COLOR);
 			httpServer = null;
@@ -233,11 +232,9 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 			// the value to send (must match the configured resolver)
 			String value = tfLoopbackValue.getText();
 
-			// timestamp when sent
-			String timestamp = DomainUtils.offsetDateTimeToString(OffsetDateTime.now());
-
 			// create the data transfer event object
-			EquipmentEventRequestDto dto = new EquipmentEventRequestDto(eventResolver.getSourceId(), value, timestamp);
+			EquipmentEventRequestDto dto = new EquipmentEventRequestDto(eventResolver.getSourceId(), value);
+			dto.setDateTime(OffsetDateTime.now());
 
 			// serialize the body
 			Gson gson = new Gson();
@@ -278,7 +275,7 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 		private final String dataValue;
 		private final OffsetDateTime timestamp;
 
-		public ResolutionService(String sourceId, String dataValue, OffsetDateTime timestamp) {
+		private ResolutionService(String sourceId, String dataValue, OffsetDateTime timestamp) {
 			this.dataValue = dataValue;
 			this.timestamp = timestamp;
 		}

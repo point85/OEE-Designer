@@ -235,7 +235,7 @@ public class TrendChartController extends DesignerController {
 		// timestamp
 		tcTimestamp.setCellValueFactory(cellDataFeatures -> {
 			OffsetDateTime odt = cellDataFeatures.getValue().getStartTime();
-			return new SimpleStringProperty(DomainUtils.offsetDateTimeToString(odt));
+			return new SimpleStringProperty(DomainUtils.offsetDateTimeToString(odt, DomainUtils.OFFSET_DATE_TIME_PATTERN));
 		});
 
 		// output value

@@ -16,12 +16,13 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.collector.ClientTestApplication">
    <children>
-      <SplitPane dividerPositions="0.5" layoutX="200.0" layoutY="155.0" orientation="VERTICAL" prefHeight="445.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="200.0">
+      <SplitPane dividerPositions="0.5" layoutX="200.0" layoutY="155.0" orientation="VERTICAL" prefHeight="445.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="225.0">
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0">
                <children>
@@ -89,19 +90,20 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-          <Button fx:id="btHttpPost" mnemonicParsing="false" onAction="#onHttpPostEvent" text="Post" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-            <Label text="Source Id" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
-            <Label prefHeight="0.0" prefWidth="37.0" text="Value" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
-            <TextField fx:id="tfHttpValue" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <Label text="Host:Port" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-            <ComboBox fx:id="cbHttpSourceId" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <Label GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-            <ComboBox fx:id="cbHttpHostPort" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <Label text="Broker" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+          <Button fx:id="btHttpPost" mnemonicParsing="false" onAction="#onHttpPostEvent" text="Post" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+            <Label text="Source Id" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
+            <Label prefHeight="0.0" prefWidth="37.0" text="Value" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
+            <TextField fx:id="tfHttpValue" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <Label text="Host:Port" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
+            <ComboBox fx:id="cbHttpSourceId" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Label GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
+            <ComboBox fx:id="cbHttpHostPort" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label text="Broker" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
             <Label text="HTTP" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER">
                <font>
                   <Font name="System Bold" size="18.0" />
@@ -112,19 +114,24 @@
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <Label text="Source Id" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
-            <ComboBox fx:id="cbMsgHostPort" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="2" />
-            <ComboBox fx:id="cbMsgSourceId" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="3" />
-            <Button fx:id="btMsgSend" mnemonicParsing="false" onAction="#onSendEquipmentEventMsg" text="Send" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-            <Label text="Value" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
-            <TextField fx:id="tfMsgValue" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="4" />
-            <Button fx:id="btReset" mnemonicParsing="false" onAction="#onReset" text="Reset" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-            <RadioButton fx:id="rbRMQ" mnemonicParsing="false" onAction="#onSelectBrokerType" text="RMQ" GridPane.columnIndex="2" GridPane.rowIndex="1">
-               <toggleGroup>
-                  <ToggleGroup fx:id="Broker" />
-               </toggleGroup>
-            </RadioButton>
-            <RadioButton fx:id="rbAMQ" mnemonicParsing="false" onAction="#onSelectBrokerType" text="JMS" toggleGroup="$Broker" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <Label text="Source Id" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
+            <ComboBox fx:id="cbMsgHost" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+            <ComboBox fx:id="cbMsgSourceId" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="4" />
+            <Button fx:id="btMsgSend" mnemonicParsing="false" onAction="#onSendEquipmentEventMsg" text="Send" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+            <Label text="Value" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
+            <TextField fx:id="tfMsgValue" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="5" />
+            <Button fx:id="btReset" mnemonicParsing="false" onAction="#onReset" text="Reset" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+            <HBox prefHeight="100.0" prefWidth="200.0" spacing="15.0" GridPane.columnIndex="4" GridPane.rowIndex="1">
+               <children>
+                  <RadioButton fx:id="rbRMQ" mnemonicParsing="false" onAction="#onSelectBrokerType" text="RMQ">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="Broker" />
+                     </toggleGroup>
+                  </RadioButton>
+                  <RadioButton fx:id="rbJMS" mnemonicParsing="false" onAction="#onSelectBrokerType" text="JMS" toggleGroup="$Broker" />
+                  <RadioButton fx:id="rbMQTT" mnemonicParsing="false" onAction="#onSelectBrokerType" text="MQTT" toggleGroup="$Broker" />
+               </children>
+            </HBox>
          </children>
       </GridPane>
    </children>

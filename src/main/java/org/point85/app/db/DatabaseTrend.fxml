@@ -23,7 +23,7 @@
             </Label>
             <Separator orientation="VERTICAL" prefHeight="200.0" />
             <Label text="Input Test Value" />
-            <TextField fx:id="tfTestValue" promptText="Enter value" />
+            <TextField fx:id="tfTestValue" onAction="#onTest" promptText="Enter value" />
             <Button fx:id="btTest" mnemonicParsing="false" onAction="#onTest" text="Test" />
          </children>
       </HBox>
