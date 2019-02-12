@@ -1,5 +1,6 @@
 package org.point85.app.monitor;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -10,6 +11,7 @@ import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
 import org.point85.app.dashboard.DashboardController;
+import org.point85.domain.DomainUtils;
 import org.point85.domain.collector.CollectorState;
 import org.point85.domain.collector.DataCollector;
 import org.point85.domain.messaging.CollectorNotificationMessage;
@@ -301,7 +303,9 @@ public class MonitorController {
 		TableColumn<CollectorNotification, String> tcTimestamp = new TableColumn<>("Timestamp");
 		tcTimestamp.setPrefWidth(250);
 		tcTimestamp.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(cellDataFeatures.getValue().getTimestamp());
+			String timestamp = cellDataFeatures.getValue().getTimestamp();
+			OffsetDateTime odt = DomainUtils.offsetDateTimeFromString(timestamp, DomainUtils.OFFSET_DATE_TIME_8601);
+			return new SimpleStringProperty(DomainUtils.offsetDateTimeToString(odt, DomainUtils.OFFSET_DATE_TIME_PATTERN));
 		});
 		tvNotifications.getColumns().add(tcTimestamp);
 

@@ -33,5 +33,17 @@
 	- Minor enhancements to the testing tools
 	- Bug fixes in OPC DA trend controller
 	- Designer usability improvements
+(12) 2.0.0, February 12, 2019:
+	- Upgraded to JPA version 2.2
+	- Added MySQL and Postgres database support
+	- Changed primary key generation to identity/auto-increment
+	- Added primary key constraints
+	- Changed timestamp from a datetime offset to separate datetime and offset fields
+	- Bug fix in handling OPC UA and DA unsigned integers
+	- Fixed bug in a work schedule not being able to save a rotation without a team first being defined
+	- Event resolver source id now shown in the dashboard event table
+	- Improved error checking with new exceptions
+	- Miscellaneous usability improvements
+	- Note that, due to the database schema changes, this release is incompatible with release 1.5.0. 
 
 Please send comments and suggestions to point85.llc@gmail.com.

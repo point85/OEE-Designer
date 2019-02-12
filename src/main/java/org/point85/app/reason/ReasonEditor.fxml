@@ -26,10 +26,10 @@
                <children>
                   <ButtonBar buttonMinWidth="25.0" nodeOrientation="RIGHT_TO_LEFT" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0">
                     <buttons>
-                        <Button fx:id="btDelete" mnemonicParsing="false" onAction="#onDeleteReason" text="Delete" textAlignment="CENTER" />
-                        <Button fx:id="btRefresh" mnemonicParsing="false" onAction="#onRefreshReason" text="Refresh" />
-                        <Button fx:id="btSave" mnemonicParsing="false" onAction="#onSaveReason" text="Save" textAlignment="CENTER" />
-                      <Button fx:id="btNew" mnemonicParsing="false" onAction="#onNewReason" text="New" textAlignment="CENTER" />
+                        <Button fx:id="btDelete" mnemonicParsing="false" onAction="#onDeleteReason" prefWidth="100.0" text="Delete" textAlignment="CENTER" />
+                        <Button fx:id="btRefresh" mnemonicParsing="false" onAction="#onRefreshReason" prefWidth="100.0" text="Refresh" />
+                        <Button fx:id="btSave" mnemonicParsing="false" onAction="#onSaveReason" prefWidth="100.0" text="Save" textAlignment="CENTER" />
+                      <Button fx:id="btNew" mnemonicParsing="false" onAction="#onNewReason" prefWidth="100.0" text="New" textAlignment="CENTER" />
                     </buttons>
                      <padding>
                         <Insets top="5.0" />
@@ -38,7 +38,7 @@
                   <TreeView fx:id="tvReasons" layoutX="190.0" layoutY="391.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="90.0" />
                   <ButtonBar buttonMinWidth="25.0" layoutX="66.0" layoutY="41.0" nodeOrientation="RIGHT_TO_LEFT" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="45.0">
                     <buttons>
-                        <Button fx:id="btImport" mnemonicParsing="false" onAction="#onImportReasons" text="Import" />
+                        <Button fx:id="btImport" mnemonicParsing="false" onAction="#onImportReasons" prefWidth="100.0" text="Import ..." />
                     </buttons>
                      <padding>
                         <Insets top="5.0" />

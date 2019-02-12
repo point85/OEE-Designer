@@ -166,6 +166,9 @@ public class EventResolverController extends DesignerDialogController {
 		this.tfMatlId.clear();
 		this.tfValue.clear();
 		this.tfLastValue.clear();
+		this.lbDataType.setText("");
+		this.lbMatlDescription.setText("");
+		this.lbReasonDescription.setText("");
 	}
 
 	@FXML
@@ -229,7 +232,12 @@ public class EventResolverController extends DesignerDialogController {
 		try {
 			Object result = executeScript();
 
-			if (result == null || eventResolver.getType() == null) {
+			if (result == null) {
+				return;
+			}
+
+			if (eventResolver.getType() == null) {
+				taResult.appendText(result.toString() + '\n');
 				return;
 			}
 

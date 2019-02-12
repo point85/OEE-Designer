@@ -377,7 +377,8 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 
 		// shift duration
 		shiftDurationColumn.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(AppUtils.stringFromDuration(cellDataFeatures.getValue().getDuration(), false));
+			return new SimpleStringProperty(
+					AppUtils.stringFromDuration(cellDataFeatures.getValue().getDuration(), false));
 		});
 	}
 
@@ -423,7 +424,8 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 
 		// rotation duration
 		rotationDurationColumn.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(AppUtils.stringFromDuration(cellDataFeatures.getValue().getDuration(), false));
+			return new SimpleStringProperty(
+					AppUtils.stringFromDuration(cellDataFeatures.getValue().getDuration(), false));
 		});
 
 		// rotation table view row selection listener
@@ -494,7 +496,13 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 
 		// team rotation name
 		teamRotationColumn.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(cellDataFeatures.getValue().getRotation().getName());
+			String name = null;
+			Rotation rotation = cellDataFeatures.getValue().getRotation();
+
+			if (rotation != null) {
+				name = rotation.getName();
+			}
+			return new SimpleStringProperty(name);
 		});
 
 		// rotation start
@@ -543,7 +551,8 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 
 		// period duration
 		periodDurationColumn.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(AppUtils.stringFromDuration(cellDataFeatures.getValue().getDuration(), false));
+			return new SimpleStringProperty(
+					AppUtils.stringFromDuration(cellDataFeatures.getValue().getDuration(), false));
 		});
 
 		// period loss
@@ -608,14 +617,6 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 			return;
 		}
 
-		// check for previous edit
-		/*
-		 * if (oldItem != null) { boolean isChanged = setAttributes(oldItem);
-		 * 
-		 * if (isChanged) {
-		 * oldItem.setGraphic(ImageManager.instance().getImageView(Images.CHANGED));
-		 * tvSchedules.refresh(); } }
-		 */
 		selectedScheduleItem = newItem;
 
 		// new attributes
@@ -1083,7 +1084,6 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 
 		// shifts
 		List<Shift> shifts = schedule.getShifts();
-
 		shiftList.clear();
 		shiftNames.clear();
 
@@ -1094,20 +1094,31 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		Collections.sort(shiftList);
 		tvShifts.refresh();
 
+		// rotations
+		List<Rotation> rotations = schedule.getRotations();
+		rotationList.clear();
+		rotationSegmentList.clear();
+		rotationNames.clear();
+
+		for (Rotation rotation : rotations) {
+			rotationList.add(rotation);
+			rotationNames.add(rotation.getName());
+		}
+		Collections.sort(rotationList);
+		Collections.sort(rotationNames);
+		tvRotations.refresh();
+
 		// teams
 		List<Team> teams = schedule.getTeams();
 
 		teamList.clear();
-		rotationList.clear();
-		rotationSegmentList.clear();
-		rotationNames.clear();
 
 		for (Team team : teams) {
 			teamList.add(team);
 
 			Rotation rotation = team.getRotation();
 
-			if (rotation.getName() != null && !rotationList.contains(rotation)) {
+			if (rotation != null && rotation.getName() != null && !rotationList.contains(rotation)) {
 				// add to table binding
 				rotationList.add(rotation);
 
@@ -1117,11 +1128,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		}
 
 		Collections.sort(teamList);
-		Collections.sort(rotationList);
-		Collections.sort(rotationNames);
-
 		tvTeams.refresh();
-		tvRotations.refresh();
 
 		// non-working periods
 		List<NonWorkingPeriod> periods = schedule.getNonWorkingPeriods();
@@ -1342,7 +1349,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 
 			if (currentRotation == null) {
 				// new rotation
-				currentRotation = new Rotation(name, description);
+				currentRotation = getSelectedSchedule().createRotation(name, description);
 				rotationList.add(currentRotation);
 			} else {
 				currentRotation.setName(name);

@@ -219,7 +219,7 @@ public class TrendChartController extends DesignerController {
 
 		// item id
 		tcItem.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(cellDataFeatures.getValue().getItemId());
+			return new SimpleStringProperty(cellDataFeatures.getValue().getSourceId());
 		});
 
 		// input value
@@ -564,7 +564,7 @@ public class TrendChartController extends DesignerController {
 				}
 				
 				// add event to table
-				event.setItemId(eventResolver.getSourceId());
+				event.setSourceId(eventResolver.getSourceId());
 				event.setOutputValue(plottedValue);
 				addEvent(event);
 

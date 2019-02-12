@@ -90,6 +90,7 @@
                                     <TableColumn fx:id="tcProdUnit" editable="false" prefWidth="75.0" text="UOM" />
                                     <TableColumn fx:id="tcMaterial" editable="false" prefWidth="150.0" text="Material" />
                                     <TableColumn fx:id="tcJob" editable="false" prefWidth="100.0" text="Job" />
+                                    <TableColumn fx:id="tcSourceId" editable="false" prefWidth="100.0" text="Source" />
                                 </columns>
                               </TableView>
                               <ButtonBar layoutX="71.0" layoutY="-6.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="50.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">

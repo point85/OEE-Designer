@@ -121,6 +121,9 @@ public class DashboardController extends DialogController implements CategoryCli
 
 	// time between auto refresh
 	private static final long REFRESH_SEC = 60;
+	
+	// manual event id
+	private static final String EDITOR_SOURCE_ID = "EDITOR";
 
 	// auto refresh timer
 	private Timer refreshTimer;
@@ -336,6 +339,9 @@ public class DashboardController extends DialogController implements CategoryCli
 
 	@FXML
 	private TableColumn<OeeEvent, String> tcJob;
+
+	@FXML
+	private TableColumn<OeeEvent, String> tcSourceId;
 
 	// loss chart
 	@FXML
@@ -1149,6 +1155,15 @@ public class DashboardController extends DialogController implements CategoryCli
 			return property;
 		});
 
+		// source
+		tcSourceId.setCellValueFactory(cellDataFeatures -> {
+			SimpleStringProperty property = null;
+			OeeEvent event = cellDataFeatures.getValue();
+			String sourceId = event.getSourceId();
+			property = new SimpleStringProperty(sourceId);
+			return property;
+		});
+
 	}
 
 	private void refreshCharts(Tab newValue) throws Exception {
@@ -1392,7 +1407,9 @@ public class DashboardController extends DialogController implements CategoryCli
 			}
 
 			if (setups.isEmpty()) {
-				throw new Exception("No material setup has been defined.");
+				throw new Exception("No material setup has been defined for the period from "
+						+ DomainUtils.offsetDateTimeToString(odtStart, DomainUtils.OFFSET_DATE_TIME_PATTERN) + " to "
+						+ DomainUtils.offsetDateTimeToString(odtEnd, DomainUtils.OFFSET_DATE_TIME_PATTERN));
 			}
 
 			// add setup events
@@ -1486,7 +1503,6 @@ public class DashboardController extends DialogController implements CategoryCli
 			// sort by start time
 			Collections.sort(historyRecords, new Comparator<OeeEvent>() {
 				public int compare(OeeEvent record1, OeeEvent record2) {
-
 					return record1.getStartTime().compareTo(record2.getStartTime());
 				}
 			});
@@ -1587,6 +1603,7 @@ public class DashboardController extends DialogController implements CategoryCli
 	private void onNewAvailability() {
 		try {
 			OeeEvent event = new OeeEvent(equipmentLoss.getEquipment());
+			event.setSourceId(EDITOR_SOURCE_ID);
 			event.setEventType(OeeEventType.AVAILABILITY);
 			getAvailabilityController().initializeEditor(event);
 			getAvailabilityController().getDialogStage().showAndWait();
@@ -1602,6 +1619,7 @@ public class DashboardController extends DialogController implements CategoryCli
 	private void onNewProduction() {
 		try {
 			OeeEvent event = new OeeEvent(equipmentLoss.getEquipment());
+			event.setSourceId(EDITOR_SOURCE_ID);
 			getProductionController().initializeEditor(event);
 			getProductionController().getDialogStage().showAndWait();
 
@@ -1616,6 +1634,7 @@ public class DashboardController extends DialogController implements CategoryCli
 	private void onNewSetup() {
 		try {
 			OeeEvent event = new OeeEvent(equipmentLoss.getEquipment());
+			event.setSourceId(EDITOR_SOURCE_ID);
 			getSetupController().initializeEditor(event);
 			getSetupController().getDialogStage().showAndWait();
 

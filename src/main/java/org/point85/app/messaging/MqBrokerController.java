@@ -25,6 +25,11 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
 public class MqBrokerController extends DesignerDialogController {
+	// default ports
+	private static final int RMQ_DEFAULT_PORT = 5672;
+	private static final int AMQ_DEFAULT_PORT = 61616;
+	private static final int MQTT_DEFAULT_PORT = 1883;
+
 	// current source
 	private CollectorDataSource dataSource;
 
@@ -152,7 +157,21 @@ public class MqBrokerController extends DesignerDialogController {
 			this.tfUserName.clear();
 			this.pfPassword.clear();
 			this.tfDescription.clear();
-			this.tfPort.clear();
+
+			// default the port
+			if (sourceType != null) {
+				int port = RMQ_DEFAULT_PORT;
+
+				if (sourceType.equals(DataSourceType.JMS)) {
+					port = AMQ_DEFAULT_PORT;
+				} else if (sourceType.equals(DataSourceType.MQTT)) {
+					port = MQTT_DEFAULT_PORT;
+				}
+				this.tfPort.setText(String.valueOf(port));
+			} else {
+				this.tfPort.clear();
+			}
+
 			this.cbDataSources.getSelectionModel().clearSelection();
 
 			this.setSource(null);

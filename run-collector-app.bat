@@ -1,2 +1,2 @@
 rem Launch the Collector application (JDBC connection string, user name and password)
-start javaw.exe -jar oee-apps-1.5.0.jar COLLECTOR jdbc:sqlserver://localhost:1433;databaseName=OEE Point85 Point85 
+start javaw.exe -jar oee-apps-2.0.0.jar COLLECTOR jdbc:sqlserver://localhost:1433;databaseName=OEE Point85 Point85 

@@ -110,10 +110,6 @@ public class DesignerApplication {
 			URL url = getClass().getResource("DesignerApplication.fxml");
 			loader.setLocation(url);
 
-			if (logger.isInfoEnabled()) {
-				logger.info("Loading fxml at url " + url.toExternalForm());
-			}
-
 			AnchorPane mainLayout = (AnchorPane) loader.load();
 
 			// Give the controller access to the main app.
@@ -400,7 +396,15 @@ public class DesignerApplication {
 
 		// Create the dialog Stage.
 		Stage dialogStage = new Stage(StageStyle.DECORATED);
-		dialogStage.setTitle("Edit Messaging Brokers");
+
+		if (type.equals(DataSourceType.MQTT)) {
+			dialogStage.setTitle("Edit MQTT Servers");
+		} else if (type.equals(DataSourceType.MESSAGING)) {
+			dialogStage.setTitle("Edit Messaging Brokers");
+		} else if (type.equals(DataSourceType.JMS)) {
+			dialogStage.setTitle("Edit JMS Brokers");
+		}
+
 		dialogStage.initModality(Modality.WINDOW_MODAL);
 		Scene scene = new Scene(page);
 		dialogStage.setScene(scene);

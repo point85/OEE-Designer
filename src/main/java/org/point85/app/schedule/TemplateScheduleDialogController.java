@@ -155,7 +155,7 @@ public class TemplateScheduleDialogController extends DesignerDialogController {
 		Shift night = schedule.createShift("Night", "Night shift", LocalTime.of(19, 0, 0), Duration.ofHours(12));
 
 		// rotation
-		Rotation rotation = new Rotation("Panama",
+		Rotation rotation = schedule.createRotation("Panama",
 				"2 days on, 2 days off, 3 days on, 2 days off, 2 days on, 3 days off");
 		// 2 days on, 2 off, 3 on, 2 off, 2 on, 3 off (and repeat)
 		rotation.addSegment(day, 2, 2);
@@ -197,11 +197,11 @@ public class TemplateScheduleDialogController extends DesignerDialogController {
 		Shift night = schedule.createShift("Night", "Night shift", LocalTime.of(19, 0, 0), Duration.ofHours(12));
 
 		// Team1 rotation
-		Rotation team1Rotation = new Rotation("Team1", "Team1");
+		Rotation team1Rotation = schedule.createRotation("Team1", "Team1");
 		team1Rotation.addSegment(day, 1, 0);
 
 		// Team1 rotation
-		Rotation team2Rotation = new Rotation("Team2", "Team2");
+		Rotation team2Rotation = schedule.createRotation("Team2", "Team2");
 		team2Rotation.addSegment(night, 1, 0);
 
 		// reference date for start of shift rotations
@@ -232,7 +232,7 @@ public class TemplateScheduleDialogController extends DesignerDialogController {
 		Shift night = schedule.createShift("Night", "Night shift", LocalTime.of(23, 0, 0), Duration.ofHours(8));
 
 		// day rotation
-		Rotation dayRotation = new Rotation("Day", "Day");
+		Rotation dayRotation = schedule.createRotation("Day", "Day");
 		dayRotation.addSegment(day, 6, 3);
 		dayRotation.addSegment(day, 5, 3);
 		dayRotation.addSegment(day, 6, 2);
@@ -241,7 +241,7 @@ public class TemplateScheduleDialogController extends DesignerDialogController {
 		dayRotation.addSegment(day, 6, 2);
 
 		// swing rotation
-		Rotation swingRotation = new Rotation("Swing", "Swing");
+		Rotation swingRotation = schedule.createRotation("Swing", "Swing");
 		swingRotation.addSegment(swing, 6, 3);
 		swingRotation.addSegment(swing, 5, 3);
 		swingRotation.addSegment(swing, 6, 2);
@@ -250,7 +250,7 @@ public class TemplateScheduleDialogController extends DesignerDialogController {
 		swingRotation.addSegment(swing, 6, 2);
 
 		// night rotation
-		Rotation nightRotation = new Rotation("Night", "Night");
+		Rotation nightRotation = schedule.createRotation("Night", "Night");
 		nightRotation.addSegment(night, 6, 3);
 		nightRotation.addSegment(night, 5, 3);
 		nightRotation.addSegment(night, 6, 2);
@@ -304,7 +304,7 @@ public class TemplateScheduleDialogController extends DesignerDialogController {
 		Shift night = schedule.createShift("Night", "Night shift", LocalTime.of(19, 0, 0), Duration.ofHours(12));
 
 		// rotation
-		Rotation rotation = new Rotation("DNO", "DNO");
+		Rotation rotation = schedule.createRotation("DNO", "DNO");
 		rotation.addSegment(day, 1, 0);
 		rotation.addSegment(night, 1, 1);
 
@@ -334,7 +334,7 @@ public class TemplateScheduleDialogController extends DesignerDialogController {
 		Shift night = schedule.createShift("Night", "Night shift", LocalTime.of(19, 0, 0), Duration.ofHours(12));
 
 		// Team1 rotation
-		Rotation rotation = new Rotation("DuPont", "DuPont");
+		Rotation rotation = schedule.createRotation("DuPont", "DuPont");
 		rotation.addSegment(night, 4, 3);
 		rotation.addSegment(day, 3, 1);
 		rotation.addSegment(night, 3, 3);
@@ -369,7 +369,7 @@ public class TemplateScheduleDialogController extends DesignerDialogController {
 		Shift night = schedule.createShift("Night", "Night shift", LocalTime.of(22, 0, 0), Duration.ofHours(14));
 
 		// Team1 rotation
-		Rotation rotation = new Rotation("ICU", "ICU");
+		Rotation rotation = schedule.createRotation("ICU", "ICU");
 		rotation.addSegment(day, 1, 0);
 		rotation.addSegment(crossover, 1, 0);
 		rotation.addSegment(night, 1, 1);
@@ -407,7 +407,7 @@ public class TemplateScheduleDialogController extends DesignerDialogController {
 		Shift night2 = schedule.createShift("Night2", "Night shift #2", LocalTime.of(23, 0, 0), Duration.ofHours(8));
 
 		// shift rotation (28 days)
-		Rotation rotation = new Rotation("8 Plus 12", "8 Plus 12");
+		Rotation rotation = schedule.createRotation("8 Plus 12", "8 Plus 12");
 		rotation.addSegment(day2, 5, 0);
 		rotation.addSegment(day1, 2, 3);
 		rotation.addSegment(night2, 2, 0);
@@ -435,7 +435,7 @@ public class TemplateScheduleDialogController extends DesignerDialogController {
 		Shift day = schedule.createShift("Day", "Day shift", LocalTime.of(9, 0, 0), Duration.ofHours(8));
 
 		// Team1 rotation (5 days)
-		Rotation rotation = new Rotation("9 To 5 ", "9 To 5 ");
+		Rotation rotation = schedule.createRotation("9 To 5 ", "9 To 5 ");
 		rotation.addSegment(day, 5, 2);
 
 		// 1 team, 1 shift
@@ -454,7 +454,7 @@ public class TemplateScheduleDialogController extends DesignerDialogController {
 		Shift day2 = schedule.createShift("Day2", "Day shift #2", LocalTime.of(7, 0, 0), Duration.ofHours(8));
 
 		// Team rotation (28 days)
-		Rotation rotation = new Rotation("5/4/9 ", "5/4/9 ");
+		Rotation rotation = schedule.createRotation("5/4/9 ", "5/4/9 ");
 		rotation.addSegment(day1, 4, 0);
 		rotation.addSegment(day2, 1, 3);
 		rotation.addSegment(day1, 4, 3);
@@ -479,7 +479,7 @@ public class TemplateScheduleDialogController extends DesignerDialogController {
 		Shift shift = schedule.createShift("24 Hour", "24 hour shift", LocalTime.of(0, 0, 0), Duration.ofHours(24));
 
 		// Team rotation
-		Rotation rotation = new Rotation("3 Team Fixed 24 Plan", "3 Team Fixed 24 Plan");
+		Rotation rotation = schedule.createRotation("3 Team Fixed 24 Plan", "3 Team Fixed 24 Plan");
 		rotation.addSegment(shift, 1, 1);
 		rotation.addSegment(shift, 1, 1);
 		rotation.addSegment(shift, 1, 4);
@@ -504,7 +504,7 @@ public class TemplateScheduleDialogController extends DesignerDialogController {
 		Shift night = schedule.createShift("Night", "Night shift", LocalTime.of(23, 0, 0), Duration.ofHours(8));
 
 		// Team rotation
-		Rotation rotation = new Rotation("Low night demand", "Low night demand");
+		Rotation rotation = schedule.createRotation("Low night demand", "Low night demand");
 		rotation.addSegment(day, 3, 0);
 		rotation.addSegment(swing, 4, 3);
 		rotation.addSegment(day, 4, 0);
@@ -560,11 +560,11 @@ public class TemplateScheduleDialogController extends DesignerDialogController {
 		Shift shift2 = schedule.createShift("Shift2", "Shift #2", shift2Start, shiftDuration);
 
 		// shift 1, 5 days ON, 2 OFF
-		Rotation rotation1 = new Rotation("Shift1", "Shift1");
+		Rotation rotation1 = schedule.createRotation("Shift1", "Shift1");
 		rotation1.addSegment(shift1, 5, 2);
 
 		// shift 2, 5 days ON, 2 OFF
-		Rotation rotation2 = new Rotation("Shift2", "Shift2");
+		Rotation rotation2 = schedule.createRotation("Shift2", "Shift2");
 		rotation2.addSegment(shift2, 5, 2);
 
 		LocalDate startRotation = LocalDate.of(2016, 1, 1);
@@ -585,11 +585,11 @@ public class TemplateScheduleDialogController extends DesignerDialogController {
 		Shift night = schedule.createShift("Night", "Night shift", LocalTime.of(19, 0, 0), Duration.ofHours(12));
 
 		// 7 days ON, 7 OFF
-		Rotation dayRotation = new Rotation("Day", "Day");
+		Rotation dayRotation = schedule.createRotation("Day", "Day");
 		dayRotation.addSegment(day, 7, 7);
 
 		// 7 nights ON, 7 OFF
-		Rotation nightRotation = new Rotation("Night", "Night");
+		Rotation nightRotation = schedule.createRotation("Night", "Night");
 		nightRotation.addSegment(night, 7, 7);
 
 		schedule.createTeam("A", "A day shift", dayRotation, LocalDate.of(2014, 1, 2));
@@ -608,7 +608,7 @@ public class TemplateScheduleDialogController extends DesignerDialogController {
 		Shift shift = schedule.createShift("24 Hour", "24 hour shift", LocalTime.of(7, 0, 0), Duration.ofHours(24));
 
 		// 2 days ON, 2 OFF, 2 ON, 2 OFF, 2 ON, 8 OFF
-		Rotation rotation = new Rotation("24 Hour", "2 days ON, 2 OFF, 2 ON, 2 OFF, 2 ON, 8 OFF");
+		Rotation rotation = schedule.createRotation("24 Hour", "2 days ON, 2 OFF, 2 ON, 2 OFF, 2 ON, 8 OFF");
 		rotation.addSegment(shift, 2, 2);
 		rotation.addSegment(shift, 2, 2);
 		rotation.addSegment(shift, 2, 8);
@@ -632,23 +632,23 @@ public class TemplateScheduleDialogController extends DesignerDialogController {
 		Shift night = schedule.createShift("Night", "Night shift", LocalTime.of(18, 0, 0), Duration.ofHours(12));
 
 		// day rotation
-		Rotation dayRotation = new Rotation("Day", "Day");
+		Rotation dayRotation = schedule.createRotation("Day", "Day");
 		dayRotation.addSegment(day, 3, 4);
 		dayRotation.addSegment(day, 4, 3);
 
 		// inverse day rotation (day + 3 days)
-		Rotation inverseDayRotation = new Rotation("Inverse Day", "Inverse Day");
+		Rotation inverseDayRotation = schedule.createRotation("Inverse Day", "Inverse Day");
 		inverseDayRotation.addSegment(day, 0, 3);
 		inverseDayRotation.addSegment(day, 4, 4);
 		inverseDayRotation.addSegment(day, 3, 0);
 
 		// night rotation
-		Rotation nightRotation = new Rotation("Night", "Night");
+		Rotation nightRotation = schedule.createRotation("Night", "Night");
 		nightRotation.addSegment(night, 4, 3);
 		nightRotation.addSegment(night, 3, 4);
 
 		// inverse night rotation
-		Rotation inverseNightRotation = new Rotation("Inverse Night", "Inverse Night");
+		Rotation inverseNightRotation = schedule.createRotation("Inverse Night", "Inverse Night");
 		inverseNightRotation.addSegment(night, 0, 4);
 		inverseNightRotation.addSegment(night, 3, 3);
 		inverseNightRotation.addSegment(night, 4, 0);
@@ -670,7 +670,7 @@ public class TemplateScheduleDialogController extends DesignerDialogController {
 		// shift, start at 08:00 for 9 hours
 		Shift day = schedule.createShift("Day", "day shift", LocalTime.of(8, 0, 0), Duration.ofHours(9));
 
-		Rotation rotation = new Rotation("Day", "Day");
+		Rotation rotation = schedule.createRotation("Day", "Day");
 		rotation.addSegment(day, 3, 7);
 		rotation.addSegment(day, 1, 7);
 		rotation.addSegment(day, 1, 7);
@@ -698,7 +698,7 @@ public class TemplateScheduleDialogController extends DesignerDialogController {
 		Shift shift = schedule.createShift("24 Hours", "24 hour shift", LocalTime.of(7, 0, 0), Duration.ofHours(24));
 
 		// 1 day ON, 4 OFF, 1 ON, 2 OFF
-		Rotation rotation = new Rotation("24 Hours", "24 Hours");
+		Rotation rotation = schedule.createRotation("24 Hours", "24 Hours");
 		rotation.addSegment(shift, 1, 4);
 		rotation.addSegment(shift, 1, 2);
 

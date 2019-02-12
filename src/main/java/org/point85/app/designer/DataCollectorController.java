@@ -21,6 +21,10 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
 public class DataCollectorController extends DialogController {
+	// default ports
+	private static final int RMQ_DEFAULT_PORT = 5672;
+	
+	// the collector
 	private DataCollector dataCollector;
 
 	// list of collector names
@@ -179,7 +183,7 @@ public class DataCollectorController extends DialogController {
 			this.tfName.clear();
 			this.tfDescription.clear();
 			this.tfBrokerHost.clear();
-			this.tfBrokerPort.clear();
+			this.tfBrokerPort.setText(String.valueOf(RMQ_DEFAULT_PORT));
 			this.tfBrokerUserName.clear();
 			this.pfBrokerUserPassword.clear();
 

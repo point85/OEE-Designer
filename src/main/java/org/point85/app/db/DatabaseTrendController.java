@@ -126,15 +126,15 @@ public class DatabaseTrendController extends DesignerDialogController implements
 		if (databaseClient != null) {
 			return;
 		}
-		
+
 		EventResolver eventResolver = trendChartController.getEventResolver();
-		DatabaseEventSource source = (DatabaseEventSource)eventResolver.getDataSource();
-		
+		DatabaseEventSource source = (DatabaseEventSource) eventResolver.getDataSource();
+
 		Integer period = eventResolver.getUpdatePeriod();
 		if (period == null) {
 			period = CollectorDataSource.DEFAULT_UPDATE_PERIOD_MSEC;
 		}
-		
+
 		String sourceId = eventResolver.getSourceId();
 
 		databaseClient = new DatabaseEventClient(this, period);
@@ -208,7 +208,7 @@ public class DatabaseTrendController extends DesignerDialogController implements
 			DatabaseEvent databaseEvent = new DatabaseEvent();
 			databaseEvent.setSourceId(sourceId);
 			databaseEvent.setInputValue(inputValue);
-			databaseEvent.setTime(OffsetDateTime.now());
+			databaseEvent.setEventTime(OffsetDateTime.now());
 
 			DatabaseEvent saved = databaseClient.save(databaseEvent);
 			databaseEvent = saved;
@@ -249,7 +249,7 @@ public class DatabaseTrendController extends DesignerDialogController implements
 
 						// execute script
 						trendChartController.invokeResolver(getApp().getAppContext(), databaseEvent.getInputValue(),
-								databaseEvent.getTime());
+								databaseEvent.getEventTime());
 
 						// passed
 						databaseEvent.setStatus(DatabaseEventStatus.PASS);

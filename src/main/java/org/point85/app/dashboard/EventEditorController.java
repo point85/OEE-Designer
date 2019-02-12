@@ -38,14 +38,14 @@ abstract class EventEditorController extends DialogController {
 	protected void displayAttributes(OeeEvent event) {
 
 		// start date and time
-		if (event.getStartTime() != null) {
+		if (event.getOffsetStartTime() != null) {
 			dpStartDate.setValue(event.getStartTime().toLocalDate());
 			int seconds = event.getStartTime().toLocalTime().toSecondOfDay();
 			tfStartTime.setText(AppUtils.stringFromDuration(Duration.ofSeconds(seconds), true));
 		}
 
 		// end date and time
-		if (event.getEndTime() != null) {
+		if (event.getOffsetEndTime() != null) {
 			dpEndDate.setValue(event.getEndTime().toLocalDate());
 			int seconds = event.getEndTime().toLocalTime().toSecondOfDay();
 			tfEndTime.setText(AppUtils.stringFromDuration(Duration.ofSeconds(seconds), true));
@@ -106,7 +106,7 @@ abstract class EventEditorController extends DialogController {
 
 		// start time
 		event.setStartTime(odtStart);
-		
+
 		// end time
 		if (odtEnd == null && event.getDuration() != null) {
 			odtEnd = odtStart.plus(event.getDuration());

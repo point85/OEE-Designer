@@ -24,8 +24,8 @@ import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 public class OeeApplication extends Application {
-	public static final String VERSION_INFO = "Version 1.5.0, January 30, 2019";
-	
+	public static final String VERSION_INFO = "Version 2.0.0, February 12, 2019";
+
 	// JFX applications
 	private static final String DESIGNER_APP = "DESIGNER";
 	private static final String MONITOR_APP = "MONITOR";
@@ -173,18 +173,27 @@ public class OeeApplication extends Application {
 	/**
 	 * Main entry point
 	 * 
-	 * @param args Program arguments
+	 * @param args
+	 *            Program arguments
 	 */
 	public static void main(String[] args) {
 		// configure log4j
 		PropertyConfigurator.configure("config/logging/log4j.properties");
 
+		if (args.length < IDX_USER) {
+			logger.error("The application, jdbc connection string and user name must be specified.");
+			return;
+		}
+
+		String password = args.length > IDX_PASSWORD ? args[IDX_PASSWORD] : null;
+
 		// create the EMF
 		if (logger.isInfoEnabled()) {
+			logger.info("Running application " + args[IDX_APP]);
 			logger.info("Initializing persistence service with args: " + args[IDX_JDBC] + ", " + args[IDX_USER] + ", "
-					+ args[IDX_PASSWORD]);
+					+ password);
 		}
-		PersistenceService.instance().initialize(args[IDX_JDBC], args[IDX_USER], args[IDX_PASSWORD]);
+		PersistenceService.instance().initialize(args[IDX_JDBC], args[IDX_USER], password);
 
 		// start GUI
 		launch(args);

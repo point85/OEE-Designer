@@ -98,7 +98,7 @@ public class DatabaseServerController extends DesignerDialogController {
 	private void onSelectDataSource() {
 		try {
 			dataSource = cbDataSources.getSelectionModel().getSelectedItem();
-			
+
 			if (dataSource == null) {
 				return;
 			}
@@ -130,9 +130,9 @@ public class DatabaseServerController extends DesignerDialogController {
 	@FXML
 	private void onNewDataSource() {
 		try {
-			this.tfHost.clear();
-			this.tfUserName.clear();
-			this.pfPassword.clear();
+			this.tfHost.setText(PersistenceService.getJdbcConnection());
+			this.tfUserName.setText(PersistenceService.getUserName());
+			this.pfPassword.setText(PersistenceService.getUserPassword());
 			this.tfDescription.clear();
 			this.cbDataSources.getSelectionModel().clearSelection();
 

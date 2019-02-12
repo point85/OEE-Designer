@@ -2,13 +2,13 @@
 	<project name="oee-apps" default="build-all" basedir="."  xmlns:fx="javafx:com.sun.javafx.tools.ant">
 	
 	<!-- distribution archive -->
-	<property name="app_version" value="1.5.0"/>
-	<property name="dist.zip" value="oee-apps-1.5.0.jar"/>
-	<property name="domain.jar" value="oee-domain-1.5.0.jar"/>
-	<property name="collector.jar" value="oee-collector-1.5.0.jar"/>
+	<property name="app_version" value="2.0.0"/>
+	<property name="dist.zip" value="oee-apps-2.0.0.jar"/>
+	<property name="domain.jar" value="oee-domain-2.0.0.jar"/>
+	<property name="collector.jar" value="oee-collector-2.0.0.jar"/>
 		
 	<!-- folders -->
-	<property name="repo.dir" value="C:\Users\Kent\.m2\repository"/>
+	<property name="repo.dir" value="C:\maven_repo"/>
 	<property name="source.dir" value="C:\dev\OEE-Designer"/>
 	<property name="dist.dir" value="build_dist"/>
 	<property name="collector.dir" value="..\..\OEE-Collector"/>
@@ -56,8 +56,8 @@
 
 		<!-- SQL Server JDBC driver -->
 		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\com\microsoft\sqlserver\mssql-jdbc\6.2.2.jre8">
-				<filename name="mssql-jdbc-6.2.2.jre8.jar"/>
+			<fileset dir="${repo.dir}\com\microsoft\sqlserver\mssql-jdbc\7.0.0.jre8">
+				<filename name="mssql-jdbc-7.0.0.jre8.jar"/>
 			</fileset>
 		</copy>
 		
@@ -65,6 +65,13 @@
 		<copy todir="${external.dir}">
 			<fileset dir="${repo.dir}\com\oracle\jdbc\ojdbc8\8.0">
 				<filename name="ojdbc8-8.0.jar"/>
+			</fileset>
+		</copy>
+		
+		<!-- MySQL JDBC driver -->
+		<copy todir="${external.dir}">
+			<fileset dir="${repo.dir}\mysql\mysql-connector-java\8.0.14">
+				<filename name="mysql-connector-java-8.0.14"/>
 			</fileset>
 		</copy>
 		
@@ -206,7 +213,7 @@
 		<delete dir="..\${archive.dir}" />	
 		<mkdir dir="..\${archive.dir}" />	
 		
-		<zip destfile="..\${archive.dir}/oee.zip" >
+		<zip destfile="..\${archive.dir}/oee-${app_version}.zip" >
 			<!-- Designer files -->
 			<fileset dir="${dist.dir}" />
 			

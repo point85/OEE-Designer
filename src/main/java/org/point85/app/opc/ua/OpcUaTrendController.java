@@ -20,6 +20,7 @@ import org.point85.domain.DomainUtils;
 import org.point85.domain.opc.ua.OpcUaAsynchListener;
 import org.point85.domain.opc.ua.OpcUaServerStatus;
 import org.point85.domain.opc.ua.OpcUaSource;
+import org.point85.domain.opc.ua.UaOpcClient;
 import org.point85.domain.script.EventResolver;
 
 import javafx.concurrent.Service;
@@ -316,7 +317,7 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 
 					try {
 						// resolve the input value into a reason
-						Object javaValue = dataValue.getValue().getValue();
+						Object javaValue = UaOpcClient.getJavaObject(dataValue.getValue());
 						DateTime dt = dataValue.getServerTime();
 						OffsetDateTime odt = DomainUtils.localTimeFromDateTime(dt);
 

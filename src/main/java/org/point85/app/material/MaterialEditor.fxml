@@ -34,10 +34,10 @@
                <children>
                   <ButtonBar buttonMinWidth="25.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0">
                     <buttons>
-                        <Button fx:id="btDelete" mnemonicParsing="false" onAction="#onDeleteMaterial" text="Delete" textAlignment="CENTER" />
-                        <Button fx:id="btRefresh" mnemonicParsing="false" onAction="#onRefreshMaterial" text="Refresh" />
-                        <Button fx:id="btSave" mnemonicParsing="false" onAction="#onSaveMaterial" text="Save" textAlignment="CENTER" />
-                      <Button fx:id="btNew" mnemonicParsing="false" onAction="#onNewMaterial" text="New" textAlignment="CENTER" />
+                        <Button fx:id="btDelete" mnemonicParsing="false" onAction="#onDeleteMaterial" prefWidth="100.0" text="Delete" textAlignment="CENTER" />
+                        <Button fx:id="btRefresh" mnemonicParsing="false" onAction="#onRefreshMaterial" prefWidth="100.0" text="Refresh" />
+                        <Button fx:id="btSave" mnemonicParsing="false" onAction="#onSaveMaterial" prefWidth="100.0" text="Save" textAlignment="CENTER" />
+                      <Button fx:id="btNew" mnemonicParsing="false" onAction="#onNewMaterial" prefWidth="100.0" text="New" textAlignment="CENTER" />
                     </buttons>
                   </ButtonBar>
                   <TreeView fx:id="tvMaterials" layoutX="190.0" layoutY="391.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="90.0">
@@ -51,7 +51,7 @@
                      </contextMenu></TreeView>
                   <ButtonBar buttonMinWidth="25.0" layoutX="22.0" layoutY="70.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="45.0">
                     <buttons>
-                        <Button fx:id="btImport" mnemonicParsing="false" onAction="#onImportMaterial" text="Import" />
+                        <Button fx:id="btImport" mnemonicParsing="false" onAction="#onImportMaterial" prefWidth="100.0" text="Import ..." />
                     </buttons>
                   </ButtonBar>
                </children>

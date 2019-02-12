@@ -1,1 +1,2 @@
-call mvn install:install-file -Dfile=C:\dev\OEE-Domain\lib\oracle\ojdbc8.jar -DgroupId=com.oracle.jdbc -DartifactId=ojdbc8 -Dversion=8.0 -Dpackaging=jar
+rem Maven install script for Oracle JDBC driver jar not in Maven Central, i.e. stored locally
+call mvn install:install-file -Dfile=C:\dev\OEE-Domain\lib\jdbc\ojdbc8.jar -DgroupId=com.oracle.jdbc -DartifactId=ojdbc8 -Dversion=8.0 -Dpackaging=jar

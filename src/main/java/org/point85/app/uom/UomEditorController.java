@@ -333,6 +333,10 @@ public class UomEditorController extends DesignerDialogController {
 			}
 
 			UnitOfMeasure uom = uomImportController.getSelectedUom();
+			
+			if (uom == null) {
+				throw new Exception("A unit of measure must be selected.");
+			}
 
 			// make sure that there is a non-null category
 			uom.getCategory();
