@@ -9,6 +9,8 @@ import org.point85.app.Images;
 import org.point85.app.charts.DataSubscriber;
 import org.point85.app.charts.TrendChartController;
 import org.point85.app.designer.DesignerDialogController;
+import org.point85.domain.DomainUtils;
+import org.point85.domain.messaging.EquipmentEventMessage;
 import org.point85.domain.script.EventResolver;
 
 import javafx.application.Platform;
@@ -22,7 +24,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
 
-public abstract class BaseMessagingTrendController extends DesignerDialogController  implements DataSubscriber {
+public abstract class BaseMessagingTrendController extends DesignerDialogController implements DataSubscriber {
 	// trend chart
 	protected TrendChartController trendChartController;
 
@@ -78,7 +80,7 @@ public abstract class BaseMessagingTrendController extends DesignerDialogControl
 				"Equipment: " + eventResolver.getEquipment().getName() + ", Source Id: " + eventResolver.getSourceId());
 		lbBroker.setText(eventResolver.getDataSource().getId());
 	}
-	
+
 	@Override
 	@FXML
 	protected void onOK() {
@@ -119,19 +121,35 @@ public abstract class BaseMessagingTrendController extends DesignerDialogControl
 			AppUtils.showErrorDialog(e);
 		}
 	}
-	
-	protected String getLoopbackValue() {
-		return tfLoopbackValue.getText();
+
+	protected EquipmentEventMessage createMessage() throws Exception {
+		EventResolver eventResolver = trendChartController.getEventResolver();
+
+		String sourceId = eventResolver.getSourceId();
+
+		String input = tfLoopbackValue.getText();
+		String[] values = AppUtils.parseCsvInput(input);
+
+		EquipmentEventMessage msg = new EquipmentEventMessage();
+		msg.setSourceId(sourceId);
+		msg.setValue(values[0]);
+		msg.setReason(values[1]);
+		String timestamp = DomainUtils.offsetDateTimeToString(OffsetDateTime.now(), DomainUtils.OFFSET_DATE_TIME_8601);
+		msg.setTimestamp(timestamp);
+
+		return msg;
 	}
-	
+
 	// service class for callbacks on received data
 	protected class ResolutionService extends Service<Void> {
 		private final String dataValue;
-		private final OffsetDateTime timestamp;
+		private final String timestamp;
+		private final String reason;
 
-		 protected ResolutionService(String sourceId, String dataValue, OffsetDateTime timestamp) {
+		protected ResolutionService(String dataValue, String timestamp, String reason) {
 			this.dataValue = dataValue;
 			this.timestamp = timestamp;
+			this.reason = reason;
 		}
 
 		@Override
@@ -141,7 +159,9 @@ public abstract class BaseMessagingTrendController extends DesignerDialogControl
 				@Override
 				protected Void call() {
 					try {
-						trendChartController.invokeResolver(getApp().getAppContext(), dataValue, timestamp);
+						OffsetDateTime odt = DomainUtils.offsetDateTimeFromString(timestamp,
+								DomainUtils.OFFSET_DATE_TIME_8601);
+						trendChartController.invokeResolver(getApp().getAppContext(), dataValue, odt, reason);
 					} catch (Exception e) {
 						Platform.runLater(() -> {
 							AppUtils.showErrorDialog(e);

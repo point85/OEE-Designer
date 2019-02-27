@@ -28,6 +28,7 @@ import org.point85.app.opc.ua.OpcUaTrendController;
 import org.point85.app.reason.ReasonEditorController;
 import org.point85.app.schedule.TemplateScheduleDialogController;
 import org.point85.app.schedule.WorkScheduleEditorController;
+import org.point85.app.schedule.WorkScheduleShiftsController;
 import org.point85.app.script.EventResolverController;
 import org.point85.app.uom.UomConversionController;
 import org.point85.app.uom.UomEditorController;
@@ -75,6 +76,13 @@ public class FXMLLoaderFactory {
 	public static FXMLLoader scheduleEditorLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(
 				WorkScheduleEditorController.class.getResource("WorkScheduleEditor.fxml"));
+		fxmlLoader.load();
+		return fxmlLoader;
+	}
+	
+	public static FXMLLoader scheduleShiftsLoader() throws Exception {
+		FXMLLoader fxmlLoader = new FXMLLoader(
+				WorkScheduleShiftsController.class.getResource("WorkScheduleShifts.fxml"));
 		fxmlLoader.load();
 		return fxmlLoader;
 	}

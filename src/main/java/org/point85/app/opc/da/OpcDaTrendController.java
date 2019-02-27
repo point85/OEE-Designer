@@ -312,7 +312,7 @@ public class OpcDaTrendController extends OpcDaController implements OpcDaDataCh
 							value = varientValue.getValueAsNumber();
 						}
 
-						trendChartController.invokeResolver(getApp().getAppContext(), value, item.getLocalTimestamp());
+						trendChartController.invokeResolver(getApp().getAppContext(), value, item.getLocalTimestamp(), null);
 					} catch (Exception e) {
 						errorMessage = e.getMessage();
 					}

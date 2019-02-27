@@ -1,14 +1,11 @@
 package org.point85.app.messaging;
 
-import java.time.OffsetDateTime;
-
 import org.point85.app.AppUtils;
 import org.point85.app.charts.DataSubscriber;
-import org.point85.domain.jms.JMSEquipmentEventListener;
 import org.point85.domain.jms.JMSClient;
+import org.point85.domain.jms.JMSEquipmentEventListener;
 import org.point85.domain.jms.JMSSource;
 import org.point85.domain.messaging.EquipmentEventMessage;
-import org.point85.domain.script.EventResolver;
 
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
@@ -60,8 +57,8 @@ public class JMSTrendController extends BaseMessagingTrendController implements 
 
 	@Override
 	public void onJMSEquipmentEvent(EquipmentEventMessage message) {
-		ResolutionService service = new ResolutionService(message.getSourceId(), message.getValue(),
-				message.getDateTime());
+		ResolutionService service = new ResolutionService( message.getValue(),
+				message.getTimestamp(), message.getReason());
 
 		service.setOnFailed(new EventHandler<WorkerStateEvent>() {
 			@Override
@@ -85,16 +82,20 @@ public class JMSTrendController extends BaseMessagingTrendController implements 
 			if (jmsClient == null) {
 				throw new Exception("The trend is not connected to a JMS broker.");
 			}
+			
+			EquipmentEventMessage msg = createMessage();
 
+			/*
 			EventResolver eventResolver = trendChartController.getEventResolver();
 
 			String sourceId = eventResolver.getSourceId();
-			String value = getLoopbackValue();
+			String value = getLoopbackValues();
 
 			EquipmentEventMessage msg = new EquipmentEventMessage();
 			msg.setSourceId(sourceId);
 			msg.setValue(value);
 			msg.setDateTime(OffsetDateTime.now());
+			*/
 
 			jmsClient.sendToQueue(msg, JMSClient.DEFAULT_QUEUE, 30);
 		} catch (Exception e) {

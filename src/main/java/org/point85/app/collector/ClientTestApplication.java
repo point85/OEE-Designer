@@ -17,6 +17,7 @@ import java.util.Optional;
 import org.point85.app.AppUtils;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
+import org.point85.domain.DomainUtils;
 import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.DataSourceType;
 import org.point85.domain.http.EquipmentEventRequestDto;
@@ -228,6 +229,7 @@ public class ClientTestApplication implements MessageListener, JMSEquipmentEvent
 	// called by Java FX
 	public void initialize() throws Exception {
 		setImages();
+
 		initializeEntityTable();
 		initializeMaterialTable();
 		initializeReasonTable();
@@ -244,6 +246,16 @@ public class ClientTestApplication implements MessageListener, JMSEquipmentEvent
 		} else if (rbMQTT.isSelected()) {
 			populateMsgSourceIds(DataSourceType.MQTT);
 		}
+	}
+
+	@FXML
+	private void onSelectHttpSource() {
+		tfHttpValue.clear();
+	}
+
+	@FXML
+	private void onSelectMessagingSource() {
+		tfMsgValue.clear();
 	}
 
 	public void stop() {
@@ -559,10 +571,16 @@ public class ClientTestApplication implements MessageListener, JMSEquipmentEvent
 			conn.setRequestProperty("Content-Type", "application/json");
 
 			String sourceId = (String) cbHttpSourceId.getSelectionModel().getSelectedItem();
-			String value = tfHttpValue.getText();
+			String input = tfHttpValue.getText();
 
-			EquipmentEventRequestDto dto = new EquipmentEventRequestDto(sourceId, value);
-			dto.setDateTime(OffsetDateTime.now());
+			// for production, a reason can be attached
+			String[] values = AppUtils.parseCsvInput(input);
+
+			EquipmentEventRequestDto dto = new EquipmentEventRequestDto(sourceId, values[0]);
+			String timestamp = DomainUtils.offsetDateTimeToString(OffsetDateTime.now(),
+					DomainUtils.OFFSET_DATE_TIME_8601);
+			dto.setTimestamp(timestamp);
+			dto.setReason(values[1]);
 
 			Gson gson = new Gson();
 			String payload = gson.toJson(dto);
@@ -823,7 +841,7 @@ public class ClientTestApplication implements MessageListener, JMSEquipmentEvent
 
 	@Override
 	public void onMessage(Channel channel, Envelope envelope, ApplicationMessage message) {
-		logger.info("Received RMQ message: " + message.toString());
+		logger.warn("Received unhandled RMQ message: " + message.toString());
 	}
 
 	@FXML
@@ -838,11 +856,14 @@ public class ClientTestApplication implements MessageListener, JMSEquipmentEvent
 
 			String sourceId = (String) cbMsgSourceId.getSelectionModel().getSelectedItem();
 
-			String value = tfMsgValue.getText();
+			String input = tfMsgValue.getText();
+			// for production, a reason can be attached
+			String[] values = AppUtils.parseCsvInput(input);
 
 			EquipmentEventMessage msg = new EquipmentEventMessage();
 			msg.setSourceId(sourceId);
-			msg.setValue(value);
+			msg.setValue(values[0]);
+			msg.setReason(values[1]);
 
 			String hostPort = source.getHost() + ":" + source.getPort();
 

@@ -100,7 +100,7 @@
             <Label prefHeight="0.0" prefWidth="37.0" text="Value" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
             <TextField fx:id="tfHttpValue" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
             <Label text="Host:Port" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
-            <ComboBox fx:id="cbHttpSourceId" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <ComboBox fx:id="cbHttpSourceId" editable="true" maxWidth="1.7976931348623157E308" onAction="#onSelectHttpSource" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <Label GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
             <ComboBox fx:id="cbHttpHostPort" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <Label text="Broker" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
@@ -116,7 +116,7 @@
             </Label>
             <Label text="Source Id" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
             <ComboBox fx:id="cbMsgHost" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="3" />
-            <ComboBox fx:id="cbMsgSourceId" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="4" />
+            <ComboBox fx:id="cbMsgSourceId" editable="true" maxWidth="1.7976931348623157E308" onAction="#onSelectMessagingSource" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="4" />
             <Button fx:id="btMsgSend" mnemonicParsing="false" onAction="#onSendEquipmentEventMsg" text="Send" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
             <Label text="Value" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
             <TextField fx:id="tfMsgValue" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="5" />

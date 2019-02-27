@@ -87,7 +87,7 @@ public class FileTrendController extends DesignerDialogController implements Fil
 		// write test
 		btTest.setGraphic(ImageManager.instance().getImageView(Images.EXECUTE));
 		btTest.setContentDisplay(ContentDisplay.LEFT);
-		
+
 		// file browser
 		btFileBrowser.setGraphic(ImageManager.instance().getImageView(Images.IMPORT));
 		btFileBrowser.setContentDisplay(ContentDisplay.LEFT);
@@ -282,7 +282,7 @@ public class FileTrendController extends DesignerDialogController implements Fil
 						// in-process
 						fileClient.moveFile(file, FileEventClient.READY_FOLDER, FileEventClient.PROCESSING_FOLDER);
 
-						trendChartController.invokeResolver(getApp().getAppContext(), content, odt);
+						trendChartController.invokeResolver(getApp().getAppContext(), content, odt, null);
 
 						// passed
 						fileClient.moveFile(file, FileEventClient.PROCESSING_FOLDER, FileEventClient.PASS_FOLDER);

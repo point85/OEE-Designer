@@ -8,6 +8,7 @@ import org.point85.app.ImageManager;
 import org.point85.app.Images;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
+import org.point85.domain.DomainUtils;
 import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.DataSourceType;
 import org.point85.domain.db.DatabaseEventSource;
@@ -54,6 +55,9 @@ public class DatabaseServerController extends DesignerDialogController {
 	@FXML
 	private Button btDelete;
 
+	@FXML
+	private Button btTest;
+
 	public void initialize(DesignerApplication app) throws Exception {
 		// main app
 		setApp(app);
@@ -81,6 +85,10 @@ public class DatabaseServerController extends DesignerDialogController {
 		// delete
 		btDelete.setGraphic(ImageManager.instance().getImageView(Images.DELETE));
 		btDelete.setContentDisplay(ContentDisplay.LEFT);
+		
+		// test
+		btTest.setGraphic(ImageManager.instance().getImageView(Images.EXECUTE));
+		btTest.setContentDisplay(ContentDisplay.LEFT);
 	}
 
 	public DatabaseEventSource getSource() {
@@ -167,6 +175,23 @@ public class DatabaseServerController extends DesignerDialogController {
 			}
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
+		}
+	}
+
+	@FXML
+	private void onTest() {
+		PersistenceService persistenceService = PersistenceService.create();
+		try {
+			persistenceService.connectToDatabaseEventServer(getHost(), getUserName(), getPassword());
+
+			AppUtils.showConfirmationDialog("Database connection was successful.");
+
+		} catch (Exception e) {
+			AppUtils.showErrorDialog("Database connection failed: " + DomainUtils.formatException(e));
+		} finally {
+			if (persistenceService != null) {
+				persistenceService.close();
+			}
 		}
 	}
 

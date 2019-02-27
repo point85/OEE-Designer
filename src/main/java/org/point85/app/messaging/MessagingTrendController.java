@@ -12,7 +12,6 @@ import org.point85.domain.messaging.MessageType;
 import org.point85.domain.messaging.MessagingClient;
 import org.point85.domain.messaging.MessagingSource;
 import org.point85.domain.messaging.RoutingKey;
-import org.point85.domain.script.EventResolver;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Envelope;
@@ -88,8 +87,8 @@ public class MessagingTrendController extends BaseMessagingTrendController imple
 	}
 
 	private void handleEquipmentEvent(EquipmentEventMessage message) throws Exception {
-		ResolutionService service = new ResolutionService(message.getSourceId(), message.getValue(),
-				message.getDateTime());
+		ResolutionService service = new ResolutionService( message.getValue(),
+				message.getTimestamp(), message.getReason());
 
 		service.setOnFailed(new EventHandler<WorkerStateEvent>() {
 			@Override
@@ -113,15 +112,20 @@ public class MessagingTrendController extends BaseMessagingTrendController imple
 			if (pubSub == null) {
 				throw new Exception("The trend is not connected to an RMQ broker.");
 			}
+			
+			EquipmentEventMessage msg = createMessage();
 
+			/*
 			EventResolver eventResolver = trendChartController.getEventResolver();
 
 			String sourceId = eventResolver.getSourceId();
-			String value = getLoopbackValue();
+			String[] values = getLoopbackValues();
 
 			EquipmentEventMessage msg = new EquipmentEventMessage();
 			msg.setSourceId(sourceId);
-			msg.setValue(value);
+			msg.setValue(values[0]);
+			msg.setReason(values[1]);
+			*/
 
 			pubSub.publish(msg, RoutingKey.EQUIPMENT_SOURCE_EVENT, 30);
 		} catch (Exception e) {

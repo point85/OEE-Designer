@@ -321,7 +321,7 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 						DateTime dt = dataValue.getServerTime();
 						OffsetDateTime odt = DomainUtils.localTimeFromDateTime(dt);
 
-						trendChartController.invokeResolver(getApp().getAppContext(), javaValue, odt);
+						trendChartController.invokeResolver(getApp().getAppContext(), javaValue, odt, null);
 					} catch (Exception e) {
 						errorMessage = e.getMessage();
 

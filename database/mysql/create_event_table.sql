@@ -1,4 +1,4 @@
--- MySQL script file for creating the database event interface table, schema version 2
+-- MySQL script file for creating the database event interface table, schema version 3
 -- set to your database name
 USE oee;
 
@@ -13,6 +13,7 @@ CREATE TABLE DB_EVENT (
 	EVENT_TIME_OFFSET int NULL,
 	STATUS varchar(16) NOT NULL,
 	ERROR varchar(512) NULL,
+	REASON varchar(64) NULL,
     PRIMARY KEY (EVENT_KEY)
 )  ENGINE=INNODB;
 CREATE INDEX IDX_EVT_STATUS ON DB_EVENT (STATUS);		

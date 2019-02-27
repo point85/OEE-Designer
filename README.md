@@ -88,5 +88,5 @@ For example, the screen for entering a summarized availability is:
 ![Operator Availability](https://github.com/point85/OEE-Designer/blob/master/docs/operator-availability.png)
 
 ## Database
-The Java Persistence 2.1 API (JPA) as implemented by the Hibernate ORM framework together with the Hikari connection pool is used to persist OEE information to the database. 
+The Java Persistence 2.2 API (JPA) as implemented by the Hibernate ORM framework together with the Hikari connection pool is used to persist OEE information to the database. 
 Hibernate and JPA abstract-away database specific aspects of inserting, updating, reading and deleting records in the tables.  The API is designed to work with any relational database supported by Hibernate.  

@@ -11,3 +11,9 @@ Unplanned2, Unplanned downtime  reason #2, UNPLANNED_DOWNTIME, Unplanned Downtim
 Short Stops, Minor stoppage reasons, ,
 Minor1, Minor stoppage reason #1, MINOR_STOPPAGES, Short Stops
 Minor2, Minor stoppage reason #2, MINOR_STOPPAGES, Short Stops
+Reject Codes, Codes for reject production, ,
+100, Reject reason #1, REJECT_REWORK, Reject Codes
+101, Reject reason #2, REJECT_REWORK, Reject Codes
+Startup Codes, Codes for startup production, ,
+200, Startup reason #1, STARTUP_YIELD, Startup Codes
+201, Startup reason #2, STARTUP_YIELD, Startup Codes

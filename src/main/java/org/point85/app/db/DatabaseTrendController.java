@@ -201,14 +201,17 @@ public class DatabaseTrendController extends DesignerDialogController implements
 
 			EventResolver eventResolver = trendChartController.getEventResolver();
 
-			String inputValue = tfTestValue.getText();
+			String input = tfTestValue.getText();
+			String[] values = AppUtils.parseCsvInput(input);
+
 			String sourceId = eventResolver.getSourceId();
 
 			// write to the interface table
 			DatabaseEvent databaseEvent = new DatabaseEvent();
 			databaseEvent.setSourceId(sourceId);
-			databaseEvent.setInputValue(inputValue);
+			databaseEvent.setInputValue(values[0]);
 			databaseEvent.setEventTime(OffsetDateTime.now());
+			databaseEvent.setReason(values[1]);
 
 			DatabaseEvent saved = databaseClient.save(databaseEvent);
 			databaseEvent = saved;
@@ -249,7 +252,7 @@ public class DatabaseTrendController extends DesignerDialogController implements
 
 						// execute script
 						trendChartController.invokeResolver(getApp().getAppContext(), databaseEvent.getInputValue(),
-								databaseEvent.getEventTime());
+								databaseEvent.getEventTime(), databaseEvent.getReason());
 
 						// passed
 						databaseEvent.setStatus(DatabaseEventStatus.PASS);

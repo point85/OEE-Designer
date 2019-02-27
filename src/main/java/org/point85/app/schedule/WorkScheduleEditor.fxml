@@ -41,6 +41,7 @@
                   <ButtonBar buttonMinWidth="25.0" layoutX="32.0" layoutY="91.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="45.0">
                      <buttons>
                         <Button fx:id="btChooseSchedule" alignment="CENTER" mnemonicParsing="false" onAction="#onChooseSchedule" prefWidth="100.0" text="Import ..." />
+                        <Button fx:id="btViewShifts" alignment="CENTER" mnemonicParsing="false" onAction="#onViewShifts" prefWidth="100.0" text="Shifts ..." />
                      </buttons></ButtonBar>
                   <TreeView fx:id="tvSchedules" layoutX="-14.0" layoutY="85.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="90.0">
                      <contextMenu>

@@ -45,5 +45,14 @@
 	- Improved error checking with new exceptions
 	- Miscellaneous usability improvements
 	- Note that, due to the database schema changes, this release is incompatible with release 1.5.0. 
+	
+(13) 2.1.0, February 28, 2019:
+    - Added a shift instance viewer to the work schedule editor
+	- Added capability of attaching a reason to reject and startup production
+	- Schema of the event table changed to add a reason column
+	- Added API to set the event timestamp from an ISO8601 formatted string
+	- Fixed bug in OEE calculation that did not recognize a new material setup after the default material was used
+	- Misc usability improvements in monitor and tester applications
+	- Added buttons to test the HTTP, database, RMQ, JMS and MQTT connections.
 
 Please send comments and suggestions to point85.llc@gmail.com.

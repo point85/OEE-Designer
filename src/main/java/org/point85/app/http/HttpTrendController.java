@@ -16,6 +16,7 @@ import org.point85.app.Images;
 import org.point85.app.charts.DataSubscriber;
 import org.point85.app.charts.TrendChartController;
 import org.point85.app.designer.DesignerDialogController;
+import org.point85.domain.DomainUtils;
 import org.point85.domain.http.EquipmentEventRequestDto;
 import org.point85.domain.http.HttpEventListener;
 import org.point85.domain.http.HttpSource;
@@ -192,8 +193,10 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 	}
 
 	@Override
-	public void onHttpEquipmentEvent(String sourceId, String dataValue, OffsetDateTime timestamp) {
-		ResolutionService service = new ResolutionService(sourceId, dataValue, timestamp);
+	public void onHttpEquipmentEvent(String sourceId, String dataValue, String timestamp, String reason) {
+		OffsetDateTime odt = DomainUtils.offsetDateTimeFromString(timestamp, DomainUtils.OFFSET_DATE_TIME_8601);
+
+		ResolutionService service = new ResolutionService(dataValue, odt, reason);
 
 		service.setOnFailed(new EventHandler<WorkerStateEvent>() {
 			@Override
@@ -230,11 +233,15 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 			conn.setRequestProperty("Content-Type", "application/json");
 
 			// the value to send (must match the configured resolver)
-			String value = tfLoopbackValue.getText();
+			String input = tfLoopbackValue.getText();
+			String[] values = AppUtils.parseCsvInput(input);
 
 			// create the data transfer event object
-			EquipmentEventRequestDto dto = new EquipmentEventRequestDto(eventResolver.getSourceId(), value);
-			dto.setDateTime(OffsetDateTime.now());
+			EquipmentEventRequestDto dto = new EquipmentEventRequestDto(eventResolver.getSourceId(), values[0]);
+			String timestamp = DomainUtils.offsetDateTimeToString(OffsetDateTime.now(),
+					DomainUtils.OFFSET_DATE_TIME_8601);
+			dto.setTimestamp(timestamp);
+			dto.setReason(values[1]);
 
 			// serialize the body
 			Gson gson = new Gson();
@@ -246,7 +253,8 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 			os.flush();
 
 			if (logger.isInfoEnabled()) {
-				logger.info("Posted equipment event request to URL " + url + " with value " + value);
+				logger.info("Posted equipment event request to URL " + url + " with value " + values[0] + " and reason "
+						+ values[1]);
 			}
 
 			// check the response code
@@ -274,10 +282,12 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 	private class ResolutionService extends Service<Void> {
 		private final String dataValue;
 		private final OffsetDateTime timestamp;
+		private final String reason;
 
-		private ResolutionService(String sourceId, String dataValue, OffsetDateTime timestamp) {
+		private ResolutionService(String dataValue, OffsetDateTime timestamp, String reason) {
 			this.dataValue = dataValue;
 			this.timestamp = timestamp;
+			this.reason = reason;
 		}
 
 		@Override
@@ -287,7 +297,7 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 				@Override
 				protected Void call() {
 					try {
-						trendChartController.invokeResolver(getApp().getAppContext(), dataValue, timestamp);
+						trendChartController.invokeResolver(getApp().getAppContext(), dataValue, timestamp, reason);
 					} catch (Exception e) {
 						Platform.runLater(() -> {
 							AppUtils.showErrorDialog(e);

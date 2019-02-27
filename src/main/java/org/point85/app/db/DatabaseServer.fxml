@@ -72,6 +72,7 @@
             <Button fx:id="btDelete" mnemonicParsing="false" onAction="#onDeleteDataSource" prefWidth="100.0" text="Delete" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
             <ComboBox fx:id="cbDataSources" maxWidth="1.7976931348623157E308" onAction="#onSelectDataSource" GridPane.columnIndex="1" />
             <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="or edit a server" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Button fx:id="btTest" mnemonicParsing="false" onAction="#onTest" prefWidth="100.0" text="Test" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
          </children>
       </GridPane>
    </children>

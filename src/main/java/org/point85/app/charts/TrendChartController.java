@@ -27,7 +27,6 @@ import org.point85.domain.script.OeeContext;
 import org.point85.domain.script.OeeEventType;
 
 import javafx.application.Platform;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -46,8 +45,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 
 public class TrendChartController extends DesignerController {
 	// chart views
@@ -110,7 +107,7 @@ public class TrendChartController extends DesignerController {
 	private TableColumn<OeeEvent, String> tcOutputValue;
 
 	@FXML
-	private TableColumn<OeeEvent, Text> tcLossCategory;
+	private TableColumn<OeeEvent, String> tcLossCategory;
 
 	@FXML
 	private Spinner<Integer> spUpdatePeriod;
@@ -235,7 +232,8 @@ public class TrendChartController extends DesignerController {
 		// timestamp
 		tcTimestamp.setCellValueFactory(cellDataFeatures -> {
 			OffsetDateTime odt = cellDataFeatures.getValue().getStartTime();
-			return new SimpleStringProperty(DomainUtils.offsetDateTimeToString(odt, DomainUtils.OFFSET_DATE_TIME_PATTERN));
+			return new SimpleStringProperty(
+					DomainUtils.offsetDateTimeToString(odt, DomainUtils.OFFSET_DATE_TIME_PATTERN));
 		});
 
 		// output value
@@ -250,14 +248,14 @@ public class TrendChartController extends DesignerController {
 
 		// loss category
 		tcLossCategory.setCellValueFactory(cellDataFeatures -> {
-			SimpleObjectProperty<Text> lossProperty = null;
+			SimpleStringProperty lossProperty = null;
 
 			Reason reason = cellDataFeatures.getValue().getReason();
 			if (reason != null && reason.getLossCategory() != null) {
-				Color color = reason.getLossCategory().getColor();
-				Text text = new Text(reason.getLossCategory().toString());
-				text.setFill(color);
-				lossProperty = new SimpleObjectProperty<Text>(text);
+				// Color color = reason.getLossCategory().getColor();
+				// Text text = new Text(reason.getLossCategory().toString());
+				// text.setFill(color);
+				lossProperty = new SimpleStringProperty(reason.getLossCategory().toString());
 			}
 
 			return lossProperty;
@@ -303,7 +301,9 @@ public class TrendChartController extends DesignerController {
 		this.setUpdatePeriodMsec(eventResolver.getUpdatePeriod());
 	}
 
-	public OeeEvent invokeResolver(OeeContext context, Object sourceValue, OffsetDateTime dateTime) throws Exception {
+	public OeeEvent invokeResolver(OeeContext context, Object sourceValue, OffsetDateTime dateTime, String reason)
+			throws Exception {
+		eventResolver.setReason(reason);
 		OeeEvent resolvedItem = equipmentResolver.invokeResolver(eventResolver, context, sourceValue, dateTime);
 
 		OeeEventType type = eventResolver.getType();
@@ -490,7 +490,7 @@ public class TrendChartController extends DesignerController {
 	public void onRefresh() {
 		try {
 			onResetTrending();
-			
+
 			OffsetDateTime odtStart = null;
 			OffsetDateTime odtEnd = null;
 
@@ -562,7 +562,7 @@ public class TrendChartController extends DesignerController {
 				default:
 					break;
 				}
-				
+
 				// add event to table
 				event.setSourceId(eventResolver.getSourceId());
 				event.setOutputValue(plottedValue);

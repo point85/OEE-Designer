@@ -3,15 +3,21 @@ package org.point85.app.messaging;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.jms.JMSException;
+
 import org.point85.app.AppUtils;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
+import org.point85.domain.DomainUtils;
 import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.DataSourceType;
+import org.point85.domain.jms.JMSClient;
 import org.point85.domain.jms.JMSSource;
+import org.point85.domain.messaging.MessagingClient;
 import org.point85.domain.messaging.MessagingSource;
+import org.point85.domain.mqtt.MQTTClient;
 import org.point85.domain.mqtt.MQTTSource;
 import org.point85.domain.persistence.PersistenceService;
 
@@ -66,6 +72,9 @@ public class MqBrokerController extends DesignerDialogController {
 	@FXML
 	private Button btDelete;
 
+	@FXML
+	private Button btTest;
+
 	public void initialize(DesignerApplication app, DataSourceType type) throws Exception {
 		// set source
 		this.sourceType = type;
@@ -96,6 +105,10 @@ public class MqBrokerController extends DesignerDialogController {
 		// delete
 		btDelete.setGraphic(ImageManager.instance().getImageView(Images.DELETE));
 		btDelete.setContentDisplay(ContentDisplay.LEFT);
+
+		// test
+		btTest.setGraphic(ImageManager.instance().getImageView(Images.EXECUTE));
+		btTest.setContentDisplay(ContentDisplay.LEFT);
 	}
 
 	public CollectorDataSource getSource() {
@@ -114,6 +127,52 @@ public class MqBrokerController extends DesignerDialogController {
 
 	protected void setSource(CollectorDataSource source) {
 		this.dataSource = source;
+	}
+
+	@FXML
+	private void onTest() {
+		MessagingClient pubsub = null;
+		JMSClient jmsClient = null;
+		MQTTClient mqttClient = null;
+
+		try {
+			if (sourceType.equals(DataSourceType.MESSAGING)) {
+				pubsub = new MessagingClient();
+				pubsub.connect(getHost(), getPort(), getUserName(), getPassword());
+			} else if (sourceType.equals(DataSourceType.JMS)) {
+				jmsClient = new JMSClient();
+				jmsClient.connect(getHost(), getPort(), getUserName(), getPassword());
+			} else if (sourceType.equals(DataSourceType.MQTT)) {
+				mqttClient = new MQTTClient();
+				mqttClient.connect(getHost(), getPort(), getUserName(), getPassword());
+			}
+
+			AppUtils.showConfirmationDialog("Connection was successful.");
+
+		} catch (Exception e) {
+			AppUtils.showErrorDialog("Connection failed: " + DomainUtils.formatException(e));
+		} finally {
+			if (sourceType.equals(DataSourceType.MESSAGING)) {
+				if (pubsub != null) {
+					try {
+						pubsub.shutDown();
+					} catch (Exception e) {
+					}
+				}
+			} else if (sourceType.equals(DataSourceType.JMS)) {
+				if (jmsClient != null) {
+					try {
+						jmsClient.shutDown();
+					} catch (JMSException e) {
+					}
+				}
+			} else if (sourceType.equals(DataSourceType.MQTT)) {
+				try {
+					mqttClient.shutDown();
+				} catch (Exception e) {
+				}
+			}
+		}
 	}
 
 	@FXML

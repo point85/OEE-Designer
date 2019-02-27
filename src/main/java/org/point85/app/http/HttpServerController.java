@@ -1,5 +1,7 @@
 package org.point85.app.http;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +9,7 @@ import org.point85.app.AppUtils;
 import org.point85.app.DialogController;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
+import org.point85.domain.DomainUtils;
 import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.DataSourceType;
 import org.point85.domain.http.HttpSource;
@@ -48,6 +51,9 @@ public class HttpServerController extends DialogController {
 
 	@FXML
 	private Button btDelete;
+	
+	@FXML
+	private Button btHttpTest;
 
 	public void initializeServer() throws Exception {
 		// button images
@@ -73,6 +79,10 @@ public class HttpServerController extends DialogController {
 		// delete
 		btDelete.setGraphic(ImageManager.instance().getImageView(Images.DELETE));
 		btDelete.setContentDisplay(ContentDisplay.LEFT);
+		
+		// test
+		btHttpTest.setGraphic(ImageManager.instance().getImageView(Images.EXECUTE));
+		btHttpTest.setContentDisplay(ContentDisplay.LEFT);
 	}
 
 	public HttpSource getSource() {
@@ -90,7 +100,7 @@ public class HttpServerController extends DialogController {
 	private void onSelectDataSource() {
 		try {
 			dataSource = cbDataSources.getSelectionModel().getSelectedItem();
-			
+
 			if (dataSource == null) {
 				return;
 			}
@@ -129,6 +139,31 @@ public class HttpServerController extends DialogController {
 			this.setSource(null);
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
+		}
+	}
+
+	@FXML
+	private void onTestUrl() {
+		HttpURLConnection conn = null;
+		try {
+			String urlString = "http://" + tfHost.getText() + ":" + tfPort.getText() + '/' + OeeHttpServer.EVENT_EP;
+			URL url = new URL(urlString);
+
+			conn = (HttpURLConnection) url.openConnection();
+			conn.setDoOutput(true);
+			conn.setRequestMethod("POST");
+			conn.setRequestProperty("Content-Type", "application/json");
+			conn.setConnectTimeout(2000);
+			conn.getOutputStream();
+
+			AppUtils.showConfirmationDialog("HTTP connection was successful.");
+
+		} catch (Exception e) {
+			AppUtils.showErrorDialog("HTTP connection failed: " + DomainUtils.formatException(e));
+		} finally {
+			if (conn != null) {
+				conn.disconnect();
+			}
 		}
 	}
 

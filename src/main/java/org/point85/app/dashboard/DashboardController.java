@@ -121,7 +121,7 @@ public class DashboardController extends DialogController implements CategoryCli
 
 	// time between auto refresh
 	private static final long REFRESH_SEC = 60;
-	
+
 	// manual event id
 	private static final String EDITOR_SOURCE_ID = "EDITOR";
 
@@ -913,10 +913,25 @@ public class DashboardController extends DialogController implements CategoryCli
 
 		initializeEventTable();
 
+		initializeDateRange();
+
 		initializeRefreshTimer();
 
 		// select the time loss chart
 		tpParetoCharts.getSelectionModel().select(tbTimeLosses);
+	}
+
+	private void initializeDateRange() {
+		final String hhSS = "00:00";
+
+		LocalDate today = LocalDate.now();
+		LocalDate tomorrow = today.plusDays(1);
+
+		dpStartDate.setValue(today);
+		tfStartTime.setText(hhSS);
+
+		dpEndDate.setValue(tomorrow);
+		tfEndTime.setText(hhSS);
 	}
 
 	private void initializeRefreshTimer() {
@@ -1369,7 +1384,7 @@ public class DashboardController extends DialogController implements CategoryCli
 			LocalDate endDate = dpEndDate.getValue();
 
 			if (endDate == null) {
-				endDate = LocalDate.now();
+				endDate = LocalDate.now().plusDays(1);
 			}
 
 			Duration endSeconds = null;

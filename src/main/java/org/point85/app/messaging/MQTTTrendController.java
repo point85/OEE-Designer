@@ -1,7 +1,5 @@
 package org.point85.app.messaging;
 
-import java.time.OffsetDateTime;
-
 import org.point85.app.AppUtils;
 import org.point85.app.charts.DataSubscriber;
 import org.point85.domain.messaging.EquipmentEventMessage;
@@ -9,7 +7,6 @@ import org.point85.domain.mqtt.MQTTClient;
 import org.point85.domain.mqtt.MQTTEquipmentEventListener;
 import org.point85.domain.mqtt.MQTTSource;
 import org.point85.domain.mqtt.QualityOfService;
-import org.point85.domain.script.EventResolver;
 
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
@@ -64,8 +61,8 @@ public class MQTTTrendController extends BaseMessagingTrendController
 
 	@Override
 	public void onMQTTEquipmentEvent(EquipmentEventMessage message) {
-		ResolutionService service = new ResolutionService(message.getSourceId(), message.getValue(),
-				message.getDateTime());
+		ResolutionService service = new ResolutionService(message.getValue(),
+				message.getTimestamp(), message.getReason());
 
 		service.setOnFailed(new EventHandler<WorkerStateEvent>() {
 			@Override
@@ -89,16 +86,20 @@ public class MQTTTrendController extends BaseMessagingTrendController
 			if (mqttClient == null) {
 				throw new Exception("The trend is not connected to an MQTT server.");
 			}
+			
+			EquipmentEventMessage msg = createMessage();
 
+			/*
 			EventResolver eventResolver = trendChartController.getEventResolver();
 
 			String sourceId = eventResolver.getSourceId();
-			String value = getLoopbackValue();
+			String value = getLoopbackValues();
 
 			EquipmentEventMessage msg = new EquipmentEventMessage();
 			msg.setSourceId(sourceId);
 			msg.setValue(value);
 			msg.setDateTime(OffsetDateTime.now());
+			*/
 
 			mqttClient.publish(msg, QualityOfService.AT_MOST_ONCE);
 		} catch (Exception e) {

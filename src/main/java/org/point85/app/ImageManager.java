@@ -163,6 +163,9 @@ public final class ImageManager {
 		case SCHEDULE:
 			image = new Image(path + "WorkSchedule.png", DIM, DIM, true, true);
 			break;
+		case SHIFT:
+			image = new Image(path + "Shifts.png", DIM, DIM, true, true);
+			break;
 		case SCRIPT:
 			image = new Image(path + "Script.png", DIM, DIM, true, true);
 			break;

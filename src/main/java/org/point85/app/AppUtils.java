@@ -257,4 +257,21 @@ public abstract class AppUtils {
 			throw new Exception(number + " is not a number.");
 		}
 	}
+	
+	public static String[] parseCsvInput(String csv) throws Exception {
+		String[] values = csv.split(",");
+		String reason = null;
+
+		if (values.length == 0) {
+			throw new Exception("A test value(s) must entered.");
+		} else if (values.length == 2) {
+			reason = values[1].trim();
+		}
+		
+		String[] outputs = new String[2];
+		outputs[0] = values[0].trim();
+		outputs[1] = reason;
+		
+		return outputs;
+	}
 }

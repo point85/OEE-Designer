@@ -1,4 +1,4 @@
--- SQL Server script file for creating the database event interface table, schema version 2
+-- SQL Server script file for creating the database event interface table, schema version 3
 -- set to your database name
 USE [OEE]
 GO
@@ -24,7 +24,8 @@ CREATE TABLE [dbo].[DB_EVENT](
 	[EVENT_TIME] [datetime2](3) NULL,
 	[EVENT_TIME_OFFSET] int NULL,
 	[STATUS] [nvarchar](16) NOT NULL,
-	[ERROR] [nvarchar](512) NULL
+	[ERROR] [nvarchar](512) NULL,
+	[REASON] [nvarchar](64) NULL
 ) ON [PRIMARY]
 GO
 CREATE NONCLUSTERED INDEX [IDX_EVT_STATUS] ON [dbo].[DB_EVENT]

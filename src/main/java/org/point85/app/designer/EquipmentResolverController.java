@@ -133,6 +133,10 @@ public class EquipmentResolverController extends DesignerController {
 		List<DataCollector> collectors = PersistenceService.instance().fetchAllDataCollectors();
 		cbCollectors.getItems().clear();
 		cbCollectors.getItems().addAll(collectors);
+		
+		if (collectors.size() == 1) {
+			cbCollectors.getSelectionModel().select(0);
+		}
 	}
 
 	void initialize(DesignerApplication app) throws Exception {

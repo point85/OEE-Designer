@@ -102,6 +102,9 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 	// controller for template schedules
 	private TemplateScheduleDialogController templateController;
 
+	// controller for viewing shift instances
+	private WorkScheduleShiftsController shiftsController;
+
 	// work schedule
 	@FXML
 	private TextField tfScheduleName;
@@ -330,6 +333,10 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 	// template schedule
 	@FXML
 	private Button btChooseSchedule;
+
+	// view shift instances
+	@FXML
+	private Button btViewShifts;
 
 	private void initializeScheduleList() {
 		// list of schedules selection listener
@@ -823,6 +830,10 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		// choose template schedule
 		btChooseSchedule.setGraphic(ImageManager.instance().getImageView(Images.CHOOSE));
 		btChooseSchedule.setContentDisplay(ContentDisplay.RIGHT);
+
+		// view shift instances
+		btViewShifts.setGraphic(ImageManager.instance().getImageView(Images.SHIFT));
+		btViewShifts.setContentDisplay(ContentDisplay.RIGHT);
 
 		// context menu
 		miSaveAll.setGraphic(ImageManager.instance().getImageView(Images.SAVE_ALL));
@@ -1654,6 +1665,39 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 				PersistenceService.instance().save(schedule);
 
 				displaySchedules();
+			}
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+
+	@FXML
+	private void onViewShifts() {
+		try {
+			if (getSelectedSchedule() == null) {
+				throw new Exception("A work schedule must be chosen.");
+			}
+			
+			if (shiftsController == null) {
+				FXMLLoader loader = FXMLLoaderFactory.scheduleShiftsLoader();
+				AnchorPane page = (AnchorPane) loader.getRoot();
+
+				Stage dialogStage = new Stage(StageStyle.DECORATED);
+				dialogStage.setTitle("Work Schedule Shift Instances");
+				dialogStage.initModality(Modality.NONE);
+				Scene scene = new Scene(page);
+				dialogStage.setScene(scene);
+
+				// get the controller
+				shiftsController = loader.getController();
+				shiftsController.setDialogStage(dialogStage);
+				shiftsController.initializeApp(getApp());
+			}
+
+			shiftsController.setCurrentSchedule(getSelectedSchedule());
+
+			if (!shiftsController.getDialogStage().isShowing()) {
+				shiftsController.getDialogStage().showAndWait();
 			}
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
