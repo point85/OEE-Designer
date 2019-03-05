@@ -148,7 +148,7 @@ public class MonitorApplication implements MessageListener {
 			String brokerUser = collector.getBrokerUserName();
 			String brokerPassword = collector.getBrokerUserPassword();
 
-			if (brokerHostName != null && brokerPort != null) {
+			if (brokerHostName != null && brokerHostName.trim().length() > 0 && brokerPort != null) {
 				String key = brokerHostName + ":" + brokerPort;
 
 				if (pubSubs.get(key) == null) {

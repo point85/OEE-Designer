@@ -54,5 +54,9 @@
 	- Fixed bug in OEE calculation that did not recognize a new material setup after the default material was used
 	- Misc usability improvements in monitor and tester applications
 	- Added buttons to test the HTTP, database, RMQ, JMS and MQTT connections.
+	
+(14) 2.2.0, March 6, 2019:
+    - Added support for HSQLDB database with a local server as the default.
+    - Removed requirement for the Monitor to connect to a RabbitMQ broker
 
 Please send comments and suggestions to point85.llc@gmail.com.
