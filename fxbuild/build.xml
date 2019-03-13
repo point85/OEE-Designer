@@ -2,10 +2,10 @@
 	<project name="oee-apps" default="build-all" basedir="."  xmlns:fx="javafx:com.sun.javafx.tools.ant">
 	
 	<!-- distribution archive -->
-	<property name="app_version" value="2.2.0"/>
-	<property name="dist.zip" value="oee-apps-2.2.0.jar"/>
-	<property name="domain.jar" value="oee-domain-2.2.0.jar"/>
-	<property name="collector.jar" value="oee-collector-2.2.0.jar"/>
+	<property name="app_version" value="2.2.1"/>
+	<property name="dist.zip" value="oee-apps-2.2.1.jar"/>
+	<property name="domain.jar" value="oee-domain-2.2.1.jar"/>
+	<property name="collector.jar" value="oee-collector-2.2.1.jar"/>
 		
 	<!-- folders -->
 	<property name="repo.dir" value="C:\maven_repo"/>
@@ -51,27 +51,6 @@
 		<copy todir="${external.dir}">
 			<fileset dir="${domain.dir}\target\lib">
 				<filename name="**\*.jar"/>
-			</fileset>
-		</copy>
-
-		<!-- SQL Server JDBC driver -->
-		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\com\microsoft\sqlserver\mssql-jdbc\7.0.0.jre8">
-				<filename name="mssql-jdbc-7.0.0.jre8.jar"/>
-			</fileset>
-		</copy>
-		
-		<!-- Oracle JDBC driver -->
-		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\com\oracle\jdbc\ojdbc8\8.0">
-				<filename name="ojdbc8-8.0.jar"/>
-			</fileset>
-		</copy>
-		
-		<!-- MySQL JDBC driver -->
-		<copy todir="${external.dir}">
-			<fileset dir="${repo.dir}\mysql\mysql-connector-java\8.0.14">
-				<filename name="mysql-connector-java-8.0.14"/>
 			</fileset>
 		</copy>
 		
@@ -122,15 +101,6 @@
 				</fileset>
 			</classpath>
 		</javac>
-		<!--
-		<javac includeantruntime="false" source="1.8" target="1.8" srcdir="${build.dir}/src" destdir="${build.dir}/classes" encoding="UTF-8" debug="on" debuglevel="lines" >
-			<classpath>
-				<fileset dir="${build.dir}/lib">
-					<include name="*"/>
-				</fileset>
-			</classpath>
-		</javac>
-		-->
 		<!-- Copy over non Java-Files -->
 		<copy todir="${build.dir}/classes">
 		<fileset dir="${project.dir}/src/main/resources">
@@ -203,6 +173,10 @@
 		<copy file="../run-monitor-app.bat" todir="${dist.dir}"/>
 		<copy file="../run-collector-app.bat" todir="${dist.dir}"/>
 		<copy file="../run-tester-app.bat" todir="${dist.dir}"/>
+		<copy file="../run-designer-app.sh" todir="${dist.dir}"/>
+		<copy file="../run-monitor-app.sh" todir="${dist.dir}"/>
+		<copy file="../run-collector-app.sh" todir="${dist.dir}"/>
+		<copy file="../run-tester-app.sh" todir="${dist.dir}"/>
 		
 		<!-- create a logging folder -->
 		<mkdir dir="${dist.dir}/logs" />

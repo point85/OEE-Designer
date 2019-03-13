@@ -161,6 +161,9 @@ public class DashboardController extends DialogController implements CategoryCli
 
 	@FXML
 	private CheckBox cbAutoRefresh;
+	
+	@FXML
+	private TextField tfRefreshPeriod;
 
 	// event editors
 	@FXML
@@ -908,6 +911,9 @@ public class DashboardController extends DialogController implements CategoryCli
 				AppUtils.showErrorDialog(e);
 			}
 		});
+		
+		// set default period
+		tfRefreshPeriod.setText(String.valueOf(REFRESH_SEC));
 
 		buildDashboardTiles();
 
@@ -934,7 +940,7 @@ public class DashboardController extends DialogController implements CategoryCli
 		tfEndTime.setText(hhSS);
 	}
 
-	private void initializeRefreshTimer() {
+	private void initializeRefreshTimer() {		
 		// create timer and task
 		refreshTimer = new Timer();
 		refreshTask = new RefreshTask();
@@ -944,7 +950,9 @@ public class DashboardController extends DialogController implements CategoryCli
 		if (refreshTimer == null) {
 			initializeRefreshTimer();
 		}
-		refreshTimer.schedule(refreshTask, 1000, REFRESH_SEC * 1000);
+		
+		int refreshSec = Integer.valueOf(tfRefreshPeriod.getText());
+		refreshTimer.schedule(refreshTask, 1000, refreshSec * 1000);
 	}
 
 	private void stopRefreshTimer() {
@@ -967,7 +975,6 @@ public class DashboardController extends DialogController implements CategoryCli
 		try {
 			// get the material from the dialog
 			Material material = null;
-			// getApp().showMaterialEditor();
 
 			if (material == null) {
 				return;

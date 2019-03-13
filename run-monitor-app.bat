@@ -1,2 +1,2 @@
 rem Launch the Monitor application (JDBC connection string, user name and password)
-start javaw.exe -jar oee-apps-2.2.0.jar MONITOR jdbc:hsqldb:hsql://localhost/OEE SA  
+start javaw.exe -jar oee-apps-2.2.1.jar MONITOR jdbc:hsqldb:hsql://localhost/OEE SA  

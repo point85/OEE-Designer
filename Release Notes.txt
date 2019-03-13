@@ -58,5 +58,10 @@
 (14) 2.2.0, March 6, 2019:
     - Added support for HSQLDB database with a local server as the default.
     - Removed requirement for the Monitor to connect to a RabbitMQ broker
+	
+(15) 2.2.1, March 14, 2019:
+    - Added ability to set the dashboard's refresh rate
+	- Added support for OPC UA arrays
+	- Added Linux bash scripts for the JSW
 
 Please send comments and suggestions to point85.llc@gmail.com.

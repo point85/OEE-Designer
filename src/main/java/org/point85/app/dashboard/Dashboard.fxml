@@ -22,7 +22,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<SplitPane fx:id="stRootPane" dividerPositions="0.33" orientation="VERTICAL" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.dashboard.DashboardController">
+<SplitPane fx:id="stRootPane" dividerPositions="0.33" orientation="VERTICAL" prefHeight="900.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.dashboard.DashboardController">
   <items>
       <VBox>
          <children>
@@ -38,10 +38,11 @@
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="12.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="7.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="7.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="6.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="8.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="8.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="4.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -51,14 +52,19 @@
                         <DatePicker fx:id="dpStartDate" maxWidth="1.7976931348623157E308" onAction="#clearMaterials" promptText="Choose starting date" GridPane.columnIndex="1" />
                         <Label text="To" GridPane.columnIndex="4" GridPane.halignment="RIGHT" />
                         <DatePicker fx:id="dpEndDate" maxWidth="1.7976931348623157E308" onAction="#clearMaterials" promptText="Choose ending date" GridPane.columnIndex="5" />
-                        <Button fx:id="btRefresh" disable="true" mnemonicParsing="false" onAction="#onRefresh" text="Refresh" GridPane.columnIndex="10" GridPane.halignment="CENTER" />
+                        <Button fx:id="btRefresh" disable="true" mnemonicParsing="false" onAction="#onRefresh" prefWidth="100.0" text="Refresh" GridPane.columnIndex="10" GridPane.halignment="CENTER" />
                         <ComboBox fx:id="cbMaterials" maxWidth="1.7976931348623157E308" promptText="Choose material" GridPane.columnIndex="9" />
                         <Label text="Material" GridPane.columnIndex="8" GridPane.halignment="RIGHT" />
-                        <CheckBox fx:id="cbAutoRefresh" disable="true" mnemonicParsing="false" onAction="#onToggleRefresh" text="Auto" GridPane.columnIndex="11" />
+                        <CheckBox fx:id="cbAutoRefresh" disable="true" mnemonicParsing="false" onAction="#onToggleRefresh" text="Auto (sec)" GridPane.columnIndex="11" GridPane.halignment="RIGHT" />
                         <TextField fx:id="tfStartTime" GridPane.columnIndex="2" />
                         <Label text="(HH:MM)" GridPane.columnIndex="3" />
                         <TextField fx:id="tfEndTime" GridPane.columnIndex="6" />
                         <Label text="(HH:MM)" GridPane.columnIndex="7" />
+                        <TextField fx:id="tfRefreshPeriod" GridPane.columnIndex="12" GridPane.halignment="LEFT">
+                           <GridPane.margin>
+                              <Insets right="5.0" />
+                           </GridPane.margin>
+                        </TextField>
                      </children>
                   </GridPane>
                   <AnchorPane fx:id="apTileLayout" layoutY="30.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0" />
@@ -76,8 +82,8 @@
                            <children>
                               <TableView fx:id="tvResolvedEvents" layoutX="407.0" layoutY="83.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="50.0">
                                 <columns>
-                                  <TableColumn fx:id="tcStartTime" editable="false" prefWidth="200.0" text="Start Time" />
-                                    <TableColumn fx:id="tcEndTime" editable="false" prefWidth="200.0" text="End Time" />
+                                  <TableColumn fx:id="tcStartTime" editable="false" prefWidth="225.0" text="Start Time" />
+                                    <TableColumn fx:id="tcEndTime" editable="false" prefWidth="225.0" text="End Time" />
                                     <TableColumn fx:id="tcShift" editable="false" prefWidth="75.0" text="Shift" />
                                     <TableColumn fx:id="tcTeam" editable="false" prefWidth="75.0" text="Team" />
                                     <TableColumn fx:id="tcProdType" editable="false" prefWidth="125.0" text="Event" />
@@ -90,7 +96,7 @@
                                     <TableColumn fx:id="tcProdUnit" editable="false" prefWidth="75.0" text="UOM" />
                                     <TableColumn fx:id="tcMaterial" editable="false" prefWidth="150.0" text="Material" />
                                     <TableColumn fx:id="tcJob" editable="false" prefWidth="100.0" text="Job" />
-                                    <TableColumn fx:id="tcSourceId" editable="false" prefWidth="100.0" text="Source" />
+                                    <TableColumn fx:id="tcSourceId" editable="false" prefWidth="300.0" text="Source" />
                                 </columns>
                               </TableView>
                               <ButtonBar layoutX="71.0" layoutY="-6.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="50.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">

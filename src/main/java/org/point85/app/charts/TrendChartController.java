@@ -335,7 +335,11 @@ public class TrendChartController extends DesignerController {
 
 			// convert from String
 			if (plottedValue instanceof String) {
-				plottedValue = Double.valueOf((String) plottedValue);
+				try {
+					plottedValue = Double.valueOf((String) plottedValue);
+				} catch (NumberFormatException e) {
+					// ignore
+				}
 			}
 
 			plotData(plottedValue, resolvedItem.getAmount());

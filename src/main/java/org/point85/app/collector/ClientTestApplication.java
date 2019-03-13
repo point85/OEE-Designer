@@ -393,7 +393,8 @@ public class ClientTestApplication implements MessageListener, JMSEquipmentEvent
 	}
 
 	private String buildHttpUrl(String endpoint) throws Exception {
-		HttpSource source = cbHttpHostPort.getSelectionModel().getSelectedItem();
+		int idx = cbHttpHostPort.getSelectionModel().getSelectedIndex();
+		HttpSource source = cbHttpHostPort.getItems().get(idx);
 
 		if (source == null) {
 			throw new Exception("An HTTP server must be selected");
@@ -919,11 +920,6 @@ public class ClientTestApplication implements MessageListener, JMSEquipmentEvent
 
 			for (CollectorDataSource dataSource : dataSources) {
 				items.add((HttpSource) dataSource);
-			}
-
-			// bug?
-			for (int i = 0; i < dataSources.size(); i++) {
-				cbHttpHostPort.getSelectionModel().select(i);
 			}
 
 			cbHttpSourceId.getSelectionModel().clearSelection();

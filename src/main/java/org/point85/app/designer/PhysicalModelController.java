@@ -989,10 +989,6 @@ public class PhysicalModelController extends DesignerController {
 	@FXML
 	private void onFindWorkSchedule() {
 		try {
-			if (getSelectedEntity() == null) {
-				throw new Exception("A plant object must be selected before setting the schedule.");
-			}
-
 			// get the work schedule from the dialog
 			selectedSchedule = getApp().showScheduleEditor();
 
@@ -1001,8 +997,10 @@ public class PhysicalModelController extends DesignerController {
 			}
 
 			// work schedule
-			getSelectedEntity().setWorkSchedule(selectedSchedule);
-			addEditedPlantEntity(selectedEntityItem);
+			if (getSelectedEntity() != null) {
+				getSelectedEntity().setWorkSchedule(selectedSchedule);
+				addEditedPlantEntity(selectedEntityItem);
+			}
 
 			// add schedule to text field
 			lbSchedule.setText(selectedSchedule.getName());
