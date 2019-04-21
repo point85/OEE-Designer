@@ -85,7 +85,7 @@ A second-level Pareto displays the reasons for an availability category, for exa
 ## Operator Application
 The Operator application is a desktop application that allows a user to enter availability, performance, production, material change and job events.  The events can be recorded in chronological order as they happened or in summary form over a period of time by duration of the event.
 
-For example, the screen for entering summarized reject production is:
+For example, the screen for entering a reject production event is:
 ![Operator Production](https://github.com/point85/OEE-Designer/blob/master/docs/operator-availability.png)
 
 ## Operator Web Application
@@ -95,7 +95,7 @@ For example, the screen for entering a summarized availability is:
 ![Operator Web Availability](https://github.com/point85/OEE-Designer/blob/master/docs/operator-web-availability.png)
 
 ## Localization
-All applications with user-visible text use resource bundles for localization.  The locale is the default locale of the desktop or web server machine.  Each application has two default resource bundles, one for text named <app name>Lang.properties and one for errors/exceptions named <app name>Error.properties with US English text.
+All applications with user-visible text use resource bundles for localization.  The locale is the default locale of the desktop or web server machine.  Each application has two default resource bundles, one for text named (app name)Lang.properties and one for errors/exceptions named (app name)Error.properties with US English text.
 
 ## Database
 The Java Persistence 2.2 API (JPA) as implemented by the Hibernate ORM framework together with the Hikari connection pool is used to persist OEE information to the database. 
