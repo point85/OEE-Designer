@@ -63,5 +63,9 @@
     - Added ability to set the dashboard's refresh rate
 	- Added support for OPC UA arrays
 	- Added Linux bash scripts for the JSW
+		
+(16) 2.3.0, April 21, 2019:
+    - Created a desktop operator application in JavaFX
+	- Made externally visible text localizable using resource bundles
 
 Please send comments and suggestions to point85.llc@gmail.com.

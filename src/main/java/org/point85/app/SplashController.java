@@ -1,5 +1,7 @@
 package org.point85.app;
 
+import org.point85.domain.DomainUtils;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
@@ -17,7 +19,7 @@ public class SplashController {
 
 	@FXML
 	private ImageView ivSplash;
-	
+
 	@FXML
 	private Label lbVersion;
 
@@ -27,13 +29,8 @@ public class SplashController {
 
 		// main image
 		ivSplash.setImage(ImageManager.instance().getImage(Images.SPLASH));
-		
+
 		// version info
-		lbVersion.setText(OeeApplication.VERSION_INFO);
+		lbVersion.setText(DomainUtils.getVersionInfo());
 	}
-
-	void setSplashText(String text) {
-		lbSplash.setText(text);
-	}
-
 }

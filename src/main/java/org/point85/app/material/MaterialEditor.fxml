@@ -17,11 +17,11 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.material.MaterialEditorController">
+<AnchorPane prefHeight="800.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.material.MaterialEditorController">
    <children>
       <HBox alignment="CENTER" prefHeight="50.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
-            <Button fx:id="btOK" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onOK" text="OK" textAlignment="CENTER">
+            <Button fx:id="btOK" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onOK" text="%done" textAlignment="CENTER">
                <HBox.margin>
                   <Insets right="25.0" />
                </HBox.margin>
@@ -34,24 +34,24 @@
                <children>
                   <ButtonBar buttonMinWidth="25.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0">
                     <buttons>
-                        <Button fx:id="btDelete" mnemonicParsing="false" onAction="#onDeleteMaterial" prefWidth="100.0" text="Delete" textAlignment="CENTER" />
-                        <Button fx:id="btRefresh" mnemonicParsing="false" onAction="#onRefreshMaterial" prefWidth="100.0" text="Refresh" />
-                        <Button fx:id="btSave" mnemonicParsing="false" onAction="#onSaveMaterial" prefWidth="100.0" text="Save" textAlignment="CENTER" />
-                      <Button fx:id="btNew" mnemonicParsing="false" onAction="#onNewMaterial" prefWidth="100.0" text="New" textAlignment="CENTER" />
+                        <Button fx:id="btDelete" mnemonicParsing="false" onAction="#onDeleteMaterial" prefWidth="100.0" text="%delete" textAlignment="CENTER" />
+                        <Button fx:id="btRefresh" mnemonicParsing="false" onAction="#onRefreshMaterial" prefWidth="100.0" text="%refresh" />
+                        <Button fx:id="btSave" mnemonicParsing="false" onAction="#onSaveMaterial" prefWidth="100.0" text="%save" textAlignment="CENTER" />
+                      <Button fx:id="btNew" mnemonicParsing="false" onAction="#onNewMaterial" prefWidth="100.0" text="%new" textAlignment="CENTER" />
                     </buttons>
                   </ButtonBar>
                   <TreeView fx:id="tvMaterials" layoutX="190.0" layoutY="391.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="90.0">
                      <contextMenu>
                         <ContextMenu fx:id="cmMaterial">
                           <items>
-                              <MenuItem fx:id="miSaveAll" mnemonicParsing="false" onAction="#onSaveAllMaterial" text="Save All Material" />
-                            <MenuItem fx:id="miRefreshAll" mnemonicParsing="false" onAction="#onRefreshAllMaterial" text="Refresh All Material" />
+                              <MenuItem fx:id="miSaveAll" mnemonicParsing="false" onAction="#onSaveAllMaterial" text="%save.all.material" />
+                            <MenuItem fx:id="miRefreshAll" mnemonicParsing="false" onAction="#onRefreshAllMaterial" text="%refresh.all.material" />
                           </items>
                         </ContextMenu>
                      </contextMenu></TreeView>
                   <ButtonBar buttonMinWidth="25.0" layoutX="22.0" layoutY="70.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="45.0">
                     <buttons>
-                        <Button fx:id="btImport" mnemonicParsing="false" onAction="#onImportMaterial" prefWidth="100.0" text="Import ..." />
+                        <Button fx:id="btImport" mnemonicParsing="false" onAction="#onImportMaterial" prefWidth="100.0" text="%import" />
                     </buttons>
                   </ButtonBar>
                </children>
@@ -70,24 +70,24 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Label alignment="CENTER" text="Name" textAlignment="CENTER" GridPane.halignment="RIGHT">
+                        <Label alignment="CENTER" text="%name" textAlignment="CENTER" GridPane.halignment="RIGHT">
                            <padding>
                               <Insets right="10.0" />
                            </padding>
                         </Label>
-                        <TextField fx:id="tfName" promptText="Enter the name of the material" GridPane.columnIndex="1" />
-                        <Label text="Description" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+                        <TextField fx:id="tfName" promptText="%enter.material.name" GridPane.columnIndex="1" />
+                        <Label text="%description" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                            <padding>
                               <Insets right="10.0" />
                            </padding>
                         </Label>
-                        <TextArea fx:id="taDescription" prefHeight="200.0" prefWidth="200.0" promptText="Description of the material" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.rowSpan="2" />
-                        <Label text="Category" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                        <TextArea fx:id="taDescription" prefHeight="200.0" prefWidth="200.0" promptText="%enter.material.desc" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.rowSpan="2" />
+                        <Label text="%category" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                            <padding>
                               <Insets right="10.0" />
                            </padding>
                         </Label>
-                        <ComboBox fx:id="cbCategories" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <ComboBox fx:id="cbCategories" editable="true" maxWidth="1.7976931348623157E308" promptText="%choose.category" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
                </children>

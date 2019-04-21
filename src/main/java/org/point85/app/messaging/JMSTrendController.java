@@ -2,6 +2,7 @@ package org.point85.app.messaging;
 
 import org.point85.app.AppUtils;
 import org.point85.app.charts.DataSubscriber;
+import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.jms.JMSClient;
 import org.point85.domain.jms.JMSEquipmentEventListener;
 import org.point85.domain.jms.JMSSource;
@@ -11,7 +12,8 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 
-public class JMSTrendController extends BaseMessagingTrendController implements JMSEquipmentEventListener, DataSubscriber {
+public class JMSTrendController extends BaseMessagingTrendController
+		implements JMSEquipmentEventListener, DataSubscriber {
 	// AMQ JMS client
 	private JMSClient jmsClient;
 
@@ -30,8 +32,7 @@ public class JMSTrendController extends BaseMessagingTrendController implements 
 
 		JMSSource source = (JMSSource) trendChartController.getEventResolver().getDataSource();
 
-		jmsClient.startUp(source.getHost(), source.getPort(), source.getUserName(), source.getUserPassword(),
-				this);
+		jmsClient.startUp(source.getHost(), source.getPort(), source.getUserName(), source.getUserPassword(), this);
 
 		// add to context
 		getApp().getAppContext().addJMSClient(jmsClient);
@@ -57,8 +58,8 @@ public class JMSTrendController extends BaseMessagingTrendController implements 
 
 	@Override
 	public void onJMSEquipmentEvent(EquipmentEventMessage message) {
-		ResolutionService service = new ResolutionService( message.getValue(),
-				message.getTimestamp(), message.getReason());
+		ResolutionService service = new ResolutionService(message.getValue(), message.getTimestamp(),
+				message.getReason());
 
 		service.setOnFailed(new EventHandler<WorkerStateEvent>() {
 			@Override
@@ -80,23 +81,10 @@ public class JMSTrendController extends BaseMessagingTrendController implements 
 	private void onLoopbackTest() {
 		try {
 			if (jmsClient == null) {
-				throw new Exception("The trend is not connected to a JMS broker.");
+				throw new Exception(DesignerLocalizer.instance().getErrorString("no.jms.broker"));
 			}
-			
+
 			EquipmentEventMessage msg = createMessage();
-
-			/*
-			EventResolver eventResolver = trendChartController.getEventResolver();
-
-			String sourceId = eventResolver.getSourceId();
-			String value = getLoopbackValues();
-
-			EquipmentEventMessage msg = new EquipmentEventMessage();
-			msg.setSourceId(sourceId);
-			msg.setValue(value);
-			msg.setDateTime(OffsetDateTime.now());
-			*/
-
 			jmsClient.sendToQueue(msg, JMSClient.DEFAULT_QUEUE, 30);
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);

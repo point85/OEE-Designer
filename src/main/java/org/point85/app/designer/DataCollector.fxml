@@ -12,11 +12,11 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.designer.DataCollectorController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.designer.DataCollectorController">
    <children>
       <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
-            <Button fx:id="btOK" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onOK" text="OK" textAlignment="CENTER">
+            <Button fx:id="btOK" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onOK" text="%done" textAlignment="CENTER">
                <HBox.margin>
                   <Insets right="25.0" />
                </HBox.margin>
@@ -42,40 +42,39 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <Label text="Name" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+            <Label text="%name" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin>
             </Label>
-            <Label text="Description" GridPane.halignment="RIGHT" GridPane.rowIndex="4">
+            <Label text="%description" GridPane.halignment="RIGHT" GridPane.rowIndex="4">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin>
             </Label>
-            <Label text="Choose Saved" GridPane.halignment="RIGHT">
+            <Label text="%choose.saved" GridPane.halignment="RIGHT">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin>
             </Label>
-            <TextField fx:id="tfHost" promptText="Enter host name or IP address" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <TextField fx:id="tfDescription" promptText="Enter description" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <Button fx:id="btSave" mnemonicParsing="false" onAction="#onSaveCollector" prefWidth="100.0" text="Save" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
-            <Button fx:id="btNew" mnemonicParsing="false" onAction="#onNewCollector" prefWidth="100.0" text="New" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-            <Button fx:id="btDelete" mnemonicParsing="false" onAction="#onDeleteCollector" prefWidth="100.0" text="Delete" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
-            <Label text="Host" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
-            <TextField fx:id="tfName" promptText="Enter name" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextField fx:id="tfHost" promptText="%enter.host" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <TextField fx:id="tfDescription" promptText="%enter.description" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Button fx:id="btSave" mnemonicParsing="false" onAction="#onSaveCollector" prefWidth="100.0" text="%save" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+            <Button fx:id="btNew" mnemonicParsing="false" onAction="#onNewCollector" prefWidth="100.0" text="%new" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+            <Button fx:id="btDelete" mnemonicParsing="false" onAction="#onDeleteCollector" prefWidth="100.0" text="%delete" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+            <Label text="%host" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
+            <TextField fx:id="tfName" promptText="%enter.name" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <ComboBox fx:id="cbCollectors" maxWidth="1.7976931348623157E308" onAction="#onSelectCollector" GridPane.columnIndex="1" />
-            <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="or edit a collector configuration" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Label text="Current State" GridPane.halignment="RIGHT" GridPane.rowIndex="9" />
+            <Label text="%current.state" GridPane.halignment="RIGHT" GridPane.rowIndex="9" />
             <ComboBox fx:id="cbCollectorStates" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="9" />
-            <Label text=" RMQ Broker Host/IP" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
-            <Label text="RMQ Broker Port" GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
-            <TextField fx:id="tfBrokerHost" promptText="Enter RMQ broker host name or IP address" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-            <TextField fx:id="tfBrokerPort" maxWidth="-Infinity" prefWidth="200.0" promptText="Enter RMQ broker port" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-            <Label text="RMQ User Name" GridPane.halignment="RIGHT" GridPane.rowIndex="7" />
-            <Label text="RMQ User Password" GridPane.halignment="RIGHT" GridPane.rowIndex="8" />
-            <TextField fx:id="tfBrokerUserName" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-            <PasswordField fx:id="pfBrokerUserPassword" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+            <Label text="%rmq.host" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
+            <Label text="%rmq.port" GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
+            <TextField fx:id="tfBrokerHost" promptText="%enter.rmq.host" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <TextField fx:id="tfBrokerPort" promptText="%enter.rmq.port" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <Label text="%rmq.user.name" GridPane.halignment="RIGHT" GridPane.rowIndex="7" />
+            <Label text="%rmq.user.password" GridPane.halignment="RIGHT" GridPane.rowIndex="8" />
+            <TextField fx:id="tfBrokerUserName" promptText="%enter.rmq.user.name" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+            <PasswordField fx:id="pfBrokerUserPassword" promptText="%enter.rmq.user.password" GridPane.columnIndex="1" GridPane.rowIndex="8" />
          </children>
       </GridPane>
    </children>

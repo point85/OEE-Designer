@@ -9,6 +9,7 @@ import org.point85.app.AppUtils;
 import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
+import org.point85.app.designer.DesignerLocalizer;
 import org.point85.app.material.MaterialEditorController;
 import org.point85.domain.collector.OeeEvent;
 import org.point85.domain.persistence.PersistenceService;
@@ -60,7 +61,7 @@ public class SetupEditorController extends EventEditorController {
 		super.setImages();
 
 		btMaterialEditor.setGraphic(ImageManager.instance().getImageView(Images.MATERIAL));
-		btMaterialEditor.setTooltip(new Tooltip("Find material."));
+		btMaterialEditor.setTooltip(new Tooltip(DesignerLocalizer.instance().getLangString("material.tt")));
 	}
 
 	@Override
@@ -70,7 +71,7 @@ public class SetupEditorController extends EventEditorController {
 
 		// material
 		if (setupEvent.getMaterial() == null) {
-			throw new Exception("A material must be specified.");
+			throw new Exception(DesignerLocalizer.instance().getErrorString("material.not.specified"));
 		}
 
 		// job
@@ -89,8 +90,8 @@ public class SetupEditorController extends EventEditorController {
 			OffsetDateTime lastStart = lastRecord.getStartTime();
 
 			if (newStart.isBefore(lastStart)) {
-				throw new Exception("The new setup start time of " + newStart
-						+ " cannot be before the last start time of " + lastStart);
+				throw new Exception(
+						DesignerLocalizer.instance().getErrorString("start.before.end", newStart, lastStart));
 			}
 
 			lastRecord.setEndTime(newStart);
@@ -122,7 +123,7 @@ public class SetupEditorController extends EventEditorController {
 
 				// Create the dialog Stage.
 				Stage dialogStage = new Stage(StageStyle.DECORATED);
-				dialogStage.setTitle("Setup Material");
+				dialogStage.setTitle(DesignerLocalizer.instance().getLangString("material.editor"));
 				dialogStage.initModality(Modality.APPLICATION_MODAL);
 				Scene scene = new Scene(page);
 				dialogStage.setScene(scene);
@@ -137,10 +138,12 @@ public class SetupEditorController extends EventEditorController {
 			materialController.getDialogStage().showAndWait();
 
 			Material material = materialController.getSelectedMaterial();
-			setupEvent.setMaterial(material);
-			setupEvent.setInputValue(material.getName());
-			displayMaterial();
 
+			if (material != null) {
+				setupEvent.setMaterial(material);
+				setupEvent.setInputValue(material.getName());
+				displayMaterial();
+			}
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}

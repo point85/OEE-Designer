@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane prefHeight="350.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.uom.UomConversionController">
+<AnchorPane prefHeight="350.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.uom.UomConversionController">
    <children>
       <GridPane hgap="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
         <columnConstraints>
@@ -30,32 +30,32 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <TextField fx:id="tfFromAmount" maxWidth="1.7976931348623157E308" prefWidth="150.0" promptText="Amount to convert" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+            <TextField fx:id="tfFromAmount" maxWidth="1.7976931348623157E308" prefWidth="150.0" promptText="%enter.amount" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets right="5.0" />
                </GridPane.margin></TextField>
-            <ComboBox fx:id="cbFromUnits" maxWidth="1.7976931348623157E308" prefWidth="200.0" promptText="From unit" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="3" />
-            <TextField fx:id="tfToAmount" editable="false" maxWidth="1.7976931348623157E308" prefWidth="150.0" promptText="Converted amount" GridPane.halignment="RIGHT" GridPane.rowIndex="5">
+            <ComboBox fx:id="cbFromUnits" maxWidth="1.7976931348623157E308" prefWidth="200.0" promptText="%choose.from.unit" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="3" />
+            <TextField fx:id="tfToAmount" editable="false" maxWidth="1.7976931348623157E308" prefWidth="150.0" promptText="%converted.amount" GridPane.halignment="RIGHT" GridPane.rowIndex="5">
                <GridPane.margin>
                   <Insets right="5.0" />
                </GridPane.margin></TextField>
-            <ComboBox fx:id="cbToUnits" maxWidth="1.7976931348623157E308" prefWidth="200.0" promptText="To unit" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-            <Button fx:id="btConvert" maxWidth="100.0" mnemonicParsing="false" onAction="#handleConvertButton" text="Convert" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="7" />
-            <Label text="From Unit Of Measure" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-            <Label text="To Unit Of Measure" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
-            <ComboBox fx:id="cbFromPrefixes" maxWidth="1.7976931348623157E308" prefWidth="150.0" promptText="From prefix" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <ComboBox fx:id="cbToPrefixes" maxWidth="1.7976931348623157E308" prefWidth="150.0" promptText="To prefix" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-            <Label text="Unit Type" GridPane.halignment="RIGHT">
+            <ComboBox fx:id="cbToUnits" maxWidth="1.7976931348623157E308" prefWidth="200.0" promptText="%choose.to.unit" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+            <Button fx:id="btConvert" maxWidth="100.0" mnemonicParsing="false" onAction="#handleConvertButton" text="%convert" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="7" />
+            <Label text="%from.uom" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+            <Label text="%to.uom" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+            <ComboBox fx:id="cbFromPrefixes" maxWidth="1.7976931348623157E308" prefWidth="150.0" promptText="%choose.from.prefix" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <ComboBox fx:id="cbToPrefixes" maxWidth="1.7976931348623157E308" prefWidth="150.0" promptText="%choose.to.prefix" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <Label text="%unit.type" GridPane.halignment="RIGHT">
                <padding>
                   <Insets right="5.0" />
                </padding>
             </Label>
-            <ComboBox fx:id="cbUnitTypes" maxWidth="1.7976931348623157E308" onAction="#setPossibleConversions" prefWidth="250.0" promptText="Type of the unit" GridPane.columnIndex="1" />
+            <ComboBox fx:id="cbUnitTypes" maxWidth="1.7976931348623157E308" onAction="#setPossibleConversions" prefWidth="250.0" promptText="%choose.unit.type" GridPane.columnIndex="1" />
          </children>
       </GridPane>
       <HBox alignment="CENTER" layoutX="210.0" layoutY="223.0" prefHeight="50.0" spacing="25.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
-            <Button fx:id="btOK" mnemonicParsing="false" onAction="#onOK" text="OK" />
+            <Button fx:id="btOK" mnemonicParsing="false" onAction="#onOK" text="%done" />
          </children>
       </HBox>
    </children>

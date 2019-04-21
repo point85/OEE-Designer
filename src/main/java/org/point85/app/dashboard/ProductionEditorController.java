@@ -1,6 +1,7 @@
 package org.point85.app.dashboard;
 
 import org.point85.app.AppUtils;
+import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.collector.OeeEvent;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Equipment;
@@ -66,7 +67,7 @@ public class ProductionEditorController extends EventEditorController {
 		Double amount = AppUtils.stringToDouble(tfAmount.getText());
 
 		if (amount == null || amount <= 0d) {
-			throw new Exception("An amount must be specified.");
+			throw new Exception(DesignerLocalizer.instance().getErrorString("no.amount"));
 		}
 		productionEvent.setAmount(amount);
 		productionEvent.setInputValue(String.valueOf(amount));
@@ -87,14 +88,14 @@ public class ProductionEditorController extends EventEditorController {
 		}
 
 		if (material == null) {
-			throw new Exception("No material found for equipment " + equipment.getName());
+			throw new Exception(DesignerLocalizer.instance().getErrorString("no.material", equipment.getName()));
 		}
 
 		equipmentMaterial = equipment.getEquipmentMaterial(material);
 
 		if (equipmentMaterial == null) {
-			throw new Exception("No design speed definition found for equipment " + equipment.getName()
-					+ " and material " + material.getDisplayString());
+			throw new Exception(DesignerLocalizer.instance().getErrorString("no.design.speed", equipment.getName(),
+					material.getDisplayString()));
 		}
 		return equipmentMaterial;
 	}

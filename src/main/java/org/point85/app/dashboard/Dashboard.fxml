@@ -22,7 +22,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<SplitPane fx:id="stRootPane" dividerPositions="0.33" orientation="VERTICAL" prefHeight="900.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.dashboard.DashboardController">
+<SplitPane dividerPositions="0.33" orientation="VERTICAL" prefHeight="900.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.dashboard.DashboardController">
   <items>
       <VBox>
          <children>
@@ -48,18 +48,18 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Label text="From" GridPane.halignment="RIGHT" />
-                        <DatePicker fx:id="dpStartDate" maxWidth="1.7976931348623157E308" onAction="#clearMaterials" promptText="Choose starting date" GridPane.columnIndex="1" />
-                        <Label text="To" GridPane.columnIndex="4" GridPane.halignment="RIGHT" />
-                        <DatePicker fx:id="dpEndDate" maxWidth="1.7976931348623157E308" onAction="#clearMaterials" promptText="Choose ending date" GridPane.columnIndex="5" />
-                        <Button fx:id="btRefresh" disable="true" mnemonicParsing="false" onAction="#onRefresh" prefWidth="100.0" text="Refresh" GridPane.columnIndex="10" GridPane.halignment="CENTER" />
-                        <ComboBox fx:id="cbMaterials" maxWidth="1.7976931348623157E308" promptText="Choose material" GridPane.columnIndex="9" />
-                        <Label text="Material" GridPane.columnIndex="8" GridPane.halignment="RIGHT" />
-                        <CheckBox fx:id="cbAutoRefresh" disable="true" mnemonicParsing="false" onAction="#onToggleRefresh" text="Auto (sec)" GridPane.columnIndex="11" GridPane.halignment="RIGHT" />
+                        <Label text="%from" GridPane.halignment="RIGHT" />
+                        <DatePicker fx:id="dpStartDate" maxWidth="1.7976931348623157E308" onAction="#clearMaterials" promptText="%choose.start" GridPane.columnIndex="1" />
+                        <Label text="%to" GridPane.columnIndex="4" GridPane.halignment="RIGHT" />
+                        <DatePicker fx:id="dpEndDate" maxWidth="1.7976931348623157E308" onAction="#clearMaterials" promptText="%choose.end" GridPane.columnIndex="5" />
+                        <Button fx:id="btRefresh" disable="true" mnemonicParsing="false" onAction="#onRefresh" prefWidth="100.0" text="%refresh" GridPane.columnIndex="10" GridPane.halignment="CENTER" />
+                        <ComboBox fx:id="cbMaterials" maxWidth="1.7976931348623157E308" promptText="%material.prompt" GridPane.columnIndex="9" />
+                        <Label text="%material" GridPane.columnIndex="8" GridPane.halignment="RIGHT" />
+                        <CheckBox fx:id="cbAutoRefresh" disable="true" mnemonicParsing="false" onAction="#onToggleRefresh" text="%auto" GridPane.columnIndex="11" GridPane.halignment="RIGHT" />
                         <TextField fx:id="tfStartTime" GridPane.columnIndex="2" />
-                        <Label text="(HH:MM)" GridPane.columnIndex="3" />
+                        <Label text="%hh.mm" GridPane.columnIndex="3" />
                         <TextField fx:id="tfEndTime" GridPane.columnIndex="6" />
-                        <Label text="(HH:MM)" GridPane.columnIndex="7" />
+                        <Label text="%hh.mm" GridPane.columnIndex="7" />
                         <TextField fx:id="tfRefreshPeriod" GridPane.columnIndex="12" GridPane.halignment="LEFT">
                            <GridPane.margin>
                               <Insets right="5.0" />
@@ -74,38 +74,38 @@
       </VBox>
     <AnchorPane minHeight="0.0" minWidth="0.0">
          <children>
-            <TabPane fx:id="tpParetoCharts" disable="true" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0">
+            <TabPane fx:id="tpParetoCharts" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0">
                <tabs>
-                  <Tab fx:id="tbEvents" closable="false" text="Events">
+                  <Tab fx:id="tbEvents" closable="false" text="%events">
                     <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                      <AnchorPane minHeight="0.0" minWidth="0.0">
                            <children>
-                              <TableView fx:id="tvResolvedEvents" layoutX="407.0" layoutY="83.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="50.0">
+                              <TableView fx:id="tvResolvedEvents" layoutX="5.0" layoutY="64.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="50.0">
                                 <columns>
-                                  <TableColumn fx:id="tcStartTime" editable="false" prefWidth="225.0" text="Start Time" />
-                                    <TableColumn fx:id="tcEndTime" editable="false" prefWidth="225.0" text="End Time" />
-                                    <TableColumn fx:id="tcShift" editable="false" prefWidth="75.0" text="Shift" />
-                                    <TableColumn fx:id="tcTeam" editable="false" prefWidth="75.0" text="Team" />
-                                    <TableColumn fx:id="tcProdType" editable="false" prefWidth="125.0" text="Event" />
-                                    <TableColumn fx:id="tcDuration" editable="false" prefWidth="75.0" text="Duration" />
+                                  <TableColumn fx:id="tcStartTime" editable="false" prefWidth="225.0" text="%start.time" />
+                                    <TableColumn fx:id="tcEndTime" editable="false" prefWidth="225.0" text="%end.time" />
+                                    <TableColumn fx:id="tcShift" editable="false" prefWidth="75.0" text="%shift" />
+                                    <TableColumn fx:id="tcTeam" editable="false" prefWidth="75.0" text="%team" />
+                                    <TableColumn fx:id="tcProdType" editable="false" prefWidth="125.0" text="%event" />
+                                    <TableColumn fx:id="tcDuration" editable="false" prefWidth="75.0" text="%duration" />
                                   <TableColumn fx:id="tcAvailability" editable="false" prefWidth="20.0" />
-                                    <TableColumn fx:id="tcReason" editable="false" prefWidth="175.0" text="Reason" />
-                                    <TableColumn fx:id="tcLossCategory" editable="false" prefWidth="150.0" text="Loss Category" />
-                                    <TableColumn fx:id="tcLostTime" editable="false" prefWidth="75.0" text="Lost Time" />
-                                    <TableColumn fx:id="tcProdAmount" editable="false" prefWidth="75.0" text="Amount" />
-                                    <TableColumn fx:id="tcProdUnit" editable="false" prefWidth="75.0" text="UOM" />
-                                    <TableColumn fx:id="tcMaterial" editable="false" prefWidth="150.0" text="Material" />
-                                    <TableColumn fx:id="tcJob" editable="false" prefWidth="100.0" text="Job" />
-                                    <TableColumn fx:id="tcSourceId" editable="false" prefWidth="300.0" text="Source" />
+                                    <TableColumn fx:id="tcReason" editable="false" prefWidth="175.0" text="%reason" />
+                                    <TableColumn fx:id="tcLossCategory" editable="false" prefWidth="150.0" text="%loss.category" />
+                                    <TableColumn fx:id="tcLostTime" editable="false" prefWidth="75.0" text="%lost.time" />
+                                    <TableColumn fx:id="tcProdAmount" editable="false" prefWidth="75.0" text="%amount" />
+                                    <TableColumn fx:id="tcProdUnit" editable="false" prefWidth="75.0" text="%uom" />
+                                    <TableColumn fx:id="tcMaterial" editable="false" prefWidth="150.0" text="%material" />
+                                    <TableColumn fx:id="tcJob" editable="false" prefWidth="100.0" text="%job" />
+                                    <TableColumn fx:id="tcSourceId" editable="false" prefWidth="300.0" text="%source" />
                                 </columns>
                               </TableView>
                               <ButtonBar layoutX="71.0" layoutY="-6.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="50.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                 <buttons>
-                                    <Button fx:id="btDeleteEvent" mnemonicParsing="false" onAction="#onDeleteEvent" text="Delete" />
-                                    <Button fx:id="btUpdateEvent" mnemonicParsing="false" onAction="#onUpdateEvent" text="Update" />
-                                    <Button fx:id="btNewSetup" mnemonicParsing="false" onAction="#onNewSetup" text="New Setup" />
-                                    <Button fx:id="btNewProduction" mnemonicParsing="false" onAction="#onNewProduction" text="New Production" />
-                                  <Button fx:id="btNewAvailability" mnemonicParsing="false" onAction="#onNewAvailability" text="New Availability" />
+                                    <Button fx:id="btDeleteEvent" mnemonicParsing="false" onAction="#onDeleteEvent" text="%delete" />
+                                    <Button fx:id="btUpdateEvent" mnemonicParsing="false" onAction="#onUpdateEvent" text="%update" />
+                                    <Button fx:id="btNewSetup" mnemonicParsing="false" onAction="#onNewSetup" text="%new.setup" />
+                                    <Button fx:id="btNewProduction" mnemonicParsing="false" onAction="#onNewProduction" text="%new.production" />
+                                  <Button fx:id="btNewAvailability" mnemonicParsing="false" onAction="#onNewAvailability" text="%new.availability" />
                                 </buttons>
                                  <opaqueInsets>
                                     <Insets />
@@ -115,7 +115,7 @@
                         </AnchorPane>
                     </content>
                   </Tab>
-                  <Tab fx:id="tbTimeLosses" closable="false" text="Time Losses">
+                  <Tab fx:id="tbTimeLosses" closable="false" text="%time.losses">
                     <content>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
@@ -131,42 +131,42 @@
                         </AnchorPane>
                     </content>
                   </Tab>
-                  <Tab fx:id="tbFirstLevelPareto" closable="false" text="First-Level Pareto">
+                  <Tab fx:id="tbFirstLevelPareto" closable="false" text="%first.level">
                      <content>
                         <AnchorPane fx:id="apLevel1Pareto" />
                      </content>
                   </Tab>
-                  <Tab fx:id="tbYieldPareto" closable="false" text="Startup &amp; Yield">
+                  <Tab fx:id="tbYieldPareto" closable="false" text="%startup.yield">
                     <content>
                       <AnchorPane fx:id="apYieldPareto" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                     </content>
                   </Tab>
-                  <Tab fx:id="tbRejectsPareto" closable="false" text="Rejects &amp; Rework">
+                  <Tab fx:id="tbRejectsPareto" closable="false" text="%rejects">
                     <content>
                       <AnchorPane fx:id="apRejectsPareto" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                     </content>
                   </Tab>
-                  <Tab fx:id="tbReducedSpeedPareto" closable="false" text="Reduced Speed">
+                  <Tab fx:id="tbReducedSpeedPareto" closable="false" text="%reduced.speed">
                     <content>
                       <AnchorPane fx:id="apSpeedPareto" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                     </content>
                   </Tab>
-                  <Tab fx:id="tbMinorStoppagesPareto" closable="false" text="Stoppages">
+                  <Tab fx:id="tbMinorStoppagesPareto" closable="false" text="%stoppages">
                     <content>
                       <AnchorPane fx:id="apMinorStoppagesPareto" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                     </content>
                   </Tab>
-                  <Tab fx:id="tbUnplannedDowntimePareto" closable="false" text="Unplanned Downtime">
+                  <Tab fx:id="tbUnplannedDowntimePareto" closable="false" text="%unplanned">
                     <content>
                       <AnchorPane fx:id="apUnplannedDowntimePareto" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                     </content>
                   </Tab>
-                  <Tab fx:id="tbSetupPareto" closable="false" text="Setup">
+                  <Tab fx:id="tbSetupPareto" closable="false" text="%setup">
                     <content>
                       <AnchorPane fx:id="apSetupPareto" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                     </content>
                   </Tab>
-                  <Tab fx:id="tbPlannedDowntimePareto" closable="false" text="Planned Downtime">
+                  <Tab fx:id="tbPlannedDowntimePareto" closable="false" text="%planned">
                     <content>
                       <AnchorPane fx:id="apPlannedDowntimePareto" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                     </content>

@@ -22,7 +22,8 @@ The Point85 applications supporting OEE are:
 * Designer:  a GUI application for defining the plant equipment, data sources, event resolution scripts, manufacturing work schedule, availability reasons, produced materials and units of measure for data collectors.  The designer also includes a dashboard and trending capabilities.
 * Collector:  a Windows service or Unix deamon to collect the equipment event data and store it in a relational database
 * Monitor:  a GUI application with a dashboard to view the current equipment OEE and status
-* Operator:  a web-application for manual entry of equipment events
+* Operator:  a GUI application for manual entry of equipment events
+* Operator Web:  a web-application for manual entry of equipment events
 
 In addition, two GUI test applications assist in the development of an OEE solution:
 * HTTP requester and message publisher
@@ -82,10 +83,19 @@ A second-level Pareto displays the reasons for an availability category, for exa
 ![Second Level Pareto](https://github.com/point85/OEE-Designer/blob/master/docs/dashboard-second-level-pareto.png)
 
 ## Operator Application
-The Operator application is browser-based and allows a user to enter availability, performance, production, material change and job events.  The events can be recorded in chronological order as they happened (“By Event”) or in summary form (“Summarized”) over a period of time by duration of event.  Value adding time is assumed in summary form for availability.
+The Operator application is a desktop application that allows a user to enter availability, performance, production, material change and job events.  The events can be recorded in chronological order as they happened or in summary form over a period of time by duration of the event.
+
+For example, the screen for entering summarized reject production is:
+![Operator Production](https://github.com/point85/OEE-Designer/blob/master/docs/operator-availability.png)
+
+## Operator Web Application
+The Operator web application is browser-based and allows a user to enter availability, performance, production, material change and job events.  The events can be recorded in chronological order as they happened or in summary form over a period of time by duration of event.
 
 For example, the screen for entering a summarized availability is:
-![Operator Availability](https://github.com/point85/OEE-Designer/blob/master/docs/operator-availability.png)
+![Operator Web Availability](https://github.com/point85/OEE-Designer/blob/master/docs/operator-web-availability.png)
+
+## Localization
+All applications with user-visible text use resource bundles for localization.  The locale is the default locale of the desktop or web server machine.  Each application has two default resource bundles, one for text named <app name>Lang.properties and one for errors/exceptions named <app name>Error.properties with US English text.
 
 ## Database
 The Java Persistence 2.2 API (JPA) as implemented by the Hibernate ORM framework together with the Hikari connection pool is used to persist OEE information to the database. 

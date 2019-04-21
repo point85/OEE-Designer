@@ -6,6 +6,7 @@ import org.point85.app.ImageManager;
 import org.point85.app.Images;
 import org.point85.app.charts.DataSubscriber;
 import org.point85.app.charts.TrendChartController;
+import org.point85.app.designer.ConnectionState;
 import org.point85.app.designer.DataSourceConnectionController;
 import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.opc.da.OpcDaDataChangeListener;

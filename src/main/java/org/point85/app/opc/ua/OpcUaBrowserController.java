@@ -22,7 +22,9 @@ import org.eclipse.milo.opcua.stack.core.types.structured.ReferenceDescription;
 import org.point85.app.AppUtils;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
+import org.point85.app.designer.ConnectionState;
 import org.point85.app.designer.DesignerApplication;
+import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.DomainUtils;
 import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.DataSourceType;
@@ -185,9 +187,9 @@ public class OpcUaBrowserController extends OpcUaController {
 				.addListener((observable, oldValue, newValue) -> populateAvailableNodes(newValue));
 	}
 
-	public static void arrayToStringRecursive(Object someArray, StringBuilder sb) {
+	public void arrayToStringRecursive(Object someArray, StringBuilder sb) {
 		if (someArray == null) {
-			sb.append("null");
+			sb.append("");
 			return;
 		}
 
@@ -198,7 +200,7 @@ public class OpcUaBrowserController extends OpcUaController {
 
 			sb.append('[');
 			for (int i = 0; i < length; i++) {
-				// lets test if array is multidimensional
+				// let's test if array is multidimensional
 				if (clazz.getComponentType().isArray()) {
 					arrayToStringRecursive(Array.get(someArray, i), sb);
 				} else {
@@ -210,7 +212,7 @@ public class OpcUaBrowserController extends OpcUaController {
 			}
 			sb.append(']');
 		} else {
-			sb.append(someArray + " is not an array!");
+			sb.append(someArray).append(DesignerLocalizer.instance().getErrorString("not.array"));
 		}
 	}
 
@@ -292,9 +294,11 @@ public class OpcUaBrowserController extends OpcUaController {
 				// check for matrix
 				if (dims != null) {
 					if (dims.length == 1) {
-						typeText = "Array of " + javaType.getSimpleName() + " with dimension " + arrayToString(dims);
+						typeText = DesignerLocalizer.instance().getLangString("array.of", javaType.getSimpleName(),
+								arrayToString(dims));
 					} else {
-						typeText = "Matrix of " + javaType.getSimpleName() + " with dimensions " + arrayToString(dims);
+						typeText = DesignerLocalizer.instance().getLangString("matrix.of", javaType.getSimpleName(),
+								arrayToString(dims));
 					}
 				}
 				StringBuilder sb = new StringBuilder();

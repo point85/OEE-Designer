@@ -12,11 +12,6 @@ import javafx.scene.paint.Color;
 public abstract class DataSourceConnectionController extends DesignerDialogController {
 	protected static final String NO_ERROR = "NO_ERROR";
 
-	// connection states
-	public enum ConnectionState {
-		DISCONNECTED, CONNECTING, CONNECTED
-	};
-
 	// state of our connection
 	protected ConnectionState connectionState = ConnectionState.DISCONNECTED;
 
@@ -115,7 +110,6 @@ public abstract class DataSourceConnectionController extends DesignerDialogContr
 	private class ConnectionService extends Service<String> {
 
 		private ConnectionService() {
-			// nothing to initialize
 		}
 
 		@Override

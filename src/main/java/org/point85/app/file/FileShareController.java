@@ -9,6 +9,7 @@ import org.point85.app.ImageManager;
 import org.point85.app.Images;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
+import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.DataSourceType;
 import org.point85.domain.file.FileEventSource;
@@ -172,7 +173,7 @@ public class FileShareController extends DesignerDialogController {
 			DirectoryChooser directoryChooser = new DirectoryChooser();
 
 			// Set title for DirectoryChooser
-			directoryChooser.setTitle("Select directory for the event files.");
+			directoryChooser.setTitle(DesignerLocalizer.instance().getLangString("select.dir"));
 
 			// Set Initial Directory
 			directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));

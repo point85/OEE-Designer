@@ -1,4 +1,4 @@
-package org.point85.app.collector;
+package org.point85.app.tester;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -11,12 +11,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
 import org.point85.app.AppUtils;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
+import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.DomainUtils;
 import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.DataSourceType;
@@ -57,14 +56,10 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -72,12 +67,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
-import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
 
-public class ClientTestApplication implements MessageListener, JMSEquipmentEventListener, MQTTEquipmentEventListener {
+public class TesterController implements MessageListener, JMSEquipmentEventListener, MQTTEquipmentEventListener {
 	// logger
-	private static final Logger logger = LoggerFactory.getLogger(ClientTestApplication.class);
+	private static final Logger logger = LoggerFactory.getLogger(TesterController.class);
 
 	// RMQ message publisher/subscriber
 	private final Map<String, MessagingClient> pubsubs = new HashMap<>();
@@ -179,25 +172,18 @@ public class ClientTestApplication implements MessageListener, JMSEquipmentEvent
 
 	@FXML
 	private RadioButton rbMQTT;
+	
+	@FXML
+	private Label lbNotification;
 
-	public ClientTestApplication() {
-		// nothing to initialize
-	}
+	void initialize() throws Exception {
+		setImages();
 
-	public void start(Stage primaryStage) {
-		try {
-			primaryStage.setTitle("HTTP and Messaging Test Client");
-			primaryStage.getIcons().add(ImageManager.instance().getImage(Images.POINT85));
+		initializeEntityTable();
+		initializeMaterialTable();
+		initializeReasonTable();
 
-			AnchorPane mainLayout = (AnchorPane) FXMLLoader.load(getClass().getResource("ClientTestApplication.fxml"));
-
-			Scene scene = new Scene(mainLayout);
-			primaryStage.setScene(scene);
-			primaryStage.show();
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-			stop();
-		}
+		populateHttpSourceIds();
 	}
 
 	private void setImages() throws Exception {
@@ -224,17 +210,6 @@ public class ClientTestApplication implements MessageListener, JMSEquipmentEvent
 		// reset
 		btReset.setGraphic(ImageManager.instance().getImageView(Images.REFRESH_ALL));
 		btReset.setContentDisplay(ContentDisplay.LEFT);
-	}
-
-	// called by Java FX
-	public void initialize() throws Exception {
-		setImages();
-
-		initializeEntityTable();
-		initializeMaterialTable();
-		initializeReasonTable();
-
-		populateHttpSourceIds();
 	}
 
 	@FXML
@@ -277,7 +252,6 @@ public class ClientTestApplication implements MessageListener, JMSEquipmentEvent
 				entry.getValue().shutDown();
 			}
 			mqttClients.clear();
-
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
@@ -292,7 +266,7 @@ public class ClientTestApplication implements MessageListener, JMSEquipmentEvent
 					onSelectEntity(newValue.getValue());
 				}
 			} catch (Exception e) {
-				showErrorDialog(e);
+				AppUtils.showErrorDialog(e);
 			}
 		});
 
@@ -327,7 +301,7 @@ public class ClientTestApplication implements MessageListener, JMSEquipmentEvent
 					onSelectReason(newValue.getValue());
 				}
 			} catch (Exception e) {
-				showErrorDialog(e);
+				AppUtils.showErrorDialog(e);
 			}
 		});
 
@@ -372,7 +346,7 @@ public class ClientTestApplication implements MessageListener, JMSEquipmentEvent
 					onSelectMaterial(newValue);
 				}
 			} catch (Exception e) {
-				showErrorDialog(e);
+				AppUtils.showErrorDialog(e);
 			}
 		});
 
@@ -397,7 +371,7 @@ public class ClientTestApplication implements MessageListener, JMSEquipmentEvent
 		HttpSource source = cbHttpHostPort.getItems().get(idx);
 
 		if (source == null) {
-			throw new Exception("An HTTP server must be selected");
+			throw new Exception(TesterLocalizer.instance().getErrorString("no.http.server"));
 		}
 		return "http://" + source.getHost() + ":" + source.getPort() + '/' + endpoint;
 	}
@@ -515,9 +489,7 @@ public class ClientTestApplication implements MessageListener, JMSEquipmentEvent
 
 			cbMsgSourceId.getItems().clear();
 			cbMsgSourceId.getItems().addAll(sources);
-		} finally
-
-		{
+		} finally {
 			if (conn != null) {
 				conn.disconnect();
 			}
@@ -535,7 +507,7 @@ public class ClientTestApplication implements MessageListener, JMSEquipmentEvent
 			populateMessagingSourceIds(entity);
 
 		} catch (Exception e) {
-			showErrorDialog(e);
+			AppUtils.showErrorDialog(e);
 		}
 	}
 
@@ -591,9 +563,10 @@ public class ClientTestApplication implements MessageListener, JMSEquipmentEvent
 			os.flush();
 
 			checkResponseCode(conn);
-
+			
+			lbNotification.setText(DesignerLocalizer.instance().getLangString("posted.message", urlString));
 		} catch (Exception e) {
-			showErrorDialog(e);
+			AppUtils.showErrorDialog(e);
 		} finally {
 			if (conn != null) {
 				conn.disconnect();
@@ -635,8 +608,7 @@ public class ClientTestApplication implements MessageListener, JMSEquipmentEvent
 		int codeGroup = conn.getResponseCode() / 100;
 
 		if (codeGroup != 2) {
-			String msg = "Failed : error code : " + conn.getResponseCode();
-			msg += "\nError ...";
+			String msg = TesterLocalizer.instance().getErrorString("failed.code") + " " + conn.getResponseCode() + "\n";
 
 			BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
 			String output;
@@ -697,7 +669,7 @@ public class ClientTestApplication implements MessageListener, JMSEquipmentEvent
 			ttvEntities.refresh();
 
 		} catch (Exception e) {
-			showErrorDialog(e);
+			AppUtils.showErrorDialog(e);
 		} finally {
 			if (conn != null) {
 				conn.disconnect();
@@ -754,7 +726,7 @@ public class ClientTestApplication implements MessageListener, JMSEquipmentEvent
 			ttvReasons.refresh();
 
 		} catch (Exception e) {
-			showErrorDialog(e);
+			AppUtils.showErrorDialog(e);
 		} finally {
 			if (conn != null) {
 				conn.disconnect();
@@ -802,42 +774,12 @@ public class ClientTestApplication implements MessageListener, JMSEquipmentEvent
 
 			tvMaterials.refresh();
 		} catch (Exception e) {
-			showErrorDialog(e);
+			AppUtils.showErrorDialog(e);
 		} finally {
 			if (conn != null) {
 				conn.disconnect();
 			}
 		}
-	}
-
-	// display an error dialog
-	private void showErrorDialog(Exception e) {
-		String message = e.getMessage();
-
-		if (message == null) {
-			message = e.getClass().getSimpleName();
-		}
-		showAlert(AlertType.ERROR, "Application Error", "Exception", message);
-	}
-
-	// display a general alert
-	private ButtonType showAlert(AlertType type, String title, String header, String errorMessage) {
-		// Show the error message.
-		Alert alert = new Alert(type);
-		alert.setTitle(title);
-		alert.setHeaderText(header);
-		alert.setContentText(errorMessage);
-		alert.setResizable(true);
-
-		Optional<ButtonType> result = alert.showAndWait();
-
-		ButtonType buttonType = null;
-		try {
-			buttonType = result.get();
-		} catch (NoSuchElementException e) {
-
-		}
-		return buttonType;
 	}
 
 	@Override
@@ -849,10 +791,14 @@ public class ClientTestApplication implements MessageListener, JMSEquipmentEvent
 	private void onSendEquipmentEventMsg() {
 		try {
 			int selectedIndex = cbMsgHost.getSelectionModel().getSelectedIndex();
+
+			if (selectedIndex == -1) {
+				throw new Exception(TesterLocalizer.instance().getErrorString("no.host"));
+			}
 			CollectorDataSource source = cbMsgHost.getItems().get(selectedIndex);
 
 			if (source == null) {
-				throw new Exception("A messaging source must be specified");
+				throw new Exception(TesterLocalizer.instance().getErrorString("no.source"));
 			}
 
 			String sourceId = (String) cbMsgSourceId.getSelectionModel().getSelectedItem();
@@ -867,6 +813,8 @@ public class ClientTestApplication implements MessageListener, JMSEquipmentEvent
 			msg.setReason(values[1]);
 
 			String hostPort = source.getHost() + ":" + source.getPort();
+			
+			String notification = null;
 
 			if (rbRMQ.isSelected()) {
 
@@ -879,6 +827,8 @@ public class ClientTestApplication implements MessageListener, JMSEquipmentEvent
 					pubsub.connect(source.getHost(), source.getPort(), source.getUserName(), source.getUserPassword());
 				}
 				pubsub.publish(msg, RoutingKey.EQUIPMENT_SOURCE_EVENT, 30);
+				
+				notification = DesignerLocalizer.instance().getLangString("sent.message", source.getHost(), source.getPort());
 			} else if (rbJMS.isSelected()) {
 				JMSClient jmsClient = jmsClients.get(hostPort);
 
@@ -890,6 +840,7 @@ public class ClientTestApplication implements MessageListener, JMSEquipmentEvent
 							source.getUserPassword());
 				}
 				jmsClient.sendToQueue(msg, JMSClient.DEFAULT_QUEUE, 30);
+				notification = DesignerLocalizer.instance().getLangString("sent.message", source.getHost(), source.getPort());
 			} else if (rbMQTT.isSelected()) {
 				MQTTClient mqttClient = mqttClients.get(hostPort);
 
@@ -901,11 +852,13 @@ public class ClientTestApplication implements MessageListener, JMSEquipmentEvent
 							source.getUserPassword());
 				}
 				mqttClient.publish(msg, QualityOfService.AT_MOST_ONCE);
+				notification = DesignerLocalizer.instance().getLangString("sent.message", source.getHost(), source.getPort());
 			} else {
 				return;
 			}
+			lbNotification.setText(notification);
 		} catch (Exception e) {
-			showErrorDialog(e);
+			AppUtils.showErrorDialog(e);
 		}
 	}
 
@@ -930,7 +883,7 @@ public class ClientTestApplication implements MessageListener, JMSEquipmentEvent
 				cbHttpHostPort.getSelectionModel().select(0);
 			}
 		} catch (Exception e) {
-			showErrorDialog(e);
+			AppUtils.showErrorDialog(e);
 		}
 	}
 
@@ -956,7 +909,7 @@ public class ClientTestApplication implements MessageListener, JMSEquipmentEvent
 				cbMsgHost.getSelectionModel().select(0);
 			}
 		} catch (Exception e) {
-			showErrorDialog(e);
+			AppUtils.showErrorDialog(e);
 		}
 	}
 
@@ -969,6 +922,8 @@ public class ClientTestApplication implements MessageListener, JMSEquipmentEvent
 			tvMaterials.getSelectionModel().clearSelection();
 			ttvEntities.getSelectionModel().clearSelection();
 			ttvReasons.getSelectionModel().clearSelection();
+			
+			lbNotification.setText(null);
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}
@@ -983,4 +938,5 @@ public class ClientTestApplication implements MessageListener, JMSEquipmentEvent
 	public void onMQTTEquipmentEvent(EquipmentEventMessage message) {
 		logger.info("Received MQTT message: " + message.toString());
 	}
+
 }

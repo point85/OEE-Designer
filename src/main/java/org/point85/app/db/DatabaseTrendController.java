@@ -10,6 +10,7 @@ import org.point85.app.Images;
 import org.point85.app.charts.DataSubscriber;
 import org.point85.app.charts.TrendChartController;
 import org.point85.app.designer.DesignerDialogController;
+import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.db.DatabaseEvent;
 import org.point85.domain.db.DatabaseEventClient;
@@ -68,7 +69,7 @@ public class DatabaseTrendController extends DesignerDialogController implements
 
 			setImages();
 
-			lbUser.setText("");
+			lbUser.setText(null);
 		}
 		return spTrendChart;
 	}
@@ -87,10 +88,9 @@ public class DatabaseTrendController extends DesignerDialogController implements
 		eventResolver.setWatchMode(true);
 		trendChartController.setEventResolver(eventResolver);
 
-		lbSourceId.setText(
-				"Equipment: " + eventResolver.getEquipment().getName() + ", Source Id: " + eventResolver.getSourceId());
-
-		lbUser.setText("User: " + eventResolver.getDataSource().getUserName());
+		lbSourceId.setText(DesignerLocalizer.instance().getLangString("event.source",
+				eventResolver.getEquipment().getName(), eventResolver.getSourceId()));
+		lbUser.setText(DesignerLocalizer.instance().getLangString("user", eventResolver.getDataSource().getUserName()));
 	}
 
 	@Override
@@ -196,7 +196,7 @@ public class DatabaseTrendController extends DesignerDialogController implements
 	private void onTest() {
 		try {
 			if (databaseClient == null) {
-				throw new Exception("The trend is not connected to a database server.");
+				throw new Exception(DesignerLocalizer.instance().getErrorString("not.connected"));
 			}
 
 			EventResolver eventResolver = trendChartController.getEventResolver();

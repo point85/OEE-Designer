@@ -10,6 +10,7 @@ import org.point85.app.ImageManager;
 import org.point85.app.Images;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
+import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.DomainUtils;
 import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.DataSourceType;
@@ -147,10 +148,11 @@ public class MqBrokerController extends DesignerDialogController {
 				mqttClient.connect(getHost(), getPort(), getUserName(), getPassword());
 			}
 
-			AppUtils.showConfirmationDialog("Connection was successful.");
+			AppUtils.showConfirmationDialog(DesignerLocalizer.instance().getLangString("connection.successful"));
 
 		} catch (Exception e) {
-			AppUtils.showErrorDialog("Connection failed: " + DomainUtils.formatException(e));
+			AppUtils.showErrorDialog(
+					DesignerLocalizer.instance().getErrorString("connection.failed", DomainUtils.formatException(e)));
 		} finally {
 			if (sourceType.equals(DataSourceType.MESSAGING)) {
 				if (pubsub != null) {
@@ -304,5 +306,4 @@ public class MqBrokerController extends DesignerDialogController {
 	String getDescription() {
 		return this.tfDescription.getText();
 	}
-
 }

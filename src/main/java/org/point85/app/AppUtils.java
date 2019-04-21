@@ -10,6 +10,7 @@ import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.DomainUtils;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.uom.MeasurementSystem;
@@ -63,23 +64,27 @@ public abstract class AppUtils {
 
 	// display an error dialog
 	public static void showErrorDialog(String message) {
-		showAlert(AlertType.ERROR, "Application Error", "Exception", message);
+		showAlert(AlertType.ERROR, DesignerLocalizer.instance().getLangString("app.error"),
+				DesignerLocalizer.instance().getLangString("exception"), message);
 	}
 
 	// display a warning dialog
 	public static void showWarningDialog(String message) {
-		showAlert(AlertType.WARNING, "Application Warning", "Warning", message);
+		showAlert(AlertType.WARNING, DesignerLocalizer.instance().getLangString("app.warning"),
+				DesignerLocalizer.instance().getLangString("warning"), message);
 	}
 
 	// display an error dialog
 	public static void showErrorDialog(Exception e) {
 		String message = DomainUtils.formatException(e);
-		showAlert(AlertType.ERROR, "Application Error", "Exception", message);
+		showAlert(AlertType.ERROR, DesignerLocalizer.instance().getLangString("app.error"),
+				DesignerLocalizer.instance().getLangString("exception"), message);
 	}
 
 	// display an ok/cancel dialog
 	public static ButtonType showConfirmationDialog(String message) {
-		return showAlert(AlertType.CONFIRMATION, "Confirmation", "Confirm Action", message);
+		return showAlert(AlertType.CONFIRMATION, DesignerLocalizer.instance().getLangString("app.confirm"),
+				DesignerLocalizer.instance().getLangString("confirm"), message);
 	}
 
 	// create a String from the UOM symbol and name
@@ -152,7 +157,7 @@ public abstract class AppUtils {
 		String[] fields = hrsMins.split(":");
 
 		if (fields.length != 2) {
-			throw new Exception("Both hours and minutes for the start time of day must be specified.");
+			throw new Exception(DesignerLocalizer.instance().getErrorString("both.hours.and.minutes"));
 		}
 
 		return LocalTime.of(Integer.valueOf(fields[0]), Integer.valueOf(fields[1]));
@@ -246,7 +251,7 @@ public abstract class AppUtils {
 		try {
 			return Double.valueOf(number);
 		} catch (NumberFormatException e) {
-			throw new Exception(number + " is not a number.");
+			throw new Exception(DesignerLocalizer.instance().getErrorString("not.number", number));
 		}
 	}
 
@@ -254,24 +259,24 @@ public abstract class AppUtils {
 		try {
 			return Long.valueOf(number);
 		} catch (NumberFormatException e) {
-			throw new Exception(number + " is not a number.");
+			throw new Exception(DesignerLocalizer.instance().getErrorString("not.number", number));
 		}
 	}
-	
+
 	public static String[] parseCsvInput(String csv) throws Exception {
 		String[] values = csv.split(",");
 		String reason = null;
 
 		if (values.length == 0) {
-			throw new Exception("A test value(s) must entered.");
+			throw new Exception(DesignerLocalizer.instance().getErrorString("no.values"));
 		} else if (values.length == 2) {
 			reason = values[1].trim();
 		}
-		
+
 		String[] outputs = new String[2];
 		outputs[0] = values[0].trim();
 		outputs[1] = reason;
-		
+
 		return outputs;
 	}
 }

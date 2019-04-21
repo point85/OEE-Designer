@@ -12,9 +12,9 @@ import org.point85.domain.plant.Equipment;
 import org.point85.domain.plant.EquipmentMaterial;
 import org.point85.domain.plant.Material;
 import org.point85.domain.plant.PlantEntity;
+import org.point85.domain.uom.MeasurementType;
 import org.point85.domain.uom.Quantity;
 import org.point85.domain.uom.UnitOfMeasure;
-import org.point85.domain.uom.UnitOfMeasure.MeasurementType;
 import org.point85.domain.uom.UnitType;
 
 import javafx.beans.property.SimpleStringProperty;
@@ -33,7 +33,8 @@ import javafx.scene.control.TextField;
 public class EquipmentMaterialController extends DesignerController {
 
 	// equipment materials
-	private final ObservableList<EquipmentMaterial> equipmentMaterials = FXCollections.observableArrayList(new ArrayList<>());
+	private final ObservableList<EquipmentMaterial> equipmentMaterials = FXCollections
+			.observableArrayList(new ArrayList<>());
 
 	// equipment material being edited
 	private EquipmentMaterial selectedEquipmentMaterial;
@@ -274,10 +275,10 @@ public class EquipmentMaterialController extends DesignerController {
 
 			if (source.equals(btFindIRRUnit)) {
 				if (!uom.getMeasurementType().equals(MeasurementType.QUOTIENT)) {
-					throw new Exception("Unit of measure " + symbol + " is not a quotient.");
+					throw new Exception(DesignerLocalizer.instance().getErrorString("not.quotient", symbol));
 				} else {
 					if (!uom.getDivisor().getUnitType().equals(UnitType.TIME)) {
-						throw new Exception("Unit of measure " + symbol + " is not a rate.");
+						throw new Exception(DesignerLocalizer.instance().getErrorString("not.rate", symbol));
 					}
 				}
 
@@ -288,7 +289,7 @@ public class EquipmentMaterialController extends DesignerController {
 				}
 			} else if (source.equals(btFindRejectUnit)) {
 				if (!uom.getMeasurementType().equals(MeasurementType.SCALAR)) {
-					throw new Exception("Unit of measure " + symbol + " is not a scalar.");
+					throw new Exception(DesignerLocalizer.instance().getErrorString("not.scalar", symbol));
 				}
 
 				lbRejectUnit.setText(symbol);
@@ -309,14 +310,14 @@ public class EquipmentMaterialController extends DesignerController {
 	}
 
 	void clearEditor() {
-		this.lbMatlId.setText("");
-		this.lbMatlDescription.setText("");
+		this.lbMatlId.setText(null);
+		this.lbMatlDescription.setText(null);
 		this.ckDefaultMaterial.setSelected(false);
-		this.tfTargetOEE.setText("");
-		this.tfIRR.setText("");
-		this.lbIRRUnit.setText("");
-		this.lbRejectUnit.setText("");
-		this.btAddMaterial.setText(ADD);
+		this.tfTargetOEE.setText(null);
+		this.tfIRR.setText(null);
+		this.lbIRRUnit.setText(null);
+		this.lbRejectUnit.setText(null);
+		this.btAddMaterial.setText(DesignerLocalizer.instance().getLangString("add"));
 
 		this.tvMaterial.getSelectionModel().clearSelection();
 	}
@@ -326,7 +327,7 @@ public class EquipmentMaterialController extends DesignerController {
 		try {
 			clearEditor();
 
-			btAddMaterial.setText(ADD);
+			btAddMaterial.setText(DesignerLocalizer.instance().getLangString("add"));
 
 			selectedEquipmentMaterial = null;
 
@@ -345,7 +346,7 @@ public class EquipmentMaterialController extends DesignerController {
 			PlantEntity plantEntity = getApp().getPhysicalModelController().getSelectedEntity();
 
 			if (!(plantEntity instanceof Equipment)) {
-				throw new Exception("Equipment must be selected before adding material.");
+				throw new Exception(DesignerLocalizer.instance().getErrorString("no.equipment"));
 			}
 
 			// equipment
@@ -409,7 +410,7 @@ public class EquipmentMaterialController extends DesignerController {
 	private void onRemoveMaterial() {
 		try {
 			if (selectedEquipmentMaterial == null) {
-				AppUtils.showErrorDialog("No material for this equipment has been selected for deletion.");
+				AppUtils.showErrorDialog(DesignerLocalizer.instance().getErrorString("no.material.selected"));
 				return;
 			}
 
@@ -452,11 +453,10 @@ public class EquipmentMaterialController extends DesignerController {
 			lbRejectUnit.setText(eqm.getRejectUOM().getSymbol());
 		}
 
-		btAddMaterial.setText(UPDATE);
+		btAddMaterial.setText(DesignerLocalizer.instance().getLangString("update"));
 	}
 
 	public EquipmentMaterial getSelectedEquipmentMaterial() {
 		return selectedEquipmentMaterial;
 	}
-
 }

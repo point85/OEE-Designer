@@ -31,6 +31,7 @@ import org.point85.app.ImageManager;
 import org.point85.app.Images;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
+import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.DomainUtils;
 import org.point85.domain.uom.MeasurementSystem;
 import org.point85.domain.uom.Prefix;
@@ -55,7 +56,7 @@ import javafx.scene.control.TextField;
 public class UomConversionController extends DesignerDialogController {
 	// list of Prefixes
 	private final ObservableList<String> prefixes = FXCollections.observableArrayList();
-	
+
 	// list of UnitTypes
 	private final ObservableList<String> unitTypes = FXCollections.observableArrayList();
 
@@ -82,7 +83,7 @@ public class UomConversionController extends DesignerDialogController {
 
 	@FXML
 	private Button btConvert;
-	
+
 	// get the display strings for all prefixes
 	protected ObservableList<String> getPrefixes() {
 		if (prefixes.size() == 0) {
@@ -94,7 +95,7 @@ public class UomConversionController extends DesignerDialogController {
 		}
 		return prefixes;
 	}
-	
+
 	// get the display strings for all UOM types
 	protected ObservableList<String> getUnitTypes() {
 		if (unitTypes.size() == 0) {
@@ -105,7 +106,7 @@ public class UomConversionController extends DesignerDialogController {
 		}
 		return unitTypes;
 	}
-	
+
 	@FXML
 	public void initialize() throws Exception {
 		// set unit types
@@ -181,9 +182,9 @@ public class UomConversionController extends DesignerDialogController {
 
 			// from amount
 			String text = tfFromAmount.getText().trim();
-			
+
 			if (text.length() == 0) {
-				AppUtils.showErrorDialog("An amount to convert from is required.");
+				AppUtils.showErrorDialog(DesignerLocalizer.instance().getErrorString("no.from.amount"));
 				return;
 			}
 
@@ -201,7 +202,7 @@ public class UomConversionController extends DesignerDialogController {
 			UnitOfMeasure fromUOM = AppUtils.getUOMForConversion(fromPrefix, symbol);
 
 			if (fromUOM == null) {
-				AppUtils.showErrorDialog("A unit of measure to convert from is required");
+				AppUtils.showErrorDialog(DesignerLocalizer.instance().getErrorString("no.from.uom"));
 				return;
 			}
 
@@ -210,7 +211,7 @@ public class UomConversionController extends DesignerDialogController {
 			UnitOfMeasure toUOM = AppUtils.getUOMForConversion(toPrefix, symbol);
 
 			if (toUOM == null) {
-				AppUtils.showErrorDialog("A unit of measure to convert to is required");
+				AppUtils.showErrorDialog(DesignerLocalizer.instance().getErrorString("no.to.uom"));
 				return;
 			}
 

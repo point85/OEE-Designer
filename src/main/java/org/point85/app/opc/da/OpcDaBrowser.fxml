@@ -19,18 +19,18 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.opc.da.OpcDaBrowserController">
+<AnchorPane prefHeight="800.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.opc.da.OpcDaBrowserController">
    <children>
       <HBox alignment="CENTER" prefHeight="50.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
-            <Button fx:id="btOK" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onOK" text="OK" textAlignment="CENTER">
+            <Button fx:id="btOK" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onOK" text="%done" textAlignment="CENTER">
                <HBox.margin>
                   <Insets right="25.0" />
                </HBox.margin>
             </Button>
          </children>
       </HBox>
-      <SplitPane dividerPositions="0.55" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+      <SplitPane dividerPositions="0.5" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0">
                <children>
@@ -52,7 +52,7 @@
                         <RowConstraints minHeight="10.0" prefHeight="32.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Label text="State &amp; Start" GridPane.halignment="LEFT">
+                        <Label text="%state.start" GridPane.halignment="LEFT">
                            <padding>
                               <Insets left="5.0" />
                            </padding></Label>
@@ -62,7 +62,7 @@
                            </font></Label>
                         <ProgressIndicator fx:id="piConnection" prefHeight="32.0" prefWidth="32.0" visible="false" GridPane.columnIndex="3" GridPane.halignment="CENTER" />
                         <Label fx:id="lbStartTime" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.halignment="LEFT" />
-                        <Label text="Vendor &amp; Version" GridPane.halignment="LEFT" GridPane.rowIndex="1">
+                        <Label text="%vendor.version" GridPane.halignment="LEFT" GridPane.rowIndex="1">
                            <padding>
                               <Insets left="5.0" />
                            </padding>
@@ -91,49 +91,48 @@
                         <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                      </rowConstraints>
                      <children>
-                        <Label text="Host" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+                        <Label text="%host" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                            <GridPane.margin>
                               <Insets />
                            </GridPane.margin>
                         </Label>
-                        <Label text="User Name" GridPane.halignment="RIGHT" GridPane.rowIndex="4">
+                        <Label text="%user.name" GridPane.halignment="RIGHT" GridPane.rowIndex="4">
                            <GridPane.margin>
                               <Insets />
                            </GridPane.margin>
                         </Label>
-                        <Label text="Password" GridPane.halignment="RIGHT" GridPane.rowIndex="5">
+                        <Label text="%user.password" GridPane.halignment="RIGHT" GridPane.rowIndex="5">
                            <GridPane.margin>
                               <Insets />
                            </GridPane.margin>
                         </Label>
-                        <Label text="ProgID" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+                        <Label text="%progid" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
                            <GridPane.margin>
                               <Insets />
                            </GridPane.margin>
                         </Label>
-                        <TextField fx:id="tfHost" promptText="Enter Host Name or IP" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <TextField fx:id="tfUserName" promptText="Enter User Name" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                        <PasswordField fx:id="pfPassword" promptText="Enter Password" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <TextField fx:id="tfHost" promptText="%enter.host" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <TextField fx:id="tfUserName" promptText="%enter.user.name" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <PasswordField fx:id="pfPassword" promptText="%enter.user.password" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                         <ComboBox fx:id="cbProgIds" maxWidth="1.7976931348623157E308" onAction="#onSelectProgId" GridPane.columnIndex="1" GridPane.columnSpan="2" />
-                        <Button fx:id="btSave" mnemonicParsing="false" onAction="#onSaveDataSource" prefWidth="100.0" text="Save" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
-                        <Label text="Description" GridPane.halignment="RIGHT" GridPane.rowIndex="6">
+                        <Button fx:id="btSave" mnemonicParsing="false" onAction="#onSaveDataSource" prefWidth="100.0" text="%save" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+                        <Label text="%description" GridPane.halignment="RIGHT" GridPane.rowIndex="6">
                            <GridPane.margin>
                               <Insets />
                            </GridPane.margin>
                         </Label>
-                        <TextField fx:id="tfDescription" maxWidth="1.7976931348623157E308" promptText="Enter Description" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                        <Button fx:id="btNew" mnemonicParsing="false" onAction="#onNewDataSource" prefWidth="100.0" text="New" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-                        <Button fx:id="btDelete" mnemonicParsing="false" onAction="#onDeleteDataSource" prefWidth="100.0" text="Delete" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
-                        <Label text="or edit a connection " GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-                        <TextField fx:id="tfProgId" promptText="Enter Server ProgID" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <Label text="Choose Saved" GridPane.halignment="RIGHT" />
+                        <TextField fx:id="tfDescription" maxWidth="1.7976931348623157E308" promptText="%enter.description" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                        <Button fx:id="btNew" mnemonicParsing="false" onAction="#onNewDataSource" prefWidth="100.0" text="%new" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+                        <Button fx:id="btDelete" mnemonicParsing="false" onAction="#onDeleteDataSource" prefWidth="100.0" text="%delete" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+                        <TextField fx:id="tfProgId" promptText="%enter.progid" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Label text="%choose.saved" GridPane.halignment="RIGHT" />
                      </children>
                   </GridPane>
                   <HBox alignment="CENTER" layoutX="53.0" layoutY="212.0" prefHeight="50.0" spacing="25.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="325.0">
                      <children>
-                      <Button fx:id="btConnect" mnemonicParsing="false" onAction="#onConnect" text="Connect" textAlignment="CENTER" />
-                        <Button fx:id="btDisconnect" mnemonicParsing="false" onAction="#onDisconnect" text="Disconnect" />
-                        <Button fx:id="btCancelConnect" mnemonicParsing="false" onAction="#onCancelConnect" text="Cancel" />
+                      <Button fx:id="btConnect" mnemonicParsing="false" onAction="#onConnect" text="%connect" textAlignment="CENTER" />
+                        <Button fx:id="btDisconnect" mnemonicParsing="false" onAction="#onDisconnect" text="%disconnect" />
+                        <Button fx:id="btCancelConnect" mnemonicParsing="false" onAction="#onCancelConnect" text="%cancel" />
                      </children>
                   </HBox>
                   <Separator layoutX="104.0" layoutY="266.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="375.0" />
@@ -151,22 +150,22 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Label text="Data Type" GridPane.halignment="LEFT" GridPane.rowIndex="1">
+                        <Label text="%data.type" GridPane.halignment="LEFT" GridPane.rowIndex="1">
                            <padding>
                               <Insets left="10.0" />
                            </padding></Label>
-                        <Label text="Timestamp" GridPane.halignment="LEFT" GridPane.rowIndex="2">
+                        <Label text="%timestamp" GridPane.halignment="LEFT" GridPane.rowIndex="2">
                            <padding>
                               <Insets left="10.0" />
                            </padding></Label>
-                        <Label text="Value" GridPane.halignment="LEFT" GridPane.rowIndex="3">
+                        <Label text="%value" GridPane.halignment="LEFT" GridPane.rowIndex="3">
                            <padding>
                               <Insets left="10.0" />
                            </padding></Label>
                         <Label fx:id="lbTagType" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" />
                         <Label fx:id="lbTagTimestamp" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" />
                         <TextArea fx:id="taTagValue" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="3" GridPane.rowSpan="2147483647" />
-                        <Label text="Quality" GridPane.halignment="LEFT">
+                        <Label text="%da.quality" GridPane.halignment="LEFT">
                            <padding>
                               <Insets left="10.0" />
                            </padding>

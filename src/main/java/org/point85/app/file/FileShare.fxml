@@ -11,11 +11,11 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.file.FileShareController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.file.FileShareController">
    <children>
       <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
-            <Button fx:id="btOK" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onOK" text="OK" textAlignment="CENTER">
+            <Button fx:id="btOK" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onOK" text="%done" textAlignment="CENTER">
                <HBox.margin>
                   <Insets right="25.0" />
                </HBox.margin>
@@ -36,29 +36,28 @@
             <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <Label text="File share path" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+            <Label text="%file.path" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin>
             </Label>
-            <Label text="Choose Saved" GridPane.halignment="RIGHT">
+            <Label text="%choose.saved" GridPane.halignment="RIGHT">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin>
             </Label>
-            <TextField fx:id="tfHost" promptText="Enter path to the events folder" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <Button fx:id="btSave" mnemonicParsing="false" onAction="#onSaveDataSource" prefWidth="100.0" text="Save" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-            <Label text="Description" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+            <TextField fx:id="tfHost" promptText="%file.path.prompt" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Button fx:id="btSave" mnemonicParsing="false" onAction="#onSaveDataSource" prefWidth="100.0" text="%save" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+            <Label text="%description" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin>
             </Label>
-            <TextField fx:id="tfDescription" maxWidth="1.7976931348623157E308" promptText="Enter Description" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3" />
-            <Button fx:id="btNew" mnemonicParsing="false" onAction="#onNewDataSource" prefWidth="100.0" text="New" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-            <Button fx:id="btDelete" mnemonicParsing="false" onAction="#onDeleteDataSource" prefWidth="100.0" text="Delete" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+            <TextField fx:id="tfDescription" maxWidth="1.7976931348623157E308" promptText="%enter.description" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+            <Button fx:id="btNew" mnemonicParsing="false" onAction="#onNewDataSource" prefWidth="100.0" text="%new" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+            <Button fx:id="btDelete" mnemonicParsing="false" onAction="#onDeleteDataSource" prefWidth="100.0" text="%delete" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
             <ComboBox fx:id="cbDataSources" maxWidth="1.7976931348623157E308" onAction="#onSelectDataSource" GridPane.columnIndex="1" GridPane.columnSpan="2" />
-            <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="or edit a file share" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Button fx:id="btFileChooser" mnemonicParsing="false" onAction="#onChooseFile" prefWidth="100.0" text="Choose..." GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+            <Button fx:id="btFileChooser" mnemonicParsing="false" onAction="#onChooseFile" prefWidth="100.0" text="%choose" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
          </children>
       </GridPane>
    </children>

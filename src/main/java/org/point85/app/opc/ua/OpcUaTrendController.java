@@ -16,6 +16,7 @@ import org.point85.app.ImageManager;
 import org.point85.app.Images;
 import org.point85.app.charts.DataSubscriber;
 import org.point85.app.charts.TrendChartController;
+import org.point85.app.designer.ConnectionState;
 import org.point85.domain.DomainUtils;
 import org.point85.domain.opc.ua.OpcUaAsynchListener;
 import org.point85.domain.opc.ua.OpcUaServerStatus;
@@ -70,7 +71,6 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 
 	public SplitPane initializeTrend() throws Exception {
 		if (trendChartController == null) {
-			// Load the fxml file and create the anchor pane
 			FXMLLoader loader = FXMLLoaderFactory.trendChartLoader();
 			spTrendChart = (SplitPane) loader.getRoot();
 
@@ -326,7 +326,7 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 						errorMessage = e.getMessage();
 
 						if (errorMessage == null) {
-							errorMessage = "Point85 Exception";
+							errorMessage = getClass().getSimpleName();
 						}
 					}
 					return errorMessage;

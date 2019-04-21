@@ -1,6 +1,7 @@
 package org.point85.app.opc.da;
 
 import org.point85.app.designer.DataSourceConnectionController;
+import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.opc.da.OpcDaSource;
 
 public abstract class OpcDaController extends DataSourceConnectionController {
@@ -28,9 +29,9 @@ public abstract class OpcDaController extends DataSourceConnectionController {
 	@Override
 	protected void connectToDataSource() throws Exception {
 		if (source == null) {
-			throw new Exception("The OPC DA source is not defined.");
+			throw new Exception(DesignerLocalizer.instance().getErrorString("no.da.source"));
 		}
-		
+
 		// connect to OPC server
 		getApp().getOpcDaClient().connect(source);
 	}

@@ -24,7 +24,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.schedule.WorkScheduleEditorController">
+<AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.schedule.WorkScheduleEditorController">
    <children>
       <SplitPane dividerPositions="0.4" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
         <items>
@@ -32,23 +32,23 @@
                <children>
                   <ButtonBar buttonMinWidth="25.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0">
                     <buttons>
-                        <Button fx:id="btDelete" alignment="CENTER" mnemonicParsing="false" onAction="#onDeleteSchedule" prefWidth="100.0" text="Delete" textAlignment="CENTER" />
-                        <Button fx:id="btRefresh" mnemonicParsing="false" onAction="#onRefreshSchedule" prefWidth="100.0" text="Refresh" />
-                        <Button fx:id="btSave" alignment="CENTER" mnemonicParsing="false" onAction="#onSaveSchedule" prefWidth="100.0" text="Save" textAlignment="CENTER" />
-                      <Button fx:id="btNew" alignment="CENTER" mnemonicParsing="false" onAction="#onNewSchedule" prefWidth="100.0" text="New" textAlignment="CENTER" />
+                        <Button fx:id="btDelete" alignment="CENTER" mnemonicParsing="false" onAction="#onDeleteSchedule" prefWidth="100.0" text="%delete" textAlignment="CENTER" />
+                        <Button fx:id="btRefresh" mnemonicParsing="false" onAction="#onRefreshSchedule" prefWidth="100.0" text="%refresh" />
+                        <Button fx:id="btSave" alignment="CENTER" mnemonicParsing="false" onAction="#onSaveSchedule" prefWidth="100.0" text="%save" textAlignment="CENTER" />
+                      <Button fx:id="btNew" alignment="CENTER" mnemonicParsing="false" onAction="#onNewSchedule" prefWidth="100.0" text="%new" textAlignment="CENTER" />
                     </buttons>
                   </ButtonBar>
                   <ButtonBar buttonMinWidth="25.0" layoutX="32.0" layoutY="91.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="45.0">
                      <buttons>
-                        <Button fx:id="btChooseSchedule" alignment="CENTER" mnemonicParsing="false" onAction="#onChooseSchedule" prefWidth="100.0" text="Import ..." />
-                        <Button fx:id="btViewShifts" alignment="CENTER" mnemonicParsing="false" onAction="#onViewShifts" prefWidth="100.0" text="Shifts ..." />
+                        <Button fx:id="btChooseSchedule" alignment="CENTER" mnemonicParsing="false" onAction="#onChooseSchedule" prefWidth="100.0" text="%import" />
+                        <Button fx:id="btViewShifts" alignment="CENTER" mnemonicParsing="false" onAction="#onViewShifts" prefWidth="100.0" text="%shift.instances" />
                      </buttons></ButtonBar>
                   <TreeView fx:id="tvSchedules" layoutX="-14.0" layoutY="85.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="90.0">
                      <contextMenu>
                         <ContextMenu>
                           <items>
-                              <MenuItem fx:id="miSaveAll" mnemonicParsing="false" onAction="#onSaveAllSchedules" text="Save All Schedules" />
-                            <MenuItem fx:id="miRefreshAll" mnemonicParsing="false" onAction="#onRefreshAllSchedules" text="Refresh All Schedules" />
+                              <MenuItem fx:id="miSaveAll" mnemonicParsing="false" onAction="#onSaveAllSchedules" text="%save.all.schedules" />
+                            <MenuItem fx:id="miRefreshAll" mnemonicParsing="false" onAction="#onRefreshAllSchedules" text="%refresh.all.schedules" />
                           </items>
                         </ContextMenu>
                      </contextMenu></TreeView>
@@ -68,23 +68,23 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Label alignment="CENTER" text="Name" textAlignment="CENTER" GridPane.halignment="RIGHT">
+                        <Label alignment="CENTER" text="%name" textAlignment="CENTER" GridPane.halignment="RIGHT">
                            <padding>
                               <Insets right="10.0" />
                            </padding>
                         </Label>
-                        <TextField fx:id="tfScheduleName" promptText="Enter the name of the schedule" GridPane.columnIndex="1" />
-                        <Label text="Description" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                        <TextField fx:id="tfScheduleName" promptText="%enter.name" GridPane.columnIndex="1" />
+                        <Label text="%description" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                            <padding>
                               <Insets right="10.0" />
                            </padding>
                         </Label>
-                        <TextArea fx:id="taScheduleDescription" prefHeight="150.0" prefWidth="200.0" promptText="Description of the schedule" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.rowSpan="3" />
+                        <TextArea fx:id="taScheduleDescription" prefHeight="150.0" prefWidth="200.0" promptText="%enter.description" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.rowSpan="3" />
                      </children>
                   </GridPane>
                   <TabPane fx:id="tpShiftTeams" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="175.0">
                     <tabs>
-                        <Tab fx:id="tShifts" closable="false" text="Shifts">
+                        <Tab fx:id="tShifts" closable="false" text="%shifts">
                           <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0">
                                  <children>
@@ -100,50 +100,50 @@
                                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                       </rowConstraints>
                                        <children>
-                                          <Label text="Name" GridPane.halignment="RIGHT">
+                                          <Label text="%name" GridPane.halignment="RIGHT">
                                              <padding>
                                                 <Insets right="10.0" />
                                              </padding></Label>
-                                          <TextField fx:id="tfShiftName" promptText="Name of shift" GridPane.columnIndex="1" />
-                                          <TextField fx:id="tfShiftDescription" promptText="Description of shift" GridPane.columnIndex="3" />
-                                          <Label text="Description" GridPane.columnIndex="2" GridPane.halignment="RIGHT">
+                                          <TextField fx:id="tfShiftName" promptText="%enter.name" GridPane.columnIndex="1" />
+                                          <TextField fx:id="tfShiftDescription" promptText="%enter.description" GridPane.columnIndex="3" />
+                                          <Label text="%description" GridPane.columnIndex="2" GridPane.halignment="RIGHT">
                                              <padding>
                                                 <Insets right="10.0" />
                                              </padding></Label>
-                                          <Label text="Starts at (HH:MM)" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                                          <Label text="%shift.start" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                                              <padding>
                                                 <Insets right="10.0" />
                                              </padding></Label>
-                                          <TextField fx:id="tfShiftStart" promptText="Starting time" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                          <Label text="Duration (hr:min)" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                                          <TextField fx:id="tfShiftStart" promptText="%starting.time" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                          <Label text="%duration" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                                              <padding>
                                                 <Insets right="10.0" />
                                              </padding></Label>
-                                          <TextField fx:id="tfShiftDuration" promptText="Duration" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                                          <TextField fx:id="tfShiftDuration" promptText="%enter.duration" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                                        </children>
                                     </GridPane>
                                     <TableView fx:id="tvShifts" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="110.0">
                                       <columns>
-                                        <TableColumn fx:id="shiftNameColumn" minWidth="100.0" prefWidth="-1.0" text="Name" />
-                                        <TableColumn fx:id="shiftDescriptionColumn" minWidth="250.0" prefWidth="-1.0" text="Description" />
-                                          <TableColumn fx:id="shiftStartColumn" prefWidth="75.0" text="Start" />
-                                          <TableColumn fx:id="shiftDurationColumn" prefWidth="75.0" text="Duration" />
+                                        <TableColumn fx:id="shiftNameColumn" minWidth="100.0" prefWidth="-1.0" text="%name" />
+                                        <TableColumn fx:id="shiftDescriptionColumn" minWidth="250.0" prefWidth="-1.0" text="%description" />
+                                          <TableColumn fx:id="shiftStartColumn" prefWidth="75.0" text="%start" />
+                                          <TableColumn fx:id="shiftDurationColumn" prefWidth="75.0" text="%duration" />
                                       </columns>
                                     </TableView>
-                                    <Button fx:id="btNewShift" mnemonicParsing="false" onAction="#onNewShift" prefWidth="100.0" text="New" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="110.0" />
-                                    <Button fx:id="btAddShift" mnemonicParsing="false" onAction="#onAddShift" prefWidth="100.0" text="Add" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="160.0" />
-                                    <Button fx:id="btRemoveShift" mnemonicParsing="false" onAction="#onRemoveShift" prefWidth="100.0" text="Remove" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="210.0" />
+                                    <Button fx:id="btNewShift" mnemonicParsing="false" onAction="#onNewShift" prefWidth="100.0" text="%new" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="110.0" />
+                                    <Button fx:id="btAddShift" mnemonicParsing="false" onAction="#onAddShift" prefWidth="100.0" text="%add" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="160.0" />
+                                    <Button fx:id="btRemoveShift" mnemonicParsing="false" onAction="#onRemoveShift" prefWidth="100.0" text="%remove" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="210.0" />
                                  </children>
                               </AnchorPane>
                           </content>
                         </Tab>
-                      <Tab fx:id="tRotations" closable="false" text="Rotations">
+                      <Tab fx:id="tRotations" closable="false" text="%rotations">
                         <content>
                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <Button fx:id="btAddRotation" mnemonicParsing="false" onAction="#onAddRotation" prefWidth="100.0" text="Add" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="90.0" />
-                                    <Button fx:id="btRemoveRotation" mnemonicParsing="false" onAction="#onRemoveRotation" prefWidth="100.0" text="Remove" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="130.0" />
-                                    <Button fx:id="btNewRotation" mnemonicParsing="false" onAction="#onNewRotation" prefWidth="100.0" text="New" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="50.0" />
+                                    <Button fx:id="btAddRotation" mnemonicParsing="false" onAction="#onAddRotation" prefWidth="100.0" text="%add" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="90.0" />
+                                    <Button fx:id="btRemoveRotation" mnemonicParsing="false" onAction="#onRemoveRotation" prefWidth="100.0" text="%remove" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="130.0" />
+                                    <Button fx:id="btNewRotation" mnemonicParsing="false" onAction="#onNewRotation" prefWidth="100.0" text="%new" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="50.0" />
                                     <GridPane AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
                                       <columnConstraints>
                                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
@@ -155,26 +155,26 @@
                                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                       </rowConstraints>
                                        <children>
-                                          <Label text="Name" GridPane.halignment="RIGHT">
+                                          <Label text="%name" GridPane.halignment="RIGHT">
                                              <padding>
                                                 <Insets right="10.0" />
                                              </padding></Label>
-                                          <TextField fx:id="tfRotationName" maxWidth="1.7976931348623157E308" promptText="Name of rotation" GridPane.columnIndex="1" />
-                                          <Label text="Description" GridPane.columnIndex="2" GridPane.halignment="RIGHT">
+                                          <TextField fx:id="tfRotationName" maxWidth="1.7976931348623157E308" promptText="%enter.name" GridPane.columnIndex="1" />
+                                          <Label text="%description" GridPane.columnIndex="2" GridPane.halignment="RIGHT">
                                              <padding>
                                                 <Insets right="10.0" />
                                              </padding></Label>
-                                          <TextField fx:id="tfRotationDescription" maxWidth="1.7976931348623157E308" promptText="Description of rotation" GridPane.columnIndex="3" />
+                                          <TextField fx:id="tfRotationDescription" maxWidth="1.7976931348623157E308" promptText="%enter.description" GridPane.columnIndex="3" />
                                        </children>
                                     </GridPane>
                                     <TableView fx:id="tvRotations" prefHeight="150.0" prefWidth="200.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="50.0">
                                       <columns>
-                                        <TableColumn fx:id="rotationNameColumn" minWidth="100.0" prefWidth="-1.0" text="Name" />
-                                        <TableColumn fx:id="rotationDescriptionColumn" minWidth="312.0" prefWidth="312.0" text="Description" />
-                                          <TableColumn fx:id="rotationDurationColumn" prefWidth="100.0" text="Duration" />
+                                        <TableColumn fx:id="rotationNameColumn" minWidth="100.0" prefWidth="-1.0" text="%name" />
+                                        <TableColumn fx:id="rotationDescriptionColumn" minWidth="312.0" prefWidth="312.0" text="%description" />
+                                          <TableColumn fx:id="rotationDurationColumn" prefWidth="100.0" text="%duration" />
                                       </columns>
                                     </TableView>
-                                    <TitledPane animated="false" collapsible="false" layoutX="96.0" layoutY="157.0" text="Working Periods" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="210.0">
+                                    <TitledPane animated="false" collapsible="false" layoutX="96.0" layoutY="157.0" text="%working" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="210.0">
                                       <content>
                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                              <children>
@@ -191,32 +191,32 @@
                                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                   </rowConstraints>
                                                    <children>
-                                                      <Label text="Shift" GridPane.halignment="RIGHT">
+                                                      <Label text="%shift" GridPane.halignment="RIGHT">
                                                          <padding>
                                                             <Insets right="10.0" />
                                                          </padding></Label>
-                                                      <ComboBox fx:id="cbRotationSegmentShifts" maxWidth="1.7976931348623157E308" prefWidth="150.0" visibleRowCount="4" GridPane.columnIndex="1" />
+                                                      <ComboBox fx:id="cbRotationSegmentShifts" maxWidth="1.7976931348623157E308" prefWidth="150.0" promptText="%choose.shift" visibleRowCount="4" GridPane.columnIndex="1" />
                                                       <Spinner fx:id="spDaysOn" editable="true" styleClass="split-arrows-horizontal" GridPane.columnIndex="3" />
-                                                      <Label text="Days On" GridPane.columnIndex="2" GridPane.halignment="RIGHT">
+                                                      <Label text="%days.on" GridPane.columnIndex="2" GridPane.halignment="RIGHT">
                                                          <padding>
                                                             <Insets right="10.0" />
                                                          </padding></Label>
-                                                      <Label text="Days Off" GridPane.columnIndex="4" GridPane.halignment="RIGHT">
+                                                      <Label text="%days.off" GridPane.columnIndex="4" GridPane.halignment="RIGHT">
                                                          <padding>
                                                             <Insets right="10.0" />
                                                          </padding></Label>
                                                       <Spinner fx:id="spDaysOff" styleClass="split-arrows-horizontal" GridPane.columnIndex="5" />
                                                    </children>
                                                 </GridPane>
-                                                <Button fx:id="btNewRotationSegment" mnemonicParsing="false" onAction="#onNewRotationSegment" prefWidth="100.0" text="New" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="50.0" />
-                                                <Button fx:id="btAddRotationSegment" mnemonicParsing="false" onAction="#onAddRotationSegment" prefWidth="100.0" text="Add" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="90.0" />
-                                                <Button fx:id="btRemoveRotationSegment" mnemonicParsing="false" onAction="#onRemoveRotationSegment" prefWidth="100.0" text="Remove" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="130.0" />
+                                                <Button fx:id="btNewRotationSegment" mnemonicParsing="false" onAction="#onNewRotationSegment" prefWidth="100.0" text="%new" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="50.0" />
+                                                <Button fx:id="btAddRotationSegment" mnemonicParsing="false" onAction="#onAddRotationSegment" prefWidth="100.0" text="%add" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="90.0" />
+                                                <Button fx:id="btRemoveRotationSegment" mnemonicParsing="false" onAction="#onRemoveRotationSegment" prefWidth="100.0" text="%remove" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="130.0" />
                                                 <TableView fx:id="tvRotationSegments" layoutX="135.0" layoutY="103.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="50.0">
                                                   <columns>
-                                                    <TableColumn fx:id="rotationSegmentSequenceColumn" prefWidth="50.0" text="Seq" />
-                                                    <TableColumn fx:id="rotationSegmentShiftColumn" prefWidth="100.0" text="Shift" />
-                                                      <TableColumn fx:id="rotationSegmentDaysOnColumn" prefWidth="75.0" text="On" />
-                                                      <TableColumn fx:id="rotationSegmentDaysOffColumn" prefWidth="75.0" text="Off" />
+                                                    <TableColumn fx:id="rotationSegmentSequenceColumn" prefWidth="50.0" text="%sequence.header" />
+                                                    <TableColumn fx:id="rotationSegmentShiftColumn" prefWidth="100.0" text="%shift" />
+                                                      <TableColumn fx:id="rotationSegmentDaysOnColumn" prefWidth="75.0" text="%days.on" />
+                                                      <TableColumn fx:id="rotationSegmentDaysOffColumn" prefWidth="75.0" text="%days.off" />
                                                   </columns>
                                                 </TableView>
                                              </children>
@@ -226,7 +226,7 @@
                                  </children></AnchorPane>
                         </content>
                       </Tab>
-                      <Tab fx:id="tTeams" closable="false" text="Teams">
+                      <Tab fx:id="tTeams" closable="false" text="%teams">
                         <content>
                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
@@ -242,7 +242,7 @@
                                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                       </rowConstraints>
                                        <children>
-                                          <Label text="Name" GridPane.halignment="RIGHT">
+                                          <Label text="%name" GridPane.halignment="RIGHT">
                                              <GridPane.margin>
                                                 <Insets />
                                              </GridPane.margin>
@@ -250,7 +250,7 @@
                                                 <Insets right="10.0" />
                                              </padding>
                                           </Label>
-                                          <Label text="Description" GridPane.columnIndex="2" GridPane.halignment="RIGHT">
+                                          <Label text="%description" GridPane.columnIndex="2" GridPane.halignment="RIGHT">
                                              <GridPane.margin>
                                                 <Insets left="5.0" right="5.0" />
                                              </GridPane.margin>
@@ -258,37 +258,37 @@
                                                 <Insets right="10.0" />
                                              </padding>
                                           </Label>
-                                          <TextField fx:id="tfTeamName" maxWidth="1.7976931348623157E308" promptText="Name of team" GridPane.columnIndex="1" />
-                                          <TextField fx:id="tfTeamDescription" maxWidth="1.7976931348623157E308" promptText="Description of team" GridPane.columnIndex="3" />
-                                          <Label text="Rotation" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                                          <TextField fx:id="tfTeamName" maxWidth="1.7976931348623157E308" promptText="%enter.name" GridPane.columnIndex="1" />
+                                          <TextField fx:id="tfTeamDescription" maxWidth="1.7976931348623157E308" promptText="%enter.description" GridPane.columnIndex="3" />
+                                          <Label text="%rotation" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                                              <padding>
                                                 <Insets right="10.0" />
                                              </padding></Label>
-                                          <ComboBox fx:id="cbTeamRotations" maxWidth="1.7976931348623157E308" prefWidth="150.0" promptText="Choose rotation" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                          <Label text="Rotation Start" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                                          <ComboBox fx:id="cbTeamRotations" maxWidth="1.7976931348623157E308" prefWidth="150.0" promptText="%choose.rotation" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                          <Label text="%rotation.start" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                                              <padding>
                                                 <Insets right="10.0" />
                                              </padding></Label>
-                                          <DatePicker fx:id="dpTeamRotationStart" maxWidth="1.7976931348623157E308" promptText="Pick start date" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                                          <DatePicker fx:id="dpTeamRotationStart" maxWidth="1.7976931348623157E308" promptText="%choose.start" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                                        </children>
                                     </GridPane>
-                                    <Button fx:id="btNewTeam" mnemonicParsing="false" onAction="#onNewTeam" prefWidth="100.0" text="New" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="110.0" />
-                                    <Button fx:id="btAddTeam" mnemonicParsing="false" onAction="#onAddTeam" prefWidth="100.0" text="Add" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="160.0" />
-                                    <Button fx:id="btRemoveTeam" mnemonicParsing="false" onAction="#onRemoveTeam" prefWidth="100.0" text="Remove" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="210.0" />
+                                    <Button fx:id="btNewTeam" mnemonicParsing="false" onAction="#onNewTeam" prefWidth="100.0" text="%new" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="110.0" />
+                                    <Button fx:id="btAddTeam" mnemonicParsing="false" onAction="#onAddTeam" prefWidth="100.0" text="%add" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="160.0" />
+                                    <Button fx:id="btRemoveTeam" mnemonicParsing="false" onAction="#onRemoveTeam" prefWidth="100.0" text="%remove" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="210.0" />
                                     <TableView fx:id="tvTeams" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="110.0">
                                       <columns>
-                                        <TableColumn fx:id="teamNameColumn" prefWidth="100.0" text="Name" />
-                                        <TableColumn fx:id="teamDescriptionColumn" prefWidth="175.0" text="Description" />
-                                          <TableColumn fx:id="teamRotationColumn" prefWidth="75.0" text="Rotation" />
-                                          <TableColumn fx:id="teamRotationStartColumn" prefWidth="110.0" text="Rotation Start" />
-                                          <TableColumn fx:id="teamAvgHoursColumn" prefWidth="90.0" text="Avg Hours" />
+                                        <TableColumn fx:id="teamNameColumn" prefWidth="100.0" text="%name" />
+                                        <TableColumn fx:id="teamDescriptionColumn" prefWidth="175.0" text="%description" />
+                                          <TableColumn fx:id="teamRotationColumn" prefWidth="75.0" text="%rotation" />
+                                          <TableColumn fx:id="teamRotationStartColumn" prefWidth="110.0" text="%rotation.start" />
+                                          <TableColumn fx:id="teamAvgHoursColumn" prefWidth="90.0" text="%hours" />
                                       </columns>
                                     </TableView>
                                  </children>
                               </AnchorPane>
                         </content>
                       </Tab>
-                        <Tab text="Non-working Periods">
+                        <Tab text="%non.working">
                           <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
@@ -307,40 +307,40 @@
                                           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                       </rowConstraints>
                                        <children>
-                                          <Label text="Name" GridPane.halignment="RIGHT" />
-                                          <TextField fx:id="tfPeriodName" maxWidth="1.7976931348623157E308" promptText="Name of the period" GridPane.columnIndex="1" />
-                                          <TextField fx:id="tfPeriodDescription" promptText="Description of the period" GridPane.columnIndex="3" GridPane.columnSpan="3" />
-                                          <Label text="Description" GridPane.columnIndex="2" GridPane.halignment="RIGHT" />
-                                          <Label text=" Start Date" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                                          <Label text="%name" GridPane.halignment="RIGHT" />
+                                          <TextField fx:id="tfPeriodName" maxWidth="1.7976931348623157E308" promptText="%enter.name" GridPane.columnIndex="1" />
+                                          <TextField fx:id="tfPeriodDescription" promptText="%enter.description" GridPane.columnIndex="3" GridPane.columnSpan="3" />
+                                          <Label text="%description" GridPane.columnIndex="2" GridPane.halignment="RIGHT" />
+                                          <Label text="%start.date" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                                              <GridPane.margin>
                                                 <Insets />
                                              </GridPane.margin>
                                           </Label>
-                                          <Label text="Time (HH:MM)" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                                          <Label text="%time.hh.mm" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                                              <GridPane.margin>
                                                 <Insets />
                                              </GridPane.margin>
                                           </Label>
-                                          <DatePicker fx:id="dpPeriodStartDate" maxWidth="1.7976931348623157E308" promptText="Starting date" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                          <TextField fx:id="tfPeriodStartTime" promptText="time" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                                          <Label text="Duration (hr:min)" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-                                          <TextField fx:id="tfPeriodDuration" promptText="duration" GridPane.columnIndex="5" GridPane.rowIndex="1" />
-                                          <Label text="Loss Category" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-                                          <ComboBox fx:id="cbLosses" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                          <DatePicker fx:id="dpPeriodStartDate" maxWidth="1.7976931348623157E308" promptText="%choose.start" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                          <TextField fx:id="tfPeriodStartTime" promptText="%day.time" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                                          <Label text="%hr.mm.duration" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                                          <TextField fx:id="tfPeriodDuration" promptText="%enter.duration" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                                          <Label text="%loss.category" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+                                          <ComboBox fx:id="cbLosses" maxWidth="1.7976931348623157E308" promptText="%select.loss.cat" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                        </children>
                                     </GridPane>
                                     <TableView fx:id="tvNonWorkingPeriods" layoutX="68.0" layoutY="282.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="130.0">
                                       <columns>
-                                        <TableColumn fx:id="periodNameColumn" prefWidth="100.0" text="Name" />
-                                        <TableColumn fx:id="periodDescriptionColumn" prefWidth="200.0" text="Description" />
-                                          <TableColumn fx:id="periodStartColumn" maxWidth="1.7976931348623157E308" prefWidth="100.0" text="Start" />
-                                          <TableColumn fx:id="periodDurationColumn" prefWidth="75.0" text="Duration" />
-                                          <TableColumn fx:id="periodLossColumn" editable="false" prefWidth="75.0" text="Loss" />
+                                        <TableColumn fx:id="periodNameColumn" prefWidth="100.0" text="%name" />
+                                        <TableColumn fx:id="periodDescriptionColumn" prefWidth="200.0" text="%description" />
+                                          <TableColumn fx:id="periodStartColumn" maxWidth="1.7976931348623157E308" prefWidth="100.0" text="%start" />
+                                          <TableColumn fx:id="periodDurationColumn" prefWidth="75.0" text="%duration" />
+                                          <TableColumn fx:id="periodLossColumn" editable="false" prefWidth="75.0" text="%loss" />
                                       </columns>
                                     </TableView>
-                                    <Button fx:id="btNewNonWorkingPeriod" layoutX="587.0" layoutY="120.0" mnemonicParsing="false" onAction="#onNewNonWorkingPeriod" prefWidth="100.0" text="New" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="130.0" />
-                                    <Button fx:id="btAddNonWorkingPeriod" layoutX="587.0" layoutY="166.0" mnemonicParsing="false" onAction="#onAddNonWorkingPeriod" prefWidth="100.0" text="Add" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="180.0" />
-                                    <Button fx:id="btRemoveNonWorkingPeriod" layoutX="587.0" layoutY="212.0" mnemonicParsing="false" onAction="#onRemoveNonWorkingPeriod" prefWidth="100.0" text="Remove" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="230.0" />
+                                    <Button fx:id="btNewNonWorkingPeriod" layoutX="587.0" layoutY="120.0" mnemonicParsing="false" onAction="#onNewNonWorkingPeriod" prefWidth="100.0" text="%new" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="130.0" />
+                                    <Button fx:id="btAddNonWorkingPeriod" layoutX="587.0" layoutY="166.0" mnemonicParsing="false" onAction="#onAddNonWorkingPeriod" prefWidth="100.0" text="%add" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="180.0" />
+                                    <Button fx:id="btRemoveNonWorkingPeriod" layoutX="587.0" layoutY="212.0" mnemonicParsing="false" onAction="#onRemoveNonWorkingPeriod" prefWidth="100.0" text="%remove" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="230.0" />
                                  </children>
                               </AnchorPane>
                           </content>
@@ -353,7 +353,7 @@
       </SplitPane>
       <HBox alignment="CENTER" layoutX="90.0" layoutY="727.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="50.0" spacing="25.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
-            <Button fx:id="btOK" mnemonicParsing="false" onAction="#onOK" text="OK">
+            <Button fx:id="btOK" mnemonicParsing="false" onAction="#onOK" text="%done">
                <HBox.margin>
                   <Insets />
                </HBox.margin>

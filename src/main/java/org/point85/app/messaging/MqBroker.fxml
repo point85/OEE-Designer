@@ -12,11 +12,11 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.messaging.MqBrokerController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.messaging.MqBrokerController">
    <children>
       <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
-            <Button fx:id="btOK" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onOK" text="OK" textAlignment="CENTER">
+            <Button fx:id="btOK" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onOK" text="%done" textAlignment="CENTER">
                <HBox.margin>
                   <Insets right="25.0" />
                </HBox.margin>
@@ -39,43 +39,42 @@
             <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <Label text="Host" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+            <Label text="%host" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin>
             </Label>
-            <Label text="User Name" GridPane.halignment="RIGHT" GridPane.rowIndex="4">
+            <Label text="%user.name" GridPane.halignment="RIGHT" GridPane.rowIndex="4">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin>
             </Label>
-            <Label text="Password" GridPane.halignment="RIGHT" GridPane.rowIndex="5">
+            <Label text="%user.password" GridPane.halignment="RIGHT" GridPane.rowIndex="5">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin>
             </Label>
-            <Label text="Choose Saved" GridPane.halignment="RIGHT">
+            <Label text="%choose.saved" GridPane.halignment="RIGHT">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin>
             </Label>
-            <TextField fx:id="tfHost" promptText="Enter Host Name or IP" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <TextField fx:id="tfUserName" promptText="Enter User Name" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <PasswordField fx:id="pfPassword" promptText="Enter Password" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-            <Button fx:id="btSave" mnemonicParsing="false" onAction="#onSaveDataSource" prefWidth="100.0" text="Save" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
-            <Label text="Description" GridPane.halignment="RIGHT" GridPane.rowIndex="6">
+            <TextField fx:id="tfHost" promptText="%enter.host" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextField fx:id="tfUserName" promptText="%enter.user.name" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <PasswordField fx:id="pfPassword" promptText="%enter.user.password" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <Button fx:id="btSave" mnemonicParsing="false" onAction="#onSaveDataSource" prefWidth="100.0" text="%save" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+            <Label text="%description" GridPane.halignment="RIGHT" GridPane.rowIndex="6">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin>
             </Label>
-            <TextField fx:id="tfDescription" maxWidth="1.7976931348623157E308" promptText="Enter Description" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-            <Button fx:id="btNew" mnemonicParsing="false" onAction="#onNewDataSource" prefWidth="100.0" text="New" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-            <Button fx:id="btDelete" mnemonicParsing="false" onAction="#onDeleteDataSource" prefWidth="100.0" text="Delete" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
-            <Label text="Port" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
-            <TextField fx:id="tfPort" promptText="Enter port" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <TextField fx:id="tfDescription" maxWidth="1.7976931348623157E308" promptText="%enter.description" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <Button fx:id="btNew" mnemonicParsing="false" onAction="#onNewDataSource" prefWidth="100.0" text="%new" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+            <Button fx:id="btDelete" mnemonicParsing="false" onAction="#onDeleteDataSource" prefWidth="100.0" text="%delete" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+            <Label text="%port" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
+            <TextField fx:id="tfPort" promptText="%enter.port" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <ComboBox fx:id="cbDataSources" maxWidth="1.7976931348623157E308" onAction="#onSelectDataSource" GridPane.columnIndex="1" />
-            <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="or edit a server" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Button fx:id="btTest" mnemonicParsing="false" onAction="#onTest" prefWidth="100.0" text="Test" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
+            <Button fx:id="btTest" mnemonicParsing="false" onAction="#onTest" prefWidth="100.0" text="%test" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
          </children>
       </GridPane>
    </children>

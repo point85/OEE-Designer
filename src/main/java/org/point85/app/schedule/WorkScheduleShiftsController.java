@@ -12,6 +12,7 @@ import org.point85.app.ImageManager;
 import org.point85.app.Images;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
+import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.schedule.ShiftInstance;
 import org.point85.domain.schedule.WorkSchedule;
 
@@ -161,50 +162,55 @@ public class WorkScheduleShiftsController extends DesignerDialogController {
 	private void onShowShifts() {
 		try {
 			this.shiftInstanceList.clear();
+			this.tfWorkingTime.clear();
+			this.tfNonWorkingTime.clear();
 
 			// period start
 			LocalDate startDate = this.dpPeriodStart.getValue();
 
 			if (startDate == null) {
-				throw new Exception("A starting date must be chosen.");
+				throw new Exception(DesignerLocalizer.instance().getErrorString("choose.start"));
 			}
 			String hrsMins = this.tfStartTime.getText().trim();
 			LocalTime startTime = AppUtils.localTimeFromString(hrsMins);
 			LocalDateTime from = LocalDateTime.of(startDate, startTime);
 
-			// period end
+			// period end. If null then shift instances for the start date/time will be
+			// shown
 			LocalDate endDate = this.dpPeriodEnd.getValue();
-			if (endDate == null) {
-				throw new Exception("An ending date must be chosen.");
-			}
-			hrsMins = this.tfEndTime.getText().trim();
-			LocalTime endTime = AppUtils.localTimeFromString(hrsMins);
-			LocalDateTime to = LocalDateTime.of(endDate, endTime);
+			if (endDate != null) {
+				hrsMins = this.tfEndTime.getText().trim();
+				LocalTime endTime = AppUtils.localTimeFromString(hrsMins);
+				LocalDateTime to = LocalDateTime.of(endDate, endTime);
 
-			// working time
-			Duration working = currentSchedule.calculateWorkingTime(from, to);
-			this.tfWorkingTime.setText(AppUtils.stringFromDuration(working, false));
+				// working time
+				Duration working = currentSchedule.calculateWorkingTime(from, to);
+				this.tfWorkingTime.setText(AppUtils.stringFromDuration(working, false));
 
-			// non working time
-			Duration nonWorking = currentSchedule.calculateNonWorkingTime(from, to);
-			this.tfNonWorkingTime.setText(AppUtils.stringFromDuration(nonWorking, false));
+				// non working time
+				Duration nonWorking = currentSchedule.calculateNonWorkingTime(from, to);
+				this.tfNonWorkingTime.setText(AppUtils.stringFromDuration(nonWorking, false));
 
-			// show shift instances
-			long days = endDate.toEpochDay() - startDate.toEpochDay() + 1;
+				// show shift instances
+				long days = endDate.toEpochDay() - startDate.toEpochDay() + 1;
 
-			LocalDate day = startDate;
+				LocalDate day = startDate;
 
-			for (long i = 0; i < days; i++) {
+				for (long i = 0; i < days; i++) {
+					List<ShiftInstance> instances = currentSchedule.getShiftInstancesForDay(day);
 
-				List<ShiftInstance> instances = currentSchedule.getShiftInstancesForDay(day);
-
+					for (ShiftInstance instance : instances) {
+						this.shiftInstanceList.add(instance);
+					}
+					day = day.plusDays(1);
+				}
+			} else {
+				List<ShiftInstance> instances = currentSchedule.getShiftInstancesForTime(from);
+				
 				for (ShiftInstance instance : instances) {
 					this.shiftInstanceList.add(instance);
 				}
-
-				day = day.plusDays(1);
 			}
-
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}

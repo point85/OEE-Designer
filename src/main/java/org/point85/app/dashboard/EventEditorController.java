@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.point85.app.AppUtils;
 import org.point85.app.DialogController;
+import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.DomainUtils;
 import org.point85.domain.collector.OeeEvent;
 import org.point85.domain.schedule.Shift;
@@ -57,7 +58,7 @@ abstract class EventEditorController extends DialogController {
 		LocalDate startDate = dpStartDate.getValue();
 
 		if (startDate == null) {
-			throw new Exception("The starting date must be specified");
+			throw new Exception(DesignerLocalizer.instance().getErrorString("no.start.date"));
 		}
 
 		Duration startSeconds = null;
@@ -90,16 +91,16 @@ abstract class EventEditorController extends DialogController {
 		}
 
 		if (ldtEnd != null && ldtEnd.isBefore(ldtStart)) {
-			throw new Exception("The starting time " + ldtStart + " must be before the ending time " + ldtEnd);
+			throw new Exception(DesignerLocalizer.instance().getErrorString("start.before.end", ldtStart, ldtEnd));
 		}
 
 		LocalDateTime now = LocalDateTime.now();
 		if (ldtStart.isAfter(now)) {
-			throw new Exception("The starting time " + ldtStart + " cannot be later than the current time ");
+			throw new Exception(DesignerLocalizer.instance().getErrorString("current.start", ldtStart));
 		}
 
 		if (ldtEnd != null && ldtEnd.isAfter(now)) {
-			throw new Exception("The ending time " + ldtEnd + " cannot be later than the current time ");
+			throw new Exception(DesignerLocalizer.instance().getErrorString("current.end", ldtEnd));
 		}
 
 		OffsetDateTime odtEnd = DomainUtils.fromLocalDateTime(ldtEnd);

@@ -11,8 +11,10 @@ import java.util.Set;
 import org.point85.app.AppUtils;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
+import org.point85.app.MaterialNode;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
+import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Material;
 
@@ -36,9 +38,6 @@ import javafx.stage.FileChooser;
  *
  */
 public class MaterialEditorController extends DesignerDialogController {
-	// custom UOM category
-	private static final String NO_CATEGORY = "Uncategorized";
-
 	// Material being edited or viewed
 	private TreeItem<MaterialNode> selectedMaterialItem;
 
@@ -249,7 +248,7 @@ public class MaterialEditorController extends DesignerDialogController {
 		// name
 		String name = this.tfName.getText().trim();
 		if (name.length() == 0) {
-			throw new Exception("The name must be specified.");
+			throw new Exception(DesignerLocalizer.instance().getErrorString("no.name"));
 		}
 
 		if (!name.equals(material.getName())) {
@@ -268,7 +267,7 @@ public class MaterialEditorController extends DesignerDialogController {
 		// category
 		String category = this.cbCategories.getSelectionModel().getSelectedItem();
 		if (category == null) {
-			category = NO_CATEGORY;
+			category = DesignerLocalizer.instance().getLangString("uncategorized");
 		}
 
 		if (!category.equals(material.getCategory())) {
@@ -454,13 +453,13 @@ public class MaterialEditorController extends DesignerDialogController {
 	@FXML
 	private void onDeleteMaterial() throws Exception {
 		if (selectedMaterialItem == null || !selectedMaterialItem.getValue().isMaterial()) {
-			AppUtils.showErrorDialog("No material has been selected for deletion.");
+			AppUtils.showErrorDialog(DesignerLocalizer.instance().getErrorString("material.deletion"));
 			return;
 		}
 
 		// confirm
-		String msg = "Do you want to delete material " + getSelectedMaterial().getName() + "?";
-		ButtonType type = AppUtils.showConfirmationDialog(msg);
+		ButtonType type = AppUtils.showConfirmationDialog(
+				DesignerLocalizer.instance().getLangString("delete.material", getSelectedMaterial().getName()));
 
 		if (type.equals(ButtonType.CANCEL)) {
 			return;
@@ -558,7 +557,7 @@ public class MaterialEditorController extends DesignerDialogController {
 				String[] values = line.split(",");
 
 				if (values.length > 0 && values[0] == null || values[0].trim().length() == 0) {
-					throw new Exception("A id must be specified for the material.");
+					throw new Exception(DesignerLocalizer.instance().getErrorString("no.material.id"));
 				}
 
 				// name
@@ -571,7 +570,7 @@ public class MaterialEditorController extends DesignerDialogController {
 				}
 
 				// category
-				String category = NO_CATEGORY;
+				String category = DesignerLocalizer.instance().getLangString("uncategorized");
 
 				if (values.length > 2 && values[2] != null && values[2].trim().length() > 0) {
 					category = values[2].trim();
@@ -600,55 +599,5 @@ public class MaterialEditorController extends DesignerDialogController {
 		}
 
 		populateCategories();
-	}
-
-	// class for holding attributes of Material in a tree view leaf node
-	private class MaterialNode {
-		// material
-		private Material material;
-
-		// category name
-		private String category;
-
-		private MaterialNode(String category) {
-			this.category = category;
-		}
-
-		private MaterialNode(Material material) {
-			setMaterial(material);
-		}
-
-		private String getCategory() {
-			return category;
-		}
-
-		private Material getMaterial() {
-			return material;
-		}
-
-		private void setMaterial(Material material) {
-			this.material = material;
-
-			// category could have changed
-			this.category = material.getCategory();
-		}
-
-		private boolean isMaterial() {
-			return material != null ? true : false;
-		}
-
-		@Override
-		public String toString() {
-			if (material != null) {
-				String description = material.getDescription();
-				String value = material.getName();
-				if (description != null) {
-					value += " (" + material.getDescription() + ")";
-				}
-				return value;
-			} else {
-				return category;
-			}
-		}
 	}
 }

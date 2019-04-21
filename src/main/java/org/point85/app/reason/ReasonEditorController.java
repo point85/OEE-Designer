@@ -16,8 +16,10 @@ import java.util.Set;
 import org.point85.app.AppUtils;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
+import org.point85.app.ReasonNode;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
+import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.oee.TimeLoss;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Reason;
@@ -121,7 +123,7 @@ public class ReasonEditorController extends DesignerDialogController {
 
 		// loss categories
 		List<TimeLoss> losses = new ArrayList<>();
-		
+
 		for (TimeLoss loss : TimeLoss.values()) {
 			losses.add(loss);
 		}
@@ -284,7 +286,7 @@ public class ReasonEditorController extends DesignerDialogController {
 		String name = this.tfName.getText().trim();
 
 		if (name.length() == 0) {
-			throw new Exception("The name must be specified.");
+			throw new Exception(DesignerLocalizer.instance().getErrorString("no.name"));
 		}
 
 		if (!name.equals(reason.getName())) {
@@ -323,8 +325,8 @@ public class ReasonEditorController extends DesignerDialogController {
 
 			if (parentItem == null) {
 				// confirm
-				String msg = "Do you want to add a new top-level reason?";
-				ButtonType type = AppUtils.showConfirmationDialog(msg);
+				ButtonType type = AppUtils
+						.showConfirmationDialog(DesignerLocalizer.instance().getLangString("add.reason"));
 
 				if (type.equals(ButtonType.CANCEL)) {
 					return false;
@@ -334,9 +336,8 @@ public class ReasonEditorController extends DesignerDialogController {
 				parentItem = tvReasons.getRoot();
 			} else {
 				// confirm
-				String msg = "Do you want to add a new child reason for parent "
-						+ parentItem.getValue().getReason().getName() + "?";
-				ButtonType type = AppUtils.showConfirmationDialog(msg);
+				ButtonType type = AppUtils.showConfirmationDialog(DesignerLocalizer.instance()
+						.getLangString("add.child.reason", parentItem.getValue().getReason().getName()));
 
 				if (type.equals(ButtonType.CANCEL)) {
 					return false;
@@ -432,13 +433,13 @@ public class ReasonEditorController extends DesignerDialogController {
 	private void onDeleteReason() {
 		Reason selectedReason = getSelectedReason();
 		if (selectedReason == null) {
-			AppUtils.showErrorDialog("No reason has been selected for deletion.");
+			AppUtils.showErrorDialog(DesignerLocalizer.instance().getErrorString("no.reason.selected"));
 			return;
 		}
 
 		// confirm
-		String msg = "Do you want to delete reason " + selectedReason.getName() + "?";
-		ButtonType type = AppUtils.showConfirmationDialog(msg);
+		ButtonType type = AppUtils.showConfirmationDialog(
+				DesignerLocalizer.instance().getLangString("delete.reason", selectedReason.getName()));
 
 		if (type.equals(ButtonType.CANCEL)) {
 			return;
@@ -545,7 +546,7 @@ public class ReasonEditorController extends DesignerDialogController {
 					String[] values = line.split(",");
 
 					if (values.length > 0 && values[0] == null || values[0].trim().length() == 0) {
-						throw new Exception("A name must be specified for the reason.");
+						throw new Exception(DesignerLocalizer.instance().getErrorString("no.name"));
 					}
 
 					// name
@@ -606,7 +607,8 @@ public class ReasonEditorController extends DesignerDialogController {
 				Reason parentReason = PersistenceService.instance().fetchReasonByName(entry.getValue());
 
 				if (parentReason == null) {
-					throw new Exception("Parent reason " + entry.getValue() + " is not defined.");
+					throw new Exception(
+							DesignerLocalizer.instance().getErrorString("no.parent.reason", entry.getValue()));
 				}
 
 				Reason childReason = entry.getKey();
@@ -622,24 +624,4 @@ public class ReasonEditorController extends DesignerDialogController {
 		}
 	}
 
-	private class ReasonNode {
-		private Reason reason;
-
-		private ReasonNode(Reason reason) {
-			setReason(reason);
-		}
-
-		private Reason getReason() {
-			return reason;
-		}
-
-		private void setReason(Reason reason) {
-			this.reason = reason;
-		}
-
-		@Override
-		public String toString() {
-			return reason.getName() + " (" + reason.getDescription() + ")";
-		}
-	}
 }

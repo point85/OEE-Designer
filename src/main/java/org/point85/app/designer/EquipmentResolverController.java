@@ -133,7 +133,7 @@ public class EquipmentResolverController extends DesignerController {
 		List<DataCollector> collectors = PersistenceService.instance().fetchAllDataCollectors();
 		cbCollectors.getItems().clear();
 		cbCollectors.getItems().addAll(collectors);
-		
+
 		if (collectors.size() == 1) {
 			cbCollectors.getSelectionModel().select(0);
 		}
@@ -289,7 +289,6 @@ public class EquipmentResolverController extends DesignerController {
 				ResolverFunction resolver = new ResolverFunction(functionScript);
 				lbScript.setText(resolver.getDisplayString());
 			} catch (Exception e) {
-				// ignore
 			}
 		}
 
@@ -301,7 +300,7 @@ public class EquipmentResolverController extends DesignerController {
 		}
 		tfUpdatePeriod.setText(String.valueOf(period));
 
-		btAddResolver.setText(UPDATE);
+		btAddResolver.setText(DesignerLocalizer.instance().getLangString("update"));
 	}
 
 	void showResolvers(Equipment equipment) throws Exception {
@@ -323,7 +322,7 @@ public class EquipmentResolverController extends DesignerController {
 	private void onRemoveResolver() {
 		try {
 			if (selectedEventResolver == null) {
-				AppUtils.showErrorDialog("No event resolver has been selected for deletion.");
+				AppUtils.showErrorDialog(DesignerLocalizer.instance().getErrorString("no.resolver"));
 				return;
 			}
 
@@ -427,13 +426,13 @@ public class EquipmentResolverController extends DesignerController {
 			break;
 		}
 		btBrowseSource.setGraphic(buttonImage);
-		
+
 		if (setUpdatePeriod) {
 			tfUpdatePeriod.setText(String.valueOf(CollectorDataSource.DEFAULT_UPDATE_PERIOD_MSEC));
 		} else {
 			tfUpdatePeriod.clear();
 		}
-	} 
+	}
 
 	// browse to data source
 	@FXML
@@ -441,12 +440,12 @@ public class EquipmentResolverController extends DesignerController {
 		try {
 			Equipment equipment = (Equipment) getApp().getPhysicalModelController().getSelectedEntity();
 			if (equipment == null) {
-				throw new Exception("Equipment must be selected before browsing the source.");
+				throw new Exception(DesignerLocalizer.instance().getErrorString("no.equipment"));
 			}
 
 			DataSourceType sourceType = cbDataSources.getSelectionModel().getSelectedItem();
 			if (sourceType == null) {
-				throw new Exception("A data source must be selected");
+				throw new Exception(DesignerLocalizer.instance().getErrorString("no.data.source"));
 			}
 
 			if (sourceType.equals(DataSourceType.OPC_DA)) {
@@ -536,7 +535,7 @@ public class EquipmentResolverController extends DesignerController {
 				setDefaultSourceId();
 
 			} else {
-				throw new Exception("Unknown data source type " + sourceType);
+				throw new Exception(DesignerLocalizer.instance().getErrorString("unknown.type", sourceType));
 			}
 
 		} catch (Exception e) {
@@ -554,9 +553,9 @@ public class EquipmentResolverController extends DesignerController {
 			DataSourceType sourceType = cbDataSources.getSelectionModel().getSelectedItem();
 
 			if (resolverType != null) {
-				sourceId = entity.getName() + "." + sourceType + "." + resolverType;
+				sourceId = entity.getName() + "." + sourceType.name() + "." + resolverType.name();
 			} else {
-				sourceId = entity.getName() + "." + sourceType;
+				sourceId = entity.getName() + "." + sourceType.name();
 			}
 			tfSourceId.setText(sourceId);
 		}
@@ -580,14 +579,14 @@ public class EquipmentResolverController extends DesignerController {
 			PlantEntity entity = getApp().getPhysicalModelController().getSelectedEntity();
 
 			if (!(entity instanceof Equipment)) {
-				throw new Exception("Equipment must be selected before editing a script.");
+				throw new Exception(DesignerLocalizer.instance().getErrorString("no.equipment"));
 			}
 
 			// resolver type
 			OeeEventType resolverType = cbResolverTypes.getSelectionModel().getSelectedItem();
 
 			if (resolverType == null) {
-				throw new Exception("The script resolver type must be selected.");
+				throw new Exception(DesignerLocalizer.instance().getErrorString("no.type"));
 			}
 
 			EventResolver eventResolver = getSelectedResolver();
@@ -650,7 +649,7 @@ public class EquipmentResolverController extends DesignerController {
 
 		this.tfUpdatePeriod.setText(null);
 
-		this.btAddResolver.setText(ADD);
+		this.btAddResolver.setText(DesignerLocalizer.instance().getLangString("add"));
 
 		this.tvResolvers.getSelectionModel().clearSelection();
 	}
@@ -662,7 +661,7 @@ public class EquipmentResolverController extends DesignerController {
 
 			selectedEventResolver = null;
 
-			this.btAddResolver.setText(ADD);
+			this.btAddResolver.setText(DesignerLocalizer.instance().getLangString("add"));
 
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
@@ -676,7 +675,7 @@ public class EquipmentResolverController extends DesignerController {
 			PlantEntity plantEntity = getApp().getPhysicalModelController().getSelectedEntity();
 
 			if (!(plantEntity instanceof Equipment)) {
-				throw new Exception("Equipment must be selected before adding material.");
+				throw new Exception(DesignerLocalizer.instance().getErrorString("no.equipment"));
 			}
 
 			// equipment
@@ -732,13 +731,13 @@ public class EquipmentResolverController extends DesignerController {
 	private void onRun() {
 		try {
 			if (selectedEventResolver == null) {
-				throw new Exception("A resolver must be selected");
+				throw new Exception(DesignerLocalizer.instance().getErrorString("no.resolver"));
 			}
 
 			DataSourceType type = selectedEventResolver.getDataSource().getDataSourceType();
 
 			if (type == null) {
-				throw new Exception("A data source type must be specified.");
+				throw new Exception(DesignerLocalizer.instance().getErrorString("no.source.type"));
 			}
 
 			if (type.equals(DataSourceType.OPC_DA)) {

@@ -20,7 +20,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.designer.PhysicalModelController">
+<AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.designer.PhysicalModelController">
    <children>
       <SplitPane dividerPositions="0.35" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
         <items>
@@ -30,23 +30,23 @@
                      <contextMenu>
                         <ContextMenu>
                           <items>
-                              <MenuItem fx:id="miSaveAll" mnemonicParsing="false" onAction="#onSaveAllEntities" text="Save All Entities" />
-                            <MenuItem fx:id="miRefreshAll" mnemonicParsing="false" onAction="#onRefreshAllEntities" text="Refresh All Entities" />
-                              <MenuItem fx:id="miClearSelection" mnemonicParsing="false" onAction="#onClearSelection" text="Clear Selected Entity" />
+                              <MenuItem fx:id="miSaveAll" mnemonicParsing="false" onAction="#onSaveAllEntities" text="%save.all.entities" />
+                            <MenuItem fx:id="miRefreshAll" mnemonicParsing="false" onAction="#onRefreshAllEntities" text="%refresh.all.entities" />
+                              <MenuItem fx:id="miClearSelection" mnemonicParsing="false" onAction="#onClearSelection" text="%clear.entity" />
                           </items>
                         </ContextMenu>
                      </contextMenu></TreeView>
                   <ButtonBar buttonMinWidth="25.0" layoutX="14.0" layoutY="45.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="45.0">
                     <buttons>
-                        <Button fx:id="btDashboard" disable="true" mnemonicParsing="false" onAction="#onShowDashboard" text="Dashboard" />
+                        <Button fx:id="btDashboard" disable="true" mnemonicParsing="false" onAction="#onShowDashboard" text="%dashboard" />
                     </buttons>
                   </ButtonBar>
                   <ButtonBar layoutX="14.0" layoutY="94.0" nodeOrientation="RIGHT_TO_LEFT" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0">
                     <buttons>
-                        <Button fx:id="btDelete" mnemonicParsing="false" onAction="#onDeleteEntity" text="Delete" textAlignment="CENTER" />
-                      <Button fx:id="btRefresh" mnemonicParsing="false" onAction="#onRefreshEntity" text="Refresh" />
-                        <Button fx:id="btSave" mnemonicParsing="false" onAction="#onSaveEntity" text="Save" textAlignment="CENTER" />
-                        <Button fx:id="btNew" minHeight="20.0" minWidth="50.0" mnemonicParsing="false" onAction="#onNewEntity" text="New" textAlignment="CENTER" />
+                        <Button fx:id="btDelete" mnemonicParsing="false" onAction="#onDeleteEntity" text="%delete" textAlignment="CENTER" />
+                      <Button fx:id="btRefresh" mnemonicParsing="false" onAction="#onRefreshEntity" text="%refresh" />
+                        <Button fx:id="btSave" mnemonicParsing="false" onAction="#onSaveEntity" text="%save" textAlignment="CENTER" />
+                        <Button fx:id="btNew" minHeight="20.0" minWidth="50.0" mnemonicParsing="false" onAction="#onNewEntity" text="%new" textAlignment="CENTER" />
                     </buttons>
                   </ButtonBar>
                </children>
@@ -69,25 +69,25 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Label text="Type" GridPane.columnIndex="1" GridPane.halignment="RIGHT">
+                        <Label text="%entity.type" GridPane.columnIndex="1" GridPane.halignment="RIGHT">
                            <padding>
                               <Insets right="10.0" />
                            </padding>
                         </Label>
                         <ComboBox fx:id="cbEntityTypes" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" />
-                        <Label text="Name" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                        <Label text="%name" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                            <padding>
                               <Insets right="10.0" />
                            </padding>
                         </Label>
-                        <Label text="Description" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+                        <Label text="%description" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
                            <padding>
                               <Insets right="10.0" />
                            </padding>
                         </Label>
                         <TextField fx:id="tfEntityName" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                        <TextArea fx:id="taEntityDescription" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="3" GridPane.rowSpan="2" />
-                        <Label alignment="CENTER" text="Work Schedule" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+                        <TextArea fx:id="taEntityDescription" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="3" GridPane.rowSpan="2" />
+                        <Label alignment="CENTER" text="%work.schedule" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                            <padding>
                               <Insets right="10.0" />
                            </padding>
@@ -95,7 +95,7 @@
                         <Label fx:id="lbSchedule" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                         <Button fx:id="btWorkSchedule" mnemonicParsing="false" onAction="#onFindWorkSchedule" prefHeight="16.0" prefWidth="16.0" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                         <Button fx:id="btClearSchedule" mnemonicParsing="false" onAction="#onClearSchedule" prefHeight="16.0" prefWidth="16.0" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-                        <Label text="Retention (days)" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="5">
+                        <Label text="%retention" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="5">
                            <padding>
                               <Insets right="10.0" />
                            </padding>
@@ -105,12 +105,12 @@
                   </GridPane>
                   <TabPane fx:id="tpEntity" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="250.0">
                     <tabs>
-                      <Tab fx:id="tbEquipMaterials" closable="false" text="Processed Material">
+                      <Tab fx:id="tbEquipMaterials" closable="false" text="%processed.material">
                         <content>
                           <AnchorPane fx:id="apEquipMaterial" minHeight="0.0" minWidth="0.0" />
                         </content>
                       </Tab>
-                      <Tab fx:id="tbAvailability" closable="false" text="Data Collection">
+                      <Tab fx:id="tbAvailability" closable="false" text="%data.collection">
                         <content>
                           <AnchorPane fx:id="apAvailability" minHeight="0.0" minWidth="0.0" />
                         </content>

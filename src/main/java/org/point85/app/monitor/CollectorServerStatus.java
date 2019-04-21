@@ -82,8 +82,6 @@ public class CollectorServerStatus extends AbstractNotification {
 				return true;
 			}
 		}
-
 		return false;
 	}
-
 }

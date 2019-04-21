@@ -14,9 +14,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.schedule.WorkScheduleShiftsController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.schedule.WorkScheduleShiftsController">
    <children>
-      <TitledPane collapsible="false" layoutX="157.0" layoutY="521.0" prefHeight="200.0" prefWidth="200.0" text="Working Periods" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+      <TitledPane collapsible="false" layoutX="157.0" layoutY="521.0" prefHeight="200.0" prefWidth="200.0" text="%working" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
          <content>
             <AnchorPane prefHeight="200.0" prefWidth="200.0">
                <children>
@@ -34,12 +34,12 @@
                         <RowConstraints vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Label text="From Date" GridPane.halignment="CENTER" />
-                        <Label text="Time (HH:mm)" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
-                        <Label text="To Date" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
-                        <Label text="Time (HH:mm)" GridPane.columnIndex="3" GridPane.halignment="CENTER" />
-                        <DatePicker fx:id="dpPeriodStart" maxWidth="1.7976931348623157E308" promptText="Choose period start" GridPane.rowIndex="1" />
-                        <DatePicker fx:id="dpPeriodEnd" maxWidth="1.7976931348623157E308" promptText="Choose period end" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                        <Label text="%from.date" GridPane.halignment="CENTER" />
+                        <Label text="%time.hh.mm" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
+                        <Label text="%to.date" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
+                        <Label text="%time.hh.mm" GridPane.columnIndex="3" GridPane.halignment="CENTER" />
+                        <DatePicker fx:id="dpPeriodStart" maxWidth="1.7976931348623157E308" promptText="%choose.start" GridPane.rowIndex="1" />
+                        <DatePicker fx:id="dpPeriodEnd" maxWidth="1.7976931348623157E308" promptText="%choose.end" GridPane.columnIndex="2" GridPane.rowIndex="1">
                            <GridPane.margin>
                               <Insets />
                            </GridPane.margin></DatePicker>
@@ -51,7 +51,7 @@
                            <GridPane.margin>
                               <Insets right="10.0" />
                            </GridPane.margin></TextField>
-                        <Label text="Working time" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+                        <Label text="%working.time" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                            <GridPane.margin>
                               <Insets right="10.0" />
                            </GridPane.margin></Label>
@@ -59,7 +59,7 @@
                            <GridPane.margin>
                               <Insets right="10.0" />
                            </GridPane.margin></TextField>
-                        <Label text="Non-working time" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+                        <Label text="%non.working.time" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                            <GridPane.margin>
                               <Insets right="10.0" />
                            </GridPane.margin></Label>
@@ -67,17 +67,17 @@
                            <GridPane.margin>
                               <Insets right="10.0" />
                            </GridPane.margin></TextField>
-                        <Button fx:id="btShowShifts" mnemonicParsing="false" onAction="#onShowShifts" prefWidth="100.0" text="Shifts" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                        <Button fx:id="btShowShifts" mnemonicParsing="false" onAction="#onShowShifts" prefWidth="100.0" text="%shifts" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
                   <TableView fx:id="tvShiftInstances" layoutX="230.0" layoutY="255.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="125.0">
                     <columns>
-                      <TableColumn fx:id="dayColumn" prefWidth="100.0" text="Starting Day" />
-                      <TableColumn fx:id="teamNameColumn" prefWidth="100.0" text="Team" />
-                        <TableColumn fx:id="shiftNameColumn" prefWidth="100.0" text="Shift" />
-                        <TableColumn fx:id="startTimeColumn" prefWidth="75.0" text="Start" />
-                        <TableColumn fx:id="endTimeColumn" prefWidth="75.0" text="End" />
-                        <TableColumn fx:id="durationColumn" prefWidth="75.0" text="Duration" />
+                      <TableColumn fx:id="dayColumn" prefWidth="100.0" text="%starting.day" />
+                      <TableColumn fx:id="teamNameColumn" prefWidth="100.0" text="%team" />
+                        <TableColumn fx:id="shiftNameColumn" prefWidth="100.0" text="%shift" />
+                        <TableColumn fx:id="startTimeColumn" prefWidth="75.0" text="%start" />
+                        <TableColumn fx:id="endTimeColumn" prefWidth="75.0" text="%end" />
+                        <TableColumn fx:id="durationColumn" prefWidth="75.0" text="%duration" />
                     </columns>
                   </TableView>
                </children>
@@ -86,7 +86,7 @@
       </TitledPane>
       <HBox alignment="CENTER" layoutX="220.0" layoutY="233.0" prefHeight="50.0" spacing="25.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
-            <Button fx:id="btOK" mnemonicParsing="false" onAction="#onOK" text="OK" />
+            <Button fx:id="btOK" mnemonicParsing="false" onAction="#onOK" text="%done" />
          </children>
       </HBox>
    </children>

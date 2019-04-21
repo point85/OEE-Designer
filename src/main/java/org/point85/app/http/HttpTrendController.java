@@ -16,6 +16,7 @@ import org.point85.app.Images;
 import org.point85.app.charts.DataSubscriber;
 import org.point85.app.charts.TrendChartController;
 import org.point85.app.designer.DesignerDialogController;
+import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.DomainUtils;
 import org.point85.domain.http.EquipmentEventRequestDto;
 import org.point85.domain.http.HttpEventListener;
@@ -101,8 +102,8 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 		eventResolver.setWatchMode(true);
 		trendChartController.setEventResolver(eventResolver);
 
-		lbSourceId.setText(
-				"Equipment: " + eventResolver.getEquipment().getName() + ", Source Id: " + eventResolver.getSourceId());
+		lbSourceId.setText(DesignerLocalizer.instance().getLangString("event.source",
+				eventResolver.getEquipment().getName(), eventResolver.getSourceId()));
 	}
 
 	@Override
@@ -261,7 +262,7 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 			int codeGroup = conn.getResponseCode() / 100;
 
 			if (codeGroup != 2) {
-				String msg = "Post failed, error code : " + conn.getResponseCode() + "\nEquipment event response ...";
+				String msg = DesignerLocalizer.instance().getErrorString("post.failed", conn.getResponseCode()) + "\n";
 
 				BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
 				String output;

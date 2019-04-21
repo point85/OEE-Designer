@@ -16,6 +16,7 @@ import org.point85.app.ImageManager;
 import org.point85.app.Images;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerController;
+import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.DomainUtils;
 import org.point85.domain.collector.OeeEvent;
 import org.point85.domain.oee.TimeLoss;
@@ -50,10 +51,6 @@ public class TrendChartController extends DesignerController {
 	// chart views
 	private static final int INPUT_VALUE_VIEW = 0;
 	private static final int OUTPUT_VALUE_VIEW = 1;
-
-	// trend button text
-	private static final String START = "Start";
-	private static final String STOP = "Stop";
 
 	private static final int DEFAULT_UPDATE_SEC = 5;
 
@@ -172,16 +169,16 @@ public class TrendChartController extends DesignerController {
 		AnchorPane pane1 = (AnchorPane) loader.getRoot();
 		spCharts.getChildren().add(INPUT_VALUE_VIEW, pane1);
 		inputValueController = loader.getController();
-		inputValueController.getChart().setTitle("Input Value");
-		inputValueController.getChart().getYAxis().setLabel("Value");
+		inputValueController.getChart().setTitle(DesignerLocalizer.instance().getLangString("input.value"));
+		inputValueController.getChart().getYAxis().setLabel(DesignerLocalizer.instance().getLangString("value"));
 
 		// load second state chart controller
 		loader = FXMLLoaderFactory.sampleChartLoader();
 		AnchorPane pane2 = (AnchorPane) loader.getRoot();
 		spCharts.getChildren().add(OUTPUT_VALUE_VIEW, pane2);
 		outputValueController = loader.getController();
-		outputValueController.getChart().setTitle("Output Value");
-		outputValueController.getChart().getYAxis().setLabel("Value");
+		outputValueController.getChart().setTitle(DesignerLocalizer.instance().getLangString("output.value"));
+		outputValueController.getChart().getYAxis().setLabel(DesignerLocalizer.instance().getLangString("value"));
 
 		cbInterpolationTypes.setItems(interpolationTypes);
 		interpolationTypes.addAll(InterpolationType.values());
@@ -252,9 +249,6 @@ public class TrendChartController extends DesignerController {
 
 			Reason reason = cellDataFeatures.getValue().getReason();
 			if (reason != null && reason.getLossCategory() != null) {
-				// Color color = reason.getLossCategory().getColor();
-				// Text text = new Text(reason.getLossCategory().toString());
-				// text.setFill(color);
 				lossProperty = new SimpleStringProperty(reason.getLossCategory().toString());
 			}
 
@@ -265,10 +259,10 @@ public class TrendChartController extends DesignerController {
 	private void toggleTrendButton() throws Exception {
 		if (subscriber.isSubscribed()) {
 			btToggleTrend.setGraphic(ImageManager.instance().getImageView(Images.STOP));
-			btToggleTrend.setText(STOP);
+			btToggleTrend.setText(DesignerLocalizer.instance().getLangString("stop"));
 		} else {
 			btToggleTrend.setGraphic(ImageManager.instance().getImageView(Images.START));
-			btToggleTrend.setText(START);
+			btToggleTrend.setText(DesignerLocalizer.instance().getLangString("start"));
 		}
 	}
 
@@ -277,7 +271,7 @@ public class TrendChartController extends DesignerController {
 		// trend auto starts
 		btToggleTrend.setGraphic(ImageManager.instance().getImageView(Images.STOP));
 		btToggleTrend.setContentDisplay(ContentDisplay.LEFT);
-		btToggleTrend.setText(STOP);
+		btToggleTrend.setText(DesignerLocalizer.instance().getLangString("stop"));
 
 		// clear trend
 		btResetTrend.setGraphic(ImageManager.instance().getImageView(Images.CLEAR));
@@ -338,7 +332,6 @@ public class TrendChartController extends DesignerController {
 				try {
 					plottedValue = Double.valueOf((String) plottedValue);
 				} catch (NumberFormatException e) {
-					// ignore
 				}
 			}
 
@@ -531,7 +524,7 @@ public class TrendChartController extends DesignerController {
 			}
 
 			if (odtStart != null && odtEnd != null && odtEnd.isBefore(odtStart)) {
-				throw new Exception("The starting time " + odtStart + " must be before the ending time " + odtEnd);
+				throw new Exception(DesignerLocalizer.instance().getErrorString("start.before.end", odtStart, odtEnd));
 			}
 
 			List<OeeEvent> events = PersistenceService.instance().fetchEvents(eventResolver.getEquipment(),
@@ -580,5 +573,4 @@ public class TrendChartController extends DesignerController {
 			AppUtils.showErrorDialog(e);
 		}
 	}
-
 }

@@ -1,12 +1,9 @@
 package org.point85.app.designer;
 
-import java.net.URL;
-
 import org.point85.app.AppUtils;
 import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
-import org.point85.app.OeeApplication;
 import org.point85.app.dashboard.DashboardController;
 import org.point85.app.dashboard.DashboardDialogController;
 import org.point85.app.db.DatabaseServerController;
@@ -30,6 +27,7 @@ import org.point85.app.schedule.WorkScheduleEditorController;
 import org.point85.app.script.EventResolverController;
 import org.point85.app.uom.UomConversionController;
 import org.point85.app.uom.UomEditorController;
+import org.point85.domain.DomainUtils;
 import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.DataCollector;
 import org.point85.domain.collector.DataSourceType;
@@ -100,17 +98,12 @@ public class DesignerApplication {
 	private OeeContext appContext;
 
 	public DesignerApplication() {
-		// nothing to initialize
 	}
 
 	public void start(Stage primaryStage) {
 		try {
-			// Load root layout from fxml file.
-			FXMLLoader loader = new FXMLLoader();
-			URL url = getClass().getResource("DesignerApplication.fxml");
-			loader.setLocation(url);
-
-			AnchorPane mainLayout = (AnchorPane) loader.load();
+			FXMLLoader loader = FXMLLoaderFactory.designerApplicationLoader();
+			AnchorPane mainLayout = (AnchorPane) loader.getRoot();
 
 			// Give the controller access to the main app.
 			physicalModelController = loader.getController();
@@ -123,7 +116,7 @@ public class DesignerApplication {
 			Scene scene = new Scene(mainLayout);
 
 			// UI
-			primaryStage.setTitle("OEE Designer");
+			primaryStage.setTitle(DesignerLocalizer.instance().getLangString("designer.app.title"));
 			primaryStage.getIcons().add(ImageManager.instance().getImage(Images.POINT85));
 			primaryStage.setScene(scene);
 			primaryStage.show();
@@ -137,7 +130,7 @@ public class DesignerApplication {
 					physicalModelController.populateTopEntityNodes();
 				} catch (Exception e) {
 					AppUtils.showErrorDialog(
-							"Unable to fetch plant entities.  Check database connection.  " + e.getMessage());
+							DesignerLocalizer.instance().getErrorString("no.entities", e.getMessage()));
 				}
 			});
 
@@ -175,7 +168,7 @@ public class DesignerApplication {
 
 			// Create the dialog Stage.
 			Stage dialogStage = new Stage(StageStyle.DECORATED);
-			dialogStage.setTitle("Edit Reason");
+			dialogStage.setTitle(DesignerLocalizer.instance().getLangString("reason.editor.title"));
 			dialogStage.initModality(Modality.NONE);
 			Scene scene = new Scene(page);
 			dialogStage.setScene(scene);
@@ -202,7 +195,7 @@ public class DesignerApplication {
 
 			// Create the dialog Stage.
 			Stage dialogStage = new Stage(StageStyle.DECORATED);
-			dialogStage.setTitle("Edit Material");
+			dialogStage.setTitle(DesignerLocalizer.instance().getLangString("material.editor.title"));
 			dialogStage.initModality(Modality.NONE);
 
 			Scene scene = new Scene(pane);
@@ -231,7 +224,7 @@ public class DesignerApplication {
 
 			// Create the dialog Stage
 			Stage dialogStage = new Stage(StageStyle.DECORATED);
-			dialogStage.setTitle("Edit Unit Of Measure");
+			dialogStage.setTitle(DesignerLocalizer.instance().getLangString("uom.editor.title"));
 			dialogStage.initModality(Modality.NONE);
 
 			Scene scene = new Scene(page);
@@ -261,7 +254,7 @@ public class DesignerApplication {
 
 			// Create the dialog Stage.
 			Stage dialogStage = new Stage(StageStyle.DECORATED);
-			dialogStage.setTitle("Edit Work Schedule");
+			dialogStage.setTitle(DesignerLocalizer.instance().getLangString("schedule.editor.title"));
 			dialogStage.initModality(Modality.NONE);
 
 			Scene scene = new Scene(page);
@@ -289,7 +282,7 @@ public class DesignerApplication {
 
 			// Create the dialog Stage.
 			Stage dialogStage = new Stage(StageStyle.DECORATED);
-			dialogStage.setTitle("Browse OPC DA Data Source");
+			dialogStage.setTitle(DesignerLocalizer.instance().getLangString("opc.da.title"));
 			dialogStage.initModality(Modality.NONE);
 
 			Scene scene = new Scene(page);
@@ -317,7 +310,7 @@ public class DesignerApplication {
 
 			// Create the dialog Stage.
 			Stage dialogStage = new Stage(StageStyle.DECORATED);
-			dialogStage.setTitle("Browse OPC UA Data Source");
+			dialogStage.setTitle(DesignerLocalizer.instance().getLangString("opc.ua.title"));
 			dialogStage.initModality(Modality.NONE);
 
 			Scene scene = new Scene(page);
@@ -345,7 +338,7 @@ public class DesignerApplication {
 
 			// Create the dialog Stage.
 			Stage dialogStage = new Stage(StageStyle.DECORATED);
-			dialogStage.setTitle("Edit Script Resolver");
+			dialogStage.setTitle(DesignerLocalizer.instance().getLangString("script.editor.title"));
 			dialogStage.initModality(Modality.NONE);
 
 			Scene scene = new Scene(page);
@@ -374,7 +367,7 @@ public class DesignerApplication {
 
 		// Create the dialog Stage.
 		Stage dialogStage = new Stage(StageStyle.DECORATED);
-		dialogStage.setTitle("Edit HTTP Servers");
+		dialogStage.setTitle(DesignerLocalizer.instance().getLangString("http.servers.title"));
 		dialogStage.initModality(Modality.WINDOW_MODAL);
 		Scene scene = new Scene(page);
 		dialogStage.setScene(scene);
@@ -398,11 +391,11 @@ public class DesignerApplication {
 		Stage dialogStage = new Stage(StageStyle.DECORATED);
 
 		if (type.equals(DataSourceType.MQTT)) {
-			dialogStage.setTitle("Edit MQTT Servers");
+			dialogStage.setTitle(DesignerLocalizer.instance().getLangString("mqtt.editor.title"));
 		} else if (type.equals(DataSourceType.MESSAGING)) {
-			dialogStage.setTitle("Edit Messaging Brokers");
+			dialogStage.setTitle(DesignerLocalizer.instance().getLangString("rmq.editor.title"));
 		} else if (type.equals(DataSourceType.JMS)) {
-			dialogStage.setTitle("Edit JMS Brokers");
+			dialogStage.setTitle(DesignerLocalizer.instance().getLangString("jms.editor.title"));
 		}
 
 		dialogStage.initModality(Modality.WINDOW_MODAL);
@@ -428,7 +421,7 @@ public class DesignerApplication {
 
 		// Create the dialog Stage.
 		Stage dialogStage = new Stage(StageStyle.DECORATED);
-		dialogStage.setTitle("Edit Database Servers");
+		dialogStage.setTitle(DesignerLocalizer.instance().getLangString("db.editor.title"));
 		dialogStage.initModality(Modality.WINDOW_MODAL);
 		Scene scene = new Scene(page);
 		dialogStage.setScene(scene);
@@ -452,7 +445,7 @@ public class DesignerApplication {
 
 		// Create the dialog Stage.
 		Stage dialogStage = new Stage(StageStyle.DECORATED);
-		dialogStage.setTitle("Edit File Shares");
+		dialogStage.setTitle(DesignerLocalizer.instance().getLangString("file.editor.title"));
 		dialogStage.initModality(Modality.WINDOW_MODAL);
 		Scene scene = new Scene(page);
 		dialogStage.setScene(scene);
@@ -477,7 +470,7 @@ public class DesignerApplication {
 
 			// Create the dialog Stage.
 			Stage dialogStage = new Stage(StageStyle.DECORATED);
-			dialogStage.setTitle("Edit Collector Configurations");
+			dialogStage.setTitle(DesignerLocalizer.instance().getLangString("collector.editor.title"));
 			dialogStage.initModality(Modality.WINDOW_MODAL);
 			Scene scene = new Scene(page);
 			dialogStage.setScene(scene);
@@ -503,7 +496,7 @@ public class DesignerApplication {
 
 			// Create the dialog stage
 			Stage dialogStage = new Stage(StageStyle.DECORATED);
-			dialogStage.setTitle("Unit of Measure Converter");
+			dialogStage.setTitle(DesignerLocalizer.instance().getLangString("uom.converter.title"));
 			dialogStage.initModality(Modality.NONE);
 			Scene scene = new Scene(page);
 			dialogStage.setScene(scene);
@@ -522,9 +515,9 @@ public class DesignerApplication {
 
 	void showAboutDialog() throws Exception {
 		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.setTitle("About");
-		alert.setHeaderText("Point85 Overall Equipment Effectiveness");
-		alert.setContentText(OeeApplication.VERSION_INFO);
+		alert.setTitle(DesignerLocalizer.instance().getLangString("about"));
+		alert.setHeaderText(DesignerLocalizer.instance().getLangString("about.header"));
+		alert.setContentText(DomainUtils.getVersionInfo());
 		alert.setResizable(true);
 
 		alert.showAndWait();
@@ -537,7 +530,7 @@ public class DesignerApplication {
 
 		// Create the dialog Stage.
 		Stage dialogStage = new Stage(StageStyle.DECORATED);
-		dialogStage.setTitle("OPC DA Item Trend");
+		dialogStage.setTitle(DesignerLocalizer.instance().getLangString("opc.da.trend"));
 		dialogStage.initModality(Modality.NONE);
 		Scene scene = new Scene(page);
 		dialogStage.setScene(scene);
@@ -571,7 +564,7 @@ public class DesignerApplication {
 
 		// Create the dialog Stage.
 		Stage dialogStage = new Stage(StageStyle.DECORATED);
-		dialogStage.setTitle("OPC UA Item Trend");
+		dialogStage.setTitle(DesignerLocalizer.instance().getLangString("opc.ua.trend"));
 		dialogStage.initModality(Modality.NONE);
 		// dialogStage.initOwner(primaryStage);
 		Scene scene = new Scene(page);
@@ -608,7 +601,7 @@ public class DesignerApplication {
 
 		// Create the dialog Stage.
 		Stage dialogStage = new Stage(StageStyle.DECORATED);
-		dialogStage.setTitle("HTTP Event Trend");
+		dialogStage.setTitle(DesignerLocalizer.instance().getLangString("http.trend.title"));
 		dialogStage.initModality(Modality.NONE);
 		Scene scene = new Scene(page);
 		dialogStage.setScene(scene);
@@ -645,7 +638,7 @@ public class DesignerApplication {
 
 		// Create the dialog Stage.
 		Stage dialogStage = new Stage(StageStyle.DECORATED);
-		dialogStage.setTitle("Messaging Event Trend");
+		dialogStage.setTitle(DesignerLocalizer.instance().getLangString("rmq.event.trend"));
 		dialogStage.initModality(Modality.NONE);
 		Scene scene = new Scene(page);
 		dialogStage.setScene(scene);
@@ -682,7 +675,7 @@ public class DesignerApplication {
 
 		// Create the dialog Stage.
 		Stage dialogStage = new Stage(StageStyle.DECORATED);
-		dialogStage.setTitle("JMS Event Trend");
+		dialogStage.setTitle(DesignerLocalizer.instance().getLangString("jms.event.trend"));
 		dialogStage.initModality(Modality.NONE);
 		Scene scene = new Scene(page);
 		dialogStage.setScene(scene);
@@ -719,7 +712,7 @@ public class DesignerApplication {
 
 		// Create the dialog Stage.
 		Stage dialogStage = new Stage(StageStyle.DECORATED);
-		dialogStage.setTitle("MQTT Event Trend");
+		dialogStage.setTitle(DesignerLocalizer.instance().getLangString("mqtt.event.trend"));
 		dialogStage.initModality(Modality.NONE);
 		Scene scene = new Scene(page);
 		dialogStage.setScene(scene);
@@ -756,7 +749,7 @@ public class DesignerApplication {
 
 		// Create the dialog Stage.
 		Stage dialogStage = new Stage(StageStyle.DECORATED);
-		dialogStage.setTitle("Database Event Trend");
+		dialogStage.setTitle("db.event.trend");
 		dialogStage.initModality(Modality.NONE);
 		Scene scene = new Scene(page);
 		dialogStage.setScene(scene);
@@ -793,7 +786,7 @@ public class DesignerApplication {
 
 		// Create the dialog Stage.
 		Stage dialogStage = new Stage(StageStyle.DECORATED);
-		dialogStage.setTitle("File Event Trend");
+		dialogStage.setTitle(DesignerLocalizer.instance().getLangString("file.event.trend"));
 		dialogStage.initModality(Modality.NONE);
 		Scene scene = new Scene(page);
 		dialogStage.setScene(scene);
@@ -855,7 +848,7 @@ public class DesignerApplication {
 		return appContext;
 	}
 
-	// display the OEE dashboard as a dialog
+	// display the OEE dash board as a dialog
 	void showDashboard() throws Exception {
 		PlantEntity entity = getPhysicalModelController().getSelectedEntity();
 
@@ -864,7 +857,7 @@ public class DesignerApplication {
 
 		// Create the dialog Stage.
 		Stage dialogStage = new Stage(StageStyle.DECORATED);
-		dialogStage.setTitle("OEE Dashboard for " + entity.getDisplayString());
+		dialogStage.setTitle(DesignerLocalizer.instance().getLangString("oee.dashboard", entity.getDisplayString()));
 		dialogStage.initModality(Modality.NONE);
 		Scene scene = new Scene(pane);
 		dialogStage.setScene(scene);
@@ -875,6 +868,8 @@ public class DesignerApplication {
 
 		// load the content
 		FXMLLoader dashboardLoader = FXMLLoaderFactory.dashboardLoader();
+		DashboardController dashboardController = dashboardLoader.getController();
+
 		SplitPane spDashboard = (SplitPane) dashboardLoader.getRoot();
 
 		pane.getChildren().add(0, spDashboard);
@@ -884,7 +879,6 @@ public class DesignerApplication {
 		AnchorPane.setLeftAnchor(spDashboard, 0.0);
 		AnchorPane.setRightAnchor(spDashboard, 0.0);
 
-		DashboardController dashboardController = dashboardLoader.getController();
 		dashboardController.enableRefresh(true);
 
 		dashboardDialogController.setDashboardController(dashboardController);

@@ -9,6 +9,7 @@ import org.point85.app.Images;
 import org.point85.app.charts.DataSubscriber;
 import org.point85.app.charts.TrendChartController;
 import org.point85.app.designer.DesignerDialogController;
+import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.DomainUtils;
 import org.point85.domain.messaging.EquipmentEventMessage;
 import org.point85.domain.script.EventResolver;
@@ -57,7 +58,7 @@ public abstract class BaseMessagingTrendController extends DesignerDialogControl
 
 			setImages();
 
-			lbBroker.setText("");
+			lbBroker.setText(null);
 		}
 		return spTrendChart;
 	}
@@ -76,8 +77,8 @@ public abstract class BaseMessagingTrendController extends DesignerDialogControl
 		eventResolver.setWatchMode(true);
 		trendChartController.setEventResolver(eventResolver);
 
-		lbSourceId.setText(
-				"Equipment: " + eventResolver.getEquipment().getName() + ", Source Id: " + eventResolver.getSourceId());
+		lbSourceId.setText(DesignerLocalizer.instance().getLangString("event.source",
+				eventResolver.getEquipment().getName(), eventResolver.getSourceId()));
 		lbBroker.setText(eventResolver.getDataSource().getId());
 	}
 

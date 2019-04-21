@@ -23,7 +23,7 @@ import javafx.scene.control.TextField;
 public class DataCollectorController extends DialogController {
 	// default ports
 	private static final int RMQ_DEFAULT_PORT = 5672;
-	
+
 	// the collector
 	private DataCollector dataCollector;
 

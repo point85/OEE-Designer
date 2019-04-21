@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 
+import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.oee.ParetoItem;
 
 import javafx.geometry.Side;
@@ -50,8 +51,8 @@ public class ParetoChartController {
 		this.paretoItems = items;
 		Collections.sort(paretoItems, Collections.reverseOrder());
 
-		barChartSeries.setName("Categories");
-		lineChartSeries.setName("Cumulative");
+		barChartSeries.setName(DesignerLocalizer.instance().getLangString("categories"));
+		lineChartSeries.setName(DesignerLocalizer.instance().getLangString("cumulative"));
 
 		// create the stacked charts
 		layerCharts(spPareto, createBarChart(categoryLabel), createLineChart(categoryLabel));
@@ -92,7 +93,7 @@ public class ParetoChartController {
 
 		// Y-Axis (%)
 		NumberAxis yAxis = new NumberAxis(0, 100, 10);
-		yAxis.setLabel("Percent");
+		yAxis.setLabel(DesignerLocalizer.instance().getLangString("percent"));
 		yAxis.setAutoRanging(false);
 		yAxis.setUpperBound(100.0d);
 		yAxis.setLowerBound(0.0d);
@@ -107,16 +108,18 @@ public class ParetoChartController {
 		// add the points
 		double total = totalCount.doubleValue();
 
-		int count = 0;
-		for (ParetoItem paretoItem : paretoItems) {
-			if (count > TOP_N) {
-				break;
-			}
-			count++;
+		if (total > 0.0d) {
+			int count = 0;
+			for (ParetoItem paretoItem : paretoItems) {
+				if (count > TOP_N) {
+					break;
+				}
+				count++;
 
-			Float percentage = new Float(paretoItem.getValue().floatValue() / total * 100.0f);
-			XYChart.Data<String, Number> point = new XYChart.Data<>(paretoItem.getCategory(), percentage);
-			barChartSeries.getData().add(point);
+				Float percentage = new Float(paretoItem.getValue().floatValue() / total * 100.0f);
+				XYChart.Data<String, Number> point = new XYChart.Data<>(paretoItem.getCategory(), percentage);
+				barChartSeries.getData().add(point);
+			}
 		}
 
 		// add listener for mouse click on bar
@@ -146,7 +149,7 @@ public class ParetoChartController {
 
 		// Y-Axis (%)
 		NumberAxis yAxis = new NumberAxis(0, 100, 10);
-		yAxis.setLabel("Cumulative Percent");
+		yAxis.setLabel(DesignerLocalizer.instance().getLangString("cum.percent"));
 		yAxis.setSide(Side.RIGHT);
 		yAxis.setAutoRanging(false);
 		yAxis.setUpperBound(100.0d);

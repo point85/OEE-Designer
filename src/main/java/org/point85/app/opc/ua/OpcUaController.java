@@ -1,6 +1,7 @@
 package org.point85.app.opc.ua;
 
 import org.point85.app.designer.DataSourceConnectionController;
+import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.opc.ua.OpcUaSource;
 
 public abstract class OpcUaController extends DataSourceConnectionController {
@@ -31,7 +32,7 @@ public abstract class OpcUaController extends DataSourceConnectionController {
 	@Override
 	protected void connectToDataSource() throws Exception {
 		if (dataSource == null) {
-			throw new Exception("The OPC UA source is not defined.");
+			throw new Exception(DesignerLocalizer.instance().getErrorString("no.ua.source"));
 		}
 
 		// connect to OPC server

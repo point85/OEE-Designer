@@ -11,7 +11,9 @@ import org.openscada.opc.dcom.da.OPCITEMSTATE;
 import org.point85.app.AppUtils;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
+import org.point85.app.designer.ConnectionState;
 import org.point85.app.designer.DesignerApplication;
+import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.DomainUtils;
 import org.point85.domain.opc.da.OpcDaBrowserLeaf;
 import org.point85.domain.opc.da.OpcDaMonitoredGroup;
@@ -219,7 +221,8 @@ public class OpcDaBrowserController extends OpcDaController {
 		for (KeyedResult<Integer, OPCITEMSTATE> itemStateEntry : itemState) {
 			int errorCode = itemStateEntry.getErrorCode();
 			if (errorCode != 0) {
-				throw new Exception("Unable to read value, error code: " + String.format("%08X", errorCode));
+				throw new Exception(
+						DesignerLocalizer.instance().getErrorString("bad.da.read", String.format("%08X", errorCode)));
 			}
 
 			// quality
@@ -284,7 +287,8 @@ public class OpcDaBrowserController extends OpcDaController {
 				String serverState = status.getServerState();
 				lbState.setText(serverState);
 				lbState.setTextFill(CONNECTED_COLOR);
-				String formatted = DomainUtils.offsetDateTimeToString(status.getStartTime(), DomainUtils.OFFSET_DATE_TIME_PATTERN);
+				String formatted = DomainUtils.offsetDateTimeToString(status.getStartTime(),
+						DomainUtils.OFFSET_DATE_TIME_PATTERN);
 				lbStartTime.setText(formatted);
 				lbVendor.setText(status.getVendorInfo());
 				lbVersion.setText(status.getVersion());

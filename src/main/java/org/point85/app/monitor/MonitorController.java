@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.point85.app.AppUtils;
+import org.point85.app.EntityNode;
 import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
@@ -150,7 +151,6 @@ public class MonitorController {
 	private Button btRestart;
 
 	public MonitorController() {
-		// nothing to initialize
 	}
 
 	// initialize app
@@ -281,10 +281,12 @@ public class MonitorController {
 	// notifications
 	private void createNotificationTable() {
 		// collector host
-		TableColumn<CollectorNotification, String> tcCollector = new TableColumn<>("Collector");
+		TableColumn<CollectorNotification, String> tcCollector = new TableColumn<>(
+				MonitorLocalizer.instance().getLangString("collector"));
 		tvNotifications.getColumns().add(tcCollector);
 
-		TableColumn<CollectorNotification, String> tcCollectorHost = new TableColumn<>("Host");
+		TableColumn<CollectorNotification, String> tcCollectorHost = new TableColumn<>(
+				MonitorLocalizer.instance().getLangString("host"));
 		tcCollectorHost.setPrefWidth(150);
 		tcCollectorHost.setCellValueFactory(cellDataFeatures -> {
 			return new SimpleStringProperty(cellDataFeatures.getValue().getCollectorHost());
@@ -292,7 +294,8 @@ public class MonitorController {
 		tcCollector.getColumns().add(tcCollectorHost);
 
 		// collector IP
-		TableColumn<CollectorNotification, String> tcCollectorIp = new TableColumn<>("IP Address");
+		TableColumn<CollectorNotification, String> tcCollectorIp = new TableColumn<>(
+				MonitorLocalizer.instance().getLangString("ip.address"));
 		tcCollectorIp.setPrefWidth(150);
 		tcCollectorIp.setCellValueFactory(cellDataFeatures -> {
 			return new SimpleStringProperty(cellDataFeatures.getValue().getCollectorIpAddress());
@@ -300,17 +303,20 @@ public class MonitorController {
 		tcCollector.getColumns().add(tcCollectorIp);
 
 		// timestamp
-		TableColumn<CollectorNotification, String> tcTimestamp = new TableColumn<>("Timestamp");
+		TableColumn<CollectorNotification, String> tcTimestamp = new TableColumn<>(
+				MonitorLocalizer.instance().getLangString("timestamp"));
 		tcTimestamp.setPrefWidth(250);
 		tcTimestamp.setCellValueFactory(cellDataFeatures -> {
 			String timestamp = cellDataFeatures.getValue().getTimestamp();
 			OffsetDateTime odt = DomainUtils.offsetDateTimeFromString(timestamp, DomainUtils.OFFSET_DATE_TIME_8601);
-			return new SimpleStringProperty(DomainUtils.offsetDateTimeToString(odt, DomainUtils.OFFSET_DATE_TIME_PATTERN));
+			return new SimpleStringProperty(
+					DomainUtils.offsetDateTimeToString(odt, DomainUtils.OFFSET_DATE_TIME_PATTERN));
 		});
 		tvNotifications.getColumns().add(tcTimestamp);
 
 		// severity
-		TableColumn<CollectorNotification, NotificationSeverity> tcSeverity = new TableColumn<>("Severity");
+		TableColumn<CollectorNotification, NotificationSeverity> tcSeverity = new TableColumn<>(
+				MonitorLocalizer.instance().getLangString("severity"));
 		tcSeverity.setPrefWidth(100);
 		tcSeverity.setCellValueFactory(cellDataFeatures -> {
 			return new SimpleObjectProperty<NotificationSeverity>(cellDataFeatures.getValue().getSeverity());
@@ -318,7 +324,8 @@ public class MonitorController {
 		tvNotifications.getColumns().add(tcSeverity);
 
 		// message
-		TableColumn<CollectorNotification, String> tcText = new TableColumn<>("Message");
+		TableColumn<CollectorNotification, String> tcText = new TableColumn<>(
+				MonitorLocalizer.instance().getLangString("message"));
 		tcText.setPrefWidth(600);
 		tcText.setCellValueFactory(cellDataFeatures -> {
 			return new SimpleStringProperty(cellDataFeatures.getValue().getText());
@@ -472,7 +479,7 @@ public class MonitorController {
 
 		if (selectedEntity == null) {
 			// load the entity
-			String name = newItem.getValue().getEntityName();
+			String name = newItem.getValue().getPlantEntity().getName();
 			selectedEntity = PersistenceService.instance().fetchPlantEntityByName(name);
 			newItem.getValue().setPlantEntity(selectedEntity);
 		}
@@ -509,12 +516,13 @@ public class MonitorController {
 	private void onClearMessages() {
 		notifications.clear();
 		tvNotifications.setItems(notifications);
-		this.tvNotifications.refresh();
+		tvNotifications.refresh();
 		pgMessages.setPageCount(0);
 		pgMessages.setCurrentPageIndex(0);
 	}
 
 	void handleCollectorStatus(CollectorServerStatusMessage message) {
+		// update status
 		for (int i = 0; i < serverStatus.size(); i++) {
 			CollectorServerStatus status = serverStatus.get(i);
 
@@ -593,6 +601,10 @@ public class MonitorController {
 
 		serverStatus.clear();
 		for (DataCollector collector : collectors) {
+			if (collector.getHost() == null || collector.getHost().trim().length() == 0) {
+				continue;
+			}
+
 			CollectorServerStatus status = new CollectorServerStatus(collector);
 
 			if (!serverStatus.contains(status)) {
@@ -618,53 +630,13 @@ public class MonitorController {
 			}
 
 			if (collector.getBrokerHost() == null) {
-				throw new Exception("The collector " + collector.getDisplayString()
-						+ " does not have a messaging broker configured.");
+				throw new Exception(MonitorLocalizer.instance().getErrorString("no.collector.broker",
+						collector.getDisplayString()));
 			}
 
 			monitorApp.sendRestartCommand(collector);
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
-		}
-	}
-
-	// the wrapped PlantEntity
-	private class EntityNode {
-		private String name;
-
-		private PlantEntity entity;
-
-		private EntityNode(String name) {
-			this.name = name;
-		}
-
-		private EntityNode(PlantEntity entity) {
-			setPlantEntity(entity);
-		}
-
-		private PlantEntity getPlantEntity() {
-			return entity;
-		}
-
-		private void setPlantEntity(PlantEntity entity) {
-			this.entity = entity;
-
-			if (entity instanceof Equipment) {
-				dashboardController.setupEquipmentLoss((Equipment) entity);
-			}
-		}
-
-		private String getEntityName() {
-			return name;
-		}
-
-		@Override
-		public String toString() {
-			if (entity != null) {
-				return entity.getName() + " (" + entity.getDescription() + ")";
-			} else {
-				return name;
-			}
 		}
 	}
 }

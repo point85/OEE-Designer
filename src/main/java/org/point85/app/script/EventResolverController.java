@@ -8,6 +8,7 @@ import org.point85.app.ImageManager;
 import org.point85.app.Images;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
+import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Equipment;
 import org.point85.domain.plant.EquipmentEventResolver;
@@ -166,9 +167,9 @@ public class EventResolverController extends DesignerDialogController {
 		this.tfMatlId.clear();
 		this.tfValue.clear();
 		this.tfLastValue.clear();
-		this.lbDataType.setText("");
-		this.lbMatlDescription.setText("");
-		this.lbReasonDescription.setText("");
+		this.lbDataType.setText(null);
+		this.lbMatlDescription.setText(null);
+		this.lbReasonDescription.setText(null);
 	}
 
 	@FXML
@@ -250,39 +251,43 @@ public class EventResolverController extends DesignerDialogController {
 				Reason reason = PersistenceService.instance().fetchReasonByName(reasonCode);
 
 				if (reason == null) {
-					String msg = "No reason found with code " + reasonCode;
-					throw new Exception(msg);
+					throw new Exception(DesignerLocalizer.instance().getErrorString("no.reason.found", reasonCode));
 				}
 				taResult.appendText(reason.toString() + '\n');
 				break;
 
 			case PROD_GOOD:
 				if (result != null) {
-					taResult.appendText("Good Production: " + result.toString() + '\n');
+					taResult.appendText(
+							DesignerLocalizer.instance().getLangString("good.production", result.toString()) + '\n');
 				}
 				break;
 
 			case PROD_REJECT:
 				if (result != null) {
-					taResult.appendText("Reject and rework Production: " + result.toString() + '\n');
+					taResult.appendText(
+							DesignerLocalizer.instance().getLangString("reject.production", result.toString()) + '\n');
 				}
 				break;
 
 			case PROD_STARTUP:
 				if (result != null) {
-					taResult.appendText("Startup and yield Production: " + result.toString() + '\n');
+					taResult.appendText(
+							DesignerLocalizer.instance().getLangString("startup.production", result.toString()) + '\n');
 				}
 				break;
 
 			case JOB_CHANGE:
 				if (result != null) {
-					taResult.appendText("Job " + result.toString() + '\n');
+					taResult.appendText(
+							DesignerLocalizer.instance().getLangString("job.change", result.toString()) + '\n');
 				}
 				break;
 
 			case MATL_CHANGE:
 				if (result != null) {
-					taResult.appendText("Material: " + result.toString() + '\n');
+					taResult.appendText(
+							DesignerLocalizer.instance().getLangString("material.change", result.toString()) + '\n');
 				}
 				break;
 
@@ -368,5 +373,4 @@ public class EventResolverController extends DesignerDialogController {
 			AppUtils.showErrorDialog(e);
 		}
 	}
-
 }

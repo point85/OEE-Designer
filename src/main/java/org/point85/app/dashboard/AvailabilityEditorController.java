@@ -6,6 +6,7 @@ import org.point85.app.AppUtils;
 import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
+import org.point85.app.designer.DesignerLocalizer;
 import org.point85.app.reason.ReasonEditorController;
 import org.point85.domain.collector.OeeEvent;
 import org.point85.domain.persistence.PersistenceService;
@@ -64,7 +65,7 @@ public class AvailabilityEditorController extends EventEditorController {
 		super.setImages();
 
 		btReasonEditor.setGraphic(ImageManager.instance().getImageView(Images.REASON));
-		btReasonEditor.setTooltip(new Tooltip("Find reason."));
+		btReasonEditor.setTooltip(new Tooltip(DesignerLocalizer.instance().getLangString("reason.tt")));
 	}
 
 	@Override
@@ -80,7 +81,7 @@ public class AvailabilityEditorController extends EventEditorController {
 
 		// reason
 		if (availabilityEvent.getReason() == null) {
-			throw new Exception("A reason must be specified.");
+			throw new Exception(DesignerLocalizer.instance().getErrorString("no.reason"));
 		}
 
 		// material
@@ -95,7 +96,7 @@ public class AvailabilityEditorController extends EventEditorController {
 		}
 
 		if (material == null) {
-			throw new Exception("No material found for equipment " + equipment.getName());
+			throw new Exception(DesignerLocalizer.instance().getErrorString("no.material", equipment.getName()));
 		}
 
 		availabilityEvent.setMaterial(material);
@@ -123,7 +124,7 @@ public class AvailabilityEditorController extends EventEditorController {
 
 				// Create the dialog Stage.
 				Stage dialogStage = new Stage(StageStyle.DECORATED);
-				dialogStage.setTitle("Availability Reason");
+				dialogStage.setTitle(DesignerLocalizer.instance().getLangString("reason.editor"));
 				dialogStage.initModality(Modality.APPLICATION_MODAL);
 				Scene scene = new Scene(page);
 				dialogStage.setScene(scene);
@@ -138,10 +139,12 @@ public class AvailabilityEditorController extends EventEditorController {
 			reasonController.getDialogStage().showAndWait();
 
 			Reason reason = reasonController.getSelectedReason();
-			availabilityEvent.setReason(reason);
-			availabilityEvent.setInputValue(reason.getName());
-			displayReason();
 
+			if (reason != null) {
+				availabilityEvent.setReason(reason);
+				availabilityEvent.setInputValue(reason.getName());
+				displayReason();
+			}
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}

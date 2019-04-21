@@ -11,9 +11,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane prefHeight="250.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.uom.UomImporterController">
+<AnchorPane prefHeight="250.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.uom.UomImporterController">
    <children>
-      <TitledPane collapsible="false" layoutX="5.0" layoutY="5.0" text="Choose Unit of Measure to Import" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <TitledPane collapsible="false" layoutX="5.0" layoutY="5.0" text="%choose.import.uom" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <content>
             <GridPane hgap="5.0" vgap="15.0">
               <columnConstraints>
@@ -27,26 +27,26 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <ComboBox fx:id="cbAvailableUnits" maxWidth="1.7976931348623157E308" prefWidth="200.0" promptText="Choose unit" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" />
-                  <Label text="Unit Of Measure" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                  <ComboBox fx:id="cbAvailableUnits" maxWidth="1.7976931348623157E308" prefWidth="200.0" promptText="%choose.uom" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" />
+                  <Label text="%measurement.unit" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                      <padding>
                         <Insets right="5.0" />
                      </padding>
                   </Label>
-                  <Label text="Unit Type" GridPane.halignment="RIGHT">
+                  <Label text="%unit.type" GridPane.halignment="RIGHT">
                      <padding>
                         <Insets right="5.0" />
                      </padding>
                   </Label>
-                  <ComboBox fx:id="cbUnitTypes" maxWidth="1.7976931348623157E308" onAction="#setPossibleUnits" prefWidth="250.0" promptText="Type of the unit" GridPane.columnIndex="1" />
+                  <ComboBox fx:id="cbUnitTypes" maxWidth="1.7976931348623157E308" onAction="#setPossibleUnits" prefWidth="250.0" promptText="%choose.unit.type" GridPane.columnIndex="1" />
                </children>
             </GridPane>
          </content>
       </TitledPane>
       <HBox alignment="CENTER" layoutX="210.0" layoutY="223.0" prefHeight="50.0" spacing="25.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
-            <Button fx:id="btOK" mnemonicParsing="false" onAction="#onOK" text="OK" />
-            <Button fx:id="btCancel" mnemonicParsing="false" onAction="#onCancel" text="Cancel" />
+            <Button fx:id="btOK" mnemonicParsing="false" onAction="#onOK" text="%ok" />
+            <Button fx:id="btCancel" mnemonicParsing="false" onAction="#onCancel" text="%cancel" />
          </children>
       </HBox>
    </children>

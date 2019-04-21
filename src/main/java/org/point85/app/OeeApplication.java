@@ -1,10 +1,12 @@
 package org.point85.app;
 
 import org.apache.log4j.PropertyConfigurator;
-import org.point85.app.collector.ClientTestApplication;
 import org.point85.app.collector.CollectorApplication;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.monitor.MonitorApplication;
+import org.point85.app.operator.OperatorApplication;
+import org.point85.app.tester.TesterApplication;
+import org.point85.domain.DomainUtils;
 import org.point85.domain.persistence.PersistenceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,13 +26,12 @@ import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 public class OeeApplication extends Application {
-	public static final String VERSION_INFO = "Version 2.2.1, March 14, 2019";
-
 	// JFX applications
 	private static final String DESIGNER_APP = "DESIGNER";
 	private static final String MONITOR_APP = "MONITOR";
 	private static final String COLLECTOR_APP = "COLLECTOR";
 	private static final String TESTER_APP = "TESTER";
+	private static final String OPERATOR_APP = "OPERATOR";
 
 	// program args
 	private static final int IDX_APP = 0;
@@ -47,24 +48,26 @@ public class OeeApplication extends Application {
 	// Monitor application
 	private MonitorApplication monitorApp;
 
-	// collector application
+	// Collector application
 	private CollectorApplication collectorApp;
 
-	// client test application
-	private ClientTestApplication clientTestApp;
+	// Tester application
+	private TesterApplication testerApp;
+
+	// Operator application
+	private OperatorApplication operatorApp;
 
 	// splash screen
 	private VBox splashLayout;
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-
 		final Task<String> startTask = new Task<String>() {
 			@Override
 			protected String call() throws Exception {
 				// wait for a database connection by requesting an EntityManager
 				PersistenceService.instance().getEntityManager();
-				return "OK";
+				return getClass().getSimpleName();
 			}
 		};
 
@@ -84,8 +87,10 @@ public class OeeApplication extends Application {
 				monitorApp.stop();
 			} else if (collectorApp != null) {
 				collectorApp.stop();
-			} else if (clientTestApp != null) {
-				clientTestApp.stop();
+			} else if (testerApp != null) {
+				testerApp.stop();
+			} else if (operatorApp != null) {
+				operatorApp.stop();
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
@@ -118,7 +123,6 @@ public class OeeApplication extends Application {
 		FXMLLoader loader = FXMLLoaderFactory.splashLoader();
 		SplashController splashController = loader.getController();
 		splashController.initialize();
-		splashController.setSplashText("Starting application.  Please wait ...");
 
 		splashLayout = (VBox) loader.getRoot();
 
@@ -161,8 +165,11 @@ public class OeeApplication extends Application {
 			collectorApp = new CollectorApplication();
 			collectorApp.start(mainStage);
 		} else if (appId.equals(TESTER_APP)) {
-			clientTestApp = new ClientTestApplication();
-			clientTestApp.start(mainStage);
+			testerApp = new TesterApplication();
+			testerApp.start(mainStage);
+		} else if (appId.equals(OPERATOR_APP)) {
+			operatorApp = new OperatorApplication();
+			operatorApp.start(mainStage);
 		}
 	}
 
@@ -173,8 +180,7 @@ public class OeeApplication extends Application {
 	/**
 	 * Main entry point
 	 * 
-	 * @param args
-	 *            Program arguments
+	 * @param args Program arguments
 	 */
 	public static void main(String[] args) {
 		// configure log4j
@@ -189,7 +195,7 @@ public class OeeApplication extends Application {
 
 		// create the EMF
 		if (logger.isInfoEnabled()) {
-			logger.info("Running application " + args[IDX_APP]);
+			logger.info("Running application " + args[IDX_APP] + " for version " + DomainUtils.getVersionInfo());
 			logger.info("Initializing persistence service with args: " + args[IDX_JDBC] + ", " + args[IDX_USER] + ", "
 					+ password);
 		}

@@ -34,13 +34,14 @@ import org.point85.app.ImageManager;
 import org.point85.app.Images;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
+import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.DomainUtils;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.uom.MeasurementSystem;
+import org.point85.domain.uom.MeasurementType;
 import org.point85.domain.uom.Prefix;
 import org.point85.domain.uom.Quantity;
 import org.point85.domain.uom.UnitOfMeasure;
-import org.point85.domain.uom.UnitOfMeasure.MeasurementType;
 import org.point85.domain.uom.UnitType;
 
 import javafx.collections.FXCollections;
@@ -72,9 +73,6 @@ import javafx.stage.StageStyle;
  *
  */
 public class UomEditorController extends DesignerDialogController {
-	// custom UOM category
-	private static final String CUSTOM_CATEGORY = "Uncategorized";
-
 	// select UOM
 	private TreeItem<UomNode> selectedUomItem;
 
@@ -315,7 +313,7 @@ public class UomEditorController extends DesignerDialogController {
 
 				// Create the dialog Stage.
 				Stage dialogStage = new Stage(StageStyle.DECORATED);
-				dialogStage.setTitle("Import Unit of Measure");
+				dialogStage.setTitle(DesignerLocalizer.instance().getLangString("import.uom.title"));
 				dialogStage.initModality(Modality.NONE);
 				Scene scene = new Scene(pane);
 				dialogStage.setScene(scene);
@@ -333,9 +331,9 @@ public class UomEditorController extends DesignerDialogController {
 			}
 
 			UnitOfMeasure uom = uomImportController.getSelectedUom();
-			
+
 			if (uom == null) {
-				throw new Exception("A unit of measure must be selected.");
+				throw new Exception(DesignerLocalizer.instance().getErrorString("unit.cannot.be.null"));
 			}
 
 			// make sure that there is a non-null category
@@ -681,7 +679,7 @@ public class UomEditorController extends DesignerDialogController {
 		String name = this.tfName.getText().trim();
 
 		if (name.length() == 0) {
-			AppUtils.showErrorDialog("The unit name is required.");
+			AppUtils.showErrorDialog(DesignerLocalizer.instance().getErrorString("no.uom.name"));
 			return;
 		}
 
@@ -689,13 +687,13 @@ public class UomEditorController extends DesignerDialogController {
 		String category = this.cbCategories.getSelectionModel().getSelectedItem();
 
 		if (category == null) {
-			category = CUSTOM_CATEGORY;
+			category = DesignerLocalizer.instance().getLangString("uncategorized");
 		}
 
 		String type = this.cbUnitTypes.getSelectionModel().getSelectedItem();
 
 		if (type == null) {
-			AppUtils.showErrorDialog("The unit type is required.");
+			AppUtils.showErrorDialog(DesignerLocalizer.instance().getErrorString("no.uom.type"));
 			return;
 		}
 
@@ -719,7 +717,7 @@ public class UomEditorController extends DesignerDialogController {
 			String baseSymbol = AppUtils.parseSymbol(cbPowerUnits.getSelectionModel().getSelectedItem());
 
 			if (baseSymbol == null) {
-				throw new Exception("A base power UOM symbol must be selected.");
+				throw new Exception(DesignerLocalizer.instance().getErrorString("no.base.uom"));
 			}
 			UnitOfMeasure base = AppUtils.getUOMForEditing(baseSymbol);
 
@@ -728,12 +726,12 @@ public class UomEditorController extends DesignerDialogController {
 			}
 
 			if (!base.getMeasurementType().equals(MeasurementType.SCALAR)) {
-				throw new Exception("The base unit of measure must be a scalar.");
+				throw new Exception(DesignerLocalizer.instance().getErrorString("base.scalar"));
 			}
 
 			// exponent
 			if (tfExponent.getText() == null) {
-				throw new Exception("An exponent must be provided.");
+				throw new Exception(DesignerLocalizer.instance().getErrorString("no.exponent"));
 			}
 
 			String exp = tfExponent.getText().trim();
@@ -757,14 +755,14 @@ public class UomEditorController extends DesignerDialogController {
 			}
 
 			if (!uom1.getMeasurementType().equals(MeasurementType.SCALAR)) {
-				throw new Exception("The multiplier/dividend unit of measure must be a scalar.");
+				throw new Exception(DesignerLocalizer.instance().getErrorString("not.scalar.multiplier"));
 			}
 
 			String uom2Symbol = AppUtils.parseSymbol(cbUom2Units.getSelectionModel().getSelectedItem());
 			UnitOfMeasure uom2 = AppUtils.getUOMForEditing(uom2Symbol);
 
 			if (!uom2.getMeasurementType().equals(MeasurementType.SCALAR)) {
-				throw new Exception("The multiplicand/divisor unit of measure must be a scalar.");
+				throw new Exception(DesignerLocalizer.instance().getErrorString("not.scalar.multiplicand"));
 			}
 
 			if (rbProduct.isSelected()) {
@@ -789,7 +787,7 @@ public class UomEditorController extends DesignerDialogController {
 					uom.setQuotientUnits(uom1, uom2);
 				}
 			} else {
-				throw new Exception("Either product or quotient must be selected.");
+				throw new Exception(DesignerLocalizer.instance().getErrorString("select.product.quotient"));
 			}
 		} else if (tScalar.isSelected()) {
 			// create scalar UOM
@@ -878,13 +876,13 @@ public class UomEditorController extends DesignerDialogController {
 	@FXML
 	private void onDeleteUom() {
 		if (selectedUomItem == null || !selectedUomItem.getValue().isUnitOfMeasure()) {
-			AppUtils.showErrorDialog("No unit of measure has been selected for deletion.");
+			AppUtils.showErrorDialog(DesignerLocalizer.instance().getErrorString("unit.cannot.be.null"));
 			return;
 		}
 
 		// confirm
-		String msg = "Do you want to delete " + getSelectedUom().toDisplayString();
-		ButtonType type = AppUtils.showConfirmationDialog(msg);
+		ButtonType type = AppUtils.showConfirmationDialog(
+				DesignerLocalizer.instance().getLangString("uom.delete", getSelectedUom().getDisplayString()));
 
 		if (type.equals(ButtonType.CANCEL)) {
 			return;

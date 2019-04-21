@@ -20,5 +20,4 @@ public class DashboardDialogController extends DesignerDialogController {
 		// images for buttons
 		setImages();
 	}
-
 }

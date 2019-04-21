@@ -7,7 +7,7 @@ import javafx.stage.Stage;
 
 public abstract class DialogController {
 	private boolean isCancelled = false;
-	
+
 	@FXML
 	protected Button btOK;
 
@@ -17,7 +17,6 @@ public abstract class DialogController {
 	// stage for the dialog
 	@FXML
 	private Stage dialogStage;
-
 
 	public Stage getDialogStage() {
 		return this.dialogStage;
@@ -31,7 +30,7 @@ public abstract class DialogController {
 	@FXML
 	protected void onOK() {
 		isCancelled = false;
-		
+
 		// close dialog
 		this.dialogStage.close();
 	}
@@ -39,14 +38,14 @@ public abstract class DialogController {
 	@FXML
 	protected void onCancel() {
 		isCancelled = true;
-		
+
 		// close dialog
 		this.dialogStage.close();
 	}
 
 	// images for controls
 	protected void setImages() throws Exception {
-		// OK
+		// OK or Done
 		btOK.setGraphic(ImageManager.instance().getImageView(Images.OK));
 		btOK.setContentDisplay(ContentDisplay.LEFT);
 
@@ -54,12 +53,9 @@ public abstract class DialogController {
 		if (btCancel != null) {
 			btCancel.setGraphic(ImageManager.instance().getImageView(Images.CANCEL));
 			btCancel.setContentDisplay(ContentDisplay.LEFT);
-		} else {
-			// just one button
-			btOK.setText("Done");
 		}
 	}
-	
+
 	public boolean isCancelled() {
 		return isCancelled;
 	}

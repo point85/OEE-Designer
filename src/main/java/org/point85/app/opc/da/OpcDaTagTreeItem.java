@@ -16,7 +16,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 /**
- *
+ * A node in the OPC DA tag hierarchy
  * @author Kent Randall
  */
 public class OpcDaTagTreeItem extends TreeItem<OpcDaTagTreeBranch> {

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.point85.app.AppUtils;
 import org.point85.app.charts.DataSubscriber;
+import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.messaging.ApplicationMessage;
 import org.point85.domain.messaging.EquipmentEventMessage;
 import org.point85.domain.messaging.MessageListener;
@@ -43,8 +44,8 @@ public class MessagingTrendController extends BaseMessagingTrendController imple
 
 		String queueName = getClass().getSimpleName() + "_" + System.currentTimeMillis();
 
-		pubSub.startUp(source.getHost(), source.getPort(), source.getUserName(), source.getUserPassword(),
-				queueName, keys, this);
+		pubSub.startUp(source.getHost(), source.getPort(), source.getUserName(), source.getUserPassword(), queueName,
+				keys, this);
 
 		// add to context
 		getApp().getAppContext().addMessagingClient(pubSub);
@@ -80,15 +81,15 @@ public class MessagingTrendController extends BaseMessagingTrendController imple
 		MessageType type = message.getMessageType();
 
 		if (!type.equals(MessageType.EQUIPMENT_EVENT)) {
-			throw new Exception("Received unknown message of type " + message);
+			throw new Exception(DesignerLocalizer.instance().getErrorString("unknown.message", type));
 		}
 
 		handleEquipmentEvent((EquipmentEventMessage) message);
 	}
 
 	private void handleEquipmentEvent(EquipmentEventMessage message) throws Exception {
-		ResolutionService service = new ResolutionService( message.getValue(),
-				message.getTimestamp(), message.getReason());
+		ResolutionService service = new ResolutionService(message.getValue(), message.getTimestamp(),
+				message.getReason());
 
 		service.setOnFailed(new EventHandler<WorkerStateEvent>() {
 			@Override
@@ -110,23 +111,10 @@ public class MessagingTrendController extends BaseMessagingTrendController imple
 	private void onLoopbackTest() {
 		try {
 			if (pubSub == null) {
-				throw new Exception("The trend is not connected to an RMQ broker.");
+				throw new Exception(DesignerLocalizer.instance().getErrorString("no.rmq.broker"));
 			}
-			
+
 			EquipmentEventMessage msg = createMessage();
-
-			/*
-			EventResolver eventResolver = trendChartController.getEventResolver();
-
-			String sourceId = eventResolver.getSourceId();
-			String[] values = getLoopbackValues();
-
-			EquipmentEventMessage msg = new EquipmentEventMessage();
-			msg.setSourceId(sourceId);
-			msg.setValue(values[0]);
-			msg.setReason(values[1]);
-			*/
-
 			pubSub.publish(msg, RoutingKey.EQUIPMENT_SOURCE_EVENT, 30);
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);

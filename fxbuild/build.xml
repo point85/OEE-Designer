@@ -2,10 +2,10 @@
 	<project name="oee-apps" default="build-all" basedir="."  xmlns:fx="javafx:com.sun.javafx.tools.ant">
 	
 	<!-- distribution archive -->
-	<property name="app_version" value="2.2.1"/>
-	<property name="dist.zip" value="oee-apps-2.2.1.jar"/>
-	<property name="domain.jar" value="oee-domain-2.2.1.jar"/>
-	<property name="collector.jar" value="oee-collector-2.2.1.jar"/>
+	<property name="app_version" value="2.3.0"/>
+	<property name="dist.zip" value="oee-apps-2.3.0.jar"/>
+	<property name="domain.jar" value="oee-domain-2.3.0.jar"/>
+	<property name="collector.jar" value="oee-collector-2.3.0.jar"/>
 		
 	<!-- folders -->
 	<property name="repo.dir" value="C:\maven_repo"/>
@@ -173,10 +173,12 @@
 		<copy file="../run-monitor-app.bat" todir="${dist.dir}"/>
 		<copy file="../run-collector-app.bat" todir="${dist.dir}"/>
 		<copy file="../run-tester-app.bat" todir="${dist.dir}"/>
+		<copy file="../run-operator-app.bat" todir="${dist.dir}"/>
 		<copy file="../run-designer-app.sh" todir="${dist.dir}"/>
 		<copy file="../run-monitor-app.sh" todir="${dist.dir}"/>
 		<copy file="../run-collector-app.sh" todir="${dist.dir}"/>
 		<copy file="../run-tester-app.sh" todir="${dist.dir}"/>
+		<copy file="../run-operator-app.sh" todir="${dist.dir}"/>
 		
 		<!-- create a logging folder -->
 		<mkdir dir="${dist.dir}/logs" />

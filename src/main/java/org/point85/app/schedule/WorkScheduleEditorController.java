@@ -16,6 +16,7 @@ import org.point85.app.ImageManager;
 import org.point85.app.Images;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
+import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.oee.TimeLoss;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.schedule.NonWorkingPeriod;
@@ -54,6 +55,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 public class WorkScheduleEditorController extends DesignerDialogController {
+	// not localizable
 	private static final String ROOT_SCHEDULE_NAME = "All Schedules";
 
 	// schedule being edited or viewed
@@ -891,7 +893,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 	private void onDeleteSchedule() {
 		try {
 			if (selectedScheduleItem == null) {
-				AppUtils.showErrorDialog("No schedule has been selected for deletion.");
+				AppUtils.showErrorDialog(DesignerLocalizer.instance().getErrorString("no.schedule.selected"));
 				return;
 			}
 
@@ -1058,6 +1060,9 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 
 			tvSchedules.refresh();
 
+			// re-display attributes
+			onRefreshSchedule();
+
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}
@@ -1190,14 +1195,14 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		try {
 			// need a work schedule first
 			if (getSelectedSchedule() == null) {
-				throw new Exception("A work schedule must be created before adding a shift to it.");
+				throw new Exception(DesignerLocalizer.instance().getErrorString("schedule.before.shift"));
 			}
 
 			// name
 			String name = this.tfShiftName.getText().trim();
 
 			if (name == null || name.length() == 0) {
-				throw new Exception("The name of the shift must be specified.");
+				throw new Exception(DesignerLocalizer.instance().getErrorString("no.shift.name"));
 			}
 
 			// add to comboBox for rotation segments
@@ -1270,14 +1275,14 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		try {
 			// need a work schedule first
 			if (getSelectedSchedule() == null) {
-				throw new Exception("A work schedule must be created before adding a team to it.");
+				throw new Exception(DesignerLocalizer.instance().getErrorString("schedule.before.team"));
 			}
 
 			// name
 			String name = this.tfTeamName.getText().trim();
 
 			if (name == null || name.length() == 0) {
-				throw new Exception("The name of the team must be specified.");
+				throw new Exception(DesignerLocalizer.instance().getErrorString("no.team.name"));
 			}
 
 			// description
@@ -1349,7 +1354,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		try {
 			// need a work schedule first
 			if (getSelectedSchedule() == null) {
-				throw new Exception("A work schedule must be created before adding a rotation to it.");
+				throw new Exception(DesignerLocalizer.instance().getErrorString("schedule.before.rotation"));
 			}
 
 			// name
@@ -1441,11 +1446,11 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		try {
 			// need a work schedule first
 			if (getSelectedSchedule() == null) {
-				throw new Exception("A work schedule must be created before adding a rotation segment to it.");
+				throw new Exception(DesignerLocalizer.instance().getErrorString("schedule.before.segment"));
 			}
 
 			if (currentRotation == null) {
-				throw new Exception("A rotation must be selected before adding a segment.");
+				throw new Exception(DesignerLocalizer.instance().getErrorString("rotation.before.segment"));
 			}
 
 			// shift
@@ -1460,7 +1465,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 			}
 
 			if (startingShift == null) {
-				throw new Exception("No shift found with name" + shiftName);
+				throw new Exception(DesignerLocalizer.instance().getErrorString("shift.not.found", shiftName));
 			}
 
 			Integer daysOn = this.spDaysOn.getValue();
@@ -1540,14 +1545,14 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		try {
 			// need a work schedule first
 			if (getSelectedSchedule() == null) {
-				throw new Exception("A work schedule must be created before adding a non-working period to it.");
+				throw new Exception(DesignerLocalizer.instance().getErrorString("schedule.before.non"));
 			}
 
 			// name
 			String name = this.tfPeriodName.getText().trim();
 
 			if (name == null || name.length() == 0) {
-				throw new Exception("The name of the non-working period must be specified.");
+				throw new Exception(DesignerLocalizer.instance().getErrorString("no.non.name"));
 			}
 
 			// description
@@ -1646,7 +1651,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 
 				// Create the dialog Stage.
 				Stage dialogStage = new Stage(StageStyle.DECORATED);
-				dialogStage.setTitle("Template Work Schedule");
+				dialogStage.setTitle(DesignerLocalizer.instance().getLangString("template.schedule"));
 				dialogStage.initModality(Modality.NONE);
 				Scene scene = new Scene(page);
 				dialogStage.setScene(scene);
@@ -1675,9 +1680,9 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 	private void onViewShifts() {
 		try {
 			if (getSelectedSchedule() == null) {
-				throw new Exception("A work schedule must be chosen.");
+				throw new Exception(DesignerLocalizer.instance().getErrorString("choose.schedule"));
 			}
-			
+
 			if (shiftsController == null) {
 				FXMLLoader loader = FXMLLoaderFactory.scheduleShiftsLoader();
 				AnchorPane page = (AnchorPane) loader.getRoot();

@@ -5,14 +5,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 import org.point85.app.AppUtils;
+import org.point85.app.EntityNode;
 import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
 import org.point85.domain.collector.DataSourceType;
+import org.point85.domain.i18n.I18n;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Area;
 import org.point85.domain.plant.Enterprise;
@@ -322,53 +323,54 @@ public class PhysicalModelController extends DesignerController {
 
 	private void initializeToolbar() throws Exception {
 		// toolbar
+		I18n i18n = DesignerLocalizer.instance().getLangI18n();
 		btMaterialEditor.setGraphic(ImageManager.instance().getImageView(Images.MATERIAL));
-		btMaterialEditor.setTooltip(new Tooltip("Display material editor."));
+		btMaterialEditor.setTooltip(new Tooltip(i18n.getString("material.tt")));
 
 		btReasonEditor.setGraphic(ImageManager.instance().getImageView(Images.REASON));
-		btReasonEditor.setTooltip(new Tooltip("Display reason editor."));
+		btReasonEditor.setTooltip(new Tooltip(i18n.getString("reason.tt")));
 
 		btScheduleEditor.setGraphic(ImageManager.instance().getImageView(Images.SCHEDULE));
-		btScheduleEditor.setTooltip(new Tooltip("Display work schedule editor."));
+		btScheduleEditor.setTooltip(new Tooltip(i18n.getString("schedule.tt")));
 
 		btUomEditor.setGraphic(ImageManager.instance().getImageView(Images.UOM));
-		btUomEditor.setTooltip(new Tooltip("Display unit of measure editor."));
+		btUomEditor.setTooltip(new Tooltip(i18n.getString("uom.tt")));
 
 		btOpcDaBrowser.setGraphic(ImageManager.instance().getImageView(Images.OPC_DA));
-		btOpcDaBrowser.setTooltip(new Tooltip("Display OPC DA browser."));
+		btOpcDaBrowser.setTooltip(new Tooltip(i18n.getString("opc.da.tt")));
 
 		btOpcUaBrowser.setGraphic(ImageManager.instance().getImageView(Images.OPC_UA));
-		btOpcUaBrowser.setTooltip(new Tooltip("Display OPC UA browser."));
+		btOpcUaBrowser.setTooltip(new Tooltip(i18n.getString("opc.ua.tt")));
 
 		btHttpServerEditor.setGraphic(ImageManager.instance().getImageView(Images.HTTP));
-		btHttpServerEditor.setTooltip(new Tooltip("Display HTTP server editor."));
+		btHttpServerEditor.setTooltip(new Tooltip(i18n.getString("http.tt")));
 
 		btRmqBrokerEditor.setGraphic(ImageManager.instance().getImageView(Images.RMQ));
-		btRmqBrokerEditor.setTooltip(new Tooltip("Display RabbitMQ broker editor."));
+		btRmqBrokerEditor.setTooltip(new Tooltip(i18n.getString("rmq.tt")));
 
 		btJMSBrokerEditor.setGraphic(ImageManager.instance().getImageView(Images.JMS));
-		btJMSBrokerEditor.setTooltip(new Tooltip("Display JMS broker editor."));
+		btJMSBrokerEditor.setTooltip(new Tooltip(i18n.getString("jms.tt")));
 
 		btMQTTBrokerEditor.setGraphic(ImageManager.instance().getImageView(Images.MQTT));
-		btMQTTBrokerEditor.setTooltip(new Tooltip("Display MQTT server editor."));
+		btMQTTBrokerEditor.setTooltip(new Tooltip(i18n.getString("mqtt.tt")));
 
 		btDatabaseServerEditor.setGraphic(ImageManager.instance().getImageView(Images.DB));
-		btDatabaseServerEditor.setTooltip(new Tooltip("Display database server editor."));
+		btDatabaseServerEditor.setTooltip(new Tooltip(i18n.getString("db.tt")));
 
 		btFileShareEditor.setGraphic(ImageManager.instance().getImageView(Images.FILE));
-		btFileShareEditor.setTooltip(new Tooltip("Display file share editor."));
+		btFileShareEditor.setTooltip(new Tooltip(i18n.getString("file.tt")));
 
 		btCollectorEditor.setGraphic(ImageManager.instance().getImageView(Images.COLLECTOR));
-		btCollectorEditor.setTooltip(new Tooltip("Display collector configuration editor."));
+		btCollectorEditor.setTooltip(new Tooltip(i18n.getString("collector.tt")));
 
 		btUomConverter.setGraphic(ImageManager.instance().getImageView(Images.CONVERT));
-		btUomConverter.setTooltip(new Tooltip("Display Unit of Measure Converter."));
+		btUomConverter.setTooltip(new Tooltip(i18n.getString("uom.converter.tt")));
 
 		btScriptEditor.setGraphic(ImageManager.instance().getImageView(Images.SCRIPT));
-		btScriptEditor.setTooltip(new Tooltip("Display Script Editor."));
+		btScriptEditor.setTooltip(new Tooltip(i18n.getString("script.tt")));
 
 		btAboutDialog.setGraphic(ImageManager.instance().getImageView(Images.ABOUT));
-		btAboutDialog.setTooltip(new Tooltip("Display about dialog."));
+		btAboutDialog.setTooltip(new Tooltip(i18n.getString("about.tt")));
 	}
 
 	// images for editor buttons
@@ -560,7 +562,7 @@ public class PhysicalModelController extends DesignerController {
 
 			// main editing
 			tfEntityName.clear();
-			taEntityDescription.clear();
+			taEntityDescription.setText(null);
 			cbEntityTypes.getSelectionModel().clearSelection();
 			cbEntityTypes.getSelectionModel().select(null);
 			cbEntityTypes.requestFocus();
@@ -593,8 +595,8 @@ public class PhysicalModelController extends DesignerController {
 
 			if (parentItem == null) {
 				// confirm
-				String msg = "Do you want to add a new entity at level " + childLevel + "?";
-				ButtonType type = AppUtils.showConfirmationDialog(msg);
+				ButtonType type = AppUtils.showConfirmationDialog(
+						DesignerLocalizer.instance().getLangString("add.entity", childLevel.toString()));
 
 				if (type.equals(ButtonType.CANCEL)) {
 					return false;
@@ -604,13 +606,12 @@ public class PhysicalModelController extends DesignerController {
 				parentItem = tvEntities.getRoot();
 
 				if (parentItem == null) {
-					throw new Exception("Unable to create plant entity.  Check database coonnection.");
+					throw new Exception(DesignerLocalizer.instance().getErrorString("create.entity"));
 				}
 			} else {
 				// confirm
-				String msg = "Do you want to add a new child entity for parent "
-						+ parentItem.getValue().getPlantEntity().getName() + "?";
-				ButtonType type = AppUtils.showConfirmationDialog(msg);
+				ButtonType type = AppUtils.showConfirmationDialog(DesignerLocalizer.instance()
+						.getLangString("add.entity.parent", parentItem.getValue().getPlantEntity().getName()));
 
 				if (type.equals(ButtonType.CANCEL)) {
 					return false;
@@ -646,7 +647,7 @@ public class PhysicalModelController extends DesignerController {
 			}
 
 			if (childLevel == null) {
-				throw new Exception("The level of the plant entity must be specified.");
+				throw new Exception(DesignerLocalizer.instance().getErrorString("no.level"));
 			}
 
 			switch (childLevel) {
@@ -744,6 +745,7 @@ public class PhysicalModelController extends DesignerController {
 		try {
 			PlantEntity selectedEntity = getSelectedEntity();
 			if (selectedEntity == null) {
+				onNewEntity();
 				return;
 			}
 
@@ -767,7 +769,7 @@ public class PhysicalModelController extends DesignerController {
 			populateTopEntityNodes();
 			onNewEntity();
 		} catch (Exception e) {
-			AppUtils.showErrorDialog("Unable to fetch plant entities.  Check database connection.  " + e.getMessage());
+			AppUtils.showErrorDialog(DesignerLocalizer.instance().getErrorString("fetch.entities", e.getMessage()));
 		}
 	}
 
@@ -777,13 +779,13 @@ public class PhysicalModelController extends DesignerController {
 		PlantEntity selectedEntity = getSelectedEntity();
 
 		if (selectedEntity == null) {
-			AppUtils.showErrorDialog("No entity has been selected for deletion.");
+			AppUtils.showErrorDialog(DesignerLocalizer.instance().getErrorString("no.entity"));
 			return;
 		}
 
 		// confirm
-		String msg = "Do you want to delete entity " + selectedEntity.getName() + "?";
-		ButtonType type = AppUtils.showConfirmationDialog(msg);
+		ButtonType type = AppUtils.showConfirmationDialog(
+				DesignerLocalizer.instance().getLangString("confirm.delete", selectedEntity.getName()));
 
 		if (type.equals(ButtonType.CANCEL)) {
 			return;
@@ -919,7 +921,7 @@ public class PhysicalModelController extends DesignerController {
 			long days = entity.getRetentionDuration().toDays();
 			this.tfRetention.setText(String.valueOf(days));
 		} else {
-			this.tfRetention.setText("");
+			this.tfRetention.setText(null);
 		}
 
 		if (entity instanceof Equipment) {
@@ -940,7 +942,7 @@ public class PhysicalModelController extends DesignerController {
 		String name = tfEntityName.getText().trim();
 
 		if (name.length() == 0) {
-			throw new Exception("The plant entity name must be specified.");
+			throw new Exception(DesignerLocalizer.instance().getErrorString("no.name"));
 		}
 		entity.setName(name);
 
@@ -949,13 +951,13 @@ public class PhysicalModelController extends DesignerController {
 		entity.setDescription(description);
 
 		// retention period
-		String period = tfRetention.getText().trim();
+		String period = tfRetention.getText();
 
-		if (period.length() > 0) {
-			Long days = AppUtils.stringToLong(period);
+		if (period != null && period.length() > 0) {
+			Long days = AppUtils.stringToLong(period.trim());
 
 			if (days < 0) {
-				throw new Exception("The retention period must be greater than or equals to zero days");
+				throw new Exception(DesignerLocalizer.instance().getErrorString("invalid.retention"));
 			}
 			entity.setRetentionDuration(Duration.ofDays(days));
 		}
@@ -1079,44 +1081,6 @@ public class PhysicalModelController extends DesignerController {
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 			return;
-		}
-	}
-
-	// the wrapped PlantEntity
-	private class EntityNode {
-		private PlantEntity entity;
-
-		private EntityNode(PlantEntity entity) {
-			setPlantEntity(entity);
-		}
-
-		private PlantEntity getPlantEntity() {
-			return entity;
-		}
-
-		private void setPlantEntity(PlantEntity entity) {
-			this.entity = entity;
-		}
-
-		@Override
-		public int hashCode() {
-			return Objects.hash(entity.getName());
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (obj instanceof EntityNode) {
-				EntityNode other = (EntityNode) obj;
-				if (entity.getName().equals(other.entity.getName())) {
-					return true;
-				}
-			}
-			return false;
-		}
-
-		@Override
-		public String toString() {
-			return entity.getName() + " (" + entity.getDescription() + ")";
 		}
 	}
 }

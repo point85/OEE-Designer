@@ -13,6 +13,7 @@ import org.point85.app.Images;
 import org.point85.app.charts.DataSubscriber;
 import org.point85.app.charts.TrendChartController;
 import org.point85.app.designer.DesignerDialogController;
+import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.file.FileEventClient;
 import org.point85.domain.file.FileEventListener;
 import org.point85.domain.file.FileEventSource;
@@ -36,7 +37,7 @@ public class FileTrendController extends DesignerDialogController implements Fil
 	// polling client
 	private FileEventClient fileClient;
 
-	// folder to start browing from
+	// folder to start browsing from
 	private File initialDirectory;
 
 	// trend chart
@@ -74,7 +75,7 @@ public class FileTrendController extends DesignerDialogController implements Fil
 
 			setImages();
 
-			lbHost.setText("");
+			lbHost.setText(null);
 		}
 		return spTrendChart;
 	}
@@ -97,10 +98,10 @@ public class FileTrendController extends DesignerDialogController implements Fil
 		eventResolver.setWatchMode(true);
 		trendChartController.setEventResolver(eventResolver);
 
-		lbSourceId.setText(
-				"Equipment: " + eventResolver.getEquipment().getName() + ", Source Id: " + eventResolver.getSourceId());
+		lbSourceId.setText(DesignerLocalizer.instance().getLangString("event.source",
+				eventResolver.getEquipment().getName(), eventResolver.getSourceId()));
 
-		lbHost.setText("Share: " + eventResolver.getDataSource().getHost());
+		lbHost.setText(DesignerLocalizer.instance().getLangString("share", eventResolver.getDataSource().getHost()));
 	}
 
 	@Override
@@ -215,7 +216,7 @@ public class FileTrendController extends DesignerDialogController implements Fil
 	private void onTest() {
 		try {
 			if (fileClient == null) {
-				throw new Exception("The trend is not connected to a file server.");
+				throw new Exception(DesignerLocalizer.instance().getErrorString("file.not.connected"));
 			}
 
 			EventResolver eventResolver = trendChartController.getEventResolver();
@@ -224,7 +225,7 @@ public class FileTrendController extends DesignerDialogController implements Fil
 			File selectedFile = (File) tfFilePath.getUserData();
 
 			if (selectedFile == null) {
-				throw new Exception("The file to test must be selected first.");
+				throw new Exception(DesignerLocalizer.instance().getErrorString("test.file"));
 			}
 
 			// move the file to READY folder

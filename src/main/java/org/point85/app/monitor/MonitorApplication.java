@@ -1,7 +1,6 @@
 package org.point85.app.monitor;
 
 import java.net.InetAddress;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +8,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.point85.app.AppUtils;
+import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
 import org.point85.domain.collector.CollectorState;
@@ -20,8 +20,8 @@ import org.point85.domain.messaging.CollectorResolvedEventMessage;
 import org.point85.domain.messaging.CollectorServerStatusMessage;
 import org.point85.domain.messaging.MessageListener;
 import org.point85.domain.messaging.MessageType;
-import org.point85.domain.messaging.NotificationSeverity;
 import org.point85.domain.messaging.MessagingClient;
+import org.point85.domain.messaging.NotificationSeverity;
 import org.point85.domain.messaging.RoutingKey;
 import org.point85.domain.persistence.PersistenceService;
 import org.slf4j.Logger;
@@ -62,7 +62,6 @@ public class MonitorApplication implements MessageListener {
 	private String ip;
 
 	public MonitorApplication() {
-		// nothing to initialize
 	}
 
 	String getHostname() {
@@ -75,21 +74,19 @@ public class MonitorApplication implements MessageListener {
 
 	public void start(Stage primaryStage) {
 		try {
-			primaryStage.setTitle("OEE Monitor");
-			primaryStage.getIcons().add(ImageManager.instance().getImage(Images.POINT85));
+			// for the monitor app
+			FXMLLoader loader = FXMLLoaderFactory.monitorApplicationLoader();
+			AnchorPane mainLayout = (AnchorPane) loader.getRoot();
 
-			URL url = getClass().getResource("Monitor.fxml");
-			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(url);
-			AnchorPane mainLayout = (AnchorPane) loader.load();
-			loader.getController();
+			monitorController = loader.getController();
+			monitorController.initializeApplication(this);
 
 			// Show the scene containing the root layout.
 			Scene scene = new Scene(mainLayout);
 			primaryStage.setScene(scene);
 
-			monitorController = loader.getController();
-			monitorController.initializeApplication(this);
+			primaryStage.setTitle(MonitorLocalizer.instance().getLangString("monitor.app.title"));
+			primaryStage.getIcons().add(ImageManager.instance().getImage(Images.POINT85));
 
 			// connect to RMA brokers
 			connectToNotificationBrokers();
@@ -101,7 +98,7 @@ public class MonitorApplication implements MessageListener {
 			InetAddress address = InetAddress.getLocalHost();
 			hostname = address.getHostName();
 			ip = address.getHostAddress();
-			
+
 			if (logger.isInfoEnabled()) {
 				logger.info("Starting monitor on host " + hostname + " (" + ip + ")");
 			}
@@ -163,8 +160,8 @@ public class MonitorApplication implements MessageListener {
 					routingKeys.add(RoutingKey.NOTIFICATION_STATUS);
 					routingKeys.add(RoutingKey.RESOLVED_EVENT);
 
-					pubsub.startUp(brokerHostName, brokerPort, brokerUser, brokerPassword, queueName,
-							routingKeys, this);
+					pubsub.startUp(brokerHostName, brokerPort, brokerUser, brokerPassword, queueName, routingKeys,
+							this);
 
 					pubSubs.put(key, pubsub);
 					notificationPubSubs.add(pubsub);
@@ -221,7 +218,7 @@ public class MonitorApplication implements MessageListener {
 		CollectorNotificationMessage msg = new CollectorNotificationMessage(hostname, ip);
 
 		msg.setSeverity(NotificationSeverity.INFO);
-		msg.setText("Monitor startup");
+		msg.setText(MonitorLocalizer.instance().getLangString("monitor.startup"));
 
 		try {
 			if (!notificationPubSubs.isEmpty()) {

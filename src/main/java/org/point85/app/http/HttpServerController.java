@@ -9,6 +9,7 @@ import org.point85.app.AppUtils;
 import org.point85.app.DialogController;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
+import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.DomainUtils;
 import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.DataSourceType;
@@ -51,7 +52,7 @@ public class HttpServerController extends DialogController {
 
 	@FXML
 	private Button btDelete;
-	
+
 	@FXML
 	private Button btHttpTest;
 
@@ -79,7 +80,7 @@ public class HttpServerController extends DialogController {
 		// delete
 		btDelete.setGraphic(ImageManager.instance().getImageView(Images.DELETE));
 		btDelete.setContentDisplay(ContentDisplay.LEFT);
-		
+
 		// test
 		btHttpTest.setGraphic(ImageManager.instance().getImageView(Images.EXECUTE));
 		btHttpTest.setContentDisplay(ContentDisplay.LEFT);
@@ -156,10 +157,11 @@ public class HttpServerController extends DialogController {
 			conn.setConnectTimeout(2000);
 			conn.getOutputStream();
 
-			AppUtils.showConfirmationDialog("HTTP connection was successful.");
+			AppUtils.showConfirmationDialog(DesignerLocalizer.instance().getLangString("connection.successful"));
 
 		} catch (Exception e) {
-			AppUtils.showErrorDialog("HTTP connection failed: " + DomainUtils.formatException(e));
+			AppUtils.showErrorDialog(
+					DesignerLocalizer.instance().getErrorString("connection.failed", DomainUtils.formatException(e)));
 		} finally {
 			if (conn != null) {
 				conn.disconnect();
@@ -222,5 +224,4 @@ public class HttpServerController extends DialogController {
 	String getDescription() {
 		return this.tfDescription.getText();
 	}
-
 }

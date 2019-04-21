@@ -24,6 +24,7 @@ import org.point85.app.ImageManager;
 import org.point85.app.Images;
 import org.point85.app.charts.CategoryClickListener;
 import org.point85.app.charts.ParetoChartController;
+import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.DomainUtils;
 import org.point85.domain.collector.OeeEvent;
 import org.point85.domain.messaging.CollectorResolvedEventMessage;
@@ -38,6 +39,7 @@ import org.point85.domain.plant.EquipmentMaterial;
 import org.point85.domain.plant.Material;
 import org.point85.domain.plant.Reason;
 import org.point85.domain.script.OeeEventType;
+import org.point85.domain.uom.MeasurementSystem;
 import org.point85.domain.uom.Quantity;
 import org.point85.domain.uom.Unit;
 import org.point85.domain.uom.UnitOfMeasure;
@@ -91,13 +93,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 public class DashboardController extends DialogController implements CategoryClickListener {
-	private static final String ALL_MATERIALS = "<All>";
-	private static final String LOSS_CHART_TITLE = "Equipment Times";
-	private static final String TIME_CATEGORY_LABEL = "Time Categories";
-	private static final String NET_TIME_SERIES = "Time in Category";
-
-	private static final String TIME_BY_REASON = "Percent Time by Reason";
-
 	private static final float SEC_PER_DAY = 86400.0f;
 	private static final float SEC_PER_HOUR = 3600.0f;
 	private static final float SEC_PER_MIN = 60.0f;
@@ -161,7 +156,7 @@ public class DashboardController extends DialogController implements CategoryCli
 
 	@FXML
 	private CheckBox cbAutoRefresh;
-	
+
 	@FXML
 	private TextField tfRefreshPeriod;
 
@@ -284,9 +279,6 @@ public class DashboardController extends DialogController implements CategoryCli
 
 	// yield series
 	private final XYChart.Series<Number, String> yieldSeries = new XYChart.Series<>();
-
-	// title of chart
-	private final String chartTitle = LOSS_CHART_TITLE;
 
 	// x-axis time unit
 	private Unit timeUnit = Unit.MINUTE;
@@ -468,7 +460,8 @@ public class DashboardController extends DialogController implements CategoryCli
 		apMinorStoppagesPareto.getChildren().add(0, spMinorStoppagesPareto);
 
 		ParetoChartController controller = new ParetoChartController();
-		controller.createParetoChart("Minor Stoppages Pareto", spMinorStoppagesPareto, items, divisor, TIME_BY_REASON);
+		controller.createParetoChart(DesignerLocalizer.instance().getLangString("stoppages.pareto"),
+				spMinorStoppagesPareto, items, divisor, DesignerLocalizer.instance().getLangString("time.by.reason"));
 	}
 
 	private void onSelectRejectsPareto() throws Exception {
@@ -487,7 +480,8 @@ public class DashboardController extends DialogController implements CategoryCli
 		apRejectsPareto.getChildren().add(0, spRejectsPareto);
 
 		ParetoChartController controller = new ParetoChartController();
-		controller.createParetoChart("Rejects and Rework Pareto", spRejectsPareto, items, divisor, TIME_BY_REASON);
+		controller.createParetoChart(DesignerLocalizer.instance().getLangString("rejects.pareto"), spRejectsPareto,
+				items, divisor, DesignerLocalizer.instance().getLangString("time.by.reason"));
 	}
 
 	private void onSelectReducedSpeedPareto() throws Exception {
@@ -506,7 +500,8 @@ public class DashboardController extends DialogController implements CategoryCli
 		apSpeedPareto.getChildren().add(0, spSpeedPareto);
 
 		ParetoChartController controller = new ParetoChartController();
-		controller.createParetoChart("Reduced Speed Pareto", spSpeedPareto, items, divisor, TIME_BY_REASON);
+		controller.createParetoChart(DesignerLocalizer.instance().getLangString("speed.pareto"), spSpeedPareto, items,
+				divisor, DesignerLocalizer.instance().getLangString("time.by.reason"));
 	}
 
 	private void onSelectStartupAndYieldPareto() throws Exception {
@@ -525,7 +520,8 @@ public class DashboardController extends DialogController implements CategoryCli
 		apYieldPareto.getChildren().add(0, spYieldPareto);
 
 		ParetoChartController controller = new ParetoChartController();
-		controller.createParetoChart("Startup And Yield Pareto", spYieldPareto, items, divisor, TIME_BY_REASON);
+		controller.createParetoChart(DesignerLocalizer.instance().getLangString("startup.pareto"), spYieldPareto, items,
+				divisor, DesignerLocalizer.instance().getLangString("time.by.reason"));
 	}
 
 	private void onSelectUnplannedDowntimePareto() throws Exception {
@@ -544,8 +540,9 @@ public class DashboardController extends DialogController implements CategoryCli
 		apUnplannedDowntimePareto.getChildren().add(0, spUnplannedDowntimePareto);
 
 		ParetoChartController controller = new ParetoChartController();
-		controller.createParetoChart("Unplanned Downtime Pareto", spUnplannedDowntimePareto, items, divisor,
-				TIME_BY_REASON);
+		controller.createParetoChart(DesignerLocalizer.instance().getLangString("downtime.pareto"),
+				spUnplannedDowntimePareto, items, divisor,
+				DesignerLocalizer.instance().getLangString("time.by.reason"));
 	}
 
 	private void onSelectSetupPareto() throws Exception {
@@ -564,7 +561,8 @@ public class DashboardController extends DialogController implements CategoryCli
 		apSetupPareto.getChildren().add(0, spSetupPareto);
 
 		ParetoChartController controller = new ParetoChartController();
-		controller.createParetoChart("Setup and Yield Pareto", spSetupPareto, items, divisor, TIME_BY_REASON);
+		controller.createParetoChart(DesignerLocalizer.instance().getLangString("setup.pareto"), spSetupPareto, items,
+				divisor, DesignerLocalizer.instance().getLangString("time.by.reason"));
 	}
 
 	private void onSelectPlannedDowntimePareto() throws Exception {
@@ -583,8 +581,8 @@ public class DashboardController extends DialogController implements CategoryCli
 		apPlannedDowntimePareto.getChildren().add(0, spPlannedDowntimePareto);
 
 		ParetoChartController controller = new ParetoChartController();
-		controller.createParetoChart("Planned Downtime Pareto", spPlannedDowntimePareto, items, divisor,
-				TIME_BY_REASON);
+		controller.createParetoChart(DesignerLocalizer.instance().getLangString("planned.downtime.pareto"),
+				spPlannedDowntimePareto, items, divisor, DesignerLocalizer.instance().getLangString("time.by.reason"));
 	}
 
 	private void createLossChart() {
@@ -715,14 +713,16 @@ public class DashboardController extends DialogController implements CategoryCli
 
 		// plot time buckets
 		CategoryAxis categoryAxis = new CategoryAxis();
-		categoryAxis.setLabel(TIME_CATEGORY_LABEL);
+		categoryAxis.setLabel(DesignerLocalizer.instance().getLangString("time.cats"));
 
 		NumberAxis timeAxis = new NumberAxis();
-		timeAxis.setLabel("Time (" + timeUnit + ")");
+		timeAxis.setLabel(DesignerLocalizer.instance().getLangString("time.axis", timeUnit));
 		timeAxis.setAutoRanging(true);
 		timeAxis.setSide(Side.TOP);
 
-		bcLosses.setTitle(chartTitle + " (" + timeUnit + ")");
+		// title of chart
+		String chartTitle = DesignerLocalizer.instance().getLangString("equipment.times");
+		bcLosses.setTitle(DesignerLocalizer.instance().getLangString("losses.title", chartTitle, timeUnit));
 		bcLosses.setAnimated(false);
 
 		if (bcLosses.getData() != null) {
@@ -730,7 +730,7 @@ public class DashboardController extends DialogController implements CategoryCli
 		}
 
 		// net times
-		netTimeSeries.setName(NET_TIME_SERIES);
+		netTimeSeries.setName(DesignerLocalizer.instance().getLangString("time.in.cat"));
 		bcLosses.getData().add(netTimeSeries);
 
 		// no demand
@@ -801,15 +801,16 @@ public class DashboardController extends DialogController implements CategoryCli
 
 		if (eqm != null) {
 			String targetOee = String.format(Locale.getDefault(), OEE_FORMAT, eqm.getOeeTarget());
-			tiOee.setText("Target OEE: " + targetOee);
+			tiOee.setText(DesignerLocalizer.instance().getLangString("target.oee", targetOee));
 
 			Quantity actualSpeed = equipmentLoss.calculateActualSpeed(eqm.getRunRate());
 
 			if (actualSpeed != null) {
 				String speed = String.format(Locale.getDefault(), PROD_FORMAT, actualSpeed.getAmount());
-				tiProduction.setText("Actual Speed: " + speed + " " + actualSpeed.getUOM().getSymbol());
+				tiProduction.setText(DesignerLocalizer.instance().getLangString("actual.speed", speed,
+						actualSpeed.getUOM().getSymbol()));
 			} else {
-				tiProduction.setText("");
+				tiProduction.setText(null);
 			}
 		}
 	}
@@ -832,7 +833,8 @@ public class DashboardController extends DialogController implements CategoryCli
 
 		ParetoChartController level1Controller = new ParetoChartController();
 		level1Controller.setCategoryClickListener(this);
-		level1Controller.createParetoChart("First-Level Pareto", spLevel1Pareto, paretoItems, divisor, "Loss Category");
+		level1Controller.createParetoChart(DesignerLocalizer.instance().getLangString("first.level.pareto"),
+				spLevel1Pareto, paretoItems, divisor, DesignerLocalizer.instance().getLangString("loss.category"));
 	}
 
 	private void onClickLossCategory(Series<Number, String> series, XYChart.Data<Number, String> lossCategory) {
@@ -911,7 +913,7 @@ public class DashboardController extends DialogController implements CategoryCli
 				AppUtils.showErrorDialog(e);
 			}
 		});
-		
+
 		// set default period
 		tfRefreshPeriod.setText(String.valueOf(REFRESH_SEC));
 
@@ -940,7 +942,7 @@ public class DashboardController extends DialogController implements CategoryCli
 		tfEndTime.setText(hhSS);
 	}
 
-	private void initializeRefreshTimer() {		
+	private void initializeRefreshTimer() {
 		// create timer and task
 		refreshTimer = new Timer();
 		refreshTask = new RefreshTask();
@@ -950,7 +952,7 @@ public class DashboardController extends DialogController implements CategoryCli
 		if (refreshTimer == null) {
 			initializeRefreshTimer();
 		}
-		
+
 		int refreshSec = Integer.valueOf(tfRefreshPeriod.getText());
 		refreshTimer.schedule(refreshTask, 1000, refreshSec * 1000);
 	}
@@ -1216,43 +1218,45 @@ public class DashboardController extends DialogController implements CategoryCli
 
 	public void buildDashboardTiles() {
 		// OEE tile
-		bciOee = new BarChartItem("OEE", 0, Tile.BLUE);
+		bciOee = new BarChartItem(DesignerLocalizer.instance().getLangString("oee"), 0, Tile.BLUE);
 		bciOee.setFormatString(OEE_FORMAT);
 
-		bciPerformance = new BarChartItem("Performance", 0, Tile.GREEN);
+		bciPerformance = new BarChartItem(DesignerLocalizer.instance().getLangString("performance"), 0, Tile.GREEN);
 		bciPerformance.setFormatString(OEE_FORMAT);
 
-		bciAvailability = new BarChartItem("Availability", 0, Tile.RED);
+		bciAvailability = new BarChartItem(DesignerLocalizer.instance().getLangString("availability"), 0, Tile.RED);
 		bciAvailability.setFormatString(OEE_FORMAT);
 
-		bciQuality = new BarChartItem("Quality", 0, Tile.ORANGE);
+		bciQuality = new BarChartItem(DesignerLocalizer.instance().getLangString("quality"), 0, Tile.ORANGE);
 		bciQuality.setFormatString(OEE_FORMAT);
 
 		tiOee = TileBuilder.create().skinType(SkinType.BAR_CHART).prefSize(TILE_WIDTH, TILE_HEIGHT)
-				.title("Overall Equipment Effectiveness")
+				.title(DesignerLocalizer.instance().getLangString("oee.title"))
 				.barChartItems(bciOee, bciAvailability, bciPerformance, bciQuality).decimals(0).sortedData(false)
 				.animated(false).build();
 
 		// production tile
-		lbiGoodProduction = new LeaderBoardItem("Good", 0);
-		lbiRejectProduction = new LeaderBoardItem("Reject", 0);
-		lbiStartupProduction = new LeaderBoardItem("Startup", 0);
+		lbiGoodProduction = new LeaderBoardItem(DesignerLocalizer.instance().getLangString("good"), 0);
+		lbiRejectProduction = new LeaderBoardItem(DesignerLocalizer.instance().getLangString("reject"), 0);
+		lbiStartupProduction = new LeaderBoardItem(DesignerLocalizer.instance().getLangString("startup"), 0);
 
-		String productionText = "Change in Quantity";
+		String productionText = DesignerLocalizer.instance().getLangString("quantity.change");
 
 		tiProduction = TileBuilder.create().skinType(SkinType.LEADER_BOARD).prefSize(TILE_WIDTH, TILE_HEIGHT)
-				.title("Current Production").text(productionText)
+				.title(DesignerLocalizer.instance().getLangString("current.production")).text(productionText)
 				.leaderBoardItems(lbiGoodProduction, lbiRejectProduction, lbiStartupProduction).sortedData(false)
 				.animated(false).build();
 
 		// availability tile
 		tiAvailability = TileBuilder.create().skinType(SkinType.TEXT).prefSize(TILE_WIDTH, TILE_HEIGHT)
-				.title("Availability").textVisible(true).descriptionAlignment(Pos.CENTER).build();
+				.title(DesignerLocalizer.instance().getLangString("availability")).textVisible(true)
+				.descriptionAlignment(Pos.CENTER).build();
 		tiAvailability.setDescriptionTextSize(TextSize.BIGGER);
 
 		// material and job
 		tiJobMaterial = TileBuilder.create().skinType(SkinType.TEXT).prefSize(TILE_WIDTH, TILE_HEIGHT)
-				.title("Material and Job").textVisible(true).descriptionAlignment(Pos.CENTER).build();
+				.title(DesignerLocalizer.instance().getLangString("material.title")).textVisible(true)
+				.descriptionAlignment(Pos.CENTER).build();
 		tiJobMaterial.setDescriptionTextSize(TextSize.NORMAL);
 		tiJobMaterial.setDescriptionColor(Color.WHITE);
 
@@ -1308,7 +1312,7 @@ public class DashboardController extends DialogController implements CategoryCli
 
 		case PROD_GOOD: {
 			// good production
-			UnitOfMeasure uom = DomainUtils.getUomBySymbol(message.getUomSymbol());
+			UnitOfMeasure uom = MeasurementSystem.instance().getUomBySymbol(message.getUomSymbol());
 			Quantity delta = new Quantity(message.getAmount(), uom);
 			Quantity good = equipmentLoss.incrementGoodQuantity(delta);
 			lbiGoodProduction.setValue(good.getAmount(), false);
@@ -1317,7 +1321,7 @@ public class DashboardController extends DialogController implements CategoryCli
 
 		case PROD_REJECT: {
 			// reject and rework
-			UnitOfMeasure uom = DomainUtils.getUomBySymbol(message.getUomSymbol());
+			UnitOfMeasure uom = MeasurementSystem.instance().getUomBySymbol(message.getUomSymbol());
 			Quantity delta = new Quantity(message.getAmount(), uom);
 			Quantity reject = equipmentLoss.incrementRejectQuantity(delta);
 			lbiRejectProduction.setValue(reject.getAmount(), true);
@@ -1326,7 +1330,7 @@ public class DashboardController extends DialogController implements CategoryCli
 
 		case PROD_STARTUP: {
 			// startup and yield
-			UnitOfMeasure uom = DomainUtils.getUomBySymbol(message.getUomSymbol());
+			UnitOfMeasure uom = MeasurementSystem.instance().getUomBySymbol(message.getUomSymbol());
 			Quantity delta = new Quantity(message.getAmount(), uom);
 			Quantity startup = equipmentLoss.incrementStartupQuantity(delta);
 			lbiStartupProduction.setValue(startup.getAmount(), true);
@@ -1343,7 +1347,7 @@ public class DashboardController extends DialogController implements CategoryCli
 		// material filtering
 		materialMap.clear();
 		cbMaterials.getItems().clear();
-		cbMaterials.getItems().add(ALL_MATERIALS);
+		cbMaterials.getItems().add(DesignerLocalizer.instance().getLangString("all.materials"));
 	}
 
 	@FXML
@@ -1355,13 +1359,13 @@ public class DashboardController extends DialogController implements CategoryCli
 			}
 			equipmentLoss.reset();
 
-			tiJobMaterial.setText("");
+			tiJobMaterial.setText(null);
 			tiJobMaterial.setDescription("");
 
-			tiAvailability.setText("");
+			tiAvailability.setText(null);
 			tiAvailability.setDescription("");
 
-			tiProduction.setText("");
+			tiProduction.setText(null);
 
 			lbiGoodProduction.setFormatString(PROD_FORMAT + " ");
 			lbiGoodProduction.setValue(0.0d, false);
@@ -1404,7 +1408,7 @@ public class DashboardController extends DialogController implements CategoryCli
 			LocalDateTime ldtEnd = LocalDateTime.of(endDate, endTime);
 
 			if (ldtEnd.isBefore(ldtStart)) {
-				throw new Exception("The starting time " + ldtStart + " must be before the ending time " + ldtEnd);
+				throw new Exception(DesignerLocalizer.instance().getErrorString("start.before.end", ldtStart, ldtEnd));
 			}
 
 			OffsetDateTime odtEnd = DomainUtils.fromLocalDateTime(ldtEnd);
@@ -1413,13 +1417,13 @@ public class DashboardController extends DialogController implements CategoryCli
 			Equipment equipment = equipmentLoss.getEquipment();
 
 			if (equipment == null) {
-				throw new Exception("Equipment must be selected.");
+				throw new Exception(DesignerLocalizer.instance().getErrorString("no.equipment"));
 			}
 
 			String materialId = cbMaterials.getSelectionModel().getSelectedItem();
 			List<OeeEvent> setups = null;
 
-			if (materialId != null && !materialId.equals(ALL_MATERIALS)) {
+			if (materialId != null && !materialId.equals(DesignerLocalizer.instance().getLangString("all.materials"))) {
 				// filter for a specific material
 				setups = PersistenceService.instance().fetchSetupsForPeriodAndMaterial(equipment, odtStart, odtEnd,
 						materialMap.get(materialId));
@@ -1429,9 +1433,9 @@ public class DashboardController extends DialogController implements CategoryCli
 			}
 
 			if (setups.isEmpty()) {
-				throw new Exception("No material setup has been defined for the period from "
-						+ DomainUtils.offsetDateTimeToString(odtStart, DomainUtils.OFFSET_DATE_TIME_PATTERN) + " to "
-						+ DomainUtils.offsetDateTimeToString(odtEnd, DomainUtils.OFFSET_DATE_TIME_PATTERN));
+				throw new Exception(DesignerLocalizer.instance().getErrorString("no.setup",
+						DomainUtils.offsetDateTimeToString(odtStart, DomainUtils.OFFSET_DATE_TIME_PATTERN),
+						DomainUtils.offsetDateTimeToString(odtEnd, DomainUtils.OFFSET_DATE_TIME_PATTERN)));
 			}
 
 			// add setup events
@@ -1573,7 +1577,7 @@ public class DashboardController extends DialogController implements CategoryCli
 			AnchorPane page = (AnchorPane) loader.getRoot();
 
 			Stage dialogStage = new Stage(StageStyle.DECORATED);
-			dialogStage.setTitle("Availability Editor");
+			dialogStage.setTitle(DesignerLocalizer.instance().getLangString("availability.editor"));
 			dialogStage.initModality(Modality.APPLICATION_MODAL);
 			Scene scene = new Scene(page);
 			dialogStage.setScene(scene);
@@ -1591,7 +1595,7 @@ public class DashboardController extends DialogController implements CategoryCli
 			AnchorPane page = (AnchorPane) loader.getRoot();
 
 			Stage dialogStage = new Stage(StageStyle.DECORATED);
-			dialogStage.setTitle("Production Editor");
+			dialogStage.setTitle(DesignerLocalizer.instance().getLangString("production.editor"));
 			dialogStage.initModality(Modality.APPLICATION_MODAL);
 			Scene scene = new Scene(page);
 			dialogStage.setScene(scene);
@@ -1609,7 +1613,7 @@ public class DashboardController extends DialogController implements CategoryCli
 			AnchorPane page = (AnchorPane) loader.getRoot();
 
 			Stage dialogStage = new Stage(StageStyle.DECORATED);
-			dialogStage.setTitle("Setup Editor");
+			dialogStage.setTitle(DesignerLocalizer.instance().getLangString("setup.editor"));
 			dialogStage.initModality(Modality.APPLICATION_MODAL);
 			Scene scene = new Scene(page);
 			dialogStage.setScene(scene);
@@ -1673,7 +1677,7 @@ public class DashboardController extends DialogController implements CategoryCli
 			OeeEvent event = tvResolvedEvents.getSelectionModel().getSelectedItem();
 
 			if (event == null) {
-				throw new Exception("An event must be selected.");
+				throw new Exception(DesignerLocalizer.instance().getErrorString("no.event"));
 			}
 
 			if (event.isAvailability()) {
@@ -1700,11 +1704,11 @@ public class DashboardController extends DialogController implements CategoryCli
 			OeeEvent event = tvResolvedEvents.getSelectionModel().getSelectedItem();
 
 			if (event == null) {
-				throw new Exception("An event must be selected.");
+				throw new Exception(DesignerLocalizer.instance().getErrorString("no.event"));
 			}
 
 			// confirm
-			String msg = "Do you want to delete event for equipment " + event.getEquipment().getName() + "?";
+			String msg = DesignerLocalizer.instance().getLangString("confirm.deletion", event.getEquipment().getName());
 			ButtonType type = AppUtils.showConfirmationDialog(msg);
 
 			if (type.equals(ButtonType.CANCEL)) {
@@ -1714,7 +1718,6 @@ public class DashboardController extends DialogController implements CategoryCli
 			PersistenceService.instance().delete(event);
 
 			onRefresh();
-
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}

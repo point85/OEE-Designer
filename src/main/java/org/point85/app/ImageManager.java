@@ -212,6 +212,15 @@ public final class ImageManager {
 		case CHOOSE_FILE:
 			image = new Image(path + "ChooseFile.png", DIM, DIM, true, true);
 			break;
+		case PRODUCT:
+			image = new Image(path + "Product.png", DIM, DIM, true, true);
+			break;
+		case SETUP:
+			image = new Image(path + "Setup.png", DIM, DIM, true, true);
+			break;
+		case AVAILABILITY:
+			image = new Image(path + "Availability.png", DIM, DIM, true, true);
+			break;
 		default:
 			image = new Image(path + "Folder.png", DIM, DIM, true, true);
 			break;

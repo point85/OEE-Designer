@@ -1,7 +1,11 @@
 package org.point85.app;
 
+import java.util.ResourceBundle;
+
 import org.point85.app.charts.SampleChartController;
 import org.point85.app.charts.TrendChartController;
+import org.point85.app.collector.CollectorApplication;
+import org.point85.app.collector.CollectorLocalizer;
 import org.point85.app.dashboard.AvailabilityEditorController;
 import org.point85.app.dashboard.DashboardController;
 import org.point85.app.dashboard.DashboardDialogController;
@@ -10,6 +14,8 @@ import org.point85.app.dashboard.SetupEditorController;
 import org.point85.app.db.DatabaseServerController;
 import org.point85.app.db.DatabaseTrendController;
 import org.point85.app.designer.DataCollectorController;
+import org.point85.app.designer.DesignerApplication;
+import org.point85.app.designer.DesignerLocalizer;
 import org.point85.app.designer.EquipmentMaterialController;
 import org.point85.app.designer.EquipmentResolverController;
 import org.point85.app.file.FileShareController;
@@ -21,15 +27,23 @@ import org.point85.app.messaging.JMSTrendController;
 import org.point85.app.messaging.MQTTTrendController;
 import org.point85.app.messaging.MessagingTrendController;
 import org.point85.app.messaging.MqBrokerController;
+import org.point85.app.monitor.MonitorApplication;
+import org.point85.app.monitor.MonitorLocalizer;
 import org.point85.app.opc.da.OpcDaBrowserController;
 import org.point85.app.opc.da.OpcDaTrendController;
 import org.point85.app.opc.ua.OpcUaBrowserController;
 import org.point85.app.opc.ua.OpcUaTrendController;
+import org.point85.app.operator.MaterialSelectorController;
+import org.point85.app.operator.OperatorApplication;
+import org.point85.app.operator.OperatorLocalizer;
+import org.point85.app.operator.ReasonSelectorController;
 import org.point85.app.reason.ReasonEditorController;
 import org.point85.app.schedule.TemplateScheduleDialogController;
 import org.point85.app.schedule.WorkScheduleEditorController;
 import org.point85.app.schedule.WorkScheduleShiftsController;
 import org.point85.app.script.EventResolverController;
+import org.point85.app.tester.TesterApplication;
+import org.point85.app.tester.TesterLocalizer;
 import org.point85.app.uom.UomConversionController;
 import org.point85.app.uom.UomEditorController;
 import org.point85.app.uom.UomImporterController;
@@ -37,38 +51,94 @@ import org.point85.app.uom.UomImporterController;
 import javafx.fxml.FXMLLoader;
 
 public class FXMLLoaderFactory {
+	// name of Designer application resource bundle with translatable strings
+	private static ResourceBundle designerLangBundle;
+
+	// name of Monitor application resource bundle with translatable strings
+	private static ResourceBundle monitorLangBundle;
+
+	// name of Operator application resource bundle with translatable strings
+	private static ResourceBundle operatorLangBundle;
+
+	// name of Collector application resource bundle with translatable strings
+	private static ResourceBundle collectorLangBundle;
+
+	// name of Tester application resource bundle with translatable strings
+	private static ResourceBundle testerLangBundle;
+
+	public static ResourceBundle getDesignerLangBundle() {
+		if (designerLangBundle == null) {
+			designerLangBundle = DesignerLocalizer.instance().loadLangBundle();
+		}
+		return designerLangBundle;
+	}
+
+	public static ResourceBundle getMonitorLangBundle() {
+		if (monitorLangBundle == null) {
+			monitorLangBundle = MonitorLocalizer.instance().loadLangBundle();
+		}
+		return monitorLangBundle;
+	}
+
+	public static ResourceBundle getOperatorLangBundle() {
+		if (operatorLangBundle == null) {
+			operatorLangBundle = OperatorLocalizer.instance().loadLangBundle();
+		}
+		return operatorLangBundle;
+	}
+
+	public static ResourceBundle getCollectorLangBundle() {
+		if (collectorLangBundle == null) {
+			collectorLangBundle = CollectorLocalizer.instance().loadLangBundle();
+		}
+		return collectorLangBundle;
+	}
+
+	public static ResourceBundle getTesterLangBundle() {
+		if (testerLangBundle == null) {
+			testerLangBundle = TesterLocalizer.instance().loadLangBundle();
+		}
+		return testerLangBundle;
+	}
+
 	public static FXMLLoader dashboardLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(DashboardController.class.getResource("Dashboard.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
 
 	public static FXMLLoader dashboardDialogLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(DashboardDialogController.class.getResource("DashboardDialog.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
 
 	public static FXMLLoader reasonEditorLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(ReasonEditorController.class.getResource("ReasonEditor.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
 
 	public static FXMLLoader materialEditorLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(MaterialEditorController.class.getResource("MaterialEditor.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
 
 	public static FXMLLoader uomEditorLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(UomEditorController.class.getResource("UomEditor.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
 
 	public static FXMLLoader uomImporterLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(UomImporterController.class.getResource("UomImport.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
@@ -76,139 +146,162 @@ public class FXMLLoaderFactory {
 	public static FXMLLoader scheduleEditorLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(
 				WorkScheduleEditorController.class.getResource("WorkScheduleEditor.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
-	
+
 	public static FXMLLoader scheduleShiftsLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(
 				WorkScheduleShiftsController.class.getResource("WorkScheduleShifts.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
 
 	public static FXMLLoader opdDaBrowserLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(OpcDaBrowserController.class.getResource("OpcDaBrowser.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
 
 	public static FXMLLoader opdUaBrowserLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(OpcUaBrowserController.class.getResource("OpcUaBrowser.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
 
 	public static FXMLLoader eventResolverLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(EventResolverController.class.getResource("EventResolver.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
 
 	public static FXMLLoader httpServerLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(HttpServerController.class.getResource("HttpServer.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
 
 	public static FXMLLoader mqBrokerLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(MqBrokerController.class.getResource("MqBroker.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
 
 	public static FXMLLoader databaseServerLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(DatabaseServerController.class.getResource("DatabaseServer.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
 
 	public static FXMLLoader fileShareLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(FileShareController.class.getResource("FileShare.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
 
 	public static FXMLLoader dataCollectorLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(DataCollectorController.class.getResource("DataCollector.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
 
 	public static FXMLLoader uomConversionLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(UomConversionController.class.getResource("UomConversion.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
 
 	public static FXMLLoader opcDaTrendLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(OpcDaTrendController.class.getResource("OpcDaTrend.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
 
 	public static FXMLLoader opcUaTrendLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(OpcUaTrendController.class.getResource("OpcUaTrend.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
 
 	public static FXMLLoader httpTrendLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(HttpTrendController.class.getResource("HttpTrend.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
 
 	public static FXMLLoader messagingTrendLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(MessagingTrendController.class.getResource("MessagingTrend.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
 
 	public static FXMLLoader jmsTrendLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(JMSTrendController.class.getResource("JMSTrend.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
-	
+
 	public static FXMLLoader mqttTrendLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(MQTTTrendController.class.getResource("MQTTTrend.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
 
 	public static FXMLLoader databaseTrendLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(DatabaseTrendController.class.getResource("DatabaseTrend.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
 
 	public static FXMLLoader fileTrendLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(FileTrendController.class.getResource("FileTrend.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
 
 	public static FXMLLoader sampleChartLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(SampleChartController.class.getResource("SampleChart.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
 
 	public static FXMLLoader trendChartLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(TrendChartController.class.getResource("TrendChart.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
 
 	public static FXMLLoader equipmentMaterialLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(EquipmentMaterialController.class.getResource("EquipmentMaterial.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
 
 	public static FXMLLoader equipmentResolverLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(EquipmentResolverController.class.getResource("EquipmentResolver.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
@@ -216,6 +309,7 @@ public class FXMLLoaderFactory {
 	public static FXMLLoader templateScheduleLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(
 				TemplateScheduleDialogController.class.getResource("TemplateScheduleDialog.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
@@ -223,24 +317,77 @@ public class FXMLLoaderFactory {
 	public static FXMLLoader availabilityEditorLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(
 				AvailabilityEditorController.class.getResource("AvailabilityEditor.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
 
 	public static FXMLLoader setupEditorLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(SetupEditorController.class.getResource("SetupEditor.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
 
 	public static FXMLLoader productionEditorLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(ProductionEditorController.class.getResource("ProductionEditor.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
 
 	public static FXMLLoader splashLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(SplashController.class.getResource("Splash.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
+		fxmlLoader.load();
+		return fxmlLoader;
+	}
+
+	public static FXMLLoader reasonSelectorLoader() throws Exception {
+		FXMLLoader fxmlLoader = new FXMLLoader(ReasonSelectorController.class.getResource("ReasonSelector.fxml"));
+		fxmlLoader.setResources(getOperatorLangBundle());
+		fxmlLoader.load();
+		return fxmlLoader;
+	}
+
+	public static FXMLLoader operatorApplicationLoader() throws Exception {
+		FXMLLoader fxmlLoader = new FXMLLoader(OperatorApplication.class.getResource("OperatorApplication.fxml"));
+		fxmlLoader.setResources(getOperatorLangBundle());
+		fxmlLoader.load();
+		return fxmlLoader;
+	}
+
+	public static FXMLLoader materialSelectorLoader() throws Exception {
+		FXMLLoader fxmlLoader = new FXMLLoader(MaterialSelectorController.class.getResource("MaterialSelector.fxml"));
+		fxmlLoader.setResources(getOperatorLangBundle());
+		fxmlLoader.load();
+		return fxmlLoader;
+	}
+
+	public static FXMLLoader testerApplicationLoader() throws Exception {
+		FXMLLoader fxmlLoader = new FXMLLoader(TesterApplication.class.getResource("TesterApplication.fxml"));
+		fxmlLoader.setResources(getTesterLangBundle());
+		fxmlLoader.load();
+		return fxmlLoader;
+	}
+
+	public static FXMLLoader collectorApplicationLoader() throws Exception {
+		FXMLLoader fxmlLoader = new FXMLLoader(CollectorApplication.class.getResource("CollectorApplication.fxml"));
+		fxmlLoader.setResources(getCollectorLangBundle());
+		fxmlLoader.load();
+		return fxmlLoader;
+	}
+
+	public static FXMLLoader designerApplicationLoader() throws Exception {
+		FXMLLoader fxmlLoader = new FXMLLoader(DesignerApplication.class.getResource("DesignerApplication.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
+		fxmlLoader.load();
+		return fxmlLoader;
+	}
+
+	public static FXMLLoader monitorApplicationLoader() throws Exception {
+		FXMLLoader fxmlLoader = new FXMLLoader(MonitorApplication.class.getResource("MonitorApplication.fxml"));
+		fxmlLoader.setResources(getMonitorLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
 	}

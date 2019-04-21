@@ -8,6 +8,7 @@ import org.point85.app.ImageManager;
 import org.point85.app.Images;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
+import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.DomainUtils;
 import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.DataSourceType;
@@ -85,7 +86,7 @@ public class DatabaseServerController extends DesignerDialogController {
 		// delete
 		btDelete.setGraphic(ImageManager.instance().getImageView(Images.DELETE));
 		btDelete.setContentDisplay(ContentDisplay.LEFT);
-		
+
 		// test
 		btTest.setGraphic(ImageManager.instance().getImageView(Images.EXECUTE));
 		btTest.setContentDisplay(ContentDisplay.LEFT);
@@ -184,10 +185,11 @@ public class DatabaseServerController extends DesignerDialogController {
 		try {
 			persistenceService.connectToDatabaseEventServer(getHost(), getUserName(), getPassword());
 
-			AppUtils.showConfirmationDialog("Database connection was successful.");
+			AppUtils.showConfirmationDialog(DesignerLocalizer.instance().getLangString("connection.successful"));
 
 		} catch (Exception e) {
-			AppUtils.showErrorDialog("Database connection failed: " + DomainUtils.formatException(e));
+			AppUtils.showErrorDialog(
+					DesignerLocalizer.instance().getErrorString("connection.failed", DomainUtils.formatException(e)));
 		} finally {
 			if (persistenceService != null) {
 				persistenceService.close();
@@ -226,5 +228,4 @@ public class DatabaseServerController extends DesignerDialogController {
 	String getDescription() {
 		return this.tfDescription.getText();
 	}
-
 }
