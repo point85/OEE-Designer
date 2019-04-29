@@ -3,8 +3,11 @@ package org.point85.app.monitor;
 import org.point85.domain.messaging.CollectorNotificationMessage;
 import org.point85.domain.messaging.NotificationSeverity;
 
+/**
+ * Notification of a data collector event
+ *
+ */
 public class CollectorNotification extends AbstractNotification {
-
 	private final NotificationSeverity severity;
 	private final String text;
 

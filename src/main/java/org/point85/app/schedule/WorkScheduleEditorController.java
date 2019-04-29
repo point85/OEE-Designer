@@ -130,13 +130,16 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 	private TreeView<ScheduleNode> tvSchedules;
 
 	@FXML
-	private Tab tShifts;
+	private Tab tbShifts;
 
 	@FXML
-	private Tab tRotations;
+	private Tab tbRotations;
 
 	@FXML
-	private Tab tTeams;
+	private Tab tbTeams;
+
+	@FXML
+	private Tab tbPeriods;
 
 	@FXML
 	private TabPane tpShiftTeams;
@@ -492,7 +495,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 			}
 		});
 
-		// team table callbacks
+		// team table call backs
 		// team name
 		teamNameColumn.setCellValueFactory(cellDataFeatures -> {
 			return new SimpleStringProperty(cellDataFeatures.getValue().getName());
@@ -591,6 +594,17 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		// main app
 		setApp(app);
 
+		// add the tab pane listener
+		tpShiftTeams.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
+			try {
+				if (newValue.equals(tbTeams)) {
+					tvTeams.refresh();
+				}
+			} catch (Exception e) {
+				AppUtils.showErrorDialog(e);
+			}
+		});
+
 		// all work schedules
 		initializeScheduleList();
 
@@ -640,7 +654,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 
 	// update the shift editing part
 	private void onSelectShift(Shift shift) {
-		btAddShift.setText("Update");
+		btAddShift.setText(DesignerLocalizer.instance().getLangString("update"));
 		this.currentShift = shift;
 
 		// name
@@ -659,7 +673,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 
 	// called on team selection in table listener
 	private void onSelectTeam(Team team) {
-		btAddTeam.setText("Update");
+		btAddTeam.setText(DesignerLocalizer.instance().getLangString("update"));
 		this.currentTeam = team;
 
 		// name
@@ -677,7 +691,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 
 	// called on rotation selection in table listener
 	private void onSelectRotation(Rotation rotation) {
-		btAddRotation.setText("Update");
+		btAddRotation.setText(DesignerLocalizer.instance().getLangString("update"));
 
 		this.currentRotation = rotation;
 
@@ -700,7 +714,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 
 	// called on rotation segment selection in table listener
 	private void updateRotationSegmentEditor(RotationSegment segment) {
-		btAddRotationSegment.setText("Update");
+		btAddRotationSegment.setText(DesignerLocalizer.instance().getLangString("update"));
 
 		this.currentRotationSegment = segment;
 
@@ -713,7 +727,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 
 	// called on non-working period selection in table listener
 	private void onSelectNonWorkingPeriod(NonWorkingPeriod period) {
-		btAddNonWorkingPeriod.setText("Update");
+		btAddNonWorkingPeriod.setText(DesignerLocalizer.instance().getLangString("update"));
 		this.currentPeriod = period;
 
 		// name
@@ -861,7 +875,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		this.tvShifts.refresh();
 
 		this.teamList.clear();
-		this.tvShifts.refresh();
+		this.tvTeams.refresh();
 
 		this.rotationList.clear();
 		this.rotationNames.clear();
@@ -1162,7 +1176,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 	// new shift button clicked
 	@FXML
 	private void onNewShift() {
-		btAddShift.setText("Add");
+		btAddShift.setText(DesignerLocalizer.instance().getLangString("add"));
 		this.currentShift = null;
 
 		// shift editing attributes
@@ -1177,7 +1191,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 	// new team button clicked
 	@FXML
 	private void onNewTeam() {
-		btAddTeam.setText("Add");
+		btAddTeam.setText(DesignerLocalizer.instance().getLangString("add"));
 		this.currentTeam = null;
 
 		// team editing attributes
@@ -1252,6 +1266,9 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 			if (shift == null) {
 				return;
 			}
+
+			// check for shift reference
+			PersistenceService.instance().checkReferences(shift);
 
 			getSelectedSchedule().getShifts().remove(shift);
 			shiftList.remove(shift);
@@ -1333,6 +1350,9 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 				return;
 			}
 
+			// check for team reference
+			PersistenceService.instance().checkReferences(team);
+
 			getSelectedSchedule().getTeams().remove(team);
 			teamList.remove(team);
 			Collections.sort(shiftList);
@@ -1390,7 +1410,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 	// new rotation button clicked
 	@FXML
 	private void onNewRotation() {
-		btAddRotation.setText("Add");
+		btAddRotation.setText(DesignerLocalizer.instance().getLangString("add"));
 		this.currentRotation = null;
 
 		// team editing attributes
@@ -1404,7 +1424,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 	@FXML
 	private void onRemoveRotation() {
 		try {
-			Rotation rotation = this.tvRotations.getSelectionModel().getSelectedItem();
+			Rotation rotation = tvRotations.getSelectionModel().getSelectedItem();
 
 			if (rotation == null) {
 				return;
@@ -1413,7 +1433,12 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 			// check for team reference
 			PersistenceService.instance().checkReferences(rotation);
 
+			// remove from list
 			rotationList.remove(rotation);
+			
+			// remove from work schedule
+			getSelectedSchedule().getRotations().remove(rotation);
+			
 			currentRotation = null;
 			tvRotations.getSelectionModel().clearSelection();
 
@@ -1429,7 +1454,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 	// new rotation segment button clicked
 	@FXML
 	private void onNewRotationSegment() {
-		btAddRotationSegment.setText("Add");
+		btAddRotationSegment.setText(DesignerLocalizer.instance().getLangString("add"));
 		this.currentRotationSegment = null;
 
 		// editing attributes
@@ -1496,13 +1521,16 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 	@FXML
 	private void onRemoveRotationSegment() {
 		try {
-			RotationSegment segment = this.tvRotationSegments.getSelectionModel().getSelectedItem();
+			RotationSegment segment = tvRotationSegments.getSelectionModel().getSelectedItem();
 
 			if (segment == null) {
 				return;
 			}
 
 			rotationSegmentList.remove(segment);
+			
+			// remove from rotation
+			currentRotation.getRotationSegments().remove(segment);
 
 			// re-order
 			for (int i = 0; i < rotationSegmentList.size(); i++) {
@@ -1524,7 +1552,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 	// new NonWorkingPeriod button clicked
 	@FXML
 	private void onNewNonWorkingPeriod() {
-		btAddNonWorkingPeriod.setText("Add");
+		btAddNonWorkingPeriod.setText(DesignerLocalizer.instance().getLangString("add"));
 		this.currentPeriod = null;
 
 		// NonWorkingPeriod editing attributes

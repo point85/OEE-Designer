@@ -19,6 +19,9 @@ public class CollectorController {
 	// the collector service
 	private CollectorService collector;
 
+	// name of a specific collector on this host
+	private String collectorName;
+
 	@FXML
 	private Button btStartup;
 
@@ -37,8 +40,9 @@ public class CollectorController {
 	@FXML
 	private TextArea taNotification;
 
-	void initialize() throws Exception {
+	void initialize(String collectorName) throws Exception {
 		setImages();
+		this.setCollectorName(collectorName);
 	}
 
 	private void setImages() throws Exception {
@@ -84,7 +88,7 @@ public class CollectorController {
 		postNotification(CollectorLocalizer.instance().getLangString("starting.collector"));
 
 		// create the collector
-		collector = new CollectorService();
+		collector = new CollectorService(collectorName);
 
 		try {
 			// start collector
@@ -149,5 +153,13 @@ public class CollectorController {
 			collector.subscribeToDataSource();
 			postNotification(CollectorLocalizer.instance().getLangString("started.events"));
 		}
+	}
+
+	public String getCollectorName() {
+		return collectorName;
+	}
+
+	public void setCollectorName(String collectorName) {
+		this.collectorName = collectorName;
 	}
 }

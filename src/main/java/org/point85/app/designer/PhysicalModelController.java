@@ -936,6 +936,9 @@ public class PhysicalModelController extends DesignerController {
 	}
 
 	private void setAttributes(TreeItem<EntityNode> entityItem) throws Exception {
+		if (entityItem == null) {
+			return;
+		}
 		PlantEntity entity = entityItem.getValue().getPlantEntity();
 
 		// name

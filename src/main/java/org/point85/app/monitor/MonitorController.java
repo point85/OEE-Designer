@@ -45,6 +45,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.text.Text;
 
 public class MonitorController {
 	private static final int DEFAULT_MSG_LIMIT = 200;
@@ -315,12 +316,16 @@ public class MonitorController {
 		tvNotifications.getColumns().add(tcTimestamp);
 
 		// severity
-		TableColumn<CollectorNotification, NotificationSeverity> tcSeverity = new TableColumn<>(
+		TableColumn<CollectorNotification, Text> tcSeverity = new TableColumn<>(
 				MonitorLocalizer.instance().getLangString("severity"));
 		tcSeverity.setPrefWidth(100);
 		tcSeverity.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleObjectProperty<NotificationSeverity>(cellDataFeatures.getValue().getSeverity());
+			NotificationSeverity severity = cellDataFeatures.getValue().getSeverity();
+			Text text = new Text(severity.toString());
+			text.setFill(severity.getColor());
+			return new SimpleObjectProperty<Text>(text);
 		});
+
 		tvNotifications.getColumns().add(tcSeverity);
 
 		// message

@@ -546,7 +546,7 @@ public class OpcUaBrowserController extends OpcUaController {
 			OpcUaSource source = getSource();
 			if (source != null) {
 				PersistenceService.instance().delete(source);
-				servers.remove(getSource().getId());
+				servers.remove(getSource().getName());
 				cbDataSources.setItems(servers);
 
 				onNewDataSource();

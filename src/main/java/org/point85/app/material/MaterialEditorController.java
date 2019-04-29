@@ -379,6 +379,9 @@ public class MaterialEditorController extends DesignerDialogController {
 			updateCategory(selectedMaterialItem);
 
 			tvMaterials.refresh();
+			
+			tvMaterials.getSelectionModel().clearSelection();
+			selectedMaterialItem = null;
 
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);

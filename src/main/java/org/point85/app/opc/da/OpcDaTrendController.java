@@ -15,7 +15,6 @@ import org.point85.domain.opc.da.OpcDaMonitoredItem;
 import org.point85.domain.opc.da.OpcDaServerStatus;
 import org.point85.domain.opc.da.OpcDaSource;
 import org.point85.domain.opc.da.OpcDaVariant;
-import org.point85.domain.opc.da.OpcDaVariantType;
 import org.point85.domain.opc.da.TagGroupInfo;
 import org.point85.domain.opc.da.TagItemInfo;
 import org.point85.domain.plant.Equipment;
@@ -151,7 +150,7 @@ public class OpcDaTrendController extends OpcDaController implements OpcDaDataCh
 			AppUtils.showErrorDialog(e);
 		}
 	}
-	
+
 	@Override
 	@FXML
 	protected void onOK() {
@@ -264,7 +263,8 @@ public class OpcDaTrendController extends OpcDaController implements OpcDaDataCh
 			// new group using equipment name
 			Integer updatePeriod = trendChartController.getEventResolver().getUpdatePeriod();
 			TagGroupInfo tagGroup = new TagGroupInfo(createGroupName());
-			tagGroup.setUpdatePeriod(updatePeriod != null ? updatePeriod.intValue() : CollectorDataSource.DEFAULT_UPDATE_PERIOD_MSEC);
+			tagGroup.setUpdatePeriod(
+					updatePeriod != null ? updatePeriod.intValue() : CollectorDataSource.DEFAULT_UPDATE_PERIOD_MSEC);
 			tagGroup.addTagItem(monitoredTag);
 
 			// register for data change events
@@ -304,16 +304,10 @@ public class OpcDaTrendController extends OpcDaController implements OpcDaDataCh
 					try {
 						// resolve the input value into a reason
 						OpcDaVariant varientValue = item.getValue();
+						Object value = varientValue.getValueAsObject();
 
-						Object value = null;
-
-						if (varientValue.getDataType().equals(OpcDaVariantType.STRING)) {
-							value = varientValue.getValueAsString();
-						} else {
-							value = varientValue.getValueAsNumber();
-						}
-
-						trendChartController.invokeResolver(getApp().getAppContext(), value, item.getLocalTimestamp(), null);
+						trendChartController.invokeResolver(getApp().getAppContext(), value, item.getLocalTimestamp(),
+								null);
 					} catch (Exception e) {
 						errorMessage = e.getMessage();
 					}

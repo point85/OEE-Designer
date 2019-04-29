@@ -1,6 +1,7 @@
 package org.point85.app.db;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.point85.app.AppUtils;
@@ -134,11 +135,13 @@ public class DatabaseTrendController extends DesignerDialogController implements
 		if (period == null) {
 			period = CollectorDataSource.DEFAULT_UPDATE_PERIOD_MSEC;
 		}
+		List<Integer> pollingPeriods = new ArrayList<>(1);
+		pollingPeriods.add(period);
 
-		String sourceId = eventResolver.getSourceId();
+		List<String> sourceIds = new ArrayList<>(1);
+		sourceIds.add(eventResolver.getSourceId());
 
-		databaseClient = new DatabaseEventClient(this, period);
-		databaseClient.setSourceId(sourceId);
+		databaseClient = new DatabaseEventClient(this, source, sourceIds, pollingPeriods);
 		databaseClient.connectToServer(source.getHost(), source.getUserName(), source.getUserPassword());
 
 		// add to context

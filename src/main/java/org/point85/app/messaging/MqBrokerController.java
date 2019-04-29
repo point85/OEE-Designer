@@ -3,8 +3,6 @@ package org.point85.app.messaging;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.jms.JMSException;
-
 import org.point85.app.AppUtils;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
@@ -157,20 +155,20 @@ public class MqBrokerController extends DesignerDialogController {
 			if (sourceType.equals(DataSourceType.MESSAGING)) {
 				if (pubsub != null) {
 					try {
-						pubsub.shutDown();
+						pubsub.disconnect();
 					} catch (Exception e) {
 					}
 				}
 			} else if (sourceType.equals(DataSourceType.JMS)) {
 				if (jmsClient != null) {
 					try {
-						jmsClient.shutDown();
-					} catch (JMSException e) {
+						jmsClient.disconnect();
+					} catch (Exception e) {
 					}
 				}
 			} else if (sourceType.equals(DataSourceType.MQTT)) {
 				try {
-					mqttClient.shutDown();
+					mqttClient.disconnect();
 				} catch (Exception e) {
 				}
 			}
@@ -245,27 +243,28 @@ public class MqBrokerController extends DesignerDialogController {
 	private void onSaveDataSource() {
 		// set attributes
 		try {
-			CollectorDataSource dataSource = getSource();
+			CollectorDataSource eventSource = getSource();
 
-			dataSource.setHost(getHost());
-			dataSource.setUserName(getUserName());
-			dataSource.setPassword(getPassword());
-			dataSource.setPort(getPort());
-			dataSource.setDescription(getDescription());
+			eventSource.setHost(getHost());
+			eventSource.setUserName(getUserName());
+			eventSource.setPassword(getPassword());
+			eventSource.setPort(getPort());
+			eventSource.setDescription(getDescription());
 
 			// name is URL
 			String name = getHost() + ":" + getPort();
-			dataSource.setName(name);
+			eventSource.setName(name);
 
 			// save data source
-			CollectorDataSource saved = (CollectorDataSource) PersistenceService.instance().save(dataSource);
+			CollectorDataSource saved = (CollectorDataSource) PersistenceService.instance().save(eventSource);
 			setSource(saved);
 
 			// update list
-			if (dataSource.getKey() == null) {
-				// new source
-				cbDataSources.getItems().add(dataSource);
+			if (eventSource.getKey() != null) {
+				// updated
+				cbDataSources.getItems().remove(eventSource);
 			}
+			cbDataSources.getItems().add(saved);
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}

@@ -58,10 +58,10 @@ public class UomConversionController extends DesignerDialogController {
 	private final ObservableList<String> prefixes = FXCollections.observableArrayList();
 
 	// list of UnitTypes
-	private final ObservableList<String> unitTypes = FXCollections.observableArrayList();
+	private final ObservableList<UnitType> unitTypes = FXCollections.observableArrayList();
 
 	@FXML
-	private ComboBox<String> cbUnitTypes;
+	private ComboBox<UnitType> cbUnitTypes;
 
 	@FXML
 	private ComboBox<String> cbFromPrefixes;
@@ -97,10 +97,10 @@ public class UomConversionController extends DesignerDialogController {
 	}
 
 	// get the display strings for all UOM types
-	protected ObservableList<String> getUnitTypes() {
+	protected ObservableList<UnitType> getUnitTypes() {
 		if (unitTypes.size() == 0) {
 			for (UnitType unitType : UnitType.values()) {
-				unitTypes.add(unitType.toString());
+				unitTypes.add(unitType);
 			}
 			Collections.sort(unitTypes);
 		}
@@ -131,7 +131,7 @@ public class UomConversionController extends DesignerDialogController {
 	@FXML
 	private void setPossibleConversions() {
 		try {
-			String unitType = cbUnitTypes.getSelectionModel().getSelectedItem();
+			UnitType unitType = cbUnitTypes.getSelectionModel().getSelectedItem();
 
 			if (unitType == null) {
 				return;
@@ -141,7 +141,7 @@ public class UomConversionController extends DesignerDialogController {
 			ObservableList<String> units = AppUtils.getUnitsOfMeasure(unitType);
 
 			// get custom units
-			ObservableList<String> customDisplayStrings = AppUtils.getCustomSymbols(UnitType.valueOf(unitType));
+			ObservableList<String> customDisplayStrings = AppUtils.getCustomSymbols(unitType);
 
 			// set from units
 			cbFromUnits.getItems().clear();

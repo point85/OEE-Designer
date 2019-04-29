@@ -50,7 +50,7 @@ public class MQTTTrendController extends BaseMessagingTrendController
 		if (mqttClient == null) {
 			return;
 		}
-		mqttClient.shutDown();
+		mqttClient.disconnect();
 
 		// remove from app context
 		getApp().getAppContext().removeMQTTClient(mqttClient);

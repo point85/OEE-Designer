@@ -46,7 +46,7 @@ public class JMSTrendController extends BaseMessagingTrendController
 		if (jmsClient == null) {
 			return;
 		}
-		jmsClient.shutDown();
+		jmsClient.disconnect();
 
 		// remove from app context
 		getApp().getAppContext().removeJMSClient(jmsClient);

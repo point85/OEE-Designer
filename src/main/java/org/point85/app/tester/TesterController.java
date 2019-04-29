@@ -237,19 +237,19 @@ public class TesterController implements MessageListener, JMSEquipmentEventListe
 		try {
 			// disconnect RMQ brokers
 			for (Entry<String, MessagingClient> entry : pubsubs.entrySet()) {
-				entry.getValue().shutDown();
+				entry.getValue().disconnect();
 			}
 			pubsubs.clear();
 
 			// disconnect JMS brokers
 			for (Entry<String, JMSClient> entry : jmsClients.entrySet()) {
-				entry.getValue().shutDown();
+				entry.getValue().disconnect();
 			}
 			jmsClients.clear();
 
 			// disconnect MQTT brokers
 			for (Entry<String, MQTTClient> entry : mqttClients.entrySet()) {
-				entry.getValue().shutDown();
+				entry.getValue().disconnect();
 			}
 			mqttClients.clear();
 		} catch (Exception e) {

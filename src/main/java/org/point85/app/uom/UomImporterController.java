@@ -16,13 +16,13 @@ import javafx.scene.control.ComboBox;
 public class UomImporterController extends DialogController {
 
 	// list of UnitTypes
-	private final ObservableList<String> unitTypes = FXCollections.observableArrayList();
+	private final ObservableList<UnitType> unitTypes = FXCollections.observableArrayList();
 
 	// list of UOMs of this type
 	private final ObservableList<UomItem> unitItems = FXCollections.observableArrayList();
 
 	@FXML
-	private ComboBox<String> cbUnitTypes;
+	private ComboBox<UnitType> cbUnitTypes;
 
 	@FXML
 	private ComboBox<UomItem> cbAvailableUnits;
@@ -40,7 +40,7 @@ public class UomImporterController extends DialogController {
 	public void initialize() throws Exception {
 		// set unit types
 		for (UnitType unitType : UnitType.values()) {
-			unitTypes.add(unitType.toString());
+			unitTypes.add(unitType);
 		}
 		Collections.sort(unitTypes);
 
@@ -54,9 +54,9 @@ public class UomImporterController extends DialogController {
 
 	@FXML
 	private void setPossibleUnits() throws Exception {
-		String type = this.cbUnitTypes.getSelectionModel().getSelectedItem();
+		UnitType unitType = cbUnitTypes.getSelectionModel().getSelectedItem();
 
-		List<UnitOfMeasure> uoms = MeasurementSystem.instance().getUnitsOfMeasure(UnitType.valueOf(type));
+		List<UnitOfMeasure> uoms = MeasurementSystem.instance().getUnitsOfMeasure(unitType);
 
 		unitItems.clear();
 		for (UnitOfMeasure uom : uoms) {

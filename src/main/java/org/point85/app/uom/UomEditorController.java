@@ -83,7 +83,7 @@ public class UomEditorController extends DesignerDialogController {
 	private final ObservableList<String> prefixes = FXCollections.observableArrayList();
 
 	// list of UnitTypes
-	private final ObservableList<String> unitTypes = FXCollections.observableArrayList();
+	private final ObservableList<UnitType> unitTypes = FXCollections.observableArrayList();
 
 	// tree view by category
 	@FXML
@@ -111,7 +111,7 @@ public class UomEditorController extends DesignerDialogController {
 	private TextField tfSymbol;
 
 	@FXML
-	private ComboBox<String> cbUnitTypes;
+	private ComboBox<UnitType> cbUnitTypes;
 
 	@FXML
 	private ComboBox<String> cbCategories;
@@ -130,13 +130,13 @@ public class UomEditorController extends DesignerDialogController {
 
 	// for product and quotient
 	@FXML
-	private ComboBox<String> cbUom1Types;
+	private ComboBox<UnitType> cbUom1Types;
 
 	@FXML
 	private ComboBox<String> cbUom1Units;
 
 	@FXML
-	private ComboBox<String> cbUom2Types;
+	private ComboBox<UnitType> cbUom2Types;
 
 	@FXML
 	private ComboBox<String> cbUom2Units;
@@ -149,7 +149,7 @@ public class UomEditorController extends DesignerDialogController {
 
 	// for power
 	@FXML
-	private ComboBox<String> cbPowerTypes;
+	private ComboBox<UnitType> cbPowerTypes;
 
 	@FXML
 	private ComboBox<String> cbPowerUnits;
@@ -180,10 +180,10 @@ public class UomEditorController extends DesignerDialogController {
 	private UomImporterController uomImportController;
 
 	// get the display strings for all UOM types
-	protected ObservableList<String> getUnitTypes() {
+	protected ObservableList<UnitType> getUnitTypes() {
 		if (unitTypes.size() == 0) {
 			for (UnitType unitType : UnitType.values()) {
-				unitTypes.add(unitType.toString());
+				unitTypes.add(unitType);
 			}
 			Collections.sort(unitTypes);
 		}
@@ -219,20 +219,20 @@ public class UomEditorController extends DesignerDialogController {
 		setImages();
 
 		// unit types
-		ObservableList<String> unitTypes = getUnitTypes();
+		ObservableList<UnitType> unitTypes = getUnitTypes();
 
 		// scalar unit type
 		cbUnitTypes.getItems().addAll(unitTypes);
-		cbUnitTypes.getSelectionModel().select(UnitType.UNCLASSIFIED.toString());
+		cbUnitTypes.getSelectionModel().select(UnitType.UNCLASSIFIED);
 
 		// UOM1 unit type
-		this.cbUom1Types.getItems().addAll(unitTypes);
+		cbUom1Types.getItems().addAll(unitTypes);
 
 		// UOM2 unit type
-		this.cbUom2Types.getItems().addAll(unitTypes);
+		cbUom2Types.getItems().addAll(unitTypes);
 
 		// power type
-		this.cbPowerTypes.getItems().addAll(unitTypes);
+		cbPowerTypes.getItems().addAll(unitTypes);
 
 		// add the tree view listener for UOM selection
 		tvUoms.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
@@ -409,7 +409,7 @@ public class UomEditorController extends DesignerDialogController {
 		this.tfSymbol.setText(uom.getSymbol());
 		this.taDescription.setText(uom.getDescription());
 		this.cbCategories.setValue(uom.getCategory());
-		this.cbUnitTypes.getSelectionModel().select(uom.getUnitType().toString());
+		this.cbUnitTypes.getSelectionModel().select(uom.getUnitType());
 
 		// regular conversion
 		double scalingFactor = uom.getScalingFactor();
@@ -445,11 +445,11 @@ public class UomEditorController extends DesignerDialogController {
 			UnitOfMeasure multiplicand = uom.getMultiplicand();
 
 			// multiplier UOM
-			cbUom1Types.getSelectionModel().select(multiplier.getUnitType().toString());
+			cbUom1Types.getSelectionModel().select(multiplier.getUnitType());
 			selectSymbol(multiplier, cbUom1Units);
 
 			// multiplicand UOM
-			cbUom2Types.getSelectionModel().select(multiplicand.getUnitType().toString());
+			cbUom2Types.getSelectionModel().select(multiplicand.getUnitType());
 			selectSymbol(multiplicand, cbUom2Units);
 
 			tpProductPower.getSelectionModel().select(tProductQuotient);
@@ -463,11 +463,11 @@ public class UomEditorController extends DesignerDialogController {
 			UnitOfMeasure divisor = uom.getDivisor();
 
 			// dividend UOM
-			cbUom1Types.getSelectionModel().select(dividend.getUnitType().toString());
+			cbUom1Types.getSelectionModel().select(dividend.getUnitType());
 			selectSymbol(dividend, cbUom1Units);
 
 			// divisor UOM
-			cbUom2Types.getSelectionModel().select(divisor.getUnitType().toString());
+			cbUom2Types.getSelectionModel().select(divisor.getUnitType());
 			selectSymbol(divisor, cbUom2Units);
 
 			tpProductPower.getSelectionModel().select(tProductQuotient);
@@ -478,7 +478,7 @@ public class UomEditorController extends DesignerDialogController {
 			UnitOfMeasure base = uom.getPowerBase();
 
 			// base of power UOM
-			cbPowerTypes.getSelectionModel().select(base.getUnitType().toString());
+			cbPowerTypes.getSelectionModel().select(base.getUnitType());
 			selectSymbol(base, cbPowerUnits);
 
 			// exponent
@@ -542,7 +542,7 @@ public class UomEditorController extends DesignerDialogController {
 			this.tfSymbol.clear();
 			this.cbCategories.getSelectionModel().clearSelection();
 			this.cbCategories.setValue(null);
-			this.cbUnitTypes.getSelectionModel().select(UnitType.UNCLASSIFIED.toString());
+			this.cbUnitTypes.getSelectionModel().select(UnitType.UNCLASSIFIED);
 			this.taDescription.clear();
 
 			// conversion
@@ -690,15 +690,12 @@ public class UomEditorController extends DesignerDialogController {
 			category = DesignerLocalizer.instance().getLangString("uncategorized");
 		}
 
-		String type = this.cbUnitTypes.getSelectionModel().getSelectedItem();
+		UnitType unitType = this.cbUnitTypes.getSelectionModel().getSelectedItem();
 
-		if (type == null) {
+		if (unitType == null) {
 			AppUtils.showErrorDialog(DesignerLocalizer.instance().getErrorString("no.uom.type"));
 			return;
 		}
-
-		// type of unit
-		UnitType unitType = UnitType.valueOf(type);
 
 		// description
 		String description = this.taDescription.getText();
@@ -959,7 +956,7 @@ public class UomEditorController extends DesignerDialogController {
 	@FXML
 	private void setPossibleAbscissaUnits() {
 		try {
-			String unitType = cbUnitTypes.getSelectionModel().getSelectedItem();
+			UnitType unitType = cbUnitTypes.getSelectionModel().getSelectedItem();
 
 			if (unitType == null) {
 				return;
@@ -969,7 +966,7 @@ public class UomEditorController extends DesignerDialogController {
 			ObservableList<String> units = AppUtils.getUnitsOfMeasure(unitType);
 
 			// custom-defined units
-			ObservableList<String> customDisplayStrings = AppUtils.getCustomSymbols(UnitType.valueOf(unitType));
+			ObservableList<String> customDisplayStrings = AppUtils.getCustomSymbols(unitType);
 
 			cbAbscissaUnits.getItems().clear();
 			cbAbscissaUnits.getItems().addAll(units);
@@ -983,14 +980,14 @@ public class UomEditorController extends DesignerDialogController {
 	@FXML
 	private void setPossibleUom1Units() {
 		try {
-			String unitType = cbUom1Types.getSelectionModel().getSelectedItem();
+			UnitType unitType = cbUom1Types.getSelectionModel().getSelectedItem();
 
 			if (unitType == null) {
 				return;
 			}
 
 			ObservableList<String> units = AppUtils.getUnitsOfMeasure(unitType);
-			ObservableList<String> customDisplayStrings = AppUtils.getCustomSymbols(UnitType.valueOf(unitType));
+			ObservableList<String> customDisplayStrings = AppUtils.getCustomSymbols(unitType);
 
 			cbUom1Units.setDisable(false);
 			cbUom1Units.getItems().clear();
@@ -1005,14 +1002,14 @@ public class UomEditorController extends DesignerDialogController {
 	@FXML
 	private void setPossibleUom2Units() {
 		try {
-			String unitType = cbUom2Types.getSelectionModel().getSelectedItem();
+			UnitType unitType = cbUom2Types.getSelectionModel().getSelectedItem();
 
 			if (unitType == null) {
 				return;
 			}
 
 			ObservableList<String> units = AppUtils.getUnitsOfMeasure(unitType);
-			ObservableList<String> customDisplayStrings = AppUtils.getCustomSymbols(UnitType.valueOf(unitType));
+			ObservableList<String> customDisplayStrings = AppUtils.getCustomSymbols(unitType);
 
 			cbUom2Units.setDisable(false);
 			cbUom2Units.getItems().clear();
@@ -1027,14 +1024,14 @@ public class UomEditorController extends DesignerDialogController {
 	@FXML
 	private void setPossiblePowerUnits() {
 		try {
-			String unitType = cbPowerTypes.getSelectionModel().getSelectedItem();
+			UnitType unitType = cbPowerTypes.getSelectionModel().getSelectedItem();
 
 			if (unitType == null) {
 				return;
 			}
 
 			ObservableList<String> units = AppUtils.getUnitsOfMeasure(unitType);
-			ObservableList<String> customDisplayStrings = AppUtils.getCustomSymbols(UnitType.valueOf(unitType));
+			ObservableList<String> customDisplayStrings = AppUtils.getCustomSymbols(unitType);
 
 			cbPowerUnits.setDisable(false);
 			cbPowerUnits.getItems().clear();

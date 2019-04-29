@@ -2,10 +2,10 @@
 	<project name="oee-apps" default="build-all" basedir="."  xmlns:fx="javafx:com.sun.javafx.tools.ant">
 	
 	<!-- distribution archive -->
-	<property name="app_version" value="2.3.0"/>
-	<property name="dist.zip" value="oee-apps-2.3.0.jar"/>
-	<property name="domain.jar" value="oee-domain-2.3.0.jar"/>
-	<property name="collector.jar" value="oee-collector-2.3.0.jar"/>
+	<property name="app_version" value="2.3.1"/>
+	<property name="dist.zip" value="oee-apps-2.3.1.jar"/>
+	<property name="domain.jar" value="oee-domain-2.3.1.jar"/>
+	<property name="collector.jar" value="oee-collector-2.3.1.jar"/>
 		
 	<!-- folders -->
 	<property name="repo.dir" value="C:\maven_repo"/>
@@ -94,7 +94,7 @@
 		</copy>
 	
 		<!-- run java compiler.  Do not use debug switches for release jar -->
-		<javac includeantruntime="false" source="1.8" target="1.8" srcdir="${build.dir}/src" destdir="${build.dir}/classes" encoding="UTF-8" >
+		<javac executable="${JAVA_HOME}/bin/javac" includeantruntime="false" source="1.8" target="1.8" srcdir="${build.dir}/src" destdir="${build.dir}/classes" encoding="UTF-8" >
 			<classpath>
 				<fileset dir="${build.dir}/lib">
 					<include name="*"/>

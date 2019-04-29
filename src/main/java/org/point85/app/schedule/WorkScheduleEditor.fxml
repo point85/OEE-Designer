@@ -84,7 +84,7 @@
                   </GridPane>
                   <TabPane fx:id="tpShiftTeams" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="175.0">
                     <tabs>
-                        <Tab fx:id="tShifts" closable="false" text="%shifts">
+                        <Tab fx:id="tbShifts" closable="false" text="%shifts">
                           <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0">
                                  <children>
@@ -115,7 +115,7 @@
                                                 <Insets right="10.0" />
                                              </padding></Label>
                                           <TextField fx:id="tfShiftStart" promptText="%starting.time" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                          <Label text="%duration" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                                          <Label text="%hr.mm.duration" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                                              <padding>
                                                 <Insets right="10.0" />
                                              </padding></Label>
@@ -137,7 +137,7 @@
                               </AnchorPane>
                           </content>
                         </Tab>
-                      <Tab fx:id="tRotations" closable="false" text="%rotations">
+                      <Tab fx:id="tbRotations" closable="false" text="%rotations">
                         <content>
                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
@@ -226,7 +226,7 @@
                                  </children></AnchorPane>
                         </content>
                       </Tab>
-                      <Tab fx:id="tTeams" closable="false" text="%teams">
+                      <Tab fx:id="tbTeams" closable="false" text="%teams">
                         <content>
                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
@@ -288,7 +288,7 @@
                               </AnchorPane>
                         </content>
                       </Tab>
-                        <Tab text="%non.working">
+                        <Tab fx:id="tbPeriods" text="%non.working">
                           <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>

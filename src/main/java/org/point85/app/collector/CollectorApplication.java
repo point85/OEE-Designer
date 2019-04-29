@@ -18,16 +18,20 @@ public class CollectorApplication {
 	// main controller
 	private CollectorController collectorController;
 
-	public CollectorApplication() {
+	// name of a specific collector on this host
+	private String collectorName;
+
+	public CollectorApplication(String collectorName) {
+		this.setCollectorName(collectorName);
 	}
 
 	public void start(Stage primaryStage) {
 		try {
 			FXMLLoader loader = FXMLLoaderFactory.collectorApplicationLoader();
 			AnchorPane mainLayout = loader.getRoot();
-			
+
 			collectorController = loader.getController();
-			collectorController.initialize();
+			collectorController.initialize(collectorName);
 
 			Scene scene = new Scene(mainLayout);
 
@@ -45,5 +49,13 @@ public class CollectorApplication {
 		if (collectorController != null) {
 			collectorController.stop();
 		}
+	}
+
+	public String getCollectorName() {
+		return collectorName;
+	}
+
+	public void setCollectorName(String collectorName) {
+		this.collectorName = collectorName;
 	}
 }

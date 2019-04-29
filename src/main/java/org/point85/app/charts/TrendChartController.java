@@ -251,7 +251,6 @@ public class TrendChartController extends DesignerController {
 			if (reason != null && reason.getLossCategory() != null) {
 				lossProperty = new SimpleStringProperty(reason.getLossCategory().toString());
 			}
-
 			return lossProperty;
 		});
 	}

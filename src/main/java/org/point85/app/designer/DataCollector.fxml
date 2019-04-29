@@ -75,6 +75,7 @@
             <Label text="%rmq.user.password" GridPane.halignment="RIGHT" GridPane.rowIndex="8" />
             <TextField fx:id="tfBrokerUserName" promptText="%enter.rmq.user.name" GridPane.columnIndex="1" GridPane.rowIndex="7" />
             <PasswordField fx:id="pfBrokerUserPassword" promptText="%enter.rmq.user.password" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+            <Button fx:id="btTest" mnemonicParsing="false" onAction="#onTest" prefWidth="100.0" text="%test" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
          </children>
       </GridPane>
    </children>

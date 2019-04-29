@@ -38,6 +38,7 @@ public class OeeApplication extends Application {
 	private static final int IDX_JDBC = 1;
 	private static final int IDX_USER = 2;
 	private static final int IDX_PASSWORD = 3;
+	private static final int IDX_COLLECTOR = 4;
 
 	// logger
 	private static final Logger logger = LoggerFactory.getLogger(OeeApplication.class);
@@ -147,6 +148,15 @@ public class OeeApplication extends Application {
 			logger.info("Starting application " + appId);
 		}
 
+		String collectorName = null;
+		if (parameters.getRaw().size() > IDX_COLLECTOR) {
+			collectorName = parameters.getRaw().get(IDX_COLLECTOR);
+		}
+
+		if (collectorName != null && logger.isInfoEnabled()) {
+			logger.info("Collector " + collectorName + " specified.");
+		}
+
 		Stage mainStage = null;
 		if (stage == null) {
 			mainStage = new Stage(StageStyle.DECORATED);
@@ -162,7 +172,7 @@ public class OeeApplication extends Application {
 			monitorApp = new MonitorApplication();
 			monitorApp.start(mainStage);
 		} else if (appId.equals(COLLECTOR_APP)) {
-			collectorApp = new CollectorApplication();
+			collectorApp = new CollectorApplication(collectorName);
 			collectorApp.start(mainStage);
 		} else if (appId.equals(TESTER_APP)) {
 			testerApp = new TesterApplication();
@@ -195,7 +205,7 @@ public class OeeApplication extends Application {
 
 		// create the EMF
 		if (logger.isInfoEnabled()) {
-			logger.info("Running application " + args[IDX_APP] + " for version " + DomainUtils.getVersionInfo());
+			logger.info("Running application " + args[IDX_APP] + " for " + DomainUtils.getVersionInfo());
 			logger.info("Initializing persistence service with args: " + args[IDX_JDBC] + ", " + args[IDX_USER] + ", "
 					+ password);
 		}

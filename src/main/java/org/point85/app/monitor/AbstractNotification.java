@@ -2,6 +2,10 @@ package org.point85.app.monitor;
 
 import org.point85.domain.messaging.ApplicationMessage;
 
+/**
+ * Base class for notifications
+ *
+ */
 public abstract class AbstractNotification {
 	protected String collectorHostName;
 	protected String collectorIpAddress;

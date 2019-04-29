@@ -116,12 +116,12 @@ public class MonitorApplication implements MessageListener {
 
 			// disconnect from notification pubsubs
 			for (MessagingClient pubSub : notificationPubSubs) {
-				pubSub.shutDown();
+				pubSub.disconnect();
 			}
 
 			// disconnect from command pubsubs
 			for (Entry<String, MessagingClient> entry : commandPubSubs.entrySet()) {
-				entry.getValue().shutDown();
+				entry.getValue().disconnect();
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());

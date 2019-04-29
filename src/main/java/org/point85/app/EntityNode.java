@@ -38,6 +38,7 @@ public class EntityNode {
 
 	@Override
 	public String toString() {
-		return entity.getName() + " (" + entity.getDescription() + ")";
+		String description = entity.getDescription() != null ? entity.getDescription() : "";
+		return entity.getName() + " (" + description + ")";
 	}
 }

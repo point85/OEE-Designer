@@ -148,7 +148,7 @@ CREATE TABLE [dbo].[EVENT_RESOLVER](
 	[ER_KEY] [bigint] IDENTITY(1,1) NOT NULL,
 	[ENT_KEY] [bigint] NULL,
 	[SOURCE_ID] [nvarchar](128) NULL,
-	[SCRIPT] [nvarchar](1024) NULL,
+	[SCRIPT] [nvarchar](4000) NULL,
 	[SOURCE_KEY] [bigint] NULL,
 	[PERIOD] [int] NULL,
 	[ER_TYPE] [nvarchar](16) NULL,

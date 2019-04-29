@@ -112,11 +112,8 @@ public abstract class AppUtils {
 	}
 
 	// Get display strings for UOMs of the specified type
-	public static ObservableList<String> getUnitsOfMeasure(String type) throws Exception {
+	public static ObservableList<String> getUnitsOfMeasure(UnitType unitType) throws Exception {
 		ObservableList<String> displayStrings = FXCollections.observableArrayList();
-
-		// UnitType
-		UnitType unitType = UnitType.valueOf(type);
 
 		List<UnitOfMeasure> uoms = MeasurementSystem.instance().getUnitsOfMeasure(unitType);
 

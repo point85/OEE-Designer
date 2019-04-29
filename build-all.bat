@@ -2,6 +2,7 @@ echo on
 set JAVA_HOME = C:\jdk\jdk1.8.0_202-32
 rem Windows shell script to build all of the Point85 projects
 rem requires a 32-bit javac
+call mvn --version
 rem (1) Domain
 cd ../OEE-Domain
 call install-oee-domain-jar.bat

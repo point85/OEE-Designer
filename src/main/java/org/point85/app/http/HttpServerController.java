@@ -188,10 +188,11 @@ public class HttpServerController extends DialogController {
 			setSource(saved);
 
 			// update list
-			if (eventSource.getKey() == null) {
-				// new source
-				cbDataSources.getItems().add(eventSource);
+			if (eventSource.getKey() != null) {
+				// updated
+				cbDataSources.getItems().remove(eventSource);
 			}
+			cbDataSources.getItems().add(saved);
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}

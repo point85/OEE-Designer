@@ -9,6 +9,8 @@ import org.point85.app.ImageManager;
 import org.point85.app.Images;
 import org.point85.domain.collector.CollectorState;
 import org.point85.domain.collector.DataCollector;
+import org.point85.domain.messaging.MessagingClient;
+import org.point85.domain.messaging.NotificationSeverity;
 import org.point85.domain.persistence.PersistenceService;
 
 import javafx.collections.FXCollections;
@@ -59,6 +61,9 @@ public class DataCollectorController extends DialogController {
 
 	@FXML
 	private Button btDelete;
+	
+	@FXML
+	private Button btTest;
 
 	@FXML
 	private ComboBox<String> cbCollectors;
@@ -97,6 +102,10 @@ public class DataCollectorController extends DialogController {
 		// delete
 		btDelete.setGraphic(ImageManager.instance().getImageView(Images.DELETE));
 		btDelete.setContentDisplay(ContentDisplay.LEFT);
+		
+		// test
+		btTest.setGraphic(ImageManager.instance().getImageView(Images.EXECUTE));
+		btTest.setContentDisplay(ContentDisplay.LEFT);
 	}
 
 	public DataCollector getCollector() {
@@ -252,7 +261,7 @@ public class DataCollectorController extends DialogController {
 	Integer getBrokerPort() {
 		String portText = tfBrokerPort.getText();
 
-		Integer port = null;
+		Integer port = 0;
 		if (portText != null && portText.trim().length() > 0) {
 			port = Integer.valueOf(portText.trim());
 		}
@@ -269,6 +278,17 @@ public class DataCollectorController extends DialogController {
 
 	CollectorState getCollectorState() {
 		return this.cbCollectorStates.getSelectionModel().getSelectedItem();
+	}
+	
+	@FXML
+	private void onTest() {
+		try {
+			MessagingClient pubsub = new MessagingClient();			
+			pubsub.connect(getBrokerHost(), getBrokerPort(), getBrokerUserName(), getBrokerUserPassword());
+			pubsub.sendNotification("This is a test.", NotificationSeverity.INFO);
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
 	}
 
 }

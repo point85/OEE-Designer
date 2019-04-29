@@ -59,7 +59,7 @@ public class MessagingTrendController extends BaseMessagingTrendController imple
 		if (pubSub == null) {
 			return;
 		}
-		pubSub.shutDown();
+		pubSub.disconnect();
 
 		// remove from app context
 		getApp().getAppContext().removeMessagingClient(pubSub);
