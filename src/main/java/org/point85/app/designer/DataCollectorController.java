@@ -61,7 +61,7 @@ public class DataCollectorController extends DialogController {
 
 	@FXML
 	private Button btDelete;
-	
+
 	@FXML
 	private Button btTest;
 
@@ -102,7 +102,7 @@ public class DataCollectorController extends DialogController {
 		// delete
 		btDelete.setGraphic(ImageManager.instance().getImageView(Images.DELETE));
 		btDelete.setContentDisplay(ContentDisplay.LEFT);
-		
+
 		// test
 		btTest.setGraphic(ImageManager.instance().getImageView(Images.EXECUTE));
 		btTest.setContentDisplay(ContentDisplay.LEFT);
@@ -279,13 +279,15 @@ public class DataCollectorController extends DialogController {
 	CollectorState getCollectorState() {
 		return this.cbCollectorStates.getSelectionModel().getSelectedItem();
 	}
-	
+
 	@FXML
 	private void onTest() {
 		try {
-			MessagingClient pubsub = new MessagingClient();			
+			MessagingClient pubsub = new MessagingClient();
 			pubsub.connect(getBrokerHost(), getBrokerPort(), getBrokerUserName(), getBrokerUserPassword());
 			pubsub.sendNotification("This is a test.", NotificationSeverity.INFO);
+
+			AppUtils.showConfirmationDialog(DesignerLocalizer.instance().getLangString("connection.successful"));
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}

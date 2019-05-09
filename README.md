@@ -73,6 +73,9 @@ The Monitor application has three main functions, to observe:
 An example dashboard is:
 ![Dashboard](https://github.com/point85/OEE-Designer/blob/master/docs/dashboard.png)
 
+Production and availability events can be shown in a trend chart, for example:
+![Dashboard Trend](https://github.com/point85/OEE-Designer/blob/master/docs/availability-trend.png)
+
 The time-losses tab shows a bar chart of the OEE loss categories:
 ![Time Losses](https://github.com/point85/OEE-Designer/blob/master/docs/dashboard-time-losses.png)
 

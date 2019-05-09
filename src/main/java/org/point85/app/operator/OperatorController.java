@@ -771,14 +771,12 @@ public class OperatorController {
 		try {
 			recordEvent(OeeEventType.MATL_CHANGE);
 
-			// get last setup
 			PlantEntity selectedEntity = tvEntities.getSelectionModel().getSelectedItem().getValue().getPlantEntity();
 			displayEntityAttributes(selectedEntity);
 		} catch (Exception e) {
 			lbMessage.setText(null);
 			AppUtils.showErrorDialog(e);
 		}
-		selectedMaterial = null;
 	}
 
 	private OeeEvent createEvent(OeeEventType type, Equipment equipment) throws Exception {

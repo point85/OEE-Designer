@@ -77,5 +77,11 @@
 	- Updated the user guide with new custom scripting examples
 	- Upgraded to Eclipse Milo 0.2.5, RabbitMQ 5.5.3, Eclipse Paho 1.2.1
 	- Allowed multiple collector applications on the same host machine
+	
+(18) 2.3.2, May 10, 2019:
+	- Added line charts for production and availability trends in the dashboard
+    - Changed Windows build to a 64-bit Java 8 JVM for compatibility with Linux and Mac OSX	
+	- Verified Oracle 18c Express Edition database
+	- Misc bug fixes and improved logging
 
 Please send comments and suggestions to point85.llc@gmail.com.

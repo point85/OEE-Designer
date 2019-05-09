@@ -1,2 +1,2 @@
-rem Launch the Operator application (JDBC connection string, user name and password)
-start javaw.exe -jar oee-apps-2.3.1.jar OPERATOR jdbc:hsqldb:hsql://localhost/OEE SA  
+rem Launch the Operator application (args: JDBC connection string, user name, password and optional collector name)
+start javaw.exe -jar oee-apps-2.3.2.jar OPERATOR jdbc:hsqldb:hsql://localhost/OEE SA  

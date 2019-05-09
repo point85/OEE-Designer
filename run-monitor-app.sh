@@ -1,2 +1,2 @@
-# Launch the Monitor application (JDBC connection string, user name and password)
-java -jar oee-apps-2.3.1.jar MONITOR jdbc:hsqldb:hsql://localhost/OEE SA  
+# Launch the Monitor application (args: JDBC connection string, user name, password and optional collector name)
+java -jar oee-apps-2.3.2.jar MONITOR jdbc:hsqldb:hsql://localhost/OEE SA  

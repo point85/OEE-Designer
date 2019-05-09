@@ -25,6 +25,7 @@ import org.point85.app.Images;
 import org.point85.app.charts.CategoryClickListener;
 import org.point85.app.charts.ParetoChartController;
 import org.point85.app.designer.DesignerLocalizer;
+import org.point85.app.monitor.OeeEventTrendController;
 import org.point85.domain.DomainUtils;
 import org.point85.domain.collector.OeeEvent;
 import org.point85.domain.messaging.CollectorResolvedEventMessage;
@@ -80,6 +81,7 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
@@ -175,6 +177,9 @@ public class DashboardController extends DialogController implements CategoryCli
 
 	@FXML
 	private Button btDeleteEvent;
+
+	@FXML
+	private Button btOeeTrend;
 
 	// availability controller
 	private AvailabilityEditorController availabilityEditorController;
@@ -286,9 +291,8 @@ public class DashboardController extends DialogController implements CategoryCli
 	// list of events
 	private final ObservableList<OeeEvent> resolvedEvents = FXCollections.observableArrayList(new ArrayList<>());
 
+	// last availability event
 	private OeeEvent lastAvailability;
-	private OeeEvent lastMaterialSetup;
-	private OeeEvent lastJobSetup;
 
 	@FXML
 	private TableView<OeeEvent> tvResolvedEvents;
@@ -585,6 +589,12 @@ public class DashboardController extends DialogController implements CategoryCli
 				spPlannedDowntimePareto, items, divisor, DesignerLocalizer.instance().getLangString("time.by.reason"));
 	}
 
+	private void clearLossData() {
+		if (bcLosses.getData() != null) {
+			bcLosses.getData().clear();
+		}
+	}
+
 	private void createLossChart() {
 		// build data series
 		netTimeList.clear();
@@ -725,9 +735,7 @@ public class DashboardController extends DialogController implements CategoryCli
 		bcLosses.setTitle(DesignerLocalizer.instance().getLangString("losses.title", chartTitle, timeUnit));
 		bcLosses.setAnimated(false);
 
-		if (bcLosses.getData() != null) {
-			bcLosses.getData().clear();
-		}
+		clearLossData();
 
 		// net times
 		netTimeSeries.setName(DesignerLocalizer.instance().getLangString("time.in.cat"));
@@ -772,13 +780,15 @@ public class DashboardController extends DialogController implements CategoryCli
 		// style the chart
 		bcLosses.getStylesheets().addAll(getClass().getResource("/org/point85/css/dashboard.css").toExternalForm());
 
-		// add listener for mouse click on bar
+		// add listener for mouse click on bar and tooltip
 		for (Series<Number, String> series : bcLosses.getData()) {
 			for (XYChart.Data<Number, String> item : series.getData()) {
-
 				item.getNode().setOnMouseClicked((MouseEvent event) -> {
 					onClickLossCategory(series, item);
 				});
+
+				Tooltip tooltip = new Tooltip(item.getXValue().toString());
+				Tooltip.install(item.getNode(), tooltip);
 			}
 		}
 	}
@@ -894,6 +904,10 @@ public class DashboardController extends DialogController implements CategoryCli
 		// delete event
 		btDeleteEvent.setGraphic(ImageManager.instance().getImageView(Images.DELETE));
 		btDeleteEvent.setContentDisplay(ContentDisplay.RIGHT);
+
+		// OEE trend
+		btOeeTrend.setGraphic(ImageManager.instance().getImageView(Images.CHARTXY));
+		btOeeTrend.setContentDisplay(ContentDisplay.RIGHT);
 	}
 
 	@FXML
@@ -1146,15 +1160,7 @@ public class DashboardController extends DialogController implements CategoryCli
 		tcMaterial.setCellValueFactory(cellDataFeatures -> {
 			SimpleStringProperty property = null;
 			OeeEvent event = cellDataFeatures.getValue();
-			Material material = null;
-
-			if (event.isSetup()) {
-				material = event.getMaterial();
-				lastMaterialSetup = event;
-			} else {
-				// use last setup
-				material = lastMaterialSetup.getMaterial();
-			}
+			Material material = event.getMaterial();
 
 			if (material != null) {
 				property = new SimpleStringProperty(material.getName());
@@ -1164,30 +1170,18 @@ public class DashboardController extends DialogController implements CategoryCli
 
 		// job
 		tcJob.setCellValueFactory(cellDataFeatures -> {
-			SimpleStringProperty property = null;
 			OeeEvent event = cellDataFeatures.getValue();
-			String job = null;
+			String job = event.getJob();
 
-			if (event.isSetup()) {
-				job = event.getJob();
-				lastJobSetup = event;
-			} else {
-				// use last setup
-				job = lastJobSetup.getJob();
-			}
-			property = new SimpleStringProperty(job);
-			return property;
+			return new SimpleStringProperty(job);
 		});
 
 		// source
 		tcSourceId.setCellValueFactory(cellDataFeatures -> {
-			SimpleStringProperty property = null;
 			OeeEvent event = cellDataFeatures.getValue();
 			String sourceId = event.getSourceId();
-			property = new SimpleStringProperty(sourceId);
-			return property;
+			return new SimpleStringProperty(sourceId);
 		});
-
 	}
 
 	private void refreshCharts(Tab newValue) throws Exception {
@@ -1350,6 +1344,46 @@ public class DashboardController extends DialogController implements CategoryCli
 		cbMaterials.getItems().add(DesignerLocalizer.instance().getLangString("all.materials"));
 	}
 
+	private OffsetDateTime getStartTime() throws Exception {
+		LocalDate startDate = dpStartDate.getValue();
+
+		if (startDate == null) {
+			startDate = LocalDate.now();
+		}
+
+		Duration startSeconds = null;
+		if (tfStartTime.getText() != null && tfStartTime.getText().trim().length() > 0) {
+			startSeconds = AppUtils.durationFromString(tfStartTime.getText().trim());
+		} else {
+			startSeconds = Duration.ZERO;
+		}
+		LocalTime startTime = LocalTime.ofSecondOfDay(startSeconds.getSeconds());
+		LocalDateTime ldtStart = LocalDateTime.of(startDate, startTime);
+		OffsetDateTime odtStart = DomainUtils.fromLocalDateTime(ldtStart);
+
+		return odtStart;
+	}
+
+	private OffsetDateTime getEndTime() throws Exception {
+		LocalDate endDate = dpEndDate.getValue();
+
+		if (endDate == null) {
+			endDate = LocalDate.now().plusDays(1);
+		}
+
+		Duration endSeconds = null;
+		if (tfEndTime.getText() != null && tfEndTime.getText().trim().length() > 0) {
+			endSeconds = AppUtils.durationFromString(tfEndTime.getText().trim());
+		} else {
+			endSeconds = Duration.ZERO;
+		}
+		LocalTime endTime = LocalTime.ofSecondOfDay(endSeconds.getSeconds());
+		LocalDateTime ldtEnd = LocalDateTime.of(endDate, endTime);
+
+		OffsetDateTime odtEnd = DomainUtils.fromLocalDateTime(ldtEnd);
+		return odtEnd;
+	}
+
 	@FXML
 	public void onRefresh() {
 		try {
@@ -1375,43 +1409,14 @@ public class DashboardController extends DialogController implements CategoryCli
 			lbiStartupProduction.setValue(0.0d, false);
 
 			// start date and time
-			LocalDate startDate = dpStartDate.getValue();
-
-			if (startDate == null) {
-				startDate = LocalDate.now();
-			}
-
-			Duration startSeconds = null;
-			if (tfStartTime.getText() != null && tfStartTime.getText().trim().length() > 0) {
-				startSeconds = AppUtils.durationFromString(tfStartTime.getText().trim());
-			} else {
-				startSeconds = Duration.ZERO;
-			}
-			LocalTime startTime = LocalTime.ofSecondOfDay(startSeconds.getSeconds());
-			LocalDateTime ldtStart = LocalDateTime.of(startDate, startTime);
-			OffsetDateTime odtStart = DomainUtils.fromLocalDateTime(ldtStart);
+			OffsetDateTime odtStart = getStartTime();
 
 			// end date and time
-			LocalDate endDate = dpEndDate.getValue();
+			OffsetDateTime odtEnd = getEndTime();
 
-			if (endDate == null) {
-				endDate = LocalDate.now().plusDays(1);
+			if (odtEnd.isBefore(odtStart)) {
+				throw new Exception(DesignerLocalizer.instance().getErrorString("start.before.end", odtStart, odtEnd));
 			}
-
-			Duration endSeconds = null;
-			if (tfEndTime.getText() != null && tfEndTime.getText().trim().length() > 0) {
-				endSeconds = AppUtils.durationFromString(tfEndTime.getText().trim());
-			} else {
-				endSeconds = Duration.ZERO;
-			}
-			LocalTime endTime = LocalTime.ofSecondOfDay(endSeconds.getSeconds());
-			LocalDateTime ldtEnd = LocalDateTime.of(endDate, endTime);
-
-			if (ldtEnd.isBefore(ldtStart)) {
-				throw new Exception(DesignerLocalizer.instance().getErrorString("start.before.end", ldtStart, ldtEnd));
-			}
-
-			OffsetDateTime odtEnd = DomainUtils.fromLocalDateTime(ldtEnd);
 
 			// equipment
 			Equipment equipment = equipmentLoss.getEquipment();
@@ -1564,6 +1569,7 @@ public class DashboardController extends DialogController implements CategoryCli
 			showStatistics();
 
 			// display the selected tab
+			clearLossData();
 			refreshCharts(tpParetoCharts.getSelectionModel().getSelectedItem());
 
 		} catch (Exception e) {
@@ -1623,6 +1629,23 @@ public class DashboardController extends DialogController implements CategoryCli
 			setupEditorController.setDialogStage(dialogStage);
 		}
 		return setupEditorController;
+	}
+
+	private OeeEventTrendController getOeeEventTrendController() throws Exception {
+		FXMLLoader loader = FXMLLoaderFactory.oeeEventTrendLoader();
+		AnchorPane page = (AnchorPane) loader.getRoot();
+
+		Stage dialogStage = new Stage(StageStyle.DECORATED);
+		dialogStage.setTitle(DesignerLocalizer.instance().getLangString("oee.event.trend"));
+		dialogStage.initModality(Modality.NONE);
+		Scene scene = new Scene(page);
+		dialogStage.setScene(scene);
+
+		// get the controller
+		OeeEventTrendController oeeEventTrendController = loader.getController();
+		oeeEventTrendController.setDialogStage(dialogStage);
+
+		return oeeEventTrendController;
 	}
 
 	@FXML
@@ -1718,6 +1741,17 @@ public class DashboardController extends DialogController implements CategoryCli
 			PersistenceService.instance().delete(event);
 
 			onRefresh();
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+
+	@FXML
+	private void onOeeEventTrend() {
+		try {
+			OeeEventTrendController controller = getOeeEventTrendController();
+			controller.buildTrend(resolvedEvents, getStartTime(), getEndTime());
+			controller.getDialogStage().showAndWait();
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}

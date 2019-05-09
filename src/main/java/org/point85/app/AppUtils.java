@@ -51,13 +51,13 @@ public abstract class AppUtils {
 		alert.setContentText(errorMessage);
 		alert.setResizable(true);
 
+		// modal
 		Optional<ButtonType> result = alert.showAndWait();
 
 		ButtonType buttonType = null;
 		try {
 			buttonType = result.get();
 		} catch (NoSuchElementException e) {
-
 		}
 		return buttonType;
 	}
@@ -72,6 +72,12 @@ public abstract class AppUtils {
 	public static void showWarningDialog(String message) {
 		showAlert(AlertType.WARNING, DesignerLocalizer.instance().getLangString("app.warning"),
 				DesignerLocalizer.instance().getLangString("warning"), message);
+	}
+	
+	// display a informational dialog
+	public static void showInfoDialog(String message) {
+		showAlert(AlertType.INFORMATION, DesignerLocalizer.instance().getLangString("app.info"),
+				DesignerLocalizer.instance().getLangString("information"), message);
 	}
 
 	// display an error dialog
@@ -88,7 +94,7 @@ public abstract class AppUtils {
 	}
 
 	// create a String from the UOM symbol and name
-	public static String toDisplayString(String symbol, String name) {
+	public static String toUomDisplayString(String symbol, String name) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(symbol).append(" (").append(name).append(')');
 		return sb.toString();
@@ -105,7 +111,7 @@ public abstract class AppUtils {
 		for (Object[] row : rows) {
 			String symbol = (String) row[0];
 			String name = (String) row[1];
-			displayStrings.add(AppUtils.toDisplayString(symbol, name));
+			displayStrings.add(AppUtils.toUomDisplayString(symbol, name));
 		}
 
 		return FXCollections.observableArrayList(displayStrings);

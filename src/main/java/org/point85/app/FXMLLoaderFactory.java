@@ -29,6 +29,7 @@ import org.point85.app.messaging.MessagingTrendController;
 import org.point85.app.messaging.MqBrokerController;
 import org.point85.app.monitor.MonitorApplication;
 import org.point85.app.monitor.MonitorLocalizer;
+import org.point85.app.monitor.OeeEventTrendController;
 import org.point85.app.opc.da.OpcDaBrowserController;
 import org.point85.app.opc.da.OpcDaTrendController;
 import org.point85.app.opc.ua.OpcUaBrowserController;
@@ -388,6 +389,13 @@ public class FXMLLoaderFactory {
 	public static FXMLLoader monitorApplicationLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(MonitorApplication.class.getResource("MonitorApplication.fxml"));
 		fxmlLoader.setResources(getMonitorLangBundle());
+		fxmlLoader.load();
+		return fxmlLoader;
+	}
+	
+	public static FXMLLoader oeeEventTrendLoader() throws Exception {
+		FXMLLoader fxmlLoader = new FXMLLoader(OeeEventTrendController.class.getResource("OeeEventTrend.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
 	}

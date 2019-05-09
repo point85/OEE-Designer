@@ -1,2 +1,2 @@
-rem Launch the Tester application (JDBC connection string, user name and password)
-start javaw.exe -jar oee-apps-2.3.1.jar TESTER jdbc:hsqldb:hsql://localhost/OEE SA  
+rem Launch the Tester application (args: JDBC connection string, user name, password and optional collector name)
+start javaw.exe -jar oee-apps-2.3.2.jar TESTER jdbc:hsqldb:hsql://localhost/OEE SA  

@@ -64,6 +64,9 @@ public final class ImageManager {
 		case CHANGED:
 			image = new Image(path + "Changed.png", DIM, DIM, true, true);
 			break;
+		case CHARTXY:
+			image = new Image(path + "ChartXY.png", DIM, DIM, true, true);
+			break;
 		case CHOOSE:
 			image = new Image(path + "Choose.png", DIM, DIM, true, true);
 			break;

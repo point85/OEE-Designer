@@ -196,6 +196,10 @@ public class OeeApplication extends Application {
 		// configure log4j
 		PropertyConfigurator.configure("config/logging/log4j.properties");
 
+		if (logger.isInfoEnabled()) {
+			logger.info("JVM: " + DomainUtils.getJVMInfo());
+		}
+
 		if (args.length < IDX_USER) {
 			logger.error("The application, jdbc connection string and user name must be specified.");
 			return;

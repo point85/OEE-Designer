@@ -10,6 +10,7 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
@@ -74,7 +75,7 @@
       </VBox>
     <AnchorPane minHeight="0.0" minWidth="0.0">
          <children>
-            <TabPane fx:id="tpParetoCharts" disable="true" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0">
+            <TabPane fx:id="tpParetoCharts" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0">
                <tabs>
                   <Tab fx:id="tbEvents" closable="false" text="%events">
                     <content>
@@ -99,8 +100,10 @@
                                     <TableColumn fx:id="tcSourceId" editable="false" prefWidth="300.0" text="%source" />
                                 </columns>
                               </TableView>
-                              <ButtonBar layoutX="71.0" layoutY="-6.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="50.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <ButtonBar buttonMinWidth="0.0" layoutX="71.0" layoutY="-6.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="50.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                 <buttons>
+                                    <Button fx:id="btOeeTrend" mnemonicParsing="false" onAction="#onOeeEventTrend" text="%trend" />
+                                    <Separator orientation="VERTICAL" />
                                     <Button fx:id="btDeleteEvent" mnemonicParsing="false" onAction="#onDeleteEvent" text="%delete" />
                                     <Button fx:id="btUpdateEvent" mnemonicParsing="false" onAction="#onUpdateEvent" text="%update" />
                                     <Button fx:id="btNewSetup" mnemonicParsing="false" onAction="#onNewSetup" text="%new.setup" />

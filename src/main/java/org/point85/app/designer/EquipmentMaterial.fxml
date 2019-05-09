@@ -87,7 +87,7 @@
          <children>
             <Button fx:id="btRemoveMaterial" mnemonicParsing="false" onAction="#onRemoveMaterial" prefWidth="100.0" text="%remove" />
             <Button fx:id="btAddMaterial" mnemonicParsing="false" onAction="#onAddOrUpdateMaterial" prefWidth="100.0" text="%add" />
-            <Button fx:id="btNewMaterial" mnemonicParsing="false" onAction="#onNewMaterial" prefWidth="100.0" text="%clear" />
+            <Button fx:id="btNewMaterial" mnemonicParsing="false" onAction="#onNewMaterial" prefWidth="100.0" text="%new" />
          </children>
       </HBox>
       <TableView fx:id="tvMaterial" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="250.0">
