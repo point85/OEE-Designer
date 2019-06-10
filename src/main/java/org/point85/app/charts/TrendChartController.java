@@ -255,7 +255,7 @@ public class TrendChartController extends DesignerController {
 		});
 	}
 
-	private void toggleTrendButton() throws Exception {
+	public void toggleTrendButton() throws Exception {
 		if (subscriber.isSubscribed()) {
 			btToggleTrend.setGraphic(ImageManager.instance().getImageView(Images.STOP));
 			btToggleTrend.setText(DesignerLocalizer.instance().getLangString("stop"));
@@ -297,7 +297,11 @@ public class TrendChartController extends DesignerController {
 	public OeeEvent invokeResolver(OeeContext context, Object sourceValue, OffsetDateTime dateTime, String reason)
 			throws Exception {
 		eventResolver.setReason(reason);
-		OeeEvent resolvedItem = equipmentResolver.invokeResolver(eventResolver, context, sourceValue, dateTime);
+		OeeEvent resolvedEvent = equipmentResolver.invokeResolver(eventResolver, context, sourceValue, dateTime);
+		
+		if (resolvedEvent == null) {
+			return null;
+		}
 
 		OeeEventType type = eventResolver.getType();
 
@@ -305,26 +309,26 @@ public class TrendChartController extends DesignerController {
 		case AVAILABILITY: {
 			// plot loss category
 			String lossCategory = null;
-			if (resolvedItem.getReason() != null) {
-				TimeLoss loss = resolvedItem.getReason().getLossCategory();
+			if (resolvedEvent.getReason() != null) {
+				TimeLoss loss = resolvedEvent.getReason().getLossCategory();
 				lossCategory = loss.toString();
 			}
 
-			plotData(resolvedItem.getInputValue(), lossCategory);
+			plotData(resolvedEvent.getInputValue(), lossCategory);
 			break;
 		}
 
 		case CUSTOM:
 		case JOB_CHANGE:
 		case MATL_CHANGE: {
-			plotData(resolvedItem.getInputValue(), resolvedItem.getOutputValue());
+			plotData(resolvedEvent.getInputValue(), resolvedEvent.getOutputValue());
 			break;
 		}
 
 		case PROD_GOOD:
 		case PROD_REJECT:
 		case PROD_STARTUP: {
-			Object plottedValue = resolvedItem.getInputValue();
+			Object plottedValue = resolvedEvent.getInputValue();
 
 			// convert from String
 			if (plottedValue instanceof String) {
@@ -334,7 +338,7 @@ public class TrendChartController extends DesignerController {
 				}
 			}
 
-			plotData(plottedValue, resolvedItem.getAmount());
+			plotData(plottedValue, resolvedEvent.getAmount());
 			break;
 		}
 
@@ -343,9 +347,9 @@ public class TrendChartController extends DesignerController {
 		}
 
 		// add to table with limit
-		addEvent(resolvedItem);
+		addEvent(resolvedEvent);
 
-		return resolvedItem;
+		return resolvedEvent;
 	}
 
 	private synchronized void addEvent(OeeEvent event) {

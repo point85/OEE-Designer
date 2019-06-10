@@ -253,15 +253,15 @@ public class OpcDaBrowserController extends OpcDaController {
 
 		// connect
 		btConnect.setGraphic(ImageManager.instance().getImageView(Images.CONNECT));
-		btConnect.setContentDisplay(ContentDisplay.RIGHT);
+		btConnect.setContentDisplay(ContentDisplay.LEFT);
 
 		// disconnect
 		btDisconnect.setGraphic(ImageManager.instance().getImageView(Images.DISCONNECT));
-		btDisconnect.setContentDisplay(ContentDisplay.RIGHT);
+		btDisconnect.setContentDisplay(ContentDisplay.LEFT);
 
 		// cancel connect
 		btCancelConnect.setGraphic(ImageManager.instance().getImageView(Images.CANCEL));
-		btCancelConnect.setContentDisplay(ContentDisplay.RIGHT);
+		btCancelConnect.setContentDisplay(ContentDisplay.LEFT);
 
 		// new
 		btNew.setGraphic(ImageManager.instance().getImageView(Images.NEW));
@@ -286,7 +286,7 @@ public class OpcDaBrowserController extends OpcDaController {
 			if (status != null) {
 				String serverState = status.getServerState();
 				lbState.setText(serverState);
-				lbState.setTextFill(CONNECTED_COLOR);
+				lbState.setTextFill(ConnectionState.CONNECTED_COLOR);
 				String formatted = DomainUtils.offsetDateTimeToString(status.getStartTime(),
 						DomainUtils.OFFSET_DATE_TIME_PATTERN);
 				lbStartTime.setText(formatted);
@@ -294,20 +294,20 @@ public class OpcDaBrowserController extends OpcDaController {
 				lbVersion.setText(status.getVersion());
 			} else {
 				lbState.setText(ConnectionState.DISCONNECTED.toString());
-				lbState.setTextFill(DISCONNECTED_COLOR);
+				lbState.setTextFill(ConnectionState.DISCONNECTED_COLOR);
 			}
 			break;
 
 		case CONNECTING:
 			piConnection.setVisible(true);
 			lbState.setText(ConnectionState.CONNECTING.toString());
-			lbState.setTextFill(CONNECTING_COLOR);
+			lbState.setTextFill(ConnectionState.CONNECTING_COLOR);
 			break;
 
 		case DISCONNECTED:
 			piConnection.setVisible(false);
 			lbState.setText(ConnectionState.DISCONNECTED.toString());
-			lbState.setTextFill(DISCONNECTED_COLOR);
+			lbState.setTextFill(ConnectionState.DISCONNECTED_COLOR);
 
 			lbTagQuality.setText(null);
 			lbTagTimestamp.setText(null);

@@ -103,6 +103,9 @@ public class PhysicalModelController extends DesignerController {
 	private Button btMQTTBrokerEditor;
 
 	@FXML
+	private Button btModbusEditor;
+
+	@FXML
 	private Button btDatabaseServerEditor;
 
 	@FXML
@@ -278,6 +281,10 @@ public class PhysicalModelController extends DesignerController {
 		getRootEntityItem().setExpanded(true);
 		tvEntities.getSelectionModel().clearSelection();
 		tvEntities.refresh();
+
+		if (entities.size() == 1 && (entities.get(0) instanceof Equipment)) {
+			tvEntities.getSelectionModel().select(0);
+		}
 	}
 
 	private void onSelectEntity(TreeItem<EntityNode> oldItem, TreeItem<EntityNode> newItem) throws Exception {
@@ -353,6 +360,9 @@ public class PhysicalModelController extends DesignerController {
 
 		btMQTTBrokerEditor.setGraphic(ImageManager.instance().getImageView(Images.MQTT));
 		btMQTTBrokerEditor.setTooltip(new Tooltip(i18n.getString("mqtt.tt")));
+
+		btModbusEditor.setGraphic(ImageManager.instance().getImageView(Images.MODBUS));
+		btModbusEditor.setTooltip(new Tooltip(i18n.getString("modbus.tt")));
 
 		btDatabaseServerEditor.setGraphic(ImageManager.instance().getImageView(Images.DB));
 		btDatabaseServerEditor.setTooltip(new Tooltip(i18n.getString("db.tt")));
@@ -449,6 +459,15 @@ public class PhysicalModelController extends DesignerController {
 	private void onShowMQTTBrokerEditor() {
 		try {
 			this.getApp().showMQBrokerEditor(DataSourceType.MQTT);
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+
+	@FXML
+	private void onShowModbusEditor() {
+		try {
+			this.getApp().showModbusEditor();
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}

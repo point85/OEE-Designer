@@ -130,6 +130,9 @@ public final class ImageManager {
 		case POINT85:
 			image = new Image(path + "Point85.png", 64, 64, true, true);
 			break;
+		case READ:
+			image = new Image(path + "Read.png", DIM, DIM, true, true);
+			break;
 		case REASON:
 			image = new Image(path + "Reason.png", DIM, DIM, true, true);
 			break;
@@ -150,6 +153,9 @@ public final class ImageManager {
 			break;
 		case MQTT:
 			image = new Image(path + "MQTTSource.png", DIM, DIM, true, true);
+			break;
+		case MODBUS:
+			image = new Image(path + "ModbusSource.png", DIM, DIM, true, true);
 			break;
 		case DB:
 			image = new Image(path + "DatabaseSource.png", DIM, DIM, true, true);
@@ -211,6 +217,9 @@ public final class ImageManager {
 			break;
 		case WEB:
 			image = new Image(path + "WebSource.png", DIM, DIM, true, true);
+			break;
+		case WRITE:
+			image = new Image(path + "Write.png", DIM, DIM, true, true);
 			break;
 		case CHOOSE_FILE:
 			image = new Image(path + "ChooseFile.png", DIM, DIM, true, true);

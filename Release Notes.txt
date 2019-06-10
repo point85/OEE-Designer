@@ -83,5 +83,10 @@
     - Changed Windows build to a 64-bit Java 8 JVM for compatibility with Linux and Mac OSX	
 	- Verified Oracle 18c Express Edition database
 	- Misc bug fixes and improved logging
+	
+(19) 2.4.0, June 10, 2019:
+	- Added Modbus TCP, UDP and serial as a data source
+	- Added parameter to web.xml for controlling data collection on a web server
+	- Misc bug fixes and usability improvements
 
 Please send comments and suggestions to point85.llc@gmail.com.

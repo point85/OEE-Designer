@@ -17,6 +17,8 @@ import org.point85.domain.collector.DataSourceType;
 import org.point85.domain.db.DatabaseEventSource;
 import org.point85.domain.file.FileEventSource;
 import org.point85.domain.http.HttpSource;
+import org.point85.domain.modbus.ModbusEndpoint;
+import org.point85.domain.modbus.ModbusSource;
 import org.point85.domain.opc.da.OpcDaBrowserLeaf;
 import org.point85.domain.opc.da.OpcDaSource;
 import org.point85.domain.opc.da.OpcDaVariant;
@@ -422,6 +424,10 @@ public class EquipmentResolverController extends DesignerController {
 			buttonImage = ImageManager.instance().getImageView(Images.FILE);
 			setUpdatePeriod = true;
 			break;
+		case MODBUS:
+			buttonImage = ImageManager.instance().getImageView(Images.MODBUS);
+			setUpdatePeriod = true;
+			break;
 		default:
 			break;
 		}
@@ -449,7 +455,6 @@ public class EquipmentResolverController extends DesignerController {
 			}
 
 			if (sourceType.equals(DataSourceType.OPC_DA)) {
-
 				OpcDaBrowserLeaf sourceTag = getApp().showOpcDaDataSourceBrowser();
 
 				if (sourceTag == null) {
@@ -534,6 +539,21 @@ public class EquipmentResolverController extends DesignerController {
 
 				setDefaultSourceId();
 
+			} else if (sourceType.equals(DataSourceType.MODBUS)) {
+				// show Modbus master editor
+				ModbusSource dataSource = getApp().showModbusEditor();
+				tfServerId.setText(dataSource.getId());
+
+				EventResolver resolver = getSelectedResolver();
+				resolver.setDataSource(dataSource);
+
+				ModbusEndpoint endPoint = dataSource.getEndpoint();	
+				String sourceId = endPoint.buildSourceId();
+				resolver.setSourceId(sourceId);
+				
+				lbDataType.setText(endPoint.getDataType().toString());
+				tfSourceId.setText(sourceId);
+
 			} else {
 				throw new Exception(DesignerLocalizer.instance().getErrorString("unknown.type", sourceType));
 			}
@@ -603,6 +623,8 @@ public class EquipmentResolverController extends DesignerController {
 					eventResolver.setScript(EventResolver.createDefaultMaterialFunction());
 				} else if (resolverType.isJob()) {
 					eventResolver.setScript(EventResolver.createDefaultJobFunction());
+				} else {
+					eventResolver.setScript(EventResolver.createDefaultFunction());
 				}
 			}
 
@@ -756,6 +778,8 @@ public class EquipmentResolverController extends DesignerController {
 				getApp().showDatabaseTrendDialog(selectedEventResolver);
 			} else if (type.equals(DataSourceType.FILE)) {
 				getApp().showFileTrendDialog(selectedEventResolver);
+			} else if (type.equals(DataSourceType.MODBUS)) {
+				getApp().showModbusTrendDialog(selectedEventResolver);
 			}
 
 		} catch (Exception e) {

@@ -116,7 +116,7 @@
                </font>
             </Label>
             <Label text="%source" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
-            <ComboBox fx:id="cbMsgHost" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+            <ComboBox fx:id="cbMsgHost" editable="true" maxWidth="1.7976931348623157E308" onAction="#onSelectMessagingHost" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="3" />
             <ComboBox fx:id="cbMsgSourceId" editable="true" maxWidth="1.7976931348623157E308" onAction="#onSelectMessagingSource" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="4" />
             <Button fx:id="btMsgSend" mnemonicParsing="false" onAction="#onSendEquipmentEventMsg" text="%send" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
             <Label text="%value" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />

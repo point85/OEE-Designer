@@ -1,5 +1,8 @@
 package org.point85.app.script;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 
@@ -9,6 +12,11 @@ import org.point85.app.Images;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
 import org.point85.app.designer.DesignerLocalizer;
+import org.point85.domain.modbus.ModbusDataType;
+import org.point85.domain.modbus.ModbusEndpoint;
+import org.point85.domain.modbus.ModbusSource;
+import org.point85.domain.modbus.ModbusUtils;
+import org.point85.domain.modbus.ModbusVariant;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Equipment;
 import org.point85.domain.plant.EquipmentEventResolver;
@@ -259,21 +267,21 @@ public class EventResolverController extends DesignerDialogController {
 			case PROD_GOOD:
 				if (result != null) {
 					taResult.appendText(
-							DesignerLocalizer.instance().getLangString("good.production", result.toString()) + '\n');
+							DesignerLocalizer.instance().getLangString("good.production.qty", result.toString()) + '\n');
 				}
 				break;
 
 			case PROD_REJECT:
 				if (result != null) {
 					taResult.appendText(
-							DesignerLocalizer.instance().getLangString("reject.production", result.toString()) + '\n');
+							DesignerLocalizer.instance().getLangString("reject.production.qty", result.toString()) + '\n');
 				}
 				break;
 
 			case PROD_STARTUP:
 				if (result != null) {
 					taResult.appendText(
-							DesignerLocalizer.instance().getLangString("startup.production", result.toString()) + '\n');
+							DesignerLocalizer.instance().getLangString("startup.production.qty", result.toString()) + '\n');
 				}
 				break;
 
@@ -292,10 +300,8 @@ public class EventResolverController extends DesignerDialogController {
 				break;
 
 			default:
-				taResult.appendText(result.toString() + '\n');
-				break;
+				return;
 			}
-
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}
@@ -350,11 +356,21 @@ public class EventResolverController extends DesignerDialogController {
 	private void onSetValue() {
 		try {
 			String valueStr = tfValue.getText();
-
 			if (valueStr == null) {
 				return;
 			}
-			setValue(valueStr);
+
+			Object value = valueStr;
+
+			if (eventResolver.getDataSource() instanceof ModbusSource) {
+				ModbusEndpoint source = new ModbusEndpoint(eventResolver.getSourceId());
+				ModbusDataType dataType = source.getDataType();
+				ModbusVariant variant = ModbusUtils.toVariant(dataType, valueStr);
+				List<ModbusVariant> variants = new ArrayList<>(1);
+				variants.add(variant);
+				value = variants;
+			}
+			setValue(value);
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}

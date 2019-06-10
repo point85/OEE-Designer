@@ -17,6 +17,7 @@ Sources of equipment availability, performance and quality event data include:
 * MQTT Messaging:  an equipment event message received via an MQTT message server
 * Database Interface Table:  a pre-defined table for inserting OEE events
 * File Share:  a server hosting OEE event files
+* Modbus: a Modbus master communicating with its slaves.
 
 The Point85 applications supporting OEE are:
 * Designer:  a GUI application for defining the plant equipment, data sources, event resolution scripts, manufacturing work schedule, availability reasons, produced materials and units of measure for data collectors.  The designer also includes a dashboard and trending capabilities.

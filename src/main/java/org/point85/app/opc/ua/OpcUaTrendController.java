@@ -259,11 +259,11 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 				// state
 				ServerState serverState = status.getState();
 				lbState.setText(serverState.toString());
-				lbState.setTextFill(CONNECTED_COLOR);
+				lbState.setTextFill(ConnectionState.CONNECTED_COLOR);
 				trendChartController.enableTrending(true);
 			} else {
 				lbState.setText(ConnectionState.DISCONNECTED.toString());
-				lbState.setTextFill(DISCONNECTED_COLOR);
+				lbState.setTextFill(ConnectionState.DISCONNECTED_COLOR);
 				trendChartController.enableTrending(false);
 			}
 			break;
@@ -271,14 +271,14 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 		case CONNECTING:
 			piConnection.setVisible(true);
 			lbState.setText(ConnectionState.CONNECTING.toString());
-			lbState.setTextFill(CONNECTING_COLOR);
+			lbState.setTextFill(ConnectionState.CONNECTING_COLOR);
 			trendChartController.enableTrending(false);
 			break;
 
 		case DISCONNECTED:
 			piConnection.setVisible(false);
 			lbState.setText(ConnectionState.DISCONNECTED.toString());
-			lbState.setTextFill(DISCONNECTED_COLOR);
+			lbState.setTextFill(ConnectionState.DISCONNECTED_COLOR);
 			trendChartController.enableTrending(false);
 			break;
 

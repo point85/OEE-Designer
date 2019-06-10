@@ -27,6 +27,8 @@ import org.point85.app.messaging.JMSTrendController;
 import org.point85.app.messaging.MQTTTrendController;
 import org.point85.app.messaging.MessagingTrendController;
 import org.point85.app.messaging.MqBrokerController;
+import org.point85.app.modbus.ModbusMasterController;
+import org.point85.app.modbus.ModbusTrendController;
 import org.point85.app.monitor.MonitorApplication;
 import org.point85.app.monitor.MonitorLocalizer;
 import org.point85.app.monitor.OeeEventTrendController;
@@ -194,6 +196,13 @@ public class FXMLLoaderFactory {
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
+	
+	public static FXMLLoader modbusLoader() throws Exception {
+		FXMLLoader fxmlLoader = new FXMLLoader(ModbusMasterController.class.getResource("ModbusMaster.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
+		fxmlLoader.load();
+		return fxmlLoader;
+	}
 
 	public static FXMLLoader databaseServerLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(DatabaseServerController.class.getResource("DatabaseServer.fxml"));
@@ -274,6 +283,13 @@ public class FXMLLoaderFactory {
 
 	public static FXMLLoader fileTrendLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(FileTrendController.class.getResource("FileTrend.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
+		fxmlLoader.load();
+		return fxmlLoader;
+	}
+	
+	public static FXMLLoader modbusTrendLoader() throws Exception {
+		FXMLLoader fxmlLoader = new FXMLLoader(ModbusTrendController.class.getResource("ModbusTrend.fxml"));
 		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;

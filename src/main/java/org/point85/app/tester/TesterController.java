@@ -84,6 +84,9 @@ public class TesterController implements MessageListener, JMSEquipmentEventListe
 	// materials
 	private final ObservableList<Material> materials = FXCollections.observableList(new ArrayList<>());
 
+	// selected equipment
+	private PlantEntity selectedEntity;
+
 	// JSON parser
 	private final Gson gson = new Gson();
 
@@ -172,7 +175,7 @@ public class TesterController implements MessageListener, JMSEquipmentEventListe
 
 	@FXML
 	private RadioButton rbMQTT;
-	
+
 	@FXML
 	private Label lbNotification;
 
@@ -229,6 +232,15 @@ public class TesterController implements MessageListener, JMSEquipmentEventListe
 	}
 
 	@FXML
+	private void onSelectMessagingHost() {
+		try {
+			populateEquipmentMessagingSourceIds();
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+
+	@FXML
 	private void onSelectMessagingSource() {
 		tfMsgValue.clear();
 	}
@@ -258,7 +270,6 @@ public class TesterController implements MessageListener, JMSEquipmentEventListe
 	}
 
 	private void initializeEntityTable() {
-
 		// add the table view listener
 		ttvEntities.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
 			try {
@@ -397,12 +408,16 @@ public class TesterController implements MessageListener, JMSEquipmentEventListe
 		return url + sb.toString();
 	}
 
-	private void populateHttpSourceIds(PlantEntity entity) throws Exception {
+	private void populateEquipmentHttpSourceIds() throws Exception {
+		if (selectedEntity == null) {
+			return;
+		}
+
 		HttpURLConnection conn = null;
 		try {
 			// refresh list of HTTP source Ids
 			String urlString = buildHttpUrl(OeeHttpServer.SOURCE_ID_EP);
-			urlString = addQueryParameter(urlString, OeeHttpServer.EQUIP_ATTRIB, entity.getName());
+			urlString = addQueryParameter(urlString, OeeHttpServer.EQUIP_ATTRIB, selectedEntity.getName());
 			urlString = addQueryParameter(urlString, OeeHttpServer.DS_TYPE_ATTRIB, DataSourceType.HTTP.name());
 			URL url = new URL(urlString);
 
@@ -438,12 +453,16 @@ public class TesterController implements MessageListener, JMSEquipmentEventListe
 		}
 	}
 
-	private void populateMessagingSourceIds(PlantEntity entity) throws Exception {
+	private void populateEquipmentMessagingSourceIds() throws Exception {
+		if (selectedEntity == null) {
+			return;
+		}
+
 		HttpURLConnection conn = null;
 		try {
-			// refresh list of RMQ or AMQ source Ids
+			// refresh list of messaging source Ids
 			String urlString = buildHttpUrl(OeeHttpServer.SOURCE_ID_EP);
-			urlString = addQueryParameter(urlString, OeeHttpServer.EQUIP_ATTRIB, entity.getName());
+			urlString = addQueryParameter(urlString, OeeHttpServer.EQUIP_ATTRIB, selectedEntity.getName());
 
 			DataSourceType sourceType = null;
 
@@ -502,9 +521,11 @@ public class TesterController implements MessageListener, JMSEquipmentEventListe
 				return;
 			}
 
-			populateHttpSourceIds(entity);
+			selectedEntity = entity;
 
-			populateMessagingSourceIds(entity);
+			populateEquipmentHttpSourceIds();
+
+			populateEquipmentMessagingSourceIds();
 
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
@@ -563,7 +584,7 @@ public class TesterController implements MessageListener, JMSEquipmentEventListe
 			os.flush();
 
 			checkResponseCode(conn);
-			
+
 			lbNotification.setText(DesignerLocalizer.instance().getLangString("posted.message", urlString));
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
@@ -813,7 +834,7 @@ public class TesterController implements MessageListener, JMSEquipmentEventListe
 			msg.setReason(values[1]);
 
 			String hostPort = source.getHost() + ":" + source.getPort();
-			
+
 			String notification = null;
 
 			if (rbRMQ.isSelected()) {
@@ -827,8 +848,9 @@ public class TesterController implements MessageListener, JMSEquipmentEventListe
 					pubsub.connect(source.getHost(), source.getPort(), source.getUserName(), source.getUserPassword());
 				}
 				pubsub.publish(msg, RoutingKey.EQUIPMENT_SOURCE_EVENT, 30);
-				
-				notification = DesignerLocalizer.instance().getLangString("sent.message", source.getHost(), source.getPort());
+
+				notification = DesignerLocalizer.instance().getLangString("sent.message", source.getHost(),
+						source.getPort());
 			} else if (rbJMS.isSelected()) {
 				JMSClient jmsClient = jmsClients.get(hostPort);
 
@@ -840,7 +862,8 @@ public class TesterController implements MessageListener, JMSEquipmentEventListe
 							source.getUserPassword());
 				}
 				jmsClient.sendToQueue(msg, JMSClient.DEFAULT_QUEUE, 30);
-				notification = DesignerLocalizer.instance().getLangString("sent.message", source.getHost(), source.getPort());
+				notification = DesignerLocalizer.instance().getLangString("sent.message", source.getHost(),
+						source.getPort());
 			} else if (rbMQTT.isSelected()) {
 				MQTTClient mqttClient = mqttClients.get(hostPort);
 
@@ -852,7 +875,8 @@ public class TesterController implements MessageListener, JMSEquipmentEventListe
 							source.getUserPassword());
 				}
 				mqttClient.publish(msg, QualityOfService.AT_MOST_ONCE);
-				notification = DesignerLocalizer.instance().getLangString("sent.message", source.getHost(), source.getPort());
+				notification = DesignerLocalizer.instance().getLangString("sent.message", source.getHost(),
+						source.getPort());
 			} else {
 				return;
 			}
@@ -922,7 +946,7 @@ public class TesterController implements MessageListener, JMSEquipmentEventListe
 			tvMaterials.getSelectionModel().clearSelection();
 			ttvEntities.getSelectionModel().clearSelection();
 			ttvReasons.getSelectionModel().clearSelection();
-			
+
 			lbNotification.setText(null);
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);

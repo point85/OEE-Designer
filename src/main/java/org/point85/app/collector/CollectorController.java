@@ -42,7 +42,7 @@ public class CollectorController {
 
 	void initialize(String collectorName) throws Exception {
 		setImages();
-		this.setCollectorName(collectorName);
+		setCollectorName(collectorName);
 	}
 
 	private void setImages() throws Exception {

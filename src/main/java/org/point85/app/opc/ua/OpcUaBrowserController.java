@@ -332,15 +332,15 @@ public class OpcUaBrowserController extends OpcUaController {
 
 		// connect
 		btConnect.setGraphic(ImageManager.instance().getImageView(Images.CONNECT));
-		btConnect.setContentDisplay(ContentDisplay.RIGHT);
+		btConnect.setContentDisplay(ContentDisplay.LEFT);
 
 		// disconnect
 		btDisconnect.setGraphic(ImageManager.instance().getImageView(Images.DISCONNECT));
-		btDisconnect.setContentDisplay(ContentDisplay.RIGHT);
+		btDisconnect.setContentDisplay(ContentDisplay.LEFT);
 
 		// cancel connect
 		btCancelConnect.setGraphic(ImageManager.instance().getImageView(Images.CANCEL));
-		btCancelConnect.setContentDisplay(ContentDisplay.RIGHT);
+		btCancelConnect.setContentDisplay(ContentDisplay.LEFT);
 
 		// new
 		btNew.setGraphic(ImageManager.instance().getImageView(Images.NEW));
@@ -371,7 +371,7 @@ public class OpcUaBrowserController extends OpcUaController {
 				// state
 				ServerState serverState = status.getState();
 				lbState.setText(serverState.toString());
-				lbState.setTextFill(CONNECTED_COLOR);
+				lbState.setTextFill(ConnectionState.CONNECTED_COLOR);
 
 				// start time
 				OffsetDateTime start = DomainUtils.utcTimeFromDateTime(status.getStartTime());
@@ -387,14 +387,14 @@ public class OpcUaBrowserController extends OpcUaController {
 
 			} else {
 				lbState.setText(ConnectionState.DISCONNECTED.toString());
-				lbState.setTextFill(DISCONNECTED_COLOR);
+				lbState.setTextFill(ConnectionState.DISCONNECTED_COLOR);
 			}
 			break;
 
 		case CONNECTING:
 			piConnection.setVisible(true);
 			lbState.setText(ConnectionState.CONNECTING.toString());
-			lbState.setTextFill(CONNECTING_COLOR);
+			lbState.setTextFill(ConnectionState.CONNECTING_COLOR);
 			break;
 
 		case DISCONNECTED:
@@ -402,7 +402,7 @@ public class OpcUaBrowserController extends OpcUaController {
 			Platform.runLater(() -> {
 				piConnection.setVisible(false);
 				lbState.setText(ConnectionState.DISCONNECTED.toString());
-				lbState.setTextFill(DISCONNECTED_COLOR);
+				lbState.setTextFill(ConnectionState.DISCONNECTED_COLOR);
 
 				lbNodeId.setText(null);
 				lbNodeDescription.setText(null);
@@ -590,7 +590,7 @@ public class OpcUaBrowserController extends OpcUaController {
 			dataSource.setHost(getHost());
 			dataSource.setPort(getPort());
 			dataSource.setDescription(getDescription());
-			dataSource.setPath(getPath());
+			dataSource.setEndpointPath(getPath());
 
 			// security
 			dataSource.setSecurityPolicy(getSecurityPolicy());

@@ -7,7 +7,6 @@ import org.point85.app.Images;
 import org.point85.app.charts.DataSubscriber;
 import org.point85.app.charts.TrendChartController;
 import org.point85.app.designer.ConnectionState;
-import org.point85.app.designer.DataSourceConnectionController;
 import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.opc.da.OpcDaDataChangeListener;
 import org.point85.domain.opc.da.OpcDaMonitoredGroup;
@@ -184,11 +183,11 @@ public class OpcDaTrendController extends OpcDaController implements OpcDaDataCh
 			if (status != null) {
 				// state
 				lbState.setText(status.getServerState());
-				lbState.setTextFill(DataSourceConnectionController.CONNECTED_COLOR);
+				lbState.setTextFill(ConnectionState.CONNECTED_COLOR);
 				trendChartController.enableTrending(true);
 			} else {
 				lbState.setText(ConnectionState.DISCONNECTED.toString());
-				lbState.setTextFill(DataSourceConnectionController.DISCONNECTED_COLOR);
+				lbState.setTextFill(ConnectionState.DISCONNECTED_COLOR);
 				trendChartController.enableTrending(false);
 			}
 			break;
@@ -196,14 +195,14 @@ public class OpcDaTrendController extends OpcDaController implements OpcDaDataCh
 		case CONNECTING:
 			piConnection.setVisible(true);
 			lbState.setText(ConnectionState.CONNECTING.toString());
-			lbState.setTextFill(DataSourceConnectionController.CONNECTING_COLOR);
+			lbState.setTextFill(ConnectionState.CONNECTING_COLOR);
 			trendChartController.enableTrending(false);
 			break;
 
 		case DISCONNECTED:
 			piConnection.setVisible(false);
 			lbState.setText(ConnectionState.DISCONNECTED.toString());
-			lbState.setTextFill(DataSourceConnectionController.DISCONNECTED_COLOR);
+			lbState.setTextFill(ConnectionState.DISCONNECTED_COLOR);
 			trendChartController.enableTrending(false);
 			break;
 

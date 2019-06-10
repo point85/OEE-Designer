@@ -7,7 +7,6 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
-import javafx.scene.paint.Color;
 
 public abstract class DataSourceConnectionController extends DesignerDialogController {
 	protected static final String NO_ERROR = "NO_ERROR";
@@ -18,12 +17,7 @@ public abstract class DataSourceConnectionController extends DesignerDialogContr
 	// maximum time to allow for an OPC Server connection
 	protected static final long MAX_WAIT_SECONDS = 30;
 
-	// connection state colors
-	public static final Color CONNECTED_COLOR = Color.GREEN;
-	public static final Color CONNECTING_COLOR = Color.BLUE;
-	public static final Color DISCONNECTED_COLOR = Color.BLACK;
-
-	// OPC DA server connection service
+	// Connection service
 	private ConnectionService service;
 
 	protected abstract void onCancelConnect() throws Exception;

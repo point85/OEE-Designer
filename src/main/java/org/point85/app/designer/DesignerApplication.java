@@ -17,6 +17,8 @@ import org.point85.app.messaging.JMSTrendController;
 import org.point85.app.messaging.MQTTTrendController;
 import org.point85.app.messaging.MessagingTrendController;
 import org.point85.app.messaging.MqBrokerController;
+import org.point85.app.modbus.ModbusMasterController;
+import org.point85.app.modbus.ModbusTrendController;
 import org.point85.app.opc.da.OpcDaBrowserController;
 import org.point85.app.opc.da.OpcDaTrendController;
 import org.point85.app.opc.ua.OpcUaBrowserController;
@@ -34,6 +36,8 @@ import org.point85.domain.collector.DataSourceType;
 import org.point85.domain.db.DatabaseEventSource;
 import org.point85.domain.file.FileEventSource;
 import org.point85.domain.http.HttpSource;
+import org.point85.domain.modbus.ModbusMaster;
+import org.point85.domain.modbus.ModbusSource;
 import org.point85.domain.opc.da.DaOpcClient;
 import org.point85.domain.opc.da.OpcDaBrowserLeaf;
 import org.point85.domain.opc.ua.UaOpcClient;
@@ -93,6 +97,9 @@ public class DesignerApplication {
 
 	// UOM conversion controller
 	private UomConversionController uomConversionController;
+
+	// Modbus editor
+	private ModbusMasterController modbusController;
 
 	// script execution context
 	private OeeContext appContext;
@@ -413,6 +420,33 @@ public class DesignerApplication {
 		}
 
 		return mqBrokerController.getSource();
+	}
+
+	ModbusSource showModbusEditor() throws Exception {
+		if (modbusController == null) {
+			FXMLLoader loader = FXMLLoaderFactory.modbusLoader();
+			AnchorPane page = (AnchorPane) loader.getRoot();
+			Stage dialogStage = new Stage(StageStyle.DECORATED);
+
+			dialogStage.setTitle(DesignerLocalizer.instance().getLangString("modbus.editor.title"));
+
+			dialogStage.initModality(Modality.WINDOW_MODAL);
+			Scene scene = new Scene(page);
+			dialogStage.setScene(scene);
+
+			// get the controller
+			modbusController = loader.getController();
+			modbusController.setDialogStage(dialogStage);
+			modbusController.initialize(this);
+		}
+
+		// Show the dialog and wait until the user closes it
+		if (!modbusController.getDialogStage().isShowing()) {
+			modbusController.getDialogStage().showAndWait();
+		}
+
+		modbusController.setRegisterData();
+		return modbusController.getSource();
 	}
 
 	DatabaseEventSource showDatabaseServerEditor() throws Exception {
@@ -816,6 +850,42 @@ public class DesignerApplication {
 		fileTrendController.getDialogStage().show();
 	}
 
+	void showModbusTrendDialog(EventResolver eventResolver) throws Exception {
+		FXMLLoader loader = FXMLLoaderFactory.modbusTrendLoader();
+		AnchorPane page = (AnchorPane) loader.getRoot();
+
+		// Create the dialog Stage.
+		Stage dialogStage = new Stage(StageStyle.DECORATED);
+		dialogStage.setTitle(DesignerLocalizer.instance().getLangString("modbus.event.trend"));
+		dialogStage.initModality(Modality.NONE);
+		Scene scene = new Scene(page);
+		dialogStage.setScene(scene);
+
+		// get the controller
+		ModbusTrendController modbusTrendController = loader.getController();
+		modbusTrendController.setDialogStage(dialogStage);
+		modbusTrendController.setApp(this);
+
+		// add the trend chart
+		SplitPane chartPane = modbusTrendController.initializeTrend();
+
+		AnchorPane.setBottomAnchor(chartPane, 50.0);
+		AnchorPane.setLeftAnchor(chartPane, 5.0);
+		AnchorPane.setRightAnchor(chartPane, 5.0);
+		AnchorPane.setTopAnchor(chartPane, 50.0);
+
+		page.getChildren().add(0, chartPane);
+
+		// set the script resolver
+		modbusTrendController.setEventResolver(eventResolver);
+
+		// connect to the database server
+		modbusTrendController.createModbusMaster();
+
+		// show the window
+		modbusTrendController.getDialogStage().show();
+	}
+
 	public PhysicalModelController getPhysicalModelController() {
 		return this.physicalModelController;
 	}
@@ -903,5 +973,22 @@ public class DesignerApplication {
 			appContext.getOpcUaClients().add(client);
 		}
 		return client;
+	}
+
+	public ModbusMaster getModbusMaster() {
+		if (appContext == null) {
+			return null;
+		}
+
+		return appContext.getModbusMaster();
+	}
+
+	public ModbusMaster createModbusMaster(ModbusSource source) {
+		ModbusMaster master = new ModbusMaster();
+		master.setDataSource(source);
+
+		// add to context
+		appContext.getModbusMasters().add(master);
+		return master;
 	}
 }
