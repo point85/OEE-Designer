@@ -102,13 +102,13 @@
                               </TableView>
                               <ButtonBar buttonMinWidth="0.0" layoutX="71.0" layoutY="-6.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="50.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                 <buttons>
-                                    <Button fx:id="btOeeTrend" mnemonicParsing="false" onAction="#onOeeEventTrend" text="%trend" />
+                                    <Button fx:id="btOeeTrend" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" onAction="#onOeeEventTrend" text="%trend" />
                                     <Separator orientation="VERTICAL" />
-                                    <Button fx:id="btDeleteEvent" mnemonicParsing="false" onAction="#onDeleteEvent" text="%delete" />
-                                    <Button fx:id="btUpdateEvent" mnemonicParsing="false" onAction="#onUpdateEvent" text="%update" />
-                                    <Button fx:id="btNewSetup" mnemonicParsing="false" onAction="#onNewSetup" text="%new.setup" />
-                                    <Button fx:id="btNewProduction" mnemonicParsing="false" onAction="#onNewProduction" text="%new.production" />
-                                  <Button fx:id="btNewAvailability" mnemonicParsing="false" onAction="#onNewAvailability" text="%new.availability" />
+                                    <Button fx:id="btDeleteEvent" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" onAction="#onDeleteEvent" text="%delete" />
+                                    <Button fx:id="btUpdateEvent" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" onAction="#onUpdateEvent" text="%update" />
+                                    <Button fx:id="btNewSetup" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" onAction="#onNewSetup" text="%new.setup" />
+                                    <Button fx:id="btNewProduction" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" onAction="#onNewProduction" text="%new.production" />
+                                  <Button fx:id="btNewAvailability" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" onAction="#onNewAvailability" text="%new.availability" />
                                 </buttons>
                                  <opaqueInsets>
                                     <Insets />

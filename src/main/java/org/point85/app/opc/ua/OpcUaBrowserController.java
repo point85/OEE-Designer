@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import org.eclipse.milo.opcua.stack.core.BuiltinDataType;
 import org.eclipse.milo.opcua.stack.core.Identifiers;
+import org.eclipse.milo.opcua.stack.core.NamespaceTable;
 import org.eclipse.milo.opcua.stack.core.security.SecurityPolicy;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DateTime;
@@ -240,7 +241,8 @@ public class OpcUaBrowserController extends OpcUaController {
 	private void onSelectNode(OpcUaTreeNode treeNode) throws Exception {
 		selectedTreeNode = treeNode;
 
-		NodeId nodeId = treeNode.getNodeId();
+		NamespaceTable nst = getApp().getOpcUaClient().getNamespaceTable();
+		NodeId nodeId = treeNode.getNodeId(nst);
 
 		// fill in attributes
 		ReferenceDescription ref = treeNode.getReferenceDescription();
@@ -379,12 +381,14 @@ public class OpcUaBrowserController extends OpcUaController {
 
 				// product & manufacturer
 				BuildInfo info = status.getBuildInfo();
-				lbProduct.setText(info.getProductName() != null ? info.getProductName() : "");
-				lbManufacturer.setText(info.getManufacturerName() != null ? info.getManufacturerName() : "");
+
+				if (info != null) {
+					lbProduct.setText(info.getProductName() != null ? info.getProductName() : "");
+					lbManufacturer.setText(info.getManufacturerName() != null ? info.getManufacturerName() : "");
+				}
 
 				// endpoint
-				this.lbEndpoint.setText(getSource().getEndpointUrl());
-
+				lbEndpoint.setText(getSource().getEndpointUrl());
 			} else {
 				lbState.setText(ConnectionState.DISCONNECTED.toString());
 				lbState.setTextFill(ConnectionState.DISCONNECTED_COLOR);
@@ -724,15 +728,15 @@ public class OpcUaBrowserController extends OpcUaController {
 
 			// fill in the child nodes
 			ReferenceDescription parentRef = treeNode.getReferenceDescription();
-
-			NodeId nodeId = parentRef.getNodeId().local().orElse(null);
+			NamespaceTable nst = getApp().getOpcUaClient().getNamespaceTable();
+			NodeId nodeId = parentRef.getNodeId().local(nst).orElse(null);
 
 			// keep browsing down the tree
 			List<ReferenceDescription> childRefs = getApp().getOpcUaClient().browseSynch(nodeId);
 			treeNode.setBrowsed(true);
 
 			for (ReferenceDescription childRef : childRefs) {
-				NodeId childId = childRef.getNodeId().local().orElse(null);
+				NodeId childId = childRef.getNodeId().local(nst).orElse(null);
 
 				String id = childId.toString();
 				if (!monitoredItemIds.contains(id)) {

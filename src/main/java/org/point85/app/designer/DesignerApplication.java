@@ -783,7 +783,7 @@ public class DesignerApplication {
 
 		// Create the dialog Stage.
 		Stage dialogStage = new Stage(StageStyle.DECORATED);
-		dialogStage.setTitle("db.event.trend");
+		dialogStage.setTitle(DesignerLocalizer.instance().getLangString("db.event.trend"));
 		dialogStage.initModality(Modality.NONE);
 		Scene scene = new Scene(page);
 		dialogStage.setScene(scene);
@@ -984,8 +984,7 @@ public class DesignerApplication {
 	}
 
 	public ModbusMaster createModbusMaster(ModbusSource source) {
-		ModbusMaster master = new ModbusMaster();
-		master.setDataSource(source);
+		ModbusMaster master = new ModbusMaster(source);
 
 		// add to context
 		appContext.getModbusMasters().add(master);

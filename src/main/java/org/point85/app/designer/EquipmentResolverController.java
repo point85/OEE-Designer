@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.milo.opcua.stack.core.BuiltinDataType;
+import org.eclipse.milo.opcua.stack.core.NamespaceTable;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.point85.app.AppUtils;
 import org.point85.app.ImageManager;
@@ -471,8 +472,13 @@ public class EquipmentResolverController extends DesignerController {
 
 				// data type
 				OpcDaVariant nodeDataType = sourceTag.getDataType();
-				Class<?> javaType = nodeDataType.getDataType().getJavaClass();
-				lbDataType.setText(javaType.getSimpleName());
+
+				if (nodeDataType != null) {
+					Class<?> javaType = nodeDataType.getDataType().getJavaClass();
+					lbDataType.setText(javaType.getSimpleName());
+				} else {
+					lbDataType.setText(null);
+				}
 
 			} else if (sourceType.equals(DataSourceType.OPC_UA)) {
 				OpcUaTreeNode node = getApp().showOpcUaDataSourceBrowser();
@@ -482,7 +488,11 @@ public class EquipmentResolverController extends DesignerController {
 				}
 
 				// variable node
-				tfSourceId.setText(node.getNodeId().toParseableString());
+				NamespaceTable nst = getApp().getOpcUaClient().getNamespaceTable();
+
+				if (nst != null) {
+					tfSourceId.setText(node.getNodeId(nst).toParseableString());
+				}
 
 				// its data source
 				OpcUaSource dataSource = getApp().getOpcUaBrowserController().getSource();
@@ -547,10 +557,10 @@ public class EquipmentResolverController extends DesignerController {
 				EventResolver resolver = getSelectedResolver();
 				resolver.setDataSource(dataSource);
 
-				ModbusEndpoint endPoint = dataSource.getEndpoint();	
+				ModbusEndpoint endPoint = dataSource.getEndpoint();
 				String sourceId = endPoint.buildSourceId();
 				resolver.setSourceId(sourceId);
-				
+
 				lbDataType.setText(endPoint.getDataType().toString());
 				tfSourceId.setText(sourceId);
 

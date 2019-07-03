@@ -73,7 +73,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -883,31 +882,24 @@ public class DashboardController extends DialogController implements CategoryCli
 	protected void setImages() throws Exception {
 		// refresh
 		btRefresh.setGraphic(ImageManager.instance().getImageView(Images.REFRESH));
-		btRefresh.setContentDisplay(ContentDisplay.LEFT);
 
 		// new availability
 		btNewAvailability.setGraphic(ImageManager.instance().getImageView(Images.ADD));
-		btNewAvailability.setContentDisplay(ContentDisplay.RIGHT);
 
 		// new production
 		btNewProduction.setGraphic(ImageManager.instance().getImageView(Images.NEW));
-		btNewProduction.setContentDisplay(ContentDisplay.RIGHT);
 
 		// new setup
 		btNewSetup.setGraphic(ImageManager.instance().getImageView(Images.IMPORT));
-		btNewSetup.setContentDisplay(ContentDisplay.RIGHT);
 
 		// update event
 		btUpdateEvent.setGraphic(ImageManager.instance().getImageView(Images.UPDATE));
-		btUpdateEvent.setContentDisplay(ContentDisplay.RIGHT);
 
 		// delete event
 		btDeleteEvent.setGraphic(ImageManager.instance().getImageView(Images.DELETE));
-		btDeleteEvent.setContentDisplay(ContentDisplay.RIGHT);
 
 		// OEE trend
 		btOeeTrend.setGraphic(ImageManager.instance().getImageView(Images.CHARTXY));
-		btOeeTrend.setContentDisplay(ContentDisplay.RIGHT);
 	}
 
 	@FXML

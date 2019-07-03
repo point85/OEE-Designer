@@ -1,5 +1,6 @@
 package org.point85.app.opc.ua;
 
+import org.eclipse.milo.opcua.stack.core.NamespaceTable;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.NodeClass;
 import org.eclipse.milo.opcua.stack.core.types.structured.ReferenceDescription;
@@ -26,8 +27,8 @@ public class OpcUaTreeNode {
 		return referenceDescription.getNodeClass();
 	}
 
-	public NodeId getNodeId() {
-		return referenceDescription.getNodeId().local().orElse(null);
+	public NodeId getNodeId(NamespaceTable nst) {
+		return referenceDescription.getNodeId().local(nst).orElse(null);
 	}
 
 	public String getBrowseName() {

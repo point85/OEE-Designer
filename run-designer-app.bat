@@ -1,2 +1,2 @@
 rem Launch the Designer application (args: JDBC connection string, user name, password and optional collector name)
-start javaw.exe -jar oee-apps-2.4.0.jar DESIGNER jdbc:hsqldb:hsql://localhost/OEE SA  
+start javaw.exe -jar oee-apps-2.4.1.jar DESIGNER jdbc:hsqldb:hsql://localhost/OEE SA  
