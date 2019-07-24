@@ -71,10 +71,13 @@ The Monitor application has three main functions, to observe:
 * Notifications from the data collectors for abnormal conditions
 * Data collector status.
 
-An example dashboard is:
-![Dashboard](https://github.com/point85/OEE-Designer/blob/master/docs/dashboard.png)
+An example of dashboard tiles is:
+![Dashboard](https://github.com/point85/OEE-Designer/blob/master/docs/dashboard-tiles.png)
 
-Production and availability events can be shown in a trend chart, for example:
+Production and availability events can be shown in chronological order, for example:
+![Dashboard Trend](https://github.com/point85/OEE-Designer/blob/master/docs/dashboard-events.png)
+
+Production and availability events can also be shown in a trend chart, for example:
 ![Dashboard Trend](https://github.com/point85/OEE-Designer/blob/master/docs/availability-trend.png)
 
 The time-losses tab shows a bar chart of the OEE loss categories:

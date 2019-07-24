@@ -48,6 +48,7 @@ import org.point85.tilesfx.Tile;
 import org.point85.tilesfx.Tile.SkinType;
 import org.point85.tilesfx.Tile.TextSize;
 import org.point85.tilesfx.TileBuilder;
+import org.point85.tilesfx.chart.ChartData;
 import org.point85.tilesfx.skins.BarChartItem;
 import org.point85.tilesfx.skins.LeaderBoardItem;
 import org.point85.tilesfx.tools.FlowGridPane;
@@ -107,8 +108,9 @@ public class DashboardController extends DialogController implements CategoryCli
 	// 1 30-day month
 	private static final long DAYS_AMOUNT = 30 * HOURS_AMOUNT;
 
-	private static final double TILE_WIDTH = 300;
+	private static final double TILE_WIDTH = 300.0;
 	private static final double TILE_HEIGHT = TILE_WIDTH;
+	private static final double TILE_WIDE = 400.0;
 	private static final double TILE_VGAP = 20.0;
 	private static final double TILE_HGAP = 20.0;
 
@@ -215,6 +217,9 @@ public class DashboardController extends DialogController implements CategoryCli
 
 	// job and material tile
 	private Tile tiJobMaterial;
+
+	// time loss tile
+	private Tile tiLoss;
 
 	// net times
 	private final ObservableList<Data<Number, String>> netTimeList = FXCollections
@@ -1246,7 +1251,12 @@ public class DashboardController extends DialogController implements CategoryCli
 		tiJobMaterial.setDescriptionTextSize(TextSize.NORMAL);
 		tiJobMaterial.setDescriptionColor(Color.WHITE);
 
-		FlowGridPane pane = new FlowGridPane(4, 1, tiOee, tiProduction, tiAvailability, tiJobMaterial);
+		// time losses
+		tiLoss = TileBuilder.create().skinType(SkinType.DONUT_CHART).prefSize(TILE_WIDE, TILE_HEIGHT)
+				.title(DesignerLocalizer.instance().getLangString("loss.time")).textVisible(true).animated(true)
+				.sortedData(false).build();
+
+		FlowGridPane pane = new FlowGridPane(5, 1, tiOee, tiProduction, tiAvailability, tiJobMaterial, tiLoss);
 		pane.setHgap(TILE_VGAP);
 		pane.setVgap(TILE_HGAP);
 		pane.setAlignment(Pos.CENTER);
@@ -1557,6 +1567,48 @@ public class DashboardController extends DialogController implements CategoryCli
 				}
 			}
 
+			// time losses
+			ChartData[] slices = new ChartData[9];
+
+			slices[0] = new ChartData(DesignerLocalizer.instance().getLangString("loss.not.scheduled"),
+					toDouble(equipmentLoss.getLoss(TimeLoss.NOT_SCHEDULED)), Color.VIOLET);
+			slices[1] = new ChartData(DesignerLocalizer.instance().getLangString("loss.unscheduled"),
+					toDouble(equipmentLoss.getLoss(TimeLoss.UNSCHEDULED)), Color.DARKBLUE);
+			slices[2] = new ChartData(DesignerLocalizer.instance().getLangString("loss.planned.downtime"),
+					toDouble(equipmentLoss.getLoss(TimeLoss.PLANNED_DOWNTIME)), Color.DEEPSKYBLUE);
+			slices[3] = new ChartData(DesignerLocalizer.instance().getLangString("loss.setup"),
+					toDouble(equipmentLoss.getLoss(TimeLoss.SETUP)), Color.AQUAMARINE);
+			slices[4] = new ChartData(DesignerLocalizer.instance().getLangString("loss.unplanned.downtime"),
+					toDouble(equipmentLoss.getLoss(TimeLoss.UNPLANNED_DOWNTIME)), Color.GREENYELLOW);
+			slices[5] = new ChartData(DesignerLocalizer.instance().getLangString("loss.minor"),
+					toDouble(equipmentLoss.getLoss(TimeLoss.MINOR_STOPPAGES)), Color.YELLOW);
+			slices[6] = new ChartData(DesignerLocalizer.instance().getLangString("loss.speed"),
+					toDouble(equipmentLoss.getLoss(TimeLoss.REDUCED_SPEED)), Color.GOLD);
+			slices[7] = new ChartData(DesignerLocalizer.instance().getLangString("loss.reject"),
+					toDouble(equipmentLoss.getLoss(TimeLoss.REJECT_REWORK)), Color.DARKORANGE);
+			slices[8] = new ChartData(DesignerLocalizer.instance().getLangString("loss.yield"),
+					toDouble(equipmentLoss.getLoss(TimeLoss.STARTUP_YIELD)), Color.RED);
+
+			tiLoss.setChartData(slices);
+
+			tiLoss.setTitle(
+					DesignerLocalizer.instance().getLangString("loss.time") + " (" + timeUnit.toString() + ")");
+
+			// overall duration
+			Duration duration = this.equipmentLoss.getDuration();
+			long timeDuration = 0l;
+
+			if (timeUnit.equals(Unit.SECOND)) {
+				timeDuration = duration.getSeconds();
+			} else if (timeUnit.equals(Unit.MINUTE)) {
+				timeDuration = duration.toMinutes();
+			} else if (timeUnit.equals(Unit.HOUR)) {
+				timeDuration = duration.toHours();
+			} else if (timeUnit.equals(Unit.DAY)) {
+				timeDuration = duration.toDays();
+			}
+			tiLoss.setText(DesignerLocalizer.instance().getLangString("loss.duration") + ": " + timeDuration);
+
 			// show stats in tiles
 			showStatistics();
 
@@ -1567,6 +1619,20 @@ public class DashboardController extends DialogController implements CategoryCli
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}
+	}
+
+	private double toDouble(Duration duration) {
+		long value = 0;
+		if (timeUnit.equals(Unit.SECOND)) {
+			value = duration.getSeconds();
+		} else if (timeUnit.equals(Unit.MINUTE)) {
+			value = duration.toMinutes();
+		} else if (timeUnit.equals(Unit.HOUR)) {
+			value = duration.toHours();
+		} else if (timeUnit.equals(Unit.DAY)) {
+			value = duration.toDays();
+		}
+		return value;
 	}
 
 	private AvailabilityEditorController getAvailabilityController() throws Exception {

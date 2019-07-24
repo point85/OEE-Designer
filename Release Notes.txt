@@ -95,4 +95,9 @@
 	- Added HTTP examples using Postman testing application
 	- Upgraded to Vaadin version 8.8.3
 
+(21) 2.4.2, July 24, 2019:
+	- Added a time loss donut tile to the dashboard	
+	- Upgraded to Vaadin version 8.8.5
+	- Upgraded j2Mod to version 2.5.5
+
 Please send comments and suggestions to point85.llc@gmail.com.
