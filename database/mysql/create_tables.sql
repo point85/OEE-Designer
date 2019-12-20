@@ -1,4 +1,4 @@
--- MySQL schema creation script file, schema version 2
+-- MySQL schema creation script file, schema version 3, release 2.5.0
 -- set to your database name
 USE oee;
 
@@ -12,7 +12,6 @@ CREATE TABLE PLANT_ENTITY (
 	DESCRIPTION varchar(256) NULL,
 	PARENT_KEY bigint NULL,
 	HIER_LEVEL varchar(16) NULL,
-	WS_KEY bigint NULL,
 	RETENTION bigint NULL,
     PRIMARY KEY (ENT_KEY)
 )  ENGINE=INNODB;
@@ -213,6 +212,7 @@ CREATE TABLE COLLECTOR (
 	DESCRIPTION varchar(128) NULL,
 	STATE varchar(16) NULL,
 	HOST varchar(64) NULL,
+	BROKER_TYPE varchar(16) NULL,
 	BROKER_HOST varchar(64) NULL,
 	BROKER_PORT int NULL,
 	BROKER_USER varchar(64) NULL,
@@ -242,9 +242,22 @@ CREATE TABLE OEE_EVENT (
 	JOB varchar(64) NULL,
 	IN_VALUE varchar(64) NULL,
 	SOURCE_ID varchar(64) NULL,
+	COLLECTOR varchar(64) NULL,
 	PRIMARY KEY (EVENT_KEY)
 )  ENGINE=INNODB;
 CREATE UNIQUE INDEX IDX_EVT_ENT_TYPE_START ON OEE_EVENT (ENT_KEY, EVENT_TYPE, START_TIME);
+
+/****** Entity Schedule table ******/
+DROP TABLE IF EXISTS ENTITY_SCHEDULE;
+
+CREATE TABLE ENTITY_SCHEDULE (
+	ES_KEY bigint AUTO_INCREMENT,
+	WS_KEY bigint NULL,
+	ENT_KEY bigint NULL,
+	START_DATE_TIME timestamp(3) NOT NULL,
+	END_DATE_TIME timestamp(3) NOT NULL,
+    PRIMARY KEY (ES_KEY)
+)  ENGINE=INNODB;
 
 
 

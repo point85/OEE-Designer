@@ -27,6 +27,7 @@ import org.point85.domain.plant.Reason;
 import org.point85.domain.schedule.ShiftInstance;
 import org.point85.domain.schedule.WorkSchedule;
 import org.point85.domain.script.OeeEventType;
+import org.point85.domain.uom.UnitOfMeasure;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -415,20 +416,44 @@ public class OperatorController {
 
 	@FXML
 	private void onSelectGoodProduction() {
+		if (equipmentMaterial == null) {
+			return;
+		}
+
 		clearProductionCounts();
-		lbProductionUOM.setText(equipmentMaterial.getRunRateUOM().getDividend().getDisplayString());
+		UnitOfMeasure uom = equipmentMaterial.getRunRateUOM();
+
+		if (uom != null) {
+			lbProductionUOM.setText(uom.getDividend().getDisplayString());
+		}
 	}
 
 	@FXML
 	private void onSelectStartupProduction() {
+		if (equipmentMaterial == null) {
+			return;
+		}
+
 		clearProductionCounts();
-		lbProductionUOM.setText(equipmentMaterial.getRunRateUOM().getDividend().getDisplayString());
+		UnitOfMeasure uom = equipmentMaterial.getRunRateUOM();
+
+		if (uom != null) {
+			lbProductionUOM.setText(uom.getDividend().getDisplayString());
+		}
 	}
 
 	@FXML
 	private void onSelectRejectProduction() {
+		if (equipmentMaterial == null) {
+			return;
+		}
+
 		clearProductionCounts();
-		lbProductionUOM.setText(equipmentMaterial.getRejectUOM().getDisplayString());
+		UnitOfMeasure uom = equipmentMaterial.getRejectUOM();
+
+		if (uom != null) {
+			lbProductionUOM.setText(uom.getDisplayString());
+		}
 	}
 
 	private void setEntityGraphic(TreeItem<EntityNode> item) throws Exception {
@@ -630,6 +655,10 @@ public class OperatorController {
 	}
 
 	private void recordEvent(OeeEventType eventType) throws Exception {
+		if (equipmentMaterial == null) {
+			return;
+		}
+		
 		// equipment
 		if (equipment == null) {
 			throw new Exception(OperatorLocalizer.instance().getErrorString("no.equipment"));

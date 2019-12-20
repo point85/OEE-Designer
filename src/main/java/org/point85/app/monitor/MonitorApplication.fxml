@@ -102,10 +102,11 @@
                                              </columns>
                                           </TableColumn>
                                           <TableColumn fx:id="tcCollectorState" prefWidth="100.0" text="%state" />
-                                          <TableColumn prefWidth="75.0" text="%rmq.broker">
+                                          <TableColumn prefWidth="75.0" text="%msg.broker">
                                              <columns>
                                                 <TableColumn fx:id="tcBrokerHost" prefWidth="150.0" text="%host" />
                                                 <TableColumn fx:id="tcBrokerPort" prefWidth="75.0" text="%port" />
+                                                <TableColumn fx:id="tcBrokerType" prefWidth="100.0" text="%type" />
                                              </columns>
                                           </TableColumn>
                                       </columns>

@@ -83,9 +83,13 @@ public class CollectorController {
 		taNotification.setText(notification);
 	}
 
+	private String getCollectorId() {
+		return collectorName != null ? collectorName : "default";
+	}
+
 	@FXML
 	private void onStartup() {
-		postNotification(CollectorLocalizer.instance().getLangString("starting.collector"));
+		postNotification(CollectorLocalizer.instance().getLangString("starting.collector", getCollectorId()));
 
 		// create the collector
 		collectorService = new CollectorService(collectorName);
@@ -99,11 +103,11 @@ public class CollectorController {
 			btStartMonitoring.setDisable(false);
 			btStopMonitoring.setDisable(false);
 			btRestart.setDisable(false);
-			postNotification(CollectorLocalizer.instance().getLangString("started.collector"));
+			postNotification(CollectorLocalizer.instance().getLangString("started.collector", getCollectorId()));
 
 		} catch (Exception any) {
 			AppUtils.showErrorDialog(any);
-			String msg = CollectorLocalizer.instance().getErrorString("failed.collector");
+			String msg = CollectorLocalizer.instance().getErrorString("failed.collector", getCollectorId());
 			collectorService.onException(msg, any);
 			postNotification(msg);
 
@@ -127,7 +131,7 @@ public class CollectorController {
 			btStopMonitoring.setDisable(true);
 			btRestart.setDisable(true);
 
-			postNotification(CollectorLocalizer.instance().getLangString("shutdown.collector"));
+			postNotification(CollectorLocalizer.instance().getLangString("shutdown.collector", getCollectorId()));
 		}
 	}
 
@@ -135,7 +139,7 @@ public class CollectorController {
 	private void onRestart() throws Exception {
 		if (collectorService != null) {
 			collectorService.restartDataCollection();
-			postNotification(CollectorLocalizer.instance().getLangString("restarted.collector"));
+			postNotification(CollectorLocalizer.instance().getLangString("restarted.collector", getCollectorId()));
 		}
 	}
 
@@ -143,7 +147,7 @@ public class CollectorController {
 	private void onStopMonitoring() throws Exception {
 		if (collectorService != null) {
 			collectorService.unsubscribeFromDataSource();
-			postNotification(CollectorLocalizer.instance().getLangString("stopped.events"));
+			postNotification(CollectorLocalizer.instance().getLangString("stopped.events", getCollectorId()));
 		}
 	}
 
@@ -151,7 +155,7 @@ public class CollectorController {
 	private void onStartMonitoring() throws Exception {
 		if (collectorService != null) {
 			collectorService.subscribeToDataSource();
-			postNotification(CollectorLocalizer.instance().getLangString("started.events"));
+			postNotification(CollectorLocalizer.instance().getLangString("started.events", getCollectorId()));
 		}
 	}
 

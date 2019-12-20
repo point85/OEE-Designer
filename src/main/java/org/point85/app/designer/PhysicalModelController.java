@@ -65,8 +65,8 @@ public class PhysicalModelController extends DesignerController {
 	// controller for availability
 	private EquipmentResolverController resolverController;
 
-	// work schedule
-	private WorkSchedule selectedSchedule;
+	// equipment work schedules
+	private EntityWorkScheduleController entityWorkScheduleController;
 
 	// tool bar
 	@FXML
@@ -175,16 +175,16 @@ public class PhysicalModelController extends DesignerController {
 	@FXML
 	private Tab tbAvailability;
 
+	// work schedule tab
+	@FXML
+	private AnchorPane apWorkSchedules;
+
+	@FXML
+	private Tab tbWorkSchedules;
+
 	// class reasons tab
 	@FXML
 	private AnchorPane apClassReasons;
-
-	// work schedule section
-	@FXML
-	private Button btWorkSchedule;
-
-	@FXML
-	private Label lbSchedule;
 
 	// OEE dashboard
 	@FXML
@@ -192,6 +192,10 @@ public class PhysicalModelController extends DesignerController {
 
 	@FXML
 	private TextField tfRetention;
+
+	// current work schedule
+	@FXML
+	private Label lbCurrentSchedule;
 
 	// extract the PlantEntity name from the tree item
 	public PlantEntity getSelectedEntity() {
@@ -249,6 +253,8 @@ public class PhysicalModelController extends DesignerController {
 					onSelectEquipmentMaterial();
 				} else if (newValue.equals(tbAvailability)) {
 					onSelectEquipmentResolver();
+				} else if (newValue.equals(tbWorkSchedules)) {
+					onSelectWorkSchedules();
 				}
 			} catch (Exception e) {
 				AppUtils.showErrorDialog(e);
@@ -258,6 +264,7 @@ public class PhysicalModelController extends DesignerController {
 		// disable tabs
 		tbEquipMaterials.setDisable(true);
 		tbAvailability.setDisable(true);
+		tbWorkSchedules.setDisable(true);
 	}
 
 	// display top-level entities
@@ -315,16 +322,23 @@ public class PhysicalModelController extends DesignerController {
 		}
 		newItem.setExpanded(true);
 
+		tbWorkSchedules.setDisable(false);
+		lbCurrentSchedule.setText(null);
+
 		if (selectedEntity instanceof Equipment) {
 			tbAvailability.setDisable(false);
 			tbEquipMaterials.setDisable(false);
 			btDashboard.setDisable(false);
 
+			tpEntity.getSelectionModel().select(tbEquipMaterials);
 			onSelectEquipmentMaterial();
 		} else {
 			tbAvailability.setDisable(true);
 			tbEquipMaterials.setDisable(true);
 			btDashboard.setDisable(true);
+
+			tpEntity.getSelectionModel().select(tbWorkSchedules);
+			onSelectWorkSchedules();
 		}
 	}
 
@@ -401,14 +415,6 @@ public class PhysicalModelController extends DesignerController {
 		btDelete.setGraphic(ImageManager.instance().getImageView(Images.DELETE));
 		btDelete.setContentDisplay(ContentDisplay.RIGHT);
 
-		// work schedule
-		btWorkSchedule.setGraphic(ImageManager.instance().getImageView(Images.SCHEDULE));
-		btWorkSchedule.setContentDisplay(ContentDisplay.LEFT);
-
-		// clear work schedule
-		btClearSchedule.setGraphic(ImageManager.instance().getImageView(Images.CLEAR));
-		btClearSchedule.setContentDisplay(ContentDisplay.LEFT);
-
 		// dashboard
 		btDashboard.setGraphic(ImageManager.instance().getImageView(Images.DASHBOARD));
 		btDashboard.setContentDisplay(ContentDisplay.RIGHT);
@@ -440,7 +446,7 @@ public class PhysicalModelController extends DesignerController {
 	@FXML
 	private void onShowRmqBrokerEditor() {
 		try {
-			this.getApp().showMQBrokerEditor(DataSourceType.MESSAGING);
+			this.getApp().showMQBrokerEditor(DataSourceType.RMQ);
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}
@@ -577,17 +583,14 @@ public class PhysicalModelController extends DesignerController {
 	@FXML
 	private void onNewEntity() {
 		try {
-			selectedSchedule = null;
-
 			// main editing
 			tfEntityName.clear();
 			taEntityDescription.setText(null);
 			cbEntityTypes.getSelectionModel().clearSelection();
 			cbEntityTypes.getSelectionModel().select(null);
 			cbEntityTypes.requestFocus();
-			lbSchedule.setText(null);
-			lbSchedule.setUserData(null);
 			tfRetention.clear();
+			lbCurrentSchedule.setText(null);
 
 			// no entity item selection
 			selectedEntityItem = null;
@@ -595,6 +598,11 @@ public class PhysicalModelController extends DesignerController {
 			// equipment materials
 			if (equipmentMaterialController != null) {
 				equipmentMaterialController.clear();
+			}
+
+			// work schedules
+			if (entityWorkScheduleController != null) {
+				entityWorkScheduleController.clear();
 			}
 
 			// data collection
@@ -926,21 +934,20 @@ public class PhysicalModelController extends DesignerController {
 		// level
 		cbEntityTypes.getSelectionModel().select(entity.getLevel());
 
-		// work schedule
-		if (entity.getWorkSchedule() != null) {
-			this.lbSchedule.setText(entity.getWorkSchedule().getName());
-			this.lbSchedule.setUserData(entity.getWorkSchedule());
-		} else {
-			this.lbSchedule.setText(null);
-			this.lbSchedule.setUserData(null);
-		}
-
 		// retention period
 		if (entity.getRetentionDuration() != null) {
 			long days = entity.getRetentionDuration().toDays();
 			this.tfRetention.setText(String.valueOf(days));
 		} else {
 			this.tfRetention.setText(null);
+		}
+
+		// current work schedule
+		WorkSchedule schedule = entity.findWorkSchedule();
+		if (schedule != null) {
+			this.lbCurrentSchedule.setText(schedule.getName());
+		} else {
+			this.lbCurrentSchedule.setText(null);
 		}
 
 		if (entity instanceof Equipment) {
@@ -984,10 +991,6 @@ public class PhysicalModelController extends DesignerController {
 			entity.setRetentionDuration(Duration.ofDays(days));
 		}
 
-		// work schedule
-		WorkSchedule schedule = (WorkSchedule) lbSchedule.getUserData();
-		entity.setWorkSchedule(schedule);
-
 		addEditedPlantEntity(entityItem);
 	}
 
@@ -1009,32 +1012,6 @@ public class PhysicalModelController extends DesignerController {
 		this.addEditedPlantEntity(selectedEntityItem);
 	}
 
-	// find work schedule
-	@FXML
-	private void onFindWorkSchedule() {
-		try {
-			// get the work schedule from the dialog
-			selectedSchedule = getApp().showScheduleEditor();
-
-			if (selectedSchedule == null) {
-				return;
-			}
-
-			// work schedule
-			if (getSelectedEntity() != null) {
-				getSelectedEntity().setWorkSchedule(selectedSchedule);
-				addEditedPlantEntity(selectedEntityItem);
-			}
-
-			// add schedule to text field
-			lbSchedule.setText(selectedSchedule.getName());
-			lbSchedule.setUserData(selectedSchedule);
-
-		} catch (Exception e) {
-			AppUtils.showErrorDialog(e);
-		}
-	}
-
 	private void onSelectEquipmentMaterial() throws Exception {
 		if (equipmentMaterialController == null) {
 			// Load the fxml file and create the anchor pane
@@ -1053,6 +1030,22 @@ public class PhysicalModelController extends DesignerController {
 		} else {
 			equipmentMaterialController.clearEditor();
 		}
+	}
+
+	private void onSelectWorkSchedules() throws Exception {
+		if (entityWorkScheduleController == null) {
+			// Load the fxml file and create the anchor pane
+			FXMLLoader loader = FXMLLoaderFactory.entityWorkScheduleLoader();
+			AnchorPane pane = (AnchorPane) loader.getRoot();
+			tbWorkSchedules.setContent(pane);
+
+			entityWorkScheduleController = loader.getController();
+
+			entityWorkScheduleController.initialize(getApp());
+		}
+
+		// show schedules
+		entityWorkScheduleController.showSchedules(getSelectedEntity());
 	}
 
 	private EquipmentResolverController getResolverController() throws Exception {
@@ -1082,24 +1075,6 @@ public class PhysicalModelController extends DesignerController {
 	private void onShowDashboard() {
 		try {
 			getApp().showDashboard();
-		} catch (Exception e) {
-			AppUtils.showErrorDialog(e);
-			return;
-		}
-	}
-
-	@FXML
-	private void onClearSchedule() {
-		try {
-			if (getSelectedEntity() == null || getSelectedEntity().getWorkSchedule() == null) {
-				return;
-			}
-
-			getSelectedEntity().setWorkSchedule(null);
-			selectedSchedule = null;
-			lbSchedule.setText(null);
-			lbSchedule.setUserData(null);
-			markSelectedPlantEntity();
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 			return;

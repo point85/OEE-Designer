@@ -19,7 +19,7 @@ import org.point85.app.designer.DesignerDialogController;
 import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.oee.TimeLoss;
 import org.point85.domain.persistence.PersistenceService;
-import org.point85.domain.schedule.NonWorkingPeriod;
+import org.point85.domain.schedule.ExceptionPeriod;
 import org.point85.domain.schedule.Rotation;
 import org.point85.domain.schedule.RotationSegment;
 import org.point85.domain.schedule.Shift;
@@ -76,8 +76,8 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 	// current rotation segment being edited
 	private RotationSegment currentRotationSegment;
 
-	// current non-working period being edited
-	private NonWorkingPeriod currentPeriod;
+	// current exception period being edited
+	private ExceptionPeriod currentPeriod;
 
 	// list of shifts associated with the work schedule being edited
 	private final ObservableList<Shift> shiftList = FXCollections.observableArrayList(new ArrayList<>());
@@ -99,7 +99,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 			.observableArrayList(new ArrayList<>());
 
 	// list of non-working periods associated with the work schedule
-	private final ObservableList<NonWorkingPeriod> periodList = FXCollections.observableArrayList(new ArrayList<>());
+	private final ObservableList<ExceptionPeriod> periodList = FXCollections.observableArrayList(new ArrayList<>());
 
 	// controller for template schedules
 	private TemplateScheduleDialogController templateController;
@@ -282,7 +282,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 	@FXML
 	private Button btRemoveRotationSegment;
 
-	// ***** non-working periods *******************************************
+	// ***** non-working and overtime periods *******************************************
 	@FXML
 	private TextField tfPeriodName;
 
@@ -299,31 +299,31 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 	private TextField tfPeriodDuration;
 
 	@FXML
-	private TableView<NonWorkingPeriod> tvNonWorkingPeriods;
+	private TableView<ExceptionPeriod> tvExceptionPeriods;
 
 	@FXML
-	private TableColumn<NonWorkingPeriod, String> periodNameColumn;
+	private TableColumn<ExceptionPeriod, String> periodNameColumn;
 
 	@FXML
-	private TableColumn<NonWorkingPeriod, String> periodDescriptionColumn;
+	private TableColumn<ExceptionPeriod, String> periodDescriptionColumn;
 
 	@FXML
-	private TableColumn<NonWorkingPeriod, LocalDateTime> periodStartColumn;
+	private TableColumn<ExceptionPeriod, LocalDateTime> periodStartColumn;
 
 	@FXML
-	private TableColumn<NonWorkingPeriod, String> periodDurationColumn;
+	private TableColumn<ExceptionPeriod, String> periodDurationColumn;
 
 	@FXML
-	private TableColumn<NonWorkingPeriod, String> periodLossColumn;
+	private TableColumn<ExceptionPeriod, String> periodCatColumn;
 
 	@FXML
-	private Button btNewNonWorkingPeriod;
+	private Button btNewExceptionPeriod;
 
 	@FXML
-	private Button btAddNonWorkingPeriod;
+	private Button btAddExceptionPeriod;
 
 	@FXML
-	private Button btRemoveNonWorkingPeriod;
+	private Button btRemoveExceptionPeriod;
 
 	@FXML
 	private ComboBox<TimeLoss> cbLosses;
@@ -529,23 +529,23 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		});
 	}
 
-	private void initializeNonWorkingPeriodEditor() throws Exception {
+	private void initializeExceptionPeriodEditor() throws Exception {
 		// bind to list of periods
-		this.tvNonWorkingPeriods.setItems(periodList);
+		this.tvExceptionPeriods.setItems(periodList);
 
 		// table view row selection listener
-		tvNonWorkingPeriods.getSelectionModel().selectedItemProperty()
+		tvExceptionPeriods.getSelectionModel().selectedItemProperty()
 				.addListener((observableValue, oldValue, newValue) -> {
 					if (newValue != null) {
 						try {
-							onSelectNonWorkingPeriod(newValue);
+							onSelectExceptionPeriod(newValue);
 						} catch (Exception e) {
 							AppUtils.showErrorDialog(e);
 						}
 					}
 				});
 
-		// non-working period table callbacks
+		// exception period table
 		// period name
 		periodNameColumn.setCellValueFactory(cellDataFeatures -> {
 			return new SimpleStringProperty(cellDataFeatures.getValue().getName());
@@ -568,7 +568,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		});
 
 		// period loss
-		periodLossColumn.setCellValueFactory(cellDataFeatures -> {
+		periodCatColumn.setCellValueFactory(cellDataFeatures -> {
 			TimeLoss loss = cellDataFeatures.getValue().getLossCategory();
 			SimpleStringProperty property = new SimpleStringProperty();
 
@@ -581,6 +581,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		// loss categories
 		cbLosses.getItems().clear();
 		cbLosses.getItems().addAll(TimeLoss.getNonWorkingLosses());
+		cbLosses.getItems().add(TimeLoss.NO_LOSS);
 	}
 
 	@FXML
@@ -618,7 +619,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		initializeRotationEditor();
 
 		// non-working period editor
-		initializeNonWorkingPeriodEditor();
+		initializeExceptionPeriodEditor();
 
 		// display all defined work schedules
 		displaySchedules();
@@ -665,7 +666,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 
 		// start time
 		LocalTime startTime = shift.getStart();
-		this.tfShiftStart.setText(AppUtils.stringFromLocalTime(startTime));
+		this.tfShiftStart.setText(AppUtils.stringFromLocalTime(startTime, false));
 
 		Duration duration = shift.getDuration();
 		this.tfShiftDuration.setText(AppUtils.stringFromDuration(duration, false));
@@ -725,9 +726,9 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		this.spDaysOff.getValueFactory().setValue(segment.getDaysOff());
 	}
 
-	// called on non-working period selection in table listener
-	private void onSelectNonWorkingPeriod(NonWorkingPeriod period) {
-		btAddNonWorkingPeriod.setText(DesignerLocalizer.instance().getLangString("update"));
+	// called on exception period selection in table listener
+	private void onSelectExceptionPeriod(ExceptionPeriod period) {
+		btAddExceptionPeriod.setText(DesignerLocalizer.instance().getLangString("update"));
 		this.currentPeriod = period;
 
 		// name
@@ -739,7 +740,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		// start
 		this.dpPeriodStartDate.setValue(period.getStartDateTime().toLocalDate());
 		LocalTime startTime = period.getStartDateTime().toLocalTime();
-		this.tfPeriodStartTime.setText(AppUtils.stringFromLocalTime(startTime));
+		this.tfPeriodStartTime.setText(AppUtils.stringFromLocalTime(startTime, false));
 
 		// duration
 		this.tfPeriodDuration.setText(AppUtils.stringFromDuration(period.getDuration(), false));
@@ -832,16 +833,16 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		btRemoveRotationSegment.setContentDisplay(ContentDisplay.LEFT);
 
 		// new non-working period
-		btNewNonWorkingPeriod.setGraphic(ImageManager.instance().getImageView(Images.NEW));
-		btNewNonWorkingPeriod.setContentDisplay(ContentDisplay.LEFT);
+		btNewExceptionPeriod.setGraphic(ImageManager.instance().getImageView(Images.NEW));
+		btNewExceptionPeriod.setContentDisplay(ContentDisplay.LEFT);
 
 		// add non-working period
-		btAddNonWorkingPeriod.setGraphic(ImageManager.instance().getImageView(Images.ADD));
-		btAddNonWorkingPeriod.setContentDisplay(ContentDisplay.LEFT);
+		btAddExceptionPeriod.setGraphic(ImageManager.instance().getImageView(Images.ADD));
+		btAddExceptionPeriod.setContentDisplay(ContentDisplay.LEFT);
 
 		// remove non-working period
-		btRemoveNonWorkingPeriod.setGraphic(ImageManager.instance().getImageView(Images.REMOVE));
-		btRemoveNonWorkingPeriod.setContentDisplay(ContentDisplay.LEFT);
+		btRemoveExceptionPeriod.setGraphic(ImageManager.instance().getImageView(Images.REMOVE));
+		btRemoveExceptionPeriod.setContentDisplay(ContentDisplay.LEFT);
 
 		// choose template schedule
 		btChooseSchedule.setGraphic(ImageManager.instance().getImageView(Images.CHOOSE));
@@ -867,7 +868,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		onNewTeam();
 		onNewRotation();
 		onNewRotationSegment();
-		onNewNonWorkingPeriod();
+		onNewExceptionPeriod();
 
 		// clear the tables
 		this.shiftList.clear();
@@ -885,7 +886,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		this.tvRotationSegments.refresh();
 
 		this.periodList.clear();
-		this.tvNonWorkingPeriods.refresh();
+		this.tvExceptionPeriods.refresh();
 	}
 
 	// New button clicked
@@ -981,7 +982,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 			initializeRotationEditor();
 
 			// non-working period editor
-			initializeNonWorkingPeriodEditor();
+			initializeExceptionPeriodEditor();
 
 			// display all defined work schedules
 			displaySchedules();
@@ -1160,16 +1161,16 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		Collections.sort(teamList);
 		tvTeams.refresh();
 
-		// non-working periods
-		List<NonWorkingPeriod> periods = schedule.getNonWorkingPeriods();
+		// exception periods
+		List<ExceptionPeriod> periods = schedule.getExceptionPeriods();
 		periodList.clear();
 
-		for (NonWorkingPeriod period : periods) {
+		for (ExceptionPeriod period : periods) {
 			periodList.add(period);
 		}
 		Collections.sort(periodList);
 
-		tvNonWorkingPeriods.refresh();
+		tvExceptionPeriods.refresh();
 
 	}
 
@@ -1435,10 +1436,10 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 
 			// remove from list
 			rotationList.remove(rotation);
-			
+
 			// remove from work schedule
 			getSelectedSchedule().getRotations().remove(rotation);
-			
+
 			currentRotation = null;
 			tvRotations.getSelectionModel().clearSelection();
 
@@ -1528,7 +1529,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 			}
 
 			rotationSegmentList.remove(segment);
-			
+
 			// remove from rotation
 			currentRotation.getRotationSegments().remove(segment);
 
@@ -1549,13 +1550,13 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		}
 	}
 
-	// new NonWorkingPeriod button clicked
+	// new exception button clicked
 	@FXML
-	private void onNewNonWorkingPeriod() {
-		btAddNonWorkingPeriod.setText(DesignerLocalizer.instance().getLangString("add"));
+	private void onNewExceptionPeriod() {
+		btAddExceptionPeriod.setText(DesignerLocalizer.instance().getLangString("add"));
 		this.currentPeriod = null;
 
-		// NonWorkingPeriod editing attributes
+		// exception period editing attributes
 		this.tfPeriodName.clear();
 		this.tfPeriodDescription.clear();
 		this.dpPeriodStartDate.setValue(null);
@@ -1564,12 +1565,12 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		this.cbLosses.getSelectionModel().clearSelection();
 		this.cbLosses.getSelectionModel().select(null);
 
-		this.tvNonWorkingPeriods.getSelectionModel().clearSelection();
+		this.tvExceptionPeriods.getSelectionModel().clearSelection();
 	}
 
-	// add NonWorkingPeriod button clicked
+	// add exception button clicked
 	@FXML
-	private void onAddNonWorkingPeriod() {
+	private void onAddExceptionPeriod() {
 		try {
 			// need a work schedule first
 			if (getSelectedSchedule() == null) {
@@ -1605,9 +1606,8 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 
 			if (currentPeriod == null) {
 				// new non-working period
-				currentPeriod = getSelectedSchedule().createNonWorkingPeriod(name, description, startDateTime,
-						duration);
-				currentPeriod.setLossCategory(loss);
+				currentPeriod = getSelectedSchedule().createExceptionPeriod(name, description, startDateTime, duration,
+						loss);
 				periodList.add(currentPeriod);
 			} else {
 				currentPeriod.setName(name);
@@ -1621,32 +1621,32 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 			// add to edited schedules
 			addEditedSchedule(selectedScheduleItem);
 
-			tvNonWorkingPeriods.refresh();
+			tvExceptionPeriods.refresh();
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}
 	}
 
-	// remove non-working period button clicked
+	// remove exception period button clicked
 	@FXML
-	private void onRemoveNonWorkingPeriod() {
+	private void onRemoveExceptionPeriod() {
 		try {
-			NonWorkingPeriod period = this.tvNonWorkingPeriods.getSelectionModel().getSelectedItem();
+			ExceptionPeriod period = this.tvExceptionPeriods.getSelectionModel().getSelectedItem();
 
 			if (period == null) {
 				return;
 			}
 
-			getSelectedSchedule().getNonWorkingPeriods().remove(period);
+			getSelectedSchedule().getExceptionPeriods().remove(period);
 			periodList.remove(period);
 			Collections.sort(periodList);
 			currentPeriod = null;
-			tvNonWorkingPeriods.getSelectionModel().clearSelection();
+			tvExceptionPeriods.getSelectionModel().clearSelection();
 
 			// add to edited schedules
 			addEditedSchedule(selectedScheduleItem);
 
-			tvNonWorkingPeriods.refresh();
+			tvExceptionPeriods.refresh();
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}

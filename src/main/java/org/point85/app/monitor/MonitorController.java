@@ -15,6 +15,7 @@ import org.point85.app.dashboard.DashboardController;
 import org.point85.domain.DomainUtils;
 import org.point85.domain.collector.CollectorState;
 import org.point85.domain.collector.DataCollector;
+import org.point85.domain.collector.DataSourceType;
 import org.point85.domain.messaging.CollectorNotificationMessage;
 import org.point85.domain.messaging.CollectorResolvedEventMessage;
 import org.point85.domain.messaging.CollectorServerStatusMessage;
@@ -144,6 +145,9 @@ public class MonitorController {
 
 	@FXML
 	private TableColumn<DataCollector, Integer> tcBrokerPort;
+
+	@FXML
+	private TableColumn<DataCollector, DataSourceType> tcBrokerType;
 
 	@FXML
 	private Button btRefresh;
@@ -276,6 +280,11 @@ public class MonitorController {
 		// RMQ broker host
 		tcBrokerPort.setCellValueFactory(cellDataFeatures -> {
 			return new SimpleObjectProperty<Integer>(cellDataFeatures.getValue().getBrokerPort());
+		});
+
+		// RMQ broker type
+		tcBrokerType.setCellValueFactory(cellDataFeatures -> {
+			return new SimpleObjectProperty<DataSourceType>(cellDataFeatures.getValue().getBrokerType());
 		});
 	}
 
@@ -527,22 +536,27 @@ public class MonitorController {
 	}
 
 	void handleCollectorStatus(CollectorServerStatusMessage message) {
+		CollectorServerStatus newStatus = new CollectorServerStatus(message);
+
 		// update status
+		boolean isNew = true;
 		for (int i = 0; i < serverStatus.size(); i++) {
 			CollectorServerStatus status = serverStatus.get(i);
 
 			if (status.getCollectorHost().equalsIgnoreCase(message.getSenderHostName())
 					|| status.getCollectorHost().equalsIgnoreCase(message.getSenderHostAddress())) {
-				serverStatus.remove(i);
+				serverStatus.set(i, newStatus);
+				isNew = false;
 				break;
 			}
 		}
 
-		CollectorServerStatus status = new CollectorServerStatus(message);
-		serverStatus.add(status);
-		tvServerStatus.refresh();
+		if (isNew) {
+			serverStatus.add(newStatus);
+		}
 
 		tvServerStatus.getSelectionModel().clearSelection();
+		tvServerStatus.refresh();
 
 		serverCollectors.clear();
 		tvCollectorStatus.refresh();

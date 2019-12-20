@@ -400,7 +400,7 @@ public class EquipmentResolverController extends DesignerController {
 		case HTTP:
 			buttonImage = ImageManager.instance().getImageView(Images.HTTP);
 			break;
-		case MESSAGING:
+		case RMQ:
 			buttonImage = ImageManager.instance().getImageView(Images.RMQ);
 			break;
 		case JMS:
@@ -515,7 +515,7 @@ public class EquipmentResolverController extends DesignerController {
 
 				setDefaultSourceId();
 
-			} else if (sourceType.equals(DataSourceType.MESSAGING) || sourceType.equals(DataSourceType.JMS)
+			} else if (sourceType.equals(DataSourceType.RMQ) || sourceType.equals(DataSourceType.JMS)
 					|| sourceType.equals(DataSourceType.MQTT)) {
 				// show MQ broker editor
 				CollectorDataSource dataSource = getApp().showMQBrokerEditor(sourceType);
@@ -778,7 +778,7 @@ public class EquipmentResolverController extends DesignerController {
 				getApp().showOpcUaTrendDialog(selectedEventResolver);
 			} else if (type.equals(DataSourceType.HTTP)) {
 				getApp().showHttpTrendDialog(selectedEventResolver);
-			} else if (type.equals(DataSourceType.MESSAGING)) {
+			} else if (type.equals(DataSourceType.RMQ)) {
 				getApp().showMessagingTrendDialog(selectedEventResolver);
 			} else if (type.equals(DataSourceType.JMS)) {
 				getApp().showJMSTrendDialog(selectedEventResolver);

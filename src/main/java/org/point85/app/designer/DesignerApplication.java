@@ -13,9 +13,9 @@ import org.point85.app.file.FileTrendController;
 import org.point85.app.http.HttpServerController;
 import org.point85.app.http.HttpTrendController;
 import org.point85.app.material.MaterialEditorController;
-import org.point85.app.messaging.JMSTrendController;
-import org.point85.app.messaging.MQTTTrendController;
-import org.point85.app.messaging.MessagingTrendController;
+import org.point85.app.messaging.JmsTrendController;
+import org.point85.app.messaging.MqttTrendController;
+import org.point85.app.messaging.RmqTrendController;
 import org.point85.app.messaging.MqBrokerController;
 import org.point85.app.modbus.ModbusMasterController;
 import org.point85.app.modbus.ModbusTrendController;
@@ -399,7 +399,7 @@ public class DesignerApplication {
 
 		if (type.equals(DataSourceType.MQTT)) {
 			dialogStage.setTitle(DesignerLocalizer.instance().getLangString("mqtt.editor.title"));
-		} else if (type.equals(DataSourceType.MESSAGING)) {
+		} else if (type.equals(DataSourceType.RMQ)) {
 			dialogStage.setTitle(DesignerLocalizer.instance().getLangString("rmq.editor.title"));
 		} else if (type.equals(DataSourceType.JMS)) {
 			dialogStage.setTitle(DesignerLocalizer.instance().getLangString("jms.editor.title"));
@@ -678,7 +678,7 @@ public class DesignerApplication {
 		dialogStage.setScene(scene);
 
 		// get the controller
-		MessagingTrendController messagingTrendController = loader.getController();
+		RmqTrendController messagingTrendController = loader.getController();
 		messagingTrendController.setDialogStage(dialogStage);
 		messagingTrendController.setApp(this);
 
@@ -715,7 +715,7 @@ public class DesignerApplication {
 		dialogStage.setScene(scene);
 
 		// get the controller
-		JMSTrendController jmsTrendController = loader.getController();
+		JmsTrendController jmsTrendController = loader.getController();
 		jmsTrendController.setDialogStage(dialogStage);
 		jmsTrendController.setApp(this);
 
@@ -752,7 +752,7 @@ public class DesignerApplication {
 		dialogStage.setScene(scene);
 
 		// get the controller
-		MQTTTrendController mqttTrendController = loader.getController();
+		MqttTrendController mqttTrendController = loader.getController();
 		mqttTrendController.setDialogStage(dialogStage);
 		mqttTrendController.setApp(this);
 

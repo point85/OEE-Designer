@@ -12,13 +12,13 @@ import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.DomainUtils;
 import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.DataSourceType;
-import org.point85.domain.jms.JMSClient;
-import org.point85.domain.jms.JMSSource;
-import org.point85.domain.messaging.MessagingClient;
-import org.point85.domain.messaging.MessagingSource;
-import org.point85.domain.mqtt.MQTTClient;
-import org.point85.domain.mqtt.MQTTSource;
+import org.point85.domain.jms.JmsClient;
+import org.point85.domain.jms.JmsSource;
+import org.point85.domain.mqtt.MqttSource;
+import org.point85.domain.mqtt.MqttOeeClient;
 import org.point85.domain.persistence.PersistenceService;
+import org.point85.domain.rmq.RmqClient;
+import org.point85.domain.rmq.RmqSource;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -32,7 +32,7 @@ import javafx.scene.control.TextField;
 public class MqBrokerController extends DesignerDialogController {
 	// default ports
 	private static final int RMQ_DEFAULT_PORT = 5672;
-	private static final int AMQ_DEFAULT_PORT = 61616;
+	private static final int JMS_DEFAULT_PORT = 61616;
 	private static final int MQTT_DEFAULT_PORT = 1883;
 
 	// current source
@@ -113,12 +113,12 @@ public class MqBrokerController extends DesignerDialogController {
 	public CollectorDataSource getSource() {
 		// set source
 		if (dataSource == null) {
-			if (sourceType.equals(DataSourceType.MESSAGING)) {
-				dataSource = new MessagingSource();
+			if (sourceType.equals(DataSourceType.RMQ)) {
+				dataSource = new RmqSource();
 			} else if (sourceType.equals(DataSourceType.JMS)) {
-				dataSource = new JMSSource();
+				dataSource = new JmsSource();
 			} else if (sourceType.equals(DataSourceType.MQTT)) {
-				dataSource = new MQTTSource();
+				dataSource = new MqttSource();
 			}
 		}
 		return dataSource;
@@ -130,19 +130,19 @@ public class MqBrokerController extends DesignerDialogController {
 
 	@FXML
 	private void onTest() {
-		MessagingClient pubsub = null;
-		JMSClient jmsClient = null;
-		MQTTClient mqttClient = null;
+		RmqClient pubsub = null;
+		JmsClient jmsClient = null;
+		MqttOeeClient mqttClient = null;
 
 		try {
-			if (sourceType.equals(DataSourceType.MESSAGING)) {
-				pubsub = new MessagingClient();
+			if (sourceType.equals(DataSourceType.RMQ)) {
+				pubsub = new RmqClient();
 				pubsub.connect(getHost(), getPort(), getUserName(), getPassword());
 			} else if (sourceType.equals(DataSourceType.JMS)) {
-				jmsClient = new JMSClient();
+				jmsClient = new JmsClient();
 				jmsClient.connect(getHost(), getPort(), getUserName(), getPassword());
 			} else if (sourceType.equals(DataSourceType.MQTT)) {
-				mqttClient = new MQTTClient();
+				mqttClient = new MqttOeeClient();
 				mqttClient.connect(getHost(), getPort(), getUserName(), getPassword());
 			}
 
@@ -152,7 +152,7 @@ public class MqBrokerController extends DesignerDialogController {
 			AppUtils.showErrorDialog(
 					DesignerLocalizer.instance().getErrorString("connection.failed", DomainUtils.formatException(e)));
 		} finally {
-			if (sourceType.equals(DataSourceType.MESSAGING)) {
+			if (sourceType.equals(DataSourceType.RMQ)) {
 				if (pubsub != null) {
 					try {
 						pubsub.disconnect();
@@ -202,41 +202,51 @@ public class MqBrokerController extends DesignerDialogController {
 				PersistenceService.instance().delete(dataSource);
 				brokers.remove(dataSource);
 
-				onNewDataSource();
+				 clearEditor();
 			}
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}
 	}
 
+	private void clearEditor() {
+		this.tfHost.clear();
+		this.tfUserName.clear();
+		this.pfPassword.clear();
+		this.tfDescription.clear();
+		this.tfPort.clear();
+		
+		this.cbDataSources.getSelectionModel().clearSelection();
+	}
+
 	@FXML
 	private void onNewDataSource() {
 		try {
-			this.tfHost.clear();
-			this.tfUserName.clear();
-			this.pfPassword.clear();
-			this.tfDescription.clear();
+			clearEditor();
 
 			// default the port
 			if (sourceType != null) {
 				int port = RMQ_DEFAULT_PORT;
 
 				if (sourceType.equals(DataSourceType.JMS)) {
-					port = AMQ_DEFAULT_PORT;
+					port = JMS_DEFAULT_PORT;
 				} else if (sourceType.equals(DataSourceType.MQTT)) {
 					port = MQTT_DEFAULT_PORT;
 				}
 				this.tfPort.setText(String.valueOf(port));
-			} else {
-				this.tfPort.clear();
 			}
 
-			this.cbDataSources.getSelectionModel().clearSelection();
-
-			this.setSource(null);
+			setSource(null);
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}
+	}
+	
+	private String validateHost(String hostId) throws Exception {
+		if (hostId.equalsIgnoreCase("localhost")) {
+			throw new Exception(DesignerLocalizer.instance().getErrorString("host.or.ip", hostId));
+		}
+		return hostId;
 	}
 
 	@FXML
@@ -245,7 +255,7 @@ public class MqBrokerController extends DesignerDialogController {
 		try {
 			CollectorDataSource eventSource = getSource();
 
-			eventSource.setHost(getHost());
+			eventSource.setHost(validateHost(getHost()));
 			eventSource.setUserName(getUserName());
 			eventSource.setPassword(getPassword());
 			eventSource.setPort(getPort());

@@ -346,6 +346,9 @@ public class DashboardController extends DialogController implements CategoryCli
 	@FXML
 	private TableColumn<OeeEvent, String> tcSourceId;
 
+	@FXML
+	private TableColumn<OeeEvent, String> tcCollector;
+
 	// loss chart
 	@FXML
 	private StackedBarChart<Number, String> bcLosses;
@@ -1179,6 +1182,13 @@ public class DashboardController extends DialogController implements CategoryCli
 			String sourceId = event.getSourceId();
 			return new SimpleStringProperty(sourceId);
 		});
+
+		// data collector
+		tcCollector.setCellValueFactory(cellDataFeatures -> {
+			OeeEvent event = cellDataFeatures.getValue();
+			String collector = event.getCollector();
+			return new SimpleStringProperty(collector);
+		});
 	}
 
 	private void refreshCharts(Tab newValue) throws Exception {
@@ -1335,6 +1345,15 @@ public class DashboardController extends DialogController implements CategoryCli
 
 		default:
 			break;
+		}
+
+		// display the database record
+		Long key = message.getOeeEventKey();
+
+		if (key != null) {
+			OeeEvent event = PersistenceService.instance().fetchEventByKey(key);
+			resolvedEvents.add(event);
+			tvResolvedEvents.refresh();
 		}
 	}
 
@@ -1591,8 +1610,7 @@ public class DashboardController extends DialogController implements CategoryCli
 
 			tiLoss.setChartData(slices);
 
-			tiLoss.setTitle(
-					DesignerLocalizer.instance().getLangString("loss.time") + " (" + timeUnit.toString() + ")");
+			tiLoss.setTitle(DesignerLocalizer.instance().getLangString("loss.time") + " (" + timeUnit.toString() + ")");
 
 			// overall duration
 			Duration duration = this.equipmentLoss.getDuration();

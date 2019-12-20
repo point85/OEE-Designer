@@ -123,7 +123,7 @@ public abstract class BaseMessagingTrendController extends DesignerDialogControl
 		}
 	}
 
-	protected EquipmentEventMessage createMessage() throws Exception {
+	protected EquipmentEventMessage createEquipmentEventMessage() throws Exception {
 		EventResolver eventResolver = trendChartController.getEventResolver();
 
 		String sourceId = eventResolver.getSourceId();

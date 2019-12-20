@@ -1,6 +1,7 @@
 package org.point85.app.monitor;
 
 import java.net.InetAddress;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,24 +12,29 @@ import org.point85.app.AppUtils;
 import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
+import org.point85.domain.DomainUtils;
 import org.point85.domain.collector.CollectorState;
 import org.point85.domain.collector.DataCollector;
+import org.point85.domain.collector.DataSourceType;
+import org.point85.domain.jms.JmsClient;
+import org.point85.domain.jms.JmsMessageListener;
 import org.point85.domain.messaging.ApplicationMessage;
+import org.point85.domain.messaging.BaseMessagingClient;
 import org.point85.domain.messaging.CollectorCommandMessage;
 import org.point85.domain.messaging.CollectorNotificationMessage;
 import org.point85.domain.messaging.CollectorResolvedEventMessage;
 import org.point85.domain.messaging.CollectorServerStatusMessage;
-import org.point85.domain.messaging.MessageListener;
 import org.point85.domain.messaging.MessageType;
-import org.point85.domain.messaging.MessagingClient;
 import org.point85.domain.messaging.NotificationSeverity;
-import org.point85.domain.messaging.RoutingKey;
+import org.point85.domain.mqtt.MqttMessageListener;
+import org.point85.domain.mqtt.MqttOeeClient;
+import org.point85.domain.mqtt.QualityOfService;
 import org.point85.domain.persistence.PersistenceService;
+import org.point85.domain.rmq.RmqClient;
+import org.point85.domain.rmq.RmqMessageListener;
+import org.point85.domain.rmq.RoutingKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Envelope;
 
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -36,21 +42,27 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-public class MonitorApplication implements MessageListener {
-	// sec for a command message to live in the queue
-	private static final int COMMAND_TTL_SEC = 30;
-
-	// notification message TTL
-	private static final int NOTIFICATION_TTL_SEC = 30;
-
+public class MonitorApplication implements RmqMessageListener, JmsMessageListener, MqttMessageListener {
 	// logger
 	private static final Logger logger = LoggerFactory.getLogger(MonitorApplication.class);
 
 	// RabbitMQ message publisher/subscribers for incoming notifications
-	private final List<MessagingClient> notificationPubSubs = new ArrayList<>();
+	private final List<RmqClient> rmqSubscriptionClients = new ArrayList<>();
 
 	// RMQ brokers for outgoing commands
-	private final Map<String, MessagingClient> commandPubSubs = new HashMap<>();
+	private final Map<String, RmqClient> rmqPublishingClients = new HashMap<>();
+
+	// JMS message publisher/subscribers for incoming notifications
+	private final List<JmsClient> jmsSubscriptionClients = new ArrayList<>();
+
+	// JMS brokers for outgoing commands
+	private final Map<String, JmsClient> jmsPublishingClients = new HashMap<>();
+
+	// MQTT message publisher/subscribers for incoming notifications
+	private final List<MqttOeeClient> mqttSubscriptionClients = new ArrayList<>();
+
+	// MQTT brokers for outgoing commands
+	private final Map<String, MqttOeeClient> mqttPublishingClients = new HashMap<>();
 
 	// status monitor
 	private MonitorController monitorController;
@@ -88,7 +100,7 @@ public class MonitorApplication implements MessageListener {
 			primaryStage.setTitle(MonitorLocalizer.instance().getLangString("monitor.app.title"));
 			primaryStage.getIcons().add(ImageManager.instance().getImage(Images.POINT85));
 
-			// connect to RMA brokers
+			// connect to messaging brokers
 			connectToNotificationBrokers();
 
 			primaryStage.show();
@@ -115,14 +127,25 @@ public class MonitorApplication implements MessageListener {
 			PersistenceService.instance().close();
 
 			// disconnect from notification pubsubs
-			for (MessagingClient pubSub : notificationPubSubs) {
+			for (RmqClient pubSub : rmqSubscriptionClients) {
 				pubSub.disconnect();
 			}
 
-			// disconnect from command pubsubs
-			for (Entry<String, MessagingClient> entry : commandPubSubs.entrySet()) {
+			// disconnect from RMQ pubsubs
+			for (Entry<String, RmqClient> entry : rmqPublishingClients.entrySet()) {
 				entry.getValue().disconnect();
 			}
+
+			// disconnect from JMS pubsubs
+			for (Entry<String, JmsClient> entry : jmsPublishingClients.entrySet()) {
+				entry.getValue().disconnect();
+			}
+
+			// disconnect from MQTT pubsubs
+			for (Entry<String, MqttOeeClient> entry : mqttPublishingClients.entrySet()) {
+				entry.getValue().disconnect();
+			}
+
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
@@ -136,49 +159,103 @@ public class MonitorApplication implements MessageListener {
 		// data collectors being monitored
 		List<DataCollector> collectors = PersistenceService.instance().fetchCollectorsByState(states);
 
-		// connect to notification brokers for consuming only
-		Map<String, MessagingClient> pubSubs = new HashMap<>();
+		// connect to notification brokers for consuming messages only
+		Map<String, BaseMessagingClient> pubSubs = new HashMap<>();
 
 		for (DataCollector collector : collectors) {
+			DataSourceType sourceType = collector.getBrokerType();
 			String brokerHostName = collector.getBrokerHost();
 			Integer brokerPort = collector.getBrokerPort();
 			String brokerUser = collector.getBrokerUserName();
 			String brokerPassword = collector.getBrokerUserPassword();
 
-			if (brokerHostName != null && brokerHostName.trim().length() > 0 && brokerPort != null) {
-				String key = brokerHostName + ":" + brokerPort;
+			if (brokerHostName == null || brokerHostName.trim().length() == 0 || brokerPort == null) {
+				continue;
+			}
 
-				if (pubSubs.get(key) == null) {
-					// new publisher
-					MessagingClient pubsub = new MessagingClient();
+			switch (sourceType) {
+			case JMS:
+				startJMSBroker(pubSubs, brokerHostName, brokerPort, brokerUser, brokerPassword);
+				break;
+			case RMQ:
+				startRMQBroker(pubSubs, brokerHostName, brokerPort, brokerUser, brokerPassword);
+				break;
+			case MQTT:
+				startMqttBroker(pubSubs, brokerHostName, brokerPort, brokerUser, brokerPassword);
+				break;
+			default:
+				return;
 
-					// connect to broker and listen for messages
-					String queueName = getClass().getSimpleName() + "_" + System.currentTimeMillis();
-
-					List<RoutingKey> routingKeys = new ArrayList<>();
-					routingKeys.add(RoutingKey.NOTIFICATION_MESSAGE);
-					routingKeys.add(RoutingKey.NOTIFICATION_STATUS);
-					routingKeys.add(RoutingKey.RESOLVED_EVENT);
-
-					pubsub.startUp(brokerHostName, brokerPort, brokerUser, brokerPassword, queueName, routingKeys,
-							this);
-
-					pubSubs.put(key, pubsub);
-					notificationPubSubs.add(pubsub);
-				}
 			}
 		}
 	}
 
-	@Override
-	public void onMessage(Channel channel, Envelope envelope, ApplicationMessage message) throws Exception {
-		if (message == null) {
+	private void startRMQBroker(Map<String, BaseMessagingClient> pubSubs, String brokerHostName, Integer brokerPort,
+			String brokerUser, String brokerPassword) throws Exception {
+
+		String key = "RMQ." + brokerHostName + ":" + brokerPort;
+
+		if (pubSubs.get(key) != null) {
+			// already started
 			return;
 		}
 
-		// ack it now
-		channel.basicAck(envelope.getDeliveryTag(), MessagingClient.ACK_MULTIPLE);
+		// new RMQ client
+		RmqClient rmqClient = new RmqClient();
 
+		// connect to broker and listen for messages
+		String queueName = getClass().getSimpleName() + "_" + System.currentTimeMillis();
+
+		List<RoutingKey> routingKeys = new ArrayList<>();
+		routingKeys.add(RoutingKey.NOTIFICATION_MESSAGE);
+		routingKeys.add(RoutingKey.NOTIFICATION_STATUS);
+		routingKeys.add(RoutingKey.RESOLVED_EVENT);
+
+		rmqClient.startUp(brokerHostName, brokerPort, brokerUser, brokerPassword, queueName, routingKeys, this);
+
+		pubSubs.put(key, rmqClient);
+		rmqSubscriptionClients.add(rmqClient);
+	}
+
+	private void startJMSBroker(Map<String, BaseMessagingClient> pubSubs, String brokerHostName, Integer brokerPort,
+			String brokerUser, String brokerPassword) throws Exception {
+
+		String key = "JMS." + brokerHostName + ":" + brokerPort;
+
+		if (pubSubs.get(key) != null) {
+			// already started
+			return;
+		}
+
+		// new JMS client
+		JmsClient jmsClient = new JmsClient();
+		jmsClient.startUp(brokerHostName, brokerPort, brokerUser, brokerPassword, this);
+		jmsClient.consumeNotifications(true);
+
+		pubSubs.put(key, jmsClient);
+		jmsSubscriptionClients.add(jmsClient);
+	}
+
+	private void startMqttBroker(Map<String, BaseMessagingClient> pubSubs, String brokerHostName, Integer brokerPort,
+			String brokerUser, String brokerPassword) throws Exception {
+
+		String key = "MQTT." + brokerHostName + ":" + brokerPort;
+
+		if (pubSubs.get(key) != null) {
+			// already started
+			return;
+		}
+
+		// new MQTT client
+		MqttOeeClient mqttClient = new MqttOeeClient();
+		mqttClient.startUp(brokerHostName, brokerPort, brokerUser, brokerPassword, this);
+		mqttClient.subscribeToNotifications(QualityOfService.EXACTLY_ONCE);
+
+		pubSubs.put(key, mqttClient);
+		mqttSubscriptionClients.add(mqttClient);
+	}
+
+	private void handleMessage(ApplicationMessage message) {
 		MessageType type = message.getMessageType();
 
 		if (logger.isInfoEnabled()) {
@@ -213,18 +290,41 @@ public class MonitorApplication implements MessageListener {
 		}
 	}
 
+	@Override
+	public void onRmqMessage(ApplicationMessage message) throws Exception {
+		if (message == null) {
+			return;
+		}
+
+		// process it
+		handleMessage(message);
+	}
+
 	void sendStartupNotification() throws Exception {
-		// our host
+		// publish to self
 		CollectorNotificationMessage msg = new CollectorNotificationMessage(hostname, ip);
 
 		msg.setSeverity(NotificationSeverity.INFO);
 		msg.setText(MonitorLocalizer.instance().getLangString("monitor.startup"));
+		msg.setTimestamp(DomainUtils.offsetDateTimeToString(OffsetDateTime.now(), DomainUtils.OFFSET_DATE_TIME_8601));
 
 		try {
-			if (!notificationPubSubs.isEmpty()) {
-				MessagingClient pubSub = notificationPubSubs.get(0);
+			if (!rmqSubscriptionClients.isEmpty()) {
+				RmqClient pubSub = rmqSubscriptionClients.get(0);
 
-				pubSub.publish(msg, RoutingKey.NOTIFICATION_MESSAGE, NOTIFICATION_TTL_SEC);
+				pubSub.sendNotificationMessage(msg);
+			}
+
+			if (!jmsSubscriptionClients.isEmpty()) {
+				JmsClient pubSub = jmsSubscriptionClients.get(0);
+
+				pubSub.sendNotificationMessage(msg);
+			}
+
+			if (!mqttSubscriptionClients.isEmpty()) {
+				MqttOeeClient pubSub = mqttSubscriptionClients.get(0);
+
+				pubSub.sendNotificationMessage(msg);
 			}
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
@@ -233,22 +333,68 @@ public class MonitorApplication implements MessageListener {
 
 	void sendRestartCommand(DataCollector collector) throws Exception {
 		String key = collector.getBrokerHost() + ":" + collector.getBrokerPort();
-		MessagingClient pubSub = commandPubSubs.get(key);
 
-		if (pubSub == null) {
-			// new publisher
-			pubSub = new MessagingClient();
+		DataSourceType type = collector.getBrokerType();
 
-			pubSub.connect(collector.getBrokerHost(), collector.getBrokerPort(), collector.getBrokerUserName(),
-					collector.getBrokerUserPassword());
-
-			commandPubSubs.put(key, pubSub);
+		if (type == null) {
+			return;
 		}
 
 		// create the message
 		CollectorCommandMessage message = new CollectorCommandMessage(getHostname(), getIpAddress());
 		message.setCommand(CollectorCommandMessage.CMD_RESTART);
 
-		pubSub.publish(message, RoutingKey.COMMAND_MESSAGE, COMMAND_TTL_SEC);
+		if (type.equals(DataSourceType.RMQ)) {
+			RmqClient pubSub = rmqPublishingClients.get(key);
+
+			if (pubSub == null) {
+				// new publisher
+				pubSub = new RmqClient();
+
+				pubSub.connect(collector.getBrokerHost(), collector.getBrokerPort(), collector.getBrokerUserName(),
+						collector.getBrokerUserPassword());
+
+				rmqPublishingClients.put(key, pubSub);
+			}
+			pubSub.sendCommandMessage(message);
+
+		} else if (type.equals(DataSourceType.JMS)) {
+			JmsClient pubSub = jmsPublishingClients.get(key);
+
+			if (pubSub == null) {
+				// new publisher
+				pubSub = new JmsClient();
+
+				pubSub.connect(collector.getBrokerHost(), collector.getBrokerPort(), collector.getBrokerUserName(),
+						collector.getBrokerUserPassword());
+
+				jmsPublishingClients.put(key, pubSub);
+			}
+			pubSub.sendEventMessage(message);
+
+		} else if (type.equals(DataSourceType.MQTT)) {
+			MqttOeeClient pubSub = mqttPublishingClients.get(key);
+
+			if (pubSub == null) {
+				// new publisher
+				pubSub = new MqttOeeClient();
+
+				pubSub.connect(collector.getBrokerHost(), collector.getBrokerPort(), collector.getBrokerUserName(),
+						collector.getBrokerUserPassword());
+
+				mqttPublishingClients.put(key, pubSub);
+			}
+			pubSub.sendEventMessage(message);
+		}
+	}
+
+	@Override
+	public void onJmsMessage(ApplicationMessage message) {
+		handleMessage(message);
+	}
+
+	@Override
+	public void onMqttMessage(ApplicationMessage message) {
+		handleMessage(message);
 	}
 }

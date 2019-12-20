@@ -16,6 +16,7 @@ import org.point85.app.db.DatabaseTrendController;
 import org.point85.app.designer.DataCollectorController;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerLocalizer;
+import org.point85.app.designer.EntityWorkScheduleController;
 import org.point85.app.designer.EquipmentMaterialController;
 import org.point85.app.designer.EquipmentResolverController;
 import org.point85.app.file.FileShareController;
@@ -23,9 +24,9 @@ import org.point85.app.file.FileTrendController;
 import org.point85.app.http.HttpServerController;
 import org.point85.app.http.HttpTrendController;
 import org.point85.app.material.MaterialEditorController;
-import org.point85.app.messaging.JMSTrendController;
-import org.point85.app.messaging.MQTTTrendController;
-import org.point85.app.messaging.MessagingTrendController;
+import org.point85.app.messaging.JmsTrendController;
+import org.point85.app.messaging.MqttTrendController;
+import org.point85.app.messaging.RmqTrendController;
 import org.point85.app.messaging.MqBrokerController;
 import org.point85.app.modbus.ModbusMasterController;
 import org.point85.app.modbus.ModbusTrendController;
@@ -254,21 +255,21 @@ public class FXMLLoaderFactory {
 	}
 
 	public static FXMLLoader messagingTrendLoader() throws Exception {
-		FXMLLoader fxmlLoader = new FXMLLoader(MessagingTrendController.class.getResource("MessagingTrend.fxml"));
+		FXMLLoader fxmlLoader = new FXMLLoader(RmqTrendController.class.getResource("MessagingTrend.fxml"));
 		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
 
 	public static FXMLLoader jmsTrendLoader() throws Exception {
-		FXMLLoader fxmlLoader = new FXMLLoader(JMSTrendController.class.getResource("JMSTrend.fxml"));
+		FXMLLoader fxmlLoader = new FXMLLoader(JmsTrendController.class.getResource("JMSTrend.fxml"));
 		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
 
 	public static FXMLLoader mqttTrendLoader() throws Exception {
-		FXMLLoader fxmlLoader = new FXMLLoader(MQTTTrendController.class.getResource("MQTTTrend.fxml"));
+		FXMLLoader fxmlLoader = new FXMLLoader(MqttTrendController.class.getResource("MQTTTrend.fxml"));
 		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
@@ -311,6 +312,13 @@ public class FXMLLoaderFactory {
 
 	public static FXMLLoader equipmentMaterialLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(EquipmentMaterialController.class.getResource("EquipmentMaterial.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
+		fxmlLoader.load();
+		return fxmlLoader;
+	}
+	
+	public static FXMLLoader entityWorkScheduleLoader() throws Exception {
+		FXMLLoader fxmlLoader = new FXMLLoader(EntityWorkScheduleController.class.getResource("EntityWorkSchedule.fxml"));
 		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;

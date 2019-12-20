@@ -288,7 +288,7 @@
                               </AnchorPane>
                         </content>
                       </Tab>
-                        <Tab fx:id="tbPeriods" text="%non.working">
+                        <Tab fx:id="tbPeriods" text="%exception.periods">
                           <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
@@ -329,18 +329,18 @@
                                           <ComboBox fx:id="cbLosses" maxWidth="1.7976931348623157E308" promptText="%select.loss.cat" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                        </children>
                                     </GridPane>
-                                    <TableView fx:id="tvNonWorkingPeriods" layoutX="68.0" layoutY="282.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="130.0">
+                                    <TableView fx:id="tvExceptionPeriods" layoutX="68.0" layoutY="282.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="130.0">
                                       <columns>
                                         <TableColumn fx:id="periodNameColumn" prefWidth="100.0" text="%name" />
                                         <TableColumn fx:id="periodDescriptionColumn" prefWidth="200.0" text="%description" />
                                           <TableColumn fx:id="periodStartColumn" maxWidth="1.7976931348623157E308" prefWidth="100.0" text="%start" />
                                           <TableColumn fx:id="periodDurationColumn" prefWidth="75.0" text="%duration" />
-                                          <TableColumn fx:id="periodLossColumn" editable="false" prefWidth="75.0" text="%loss" />
+                                          <TableColumn fx:id="periodCatColumn" editable="false" prefWidth="75.0" text="%loss.cat.col" />
                                       </columns>
                                     </TableView>
-                                    <Button fx:id="btNewNonWorkingPeriod" layoutX="587.0" layoutY="120.0" mnemonicParsing="false" onAction="#onNewNonWorkingPeriod" prefWidth="100.0" text="%new" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="130.0" />
-                                    <Button fx:id="btAddNonWorkingPeriod" layoutX="587.0" layoutY="166.0" mnemonicParsing="false" onAction="#onAddNonWorkingPeriod" prefWidth="100.0" text="%add" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="180.0" />
-                                    <Button fx:id="btRemoveNonWorkingPeriod" layoutX="587.0" layoutY="212.0" mnemonicParsing="false" onAction="#onRemoveNonWorkingPeriod" prefWidth="100.0" text="%remove" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="230.0" />
+                                    <Button fx:id="btNewExceptionPeriod" layoutX="587.0" layoutY="120.0" mnemonicParsing="false" onAction="#onNewExceptionPeriod" prefWidth="100.0" text="%new" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="130.0" />
+                                    <Button fx:id="btAddExceptionPeriod" layoutX="587.0" layoutY="166.0" mnemonicParsing="false" onAction="#onAddExceptionPeriod" prefWidth="100.0" text="%add" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="180.0" />
+                                    <Button fx:id="btRemoveExceptionPeriod" layoutX="587.0" layoutY="212.0" mnemonicParsing="false" onAction="#onRemoveExceptionPeriod" prefWidth="100.0" text="%remove" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="230.0" />
                                  </children>
                               </AnchorPane>
                           </content>

@@ -98,6 +98,7 @@
                                     <TableColumn fx:id="tcMaterial" editable="false" prefWidth="150.0" text="%material" />
                                     <TableColumn fx:id="tcJob" editable="false" prefWidth="100.0" text="%job" />
                                     <TableColumn fx:id="tcSourceId" editable="false" prefWidth="300.0" text="%source" />
+                                    <TableColumn fx:id="tcCollector" prefWidth="100.0" text="%data.collector" />
                                 </columns>
                               </TableView>
                               <ButtonBar buttonMinWidth="0.0" layoutX="71.0" layoutY="-6.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="50.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">

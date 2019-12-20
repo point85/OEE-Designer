@@ -7,6 +7,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 
 import org.point85.app.designer.DesignerDialogController;
+import org.point85.domain.oee.TimeLoss;
 import org.point85.domain.schedule.Rotation;
 import org.point85.domain.schedule.Shift;
 import org.point85.domain.schedule.WorkSchedule;
@@ -532,16 +533,16 @@ public class TemplateScheduleDialogController extends DesignerDialogController {
 		WorkSchedule schedule = new WorkSchedule("Generic", "Regular 40 hour work week, two teams.");
 
 		// holidays
-		schedule.createNonWorkingPeriod("MEMORIAL DAY", "Memorial day", LocalDateTime.of(2016, 5, 30, 0, 0, 0),
-				Duration.ofHours(24));
-		schedule.createNonWorkingPeriod("INDEPENDENCE DAY", "Independence day", LocalDateTime.of(2016, 7, 4, 0, 0, 0),
-				Duration.ofHours(24));
-		schedule.createNonWorkingPeriod("LABOR DAY", "Labor day", LocalDateTime.of(2016, 9, 5, 0, 0, 0),
-				Duration.ofHours(24));
-		schedule.createNonWorkingPeriod("THANKSGIVING", "Thanksgiving day and day after",
-				LocalDateTime.of(2016, 11, 24, 0, 0, 0), Duration.ofHours(48));
-		schedule.createNonWorkingPeriod("CHRISTMAS SHUTDOWN", "Christmas week scheduled maintenance",
-				LocalDateTime.of(2016, 12, 25, 0, 30, 0), Duration.ofHours(168));
+		schedule.createExceptionPeriod("MEMORIAL DAY", "Memorial day", LocalDateTime.of(2016, 5, 30, 0, 0, 0),
+				Duration.ofHours(24), TimeLoss.NOT_SCHEDULED);
+		schedule.createExceptionPeriod("INDEPENDENCE DAY", "Independence day", LocalDateTime.of(2016, 7, 4, 0, 0, 0),
+				Duration.ofHours(24), TimeLoss.NOT_SCHEDULED);
+		schedule.createExceptionPeriod("LABOR DAY", "Labor day", LocalDateTime.of(2016, 9, 5, 0, 0, 0),
+				Duration.ofHours(24), TimeLoss.NOT_SCHEDULED);
+		schedule.createExceptionPeriod("THANKSGIVING", "Thanksgiving day and day after",
+				LocalDateTime.of(2016, 11, 24, 0, 0, 0), Duration.ofHours(48), TimeLoss.NOT_SCHEDULED);
+		schedule.createExceptionPeriod("CHRISTMAS SHUTDOWN", "Christmas week scheduled maintenance",
+				LocalDateTime.of(2016, 12, 25, 0, 30, 0), Duration.ofHours(168), TimeLoss.NOT_SCHEDULED);
 
 		// each shift duration
 		Duration shiftDuration = Duration.ofHours(8);

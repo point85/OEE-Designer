@@ -73,7 +73,7 @@ public abstract class AppUtils {
 		showAlert(AlertType.WARNING, DesignerLocalizer.instance().getLangString("app.warning"),
 				DesignerLocalizer.instance().getLangString("warning"), message);
 	}
-	
+
 	// display a informational dialog
 	public static void showInfoDialog(String message) {
 		showAlert(AlertType.INFORMATION, DesignerLocalizer.instance().getLangString("app.info"),
@@ -156,18 +156,28 @@ public abstract class AppUtils {
 		return Duration.ofSeconds(totalSeconds);
 	}
 
-	public static LocalTime localTimeFromString(String hrsMins) throws Exception {
-		String[] fields = hrsMins.split(":");
+	public static LocalTime localTimeFromString(String timeOfDay) throws Exception {
+		String[] fields = timeOfDay.split(":");
 
-		if (fields.length != 2) {
+		if (fields.length == 1) {
 			throw new Exception(DesignerLocalizer.instance().getErrorString("both.hours.and.minutes"));
 		}
 
-		return LocalTime.of(Integer.valueOf(fields[0]), Integer.valueOf(fields[1]));
+		int seconds = 0;
+		if (fields.length == 3) {
+			seconds = Integer.valueOf(fields[2]);
+		}
+		return LocalTime.of(Integer.valueOf(fields[0]), Integer.valueOf(fields[1]), seconds);
 	}
 
-	public static String stringFromLocalTime(LocalTime time) {
-		return String.format("%02d", time.getHour()) + ":" + String.format("%02d", time.getMinute());
+	public static String stringFromLocalTime(LocalTime time, boolean withSeconds) {
+		String dayTime = String.format("%02d", time.getHour()) + ":" + String.format("%02d", time.getMinute());
+
+		if (withSeconds) {
+			dayTime += ":" + String.format("%02d", time.getSecond());
+		}
+
+		return dayTime;
 	}
 
 	public static String stringFromDuration(Duration duration, boolean withSeconds) {

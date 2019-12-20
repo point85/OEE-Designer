@@ -39,21 +39,17 @@ import org.point85.domain.http.PlantEntityResponseDto;
 import org.point85.domain.http.ReasonDto;
 import org.point85.domain.http.ReasonResponseDto;
 import org.point85.domain.http.SourceIdResponseDto;
-import org.point85.domain.jms.JMSClient;
-import org.point85.domain.jms.JMSEquipmentEventListener;
+import org.point85.domain.jms.JmsClient;
+import org.point85.domain.jms.JmsMessageListener;
 import org.point85.domain.messaging.ApplicationMessage;
 import org.point85.domain.messaging.EquipmentEventMessage;
-import org.point85.domain.messaging.MessageListener;
-import org.point85.domain.messaging.MessagingClient;
-import org.point85.domain.messaging.RoutingKey;
 import org.point85.domain.modbus.ModbusEndpoint;
 import org.point85.domain.modbus.ModbusMaster;
 import org.point85.domain.modbus.ModbusSource;
 import org.point85.domain.modbus.ModbusUtils;
 import org.point85.domain.modbus.ModbusVariant;
-import org.point85.domain.mqtt.MQTTClient;
-import org.point85.domain.mqtt.MQTTEquipmentEventListener;
-import org.point85.domain.mqtt.QualityOfService;
+import org.point85.domain.mqtt.MqttMessageListener;
+import org.point85.domain.mqtt.MqttOeeClient;
 import org.point85.domain.oee.TimeLoss;
 import org.point85.domain.opc.da.DaOpcClient;
 import org.point85.domain.opc.da.OpcDaSource;
@@ -65,12 +61,12 @@ import org.point85.domain.plant.EntityLevel;
 import org.point85.domain.plant.Material;
 import org.point85.domain.plant.PlantEntity;
 import org.point85.domain.plant.Reason;
+import org.point85.domain.rmq.RmqClient;
+import org.point85.domain.rmq.RmqMessageListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Envelope;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -88,18 +84,18 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 
-public class TesterController implements MessageListener, JMSEquipmentEventListener, MQTTEquipmentEventListener {
+public class TesterController implements RmqMessageListener, JmsMessageListener, MqttMessageListener {
 	// logger
 	private static final Logger logger = LoggerFactory.getLogger(TesterController.class);
 
 	// RMQ message publisher/subscriber
-	private final Map<String, MessagingClient> rmqClients = new HashMap<>();
+	private final Map<String, RmqClient> rmqClients = new HashMap<>();
 
 	// JMS message publisher/subscriber
-	private final Map<String, JMSClient> jmsClients = new HashMap<>();
+	private final Map<String, JmsClient> jmsClients = new HashMap<>();
 
 	// MQTT message publisher/subscriber
-	private final Map<String, MQTTClient> mqttClients = new HashMap<>();
+	private final Map<String, MqttOeeClient> mqttClients = new HashMap<>();
 
 	// database client
 	private final Map<String, DatabaseEventClient> databaseClients = new HashMap<>();
@@ -264,39 +260,61 @@ public class TesterController implements MessageListener, JMSEquipmentEventListe
 
 	@FXML
 	private void onSelectSourceType() {
-		if (rbRMQ.isSelected()) {
-			populateDataSources(DataSourceType.MESSAGING);
-		} else if (rbJMS.isSelected()) {
-			populateDataSources(DataSourceType.JMS);
-		} else if (rbMQTT.isSelected()) {
-			populateDataSources(DataSourceType.MQTT);
-		} else if (rbHTTP.isSelected()) {
-			populateDataSources(DataSourceType.HTTP);
+		try {
+			if (rbRMQ.isSelected()) {
+				populateDataSources(DataSourceType.RMQ);
+			} else if (rbJMS.isSelected()) {
+				populateDataSources(DataSourceType.JMS);
+			} else if (rbMQTT.isSelected()) {
+				populateDataSources(DataSourceType.MQTT);
+			} else if (rbHTTP.isSelected()) {
+				populateDataSources(DataSourceType.HTTP);
 
-			// save the selected HTTP server
-			int idx = cbHost.getSelectionModel().getSelectedIndex();
-			httpSource = (HttpSource) cbHost.getItems().get(idx);
-		} else if (rbDatabase.isSelected()) {
-			populateDataSources(DataSourceType.DATABASE);
-		} else if (rbFile.isSelected()) {
-			populateDataSources(DataSourceType.FILE);
-		} else if (rbModbus.isSelected()) {
-			populateDataSources(DataSourceType.MODBUS);
-		} else if (rbOpcUa.isSelected()) {
-			populateDataSources(DataSourceType.OPC_UA);
-		} else if (rbOpcDa.isSelected()) {
-			populateDataSources(DataSourceType.OPC_DA);
+				// save the selected HTTP server
+				int idx = cbHost.getSelectionModel().getSelectedIndex();
+				if (idx != -1) {
+					httpSource = (HttpSource) cbHost.getItems().get(idx);
+				} else {
+					// use internal server
+					httpSource = launchHttpServer();
+				}
+			} else if (rbDatabase.isSelected()) {
+				populateDataSources(DataSourceType.DATABASE);
+			} else if (rbFile.isSelected()) {
+				populateDataSources(DataSourceType.FILE);
+			} else if (rbModbus.isSelected()) {
+				populateDataSources(DataSourceType.MODBUS);
+			} else if (rbOpcUa.isSelected()) {
+				populateDataSources(DataSourceType.OPC_UA);
+			} else if (rbOpcDa.isSelected()) {
+				populateDataSources(DataSourceType.OPC_DA);
+			}
+
+			tfValue.clear();
+			tfReason.clear();
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
 		}
+	}
 
-		tfValue.clear();
-		tfReason.clear();
+	private HttpSource launchHttpServer() throws Exception {
+		HttpSource dataSource = new HttpSource();
+		dataSource.setPort(OeeHttpServer.DEFAULT_PORT);
+		dataSource.setHost("localhost");
+		dataSource.setDescription("internal server");
+
+		OeeHttpServer httpServer = new OeeHttpServer(OeeHttpServer.DEFAULT_PORT);
+		// httpServer.setDataChangeListener(this);
+		httpServer.startup();
+
+		return dataSource;
 	}
 
 	@FXML
 	private void onSelectSource() {
 		try {
 			if (rbRMQ.isSelected()) {
-				populateSourceIds(DataSourceType.MESSAGING);
+				populateSourceIds(DataSourceType.RMQ);
 			} else if (rbJMS.isSelected()) {
 				populateSourceIds(DataSourceType.JMS);
 			} else if (rbMQTT.isSelected()) {
@@ -322,19 +340,19 @@ public class TesterController implements MessageListener, JMSEquipmentEventListe
 	public void stop() {
 		try {
 			// disconnect RMQ brokers
-			for (Entry<String, MessagingClient> entry : rmqClients.entrySet()) {
+			for (Entry<String, RmqClient> entry : rmqClients.entrySet()) {
 				entry.getValue().disconnect();
 			}
 			rmqClients.clear();
 
 			// disconnect JMS brokers
-			for (Entry<String, JMSClient> entry : jmsClients.entrySet()) {
+			for (Entry<String, JmsClient> entry : jmsClients.entrySet()) {
 				entry.getValue().disconnect();
 			}
 			jmsClients.clear();
 
 			// disconnect MQTT brokers
-			for (Entry<String, MQTTClient> entry : mqttClients.entrySet()) {
+			for (Entry<String, MqttOeeClient> entry : mqttClients.entrySet()) {
 				entry.getValue().disconnect();
 			}
 			mqttClients.clear();
@@ -731,7 +749,7 @@ public class TesterController implements MessageListener, JMSEquipmentEventListe
 		if (writeVariant == null) {
 			throw new Exception(TesterLocalizer.instance().getErrorString("no.data.type", value));
 		}
-		
+
 		// write the value
 		client.writeSynch(sourceId, writeVariant);
 
@@ -1062,7 +1080,7 @@ public class TesterController implements MessageListener, JMSEquipmentEventListe
 	}
 
 	@Override
-	public void onMessage(Channel channel, Envelope envelope, ApplicationMessage message) {
+	public void onRmqMessage(ApplicationMessage message) {
 		logger.warn("Received unhandled RMQ message: " + message.toString());
 	}
 
@@ -1097,42 +1115,41 @@ public class TesterController implements MessageListener, JMSEquipmentEventListe
 
 			if (rbRMQ.isSelected()) {
 
-				MessagingClient pubsub = rmqClients.get(hostPort);
+				RmqClient pubsub = rmqClients.get(hostPort);
 
 				if (pubsub == null) {
-					pubsub = new MessagingClient();
+					pubsub = new RmqClient();
 					rmqClients.put(hostPort, pubsub);
 
 					pubsub.connect(source.getHost(), source.getPort(), source.getUserName(), source.getUserPassword());
 				}
-				pubsub.publish(msg, RoutingKey.EQUIPMENT_SOURCE_EVENT, 30);
-
+				pubsub.sendEquipmentEventMessage(msg);
 				notification = TesterLocalizer.instance().getLangString("sent.message", source.getHost(),
 						source.getPort());
 			} else if (rbJMS.isSelected()) {
-				JMSClient jmsClient = jmsClients.get(hostPort);
+				JmsClient jmsClient = jmsClients.get(hostPort);
 
 				if (jmsClient == null) {
-					jmsClient = new JMSClient();
+					jmsClient = new JmsClient();
 					jmsClients.put(hostPort, jmsClient);
 
 					jmsClient.connect(source.getHost(), source.getPort(), source.getUserName(),
 							source.getUserPassword());
 				}
-				jmsClient.sendToQueue(msg, JMSClient.DEFAULT_QUEUE, 30);
+				jmsClient.sendEventMessage(msg);
 				notification = TesterLocalizer.instance().getLangString("sent.message", source.getHost(),
 						source.getPort());
 			} else if (rbMQTT.isSelected()) {
-				MQTTClient mqttClient = mqttClients.get(hostPort);
+				MqttOeeClient mqttClient = mqttClients.get(hostPort);
 
 				if (mqttClient == null) {
-					mqttClient = new MQTTClient();
+					mqttClient = new MqttOeeClient();
 					mqttClients.put(hostPort, mqttClient);
 
 					mqttClient.connect(source.getHost(), source.getPort(), source.getUserName(),
 							source.getUserPassword());
 				}
-				mqttClient.publish(msg, QualityOfService.AT_MOST_ONCE);
+				mqttClient.sendEventMessage(msg);
 				notification = TesterLocalizer.instance().getLangString("sent.message", source.getHost(),
 						source.getPort());
 			} else {
@@ -1178,7 +1195,7 @@ public class TesterController implements MessageListener, JMSEquipmentEventListe
 			ttvReasons.getSelectionModel().clearSelection();
 
 			lbNotification.setText(null);
-			
+
 			selectedEntity = null;
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
@@ -1186,12 +1203,12 @@ public class TesterController implements MessageListener, JMSEquipmentEventListe
 	}
 
 	@Override
-	public void onJMSEquipmentEvent(EquipmentEventMessage message) {
+	public void onJmsMessage(ApplicationMessage message) {
 		logger.info("Received AMQ message: " + message.toString());
 	}
 
 	@Override
-	public void onMQTTEquipmentEvent(EquipmentEventMessage message) {
+	public void onMqttMessage(ApplicationMessage message) {
 		logger.info("Received MQTT message: " + message.toString());
 	}
 }

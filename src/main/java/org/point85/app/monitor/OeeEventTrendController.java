@@ -125,9 +125,11 @@ public class OeeEventTrendController extends DesignerDialogController {
 		Equipment equipment = oeeRecords.get(0).getEquipment();
 		OeeEvent startingAvailability = PersistenceService.instance().fetchLastBoundEvent(equipment,
 				OeeEventType.AVAILABILITY, firstEventTime);
-		startingAvailability.setStartTime(firstEventTime);
 
-		plotOeeValue(startingAvailability);
+		if (startingAvailability != null) {
+			startingAvailability.setStartTime(firstEventTime);
+			plotOeeValue(startingAvailability);
+		}
 
 		// plot all the data
 		for (OeeEvent event : oeeRecords) {
@@ -137,9 +139,11 @@ public class OeeEventTrendController extends DesignerDialogController {
 		// create an availability point for the ending time
 		OeeEvent endingAvailability = PersistenceService.instance().fetchLastBoundEvent(equipment,
 				OeeEventType.AVAILABILITY, lastEventTime);
-		endingAvailability.setStartTime(lastEventTime);
 
-		plotOeeValue(endingAvailability);
+		if (endingAvailability != null) {
+			endingAvailability.setStartTime(lastEventTime);
+			plotOeeValue(endingAvailability);
+		}
 	}
 
 	private XYChart.Data<Number, String> createAvailabilityPoint(OeeEvent event) {
@@ -262,7 +266,7 @@ public class OeeEventTrendController extends DesignerDialogController {
 			nextPoint.getNode().setOnMouseClicked(e -> showProductionInfo(event));
 			break;
 		}
-		
+
 		case PROD_REJECT: {
 			// plot reject production point
 			XYChart.Data<Number, Number> nextPoint = createProductionPoint(event);
@@ -270,7 +274,7 @@ public class OeeEventTrendController extends DesignerDialogController {
 			nextPoint.getNode().setOnMouseClicked(e -> showProductionInfo(event));
 			break;
 		}
-		
+
 		case PROD_STARTUP: {
 			// plot good production point
 			XYChart.Data<Number, Number> nextPoint = createProductionPoint(event);
