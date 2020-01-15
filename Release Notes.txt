@@ -114,4 +114,7 @@ Note that version 2.5.0 has the following schema changes:
 (3)  Added COLLECTOR varchar column to OEE_EVENT table
 (4)  Added ENTITY_SCHEDULE table
 
+(23) 2.5.1, January 15, 2020:
+	- Updated Milo to version 0.3.7
+
 Please send comments and suggestions to point85.llc@gmail.com.
