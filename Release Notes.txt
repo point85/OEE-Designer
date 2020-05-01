@@ -116,5 +116,13 @@ Note that version 2.5.0 has the following schema changes:
 
 (23) 2.5.1, January 15, 2020:
 	- Updated Milo to version 0.3.7
+	
+(24) 2.6.0, May 1, 2020:
+    - Added a cron job event source
+	- Updated Milo to version 0.4.1
+	- Updated RabbitMQ client to version 5.9.0
+	- Updated ActiveMQ client to version 5.15.12
+	- Updated j2mod to version 2.6.4
+	
 
 Please send comments and suggestions to point85.llc@gmail.com.

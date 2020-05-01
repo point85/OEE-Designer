@@ -24,6 +24,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.PasswordField;
@@ -199,6 +200,14 @@ public class MqBrokerController extends DesignerDialogController {
 		try {
 			// delete
 			if (dataSource != null) {
+				// confirm
+				ButtonType type = AppUtils.showConfirmationDialog(
+						DesignerLocalizer.instance().getLangString("object.delete", dataSource.toString()));
+
+				if (type.equals(ButtonType.CANCEL)) {
+					return;
+				}
+				
 				PersistenceService.instance().delete(dataSource);
 				brokers.remove(dataSource);
 

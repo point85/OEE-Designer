@@ -16,6 +16,7 @@ import java.util.Optional;
 
 import org.eclipse.milo.opcua.stack.core.BuiltinDataType;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
+import org.eclipse.milo.opcua.stack.core.types.builtin.ExpandedNodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.Variant;
 import org.point85.app.AppUtils;
@@ -24,6 +25,9 @@ import org.point85.app.Images;
 import org.point85.domain.DomainUtils;
 import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.DataSourceType;
+import org.point85.domain.cron.CronEventClient;
+import org.point85.domain.cron.CronEventListener;
+import org.point85.domain.cron.CronEventSource;
 import org.point85.domain.db.DatabaseEvent;
 import org.point85.domain.db.DatabaseEventClient;
 import org.point85.domain.db.DatabaseEventSource;
@@ -63,11 +67,13 @@ import org.point85.domain.plant.PlantEntity;
 import org.point85.domain.plant.Reason;
 import org.point85.domain.rmq.RmqClient;
 import org.point85.domain.rmq.RmqMessageListener;
+import org.quartz.JobExecutionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -84,7 +90,8 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 
-public class TesterController implements RmqMessageListener, JmsMessageListener, MqttMessageListener {
+public class TesterController
+		implements RmqMessageListener, JmsMessageListener, MqttMessageListener, CronEventListener {
 	// logger
 	private static final Logger logger = LoggerFactory.getLogger(TesterController.class);
 
@@ -97,11 +104,14 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 	// MQTT message publisher/subscriber
 	private final Map<String, MqttOeeClient> mqttClients = new HashMap<>();
 
-	// database client
+	// database clients
 	private final Map<String, DatabaseEventClient> databaseClients = new HashMap<>();
 
-	// file client
+	// file clients
 	private final Map<String, FileEventClient> fileClients = new HashMap<>();
+
+	// cron clients
+	private final Map<String, CronEventClient> cronClients = new HashMap<>();
 
 	// Modbus master
 	private final Map<String, ModbusMaster> modbusMasters = new HashMap<>();
@@ -211,6 +221,9 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 	private RadioButton rbModbus;
 
 	@FXML
+	private RadioButton rbCron;
+
+	@FXML
 	private RadioButton rbDatabase;
 
 	@FXML
@@ -284,6 +297,8 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 				populateDataSources(DataSourceType.FILE);
 			} else if (rbModbus.isSelected()) {
 				populateDataSources(DataSourceType.MODBUS);
+			} else if (rbCron.isSelected()) {
+				populateDataSources(DataSourceType.CRON);
 			} else if (rbOpcUa.isSelected()) {
 				populateDataSources(DataSourceType.OPC_UA);
 			} else if (rbOpcDa.isSelected()) {
@@ -327,6 +342,8 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 				populateSourceIds(DataSourceType.FILE);
 			} else if (rbModbus.isSelected()) {
 				populateSourceIds(DataSourceType.MODBUS);
+			} else if (rbCron.isSelected()) {
+				populateSourceIds(DataSourceType.CRON);
 			} else if (rbOpcUa.isSelected()) {
 				populateSourceIds(DataSourceType.OPC_UA);
 			} else if (rbOpcDa.isSelected()) {
@@ -590,6 +607,8 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 				onWriteFileEvent();
 			} else if (rbModbus.isSelected()) {
 				onWriteModbusEvent();
+			} else if (rbCron.isSelected()) {
+				onTriggerCronEvent();
 			} else if (rbOpcUa.isSelected()) {
 				onWriteOpcUaEvent();
 			} else if (rbOpcDa.isSelected()) {
@@ -627,6 +646,25 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 		}
 
 		lbNotification.setText(TesterLocalizer.instance().getLangString("inserted.event", sourceId));
+	}
+
+	private void onTriggerCronEvent() throws Exception {
+		int idx = cbHost.getSelectionModel().getSelectedIndex();
+		CronEventSource source = (CronEventSource) cbHost.getItems().get(idx);
+
+		String expression = source.getCronExpression();
+		String jobName = source.getName();
+
+		CronEventClient cronClient = cronClients.get(jobName);
+
+		if (cronClient == null) {
+			List<String> expressions = new ArrayList<>();
+			expressions.add(expression);
+			cronClient = new CronEventClient(this, expressions);
+			cronClients.put(jobName, cronClient);
+		}
+
+		cronClient.runJob(jobName);
 	}
 
 	private void onWriteFileEvent() throws Exception {
@@ -783,9 +821,9 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 		DataValue dataValue = client.readSynch(nodeId);
 
 		// data type
-		Optional<NodeId> dataType = dataValue.getValue().getDataType();
+		Optional<ExpandedNodeId> dataType = dataValue.getValue().getDataType();
 
-		NodeId nodeDataType = null;
+		ExpandedNodeId nodeDataType = null;
 		if (dataType.isPresent()) {
 			nodeDataType = dataType.get();
 		} else {
@@ -1210,5 +1248,25 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 	@Override
 	public void onMqttMessage(ApplicationMessage message) {
 		logger.info("Received MQTT message: " + message.toString());
+	}
+
+	@Override
+	public void resolveCronEvent(JobExecutionContext context) {
+		Platform.runLater(() -> {
+			String jobName = context.getJobDetail().getKey().getName();
+			String sourceId = (String) context.get(CronEventClient.SOURCE_ID_KEY);
+
+			logger.info("Cron callback for source id '" + sourceId + "' for job " + jobName);
+
+			int idx = cbHost.getSelectionModel().getSelectedIndex();
+
+			String expression = "";
+			if (idx != -1) {
+				CronEventSource source = (CronEventSource) cbHost.getItems().get(idx);
+				expression = source.getCronExpression();
+			}
+
+			lbNotification.setText(TesterLocalizer.instance().getLangString("triggered.job", jobName, expression));
+		});
 	}
 }

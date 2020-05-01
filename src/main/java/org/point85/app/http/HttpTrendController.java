@@ -194,10 +194,10 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 	}
 
 	@Override
-	public void onHttpEquipmentEvent(String sourceId, String dataValue, String timestamp, String reason) {
-		OffsetDateTime odt = DomainUtils.offsetDateTimeFromString(timestamp, DomainUtils.OFFSET_DATE_TIME_8601);
+	public void onHttpEquipmentEvent(EquipmentEventRequestDto dto) {
+		OffsetDateTime odt = DomainUtils.offsetDateTimeFromString(dto.getTimestamp(), DomainUtils.OFFSET_DATE_TIME_8601);
 
-		ResolutionService service = new ResolutionService(dataValue, odt, reason);
+		ResolutionService service = new ResolutionService(dto.getValue(), odt, dto.getReason());
 
 		service.setOnFailed(new EventHandler<WorkerStateEvent>() {
 			@Override

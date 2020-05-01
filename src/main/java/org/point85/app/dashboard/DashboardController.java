@@ -1576,13 +1576,15 @@ public class DashboardController extends DialogController implements CategoryCli
 				// availability reason
 				Reason reason = lastAvailability.getReason();
 
-				tiAvailability.setText(reason.getName() + " (" + reason.getDescription() + ")");
+				if (reason != null) {
+					tiAvailability.setText(reason.getName() + " (" + reason.getDescription() + ")");
 
-				// loss category
-				TimeLoss loss = reason.getLossCategory();
-				if (loss != null) {
-					tiAvailability.setDescription(loss.toString());
-					tiAvailability.setDescriptionColor(loss.getColor());
+					// loss category
+					TimeLoss loss = reason.getLossCategory();
+					if (loss != null) {
+						tiAvailability.setDescription(loss.toString());
+						tiAvailability.setDescriptionColor(loss.getColor());
+					}
 				}
 			}
 

@@ -7,7 +7,7 @@ import java.util.Set;
 
 import org.eclipse.milo.opcua.stack.core.BuiltinDataType;
 import org.eclipse.milo.opcua.stack.core.NamespaceTable;
-import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
+import org.eclipse.milo.opcua.stack.core.types.builtin.ExpandedNodeId;
 import org.point85.app.AppUtils;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
@@ -15,6 +15,7 @@ import org.point85.app.opc.ua.OpcUaTreeNode;
 import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.DataCollector;
 import org.point85.domain.collector.DataSourceType;
+import org.point85.domain.cron.CronEventSource;
 import org.point85.domain.db.DatabaseEventSource;
 import org.point85.domain.file.FileEventSource;
 import org.point85.domain.http.HttpSource;
@@ -425,6 +426,10 @@ public class EquipmentResolverController extends DesignerController {
 			buttonImage = ImageManager.instance().getImageView(Images.FILE);
 			setUpdatePeriod = true;
 			break;
+		case CRON:
+			buttonImage = ImageManager.instance().getImageView(Images.CRON);
+			setUpdatePeriod = true;
+			break;
 		case MODBUS:
 			buttonImage = ImageManager.instance().getImageView(Images.MODBUS);
 			setUpdatePeriod = true;
@@ -500,7 +505,7 @@ public class EquipmentResolverController extends DesignerController {
 				tfServerId.setText(dataSource.getId());
 
 				// data type
-				NodeId nodeDataType = node.getNodeDataType();
+				ExpandedNodeId nodeDataType = node.getNodeDataType();
 				Class<?> javaType = BuiltinDataType.getBackingClass(nodeDataType);
 				lbDataType.setText(javaType.getSimpleName());
 
@@ -563,12 +568,24 @@ public class EquipmentResolverController extends DesignerController {
 
 				lbDataType.setText(endPoint.getDataType().toString());
 				tfSourceId.setText(sourceId);
+			} else if (sourceType.equals(DataSourceType.CRON)) {
+				// show Cron editor
+				CronEventSource dataSource = getApp().showCronEditor();
+				tfServerId.setText(dataSource.getId());
+
+				getSelectedResolver().setDataSource(dataSource);
+
+				lbDataType.setText(String.class.getSimpleName());
+
+				setDefaultSourceId();
 
 			} else {
 				throw new Exception(DesignerLocalizer.instance().getErrorString("unknown.type", sourceType));
 			}
 
-		} catch (Exception e) {
+		} catch (
+
+		Exception e) {
 			AppUtils.showErrorDialog(e);
 		}
 	}
@@ -790,6 +807,8 @@ public class EquipmentResolverController extends DesignerController {
 				getApp().showFileTrendDialog(selectedEventResolver);
 			} else if (type.equals(DataSourceType.MODBUS)) {
 				getApp().showModbusTrendDialog(selectedEventResolver);
+			} else if (type.equals(DataSourceType.CRON)) {
+				getApp().showCronTrendDialog(selectedEventResolver);
 			}
 
 		} catch (Exception e) {

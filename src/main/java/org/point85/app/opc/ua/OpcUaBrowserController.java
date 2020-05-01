@@ -12,6 +12,7 @@ import org.eclipse.milo.opcua.stack.core.NamespaceTable;
 import org.eclipse.milo.opcua.stack.core.security.SecurityPolicy;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DateTime;
+import org.eclipse.milo.opcua.stack.core.types.builtin.ExpandedNodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.Variant;
 import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
@@ -38,6 +39,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
@@ -248,7 +250,7 @@ public class OpcUaBrowserController extends OpcUaController {
 		ReferenceDescription ref = treeNode.getReferenceDescription();
 
 		NodeClass nodeClass = ref.getNodeClass();
-		NodeId nodeDataType = null;
+		ExpandedNodeId nodeDataType = null;
 		Class<?> javaType = null;
 		boolean clazzIsArray = false;
 
@@ -266,7 +268,7 @@ public class OpcUaBrowserController extends OpcUaController {
 				clazzIsArray = value.getClass().isArray();
 
 				// data type
-				Optional<NodeId> dataType = dataValue.getValue().getDataType();
+				Optional<ExpandedNodeId> dataType = dataValue.getValue().getDataType();
 
 				if (dataType.isPresent()) {
 					nodeDataType = dataType.get();
@@ -372,8 +374,11 @@ public class OpcUaBrowserController extends OpcUaController {
 			if (status != null) {
 				// state
 				ServerState serverState = status.getState();
-				lbState.setText(serverState.toString());
-				lbState.setTextFill(ConnectionState.CONNECTED_COLOR);
+
+				if (serverState != null) {
+					lbState.setText(serverState.toString());
+					lbState.setTextFill(ConnectionState.CONNECTED_COLOR);
+				}
 
 				// start time
 				OffsetDateTime start = DomainUtils.utcTimeFromDateTime(status.getStartTime());
@@ -548,7 +553,16 @@ public class OpcUaBrowserController extends OpcUaController {
 		try {
 			// delete
 			OpcUaSource source = getSource();
+
 			if (source != null) {
+				// confirm
+				ButtonType type = AppUtils.showConfirmationDialog(
+						DesignerLocalizer.instance().getLangString("object.delete", source.toString()));
+
+				if (type.equals(ButtonType.CANCEL)) {
+					return;
+				}
+
 				PersistenceService.instance().delete(source);
 				servers.remove(getSource().getName());
 				cbDataSources.setItems(servers);

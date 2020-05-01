@@ -233,6 +233,12 @@ public final class ImageManager {
 		case AVAILABILITY:
 			image = new Image(path + "Availability.png", DIM, DIM, true, true);
 			break;
+		case HELP:
+			image = new Image(path + "Info.png", DIM, DIM, true, true);
+			break;
+		case CRON:
+			image = new Image(path + "Clock.png", DIM, DIM, true, true);
+			break;
 		default:
 			image = new Image(path + "Folder.png", DIM, DIM, true, true);
 			break;

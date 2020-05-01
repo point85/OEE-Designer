@@ -78,9 +78,10 @@
             <Label text="%msg.user.password" GridPane.halignment="RIGHT" GridPane.rowIndex="11" />
             <TextField fx:id="tfBrokerUserName" promptText="%enter.msg.user.name" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="10" />
             <PasswordField fx:id="pfBrokerUserPassword" promptText="%enter.msg.user.password" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="11" />
-            <Button fx:id="btTest" mnemonicParsing="false" onAction="#onTest" prefWidth="100.0" text="%test" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="7" />
+            <Button fx:id="btTest" mnemonicParsing="false" onAction="#onTest" prefWidth="100.0" text="%test" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
             <Label text="%server.type" GridPane.halignment="RIGHT" GridPane.rowIndex="7" />
             <ComboBox fx:id="cbNotificationServers" onAction="#onSelectSourceType" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+            <Button fx:id="btClearServers" mnemonicParsing="false" onAction="#onClearServers" prefHeight="16.0" prefWidth="16.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="7" />
          </children>
       </GridPane>
    </children>

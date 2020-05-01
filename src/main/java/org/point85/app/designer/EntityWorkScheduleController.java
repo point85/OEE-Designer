@@ -231,20 +231,28 @@ public class EntityWorkScheduleController extends DesignerController {
 			}
 
 			// start date
-			LocalDate startDate = this.dpPeriodStartDate.getValue();
+			LocalDate startDate = dpPeriodStartDate.getValue();
 
 			// start time of day
-			String start = this.tfPeriodStartTime.getText().trim();
-			LocalTime startTime = AppUtils.localTimeFromString(start);
-			LocalDateTime startDateTime = LocalDateTime.of(startDate, startTime);
+			LocalDateTime startDateTime = null;
+
+			if (tfPeriodStartTime.getText() != null) {
+				String start = tfPeriodStartTime.getText().trim();
+				LocalTime startTime = AppUtils.localTimeFromString(start);
+				startDateTime = LocalDateTime.of(startDate, startTime);
+			}
 
 			// end date
-			LocalDate endDate = this.dpPeriodEndDate.getValue();
+			LocalDate endDate = dpPeriodEndDate.getValue();
 
 			// end time of day
-			String end = this.tfPeriodEndTime.getText().trim();
-			LocalTime endTime = AppUtils.localTimeFromString(end);
-			LocalDateTime endDateTime = LocalDateTime.of(endDate, endTime);
+			LocalDateTime endDateTime = null;
+
+			if (tfPeriodEndTime.getText() != null) {
+				String end = tfPeriodEndTime.getText().trim();
+				LocalTime endTime = AppUtils.localTimeFromString(end);
+				endDateTime = LocalDateTime.of(endDate, endTime);
+			}
 
 			PlantEntity plantEntity = getApp().getPhysicalModelController().getSelectedEntity();
 			currentEntitySchedule.setPlantEntity(plantEntity);
@@ -309,7 +317,7 @@ public class EntityWorkScheduleController extends DesignerController {
 		dpPeriodStartDate.setValue(schedule.getStartDateTime().toLocalDate());
 		LocalTime startTime = schedule.getStartDateTime().toLocalTime();
 		this.tfPeriodStartTime.setText(AppUtils.stringFromLocalTime(startTime, true));
-		
+
 		// end
 		dpPeriodEndDate.setValue(schedule.getEndDateTime().toLocalDate());
 		LocalTime endTime = schedule.getEndDateTime().toLocalTime();

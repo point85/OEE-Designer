@@ -110,6 +110,9 @@ public class PhysicalModelController extends DesignerController {
 
 	@FXML
 	private Button btFileShareEditor;
+	
+	@FXML
+	private Button btCronEditor;
 
 	@FXML
 	private Button btCollectorEditor;
@@ -383,6 +386,9 @@ public class PhysicalModelController extends DesignerController {
 
 		btFileShareEditor.setGraphic(ImageManager.instance().getImageView(Images.FILE));
 		btFileShareEditor.setTooltip(new Tooltip(i18n.getString("file.tt")));
+		
+		btCronEditor.setGraphic(ImageManager.instance().getImageView(Images.CRON));
+		btCronEditor.setTooltip(new Tooltip(i18n.getString("cron.tt")));
 
 		btCollectorEditor.setGraphic(ImageManager.instance().getImageView(Images.COLLECTOR));
 		btCollectorEditor.setTooltip(new Tooltip(i18n.getString("collector.tt")));
@@ -492,6 +498,15 @@ public class PhysicalModelController extends DesignerController {
 	private void onShowFileShareEditor() {
 		try {
 			this.getApp().showFileShareEditor();
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+	
+	@FXML
+	private void onShowCronEditor() {
+		try {
+			this.getApp().showCronEditor();
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}

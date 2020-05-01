@@ -18,6 +18,7 @@ Sources of equipment availability, performance and quality event data include:
 * Database Interface Table:  a pre-defined table for inserting OEE events
 * File Share:  a server hosting OEE event files
 * Modbus: a Modbus master communicating with its slaves.
+* Cron Job: a cron job scheduled to execute at specified points in time
 
 The Point85 applications supporting OEE are:
 * Designer:  a GUI application for defining the plant equipment, data sources, event resolution scripts, manufacturing work schedule, availability reasons, produced materials and units of measure for data collectors.  The designer also includes a dashboard and trending capabilities.
@@ -107,3 +108,6 @@ All applications with user-visible text use resource bundles for localization.  
 ## Database
 The Java Persistence 2.2 API (JPA) as implemented by the Hibernate ORM framework together with the Hikari connection pool is used to persist OEE information to the database. 
 Hibernate and JPA abstract-away database specific aspects of inserting, updating, reading and deleting records in the tables.  The API is designed to work with any relational database supported by Hibernate.  
+
+## What's New
+In version 2.6.0, cron job support was added.  A job has a cron expression as triggered by the Quartz scheduler.  The job executes a resolver script.

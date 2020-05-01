@@ -1,14 +1,15 @@
 package org.point85.app.opc.ua;
 
 import org.eclipse.milo.opcua.stack.core.NamespaceTable;
+import org.eclipse.milo.opcua.stack.core.types.builtin.ExpandedNodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.NodeClass;
 import org.eclipse.milo.opcua.stack.core.types.structured.ReferenceDescription;
 
 public class OpcUaTreeNode {
-	private NodeId nodeDataType;
+	private ExpandedNodeId nodeDataType;
 	private boolean browsed = false;
-	
+
 	private ReferenceDescription referenceDescription;
 
 	public OpcUaTreeNode(ReferenceDescription referenceDescription) {
@@ -52,11 +53,11 @@ public class OpcUaTreeNode {
 		this.browsed = browsed;
 	}
 
-	public NodeId getNodeDataType() {
+	public ExpandedNodeId getNodeDataType() {
 		return nodeDataType;
 	}
 
-	public void setNodeDataType(NodeId nodeDataType) {
+	public void setNodeDataType(ExpandedNodeId nodeDataType) {
 		this.nodeDataType = nodeDataType;
 	}
 }

@@ -4,6 +4,9 @@ import org.point85.app.AppUtils;
 import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
+import org.point85.app.cron.CronEditorController;
+import org.point85.app.cron.CronHelpController;
+import org.point85.app.cron.CronTrendController;
 import org.point85.app.dashboard.DashboardController;
 import org.point85.app.dashboard.DashboardDialogController;
 import org.point85.app.db.DatabaseServerController;
@@ -14,9 +17,9 @@ import org.point85.app.http.HttpServerController;
 import org.point85.app.http.HttpTrendController;
 import org.point85.app.material.MaterialEditorController;
 import org.point85.app.messaging.JmsTrendController;
+import org.point85.app.messaging.MqBrokerController;
 import org.point85.app.messaging.MqttTrendController;
 import org.point85.app.messaging.RmqTrendController;
-import org.point85.app.messaging.MqBrokerController;
 import org.point85.app.modbus.ModbusMasterController;
 import org.point85.app.modbus.ModbusTrendController;
 import org.point85.app.opc.da.OpcDaBrowserController;
@@ -33,6 +36,7 @@ import org.point85.domain.DomainUtils;
 import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.DataCollector;
 import org.point85.domain.collector.DataSourceType;
+import org.point85.domain.cron.CronEventSource;
 import org.point85.domain.db.DatabaseEventSource;
 import org.point85.domain.file.FileEventSource;
 import org.point85.domain.http.HttpSource;
@@ -497,6 +501,52 @@ public class DesignerApplication {
 		return fileShareController.getSource();
 	}
 
+	CronEventSource showCronEditor() throws Exception {
+		FXMLLoader loader = FXMLLoaderFactory.cronEditorLoader();
+		AnchorPane page = (AnchorPane) loader.getRoot();
+
+		// Create the dialog Stage.
+		Stage dialogStage = new Stage(StageStyle.DECORATED);
+		dialogStage.setTitle(DesignerLocalizer.instance().getLangString("cron.editor.title"));
+		dialogStage.initModality(Modality.WINDOW_MODAL);
+		Scene scene = new Scene(page);
+		dialogStage.setScene(scene);
+
+		// get the controller
+		CronEditorController cronController = loader.getController();
+		cronController.setDialogStage(dialogStage);
+		cronController.initialize(this);
+
+		// Show the dialog and wait until the user closes it
+		if (!cronController.getDialogStage().isShowing()) {
+			cronController.getDialogStage().showAndWait();
+		}
+
+		return cronController.getSource();
+	}
+
+	public void showCronHelp() throws Exception {
+		FXMLLoader loader = FXMLLoaderFactory.cronHelpLoader();
+		AnchorPane page = (AnchorPane) loader.getRoot();
+
+		// Create the dialog Stage.
+		Stage dialogStage = new Stage(StageStyle.DECORATED);
+		dialogStage.setTitle(DesignerLocalizer.instance().getLangString("cron.help.title"));
+		dialogStage.initModality(Modality.WINDOW_MODAL);
+		Scene scene = new Scene(page);
+		dialogStage.setScene(scene);
+
+		// get the controller
+		CronHelpController controller = loader.getController();
+		controller.setDialogStage(dialogStage);
+		controller.readHelpFile();
+
+		// Show the dialog and wait until the user closes it
+		if (!controller.getDialogStage().isShowing()) {
+			controller.getDialogStage().showAndWait();
+		}
+	}
+
 	DataCollector showCollectorEditor() throws Exception {
 		if (dataCollectorController == null) {
 			FXMLLoader loader = FXMLLoaderFactory.dataCollectorLoader();
@@ -843,11 +893,48 @@ public class DesignerApplication {
 		// set the script resolver
 		fileTrendController.setEventResolver(eventResolver);
 
-		// connect to the database server
+		// connect to the file server
 		fileTrendController.subscribeToDataSource();
 
 		// show the window
 		fileTrendController.getDialogStage().show();
+	}
+
+	void showCronTrendDialog(EventResolver eventResolver) throws Exception {
+		// Load the fxml file and create a new stage for the pop-up dialog.
+		FXMLLoader loader = FXMLLoaderFactory.cronTrendLoader();
+		AnchorPane page = (AnchorPane) loader.getRoot();
+
+		// Create the dialog Stage.
+		Stage dialogStage = new Stage(StageStyle.DECORATED);
+		dialogStage.setTitle(DesignerLocalizer.instance().getLangString("cron.event.trend"));
+		dialogStage.initModality(Modality.NONE);
+		Scene scene = new Scene(page);
+		dialogStage.setScene(scene);
+
+		// get the controller
+		CronTrendController cronTrendController = loader.getController();
+		cronTrendController.setDialogStage(dialogStage);
+		cronTrendController.setApp(this);
+
+		// add the trend chart
+		SplitPane chartPane = cronTrendController.initializeTrend();
+
+		AnchorPane.setBottomAnchor(chartPane, 50.0);
+		AnchorPane.setLeftAnchor(chartPane, 5.0);
+		AnchorPane.setRightAnchor(chartPane, 5.0);
+		AnchorPane.setTopAnchor(chartPane, 50.0);
+
+		page.getChildren().add(0, chartPane);
+
+		// set the script resolver
+		cronTrendController.setEventResolver(eventResolver);
+
+		// start the job
+		cronTrendController.subscribeToDataSource();
+
+		// show the window
+		cronTrendController.getDialogStage().show();
 	}
 
 	void showModbusTrendDialog(EventResolver eventResolver) throws Exception {

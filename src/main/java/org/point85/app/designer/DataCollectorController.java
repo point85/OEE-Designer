@@ -20,6 +20,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.PasswordField;
@@ -78,6 +79,9 @@ public class DataCollectorController extends DialogController {
 
 	@FXML
 	private ComboBox<DataSourceType> cbNotificationServers;
+	
+	@FXML
+	private Button btClearServers;
 
 	public void initialize(DesignerApplication app) throws Exception {
 		// button images
@@ -124,6 +128,10 @@ public class DataCollectorController extends DialogController {
 		// test
 		btTest.setGraphic(ImageManager.instance().getImageView(Images.EXECUTE));
 		btTest.setContentDisplay(ContentDisplay.LEFT);
+		
+		// clear servers
+		btClearServers.setGraphic(ImageManager.instance().getImageView(Images.CLEAR));
+		btClearServers.setContentDisplay(ContentDisplay.LEFT);
 	}
 
 	public DataCollector getCollector() {
@@ -199,6 +207,14 @@ public class DataCollectorController extends DialogController {
 			DataCollector definition = getCollector();
 
 			if (definition != null) {
+				// confirm
+				ButtonType type = AppUtils.showConfirmationDialog(
+						DesignerLocalizer.instance().getLangString("object.delete", definition.toString()));
+
+				if (type.equals(ButtonType.CANCEL)) {
+					return;
+				}
+				
 				PersistenceService.instance().delete(definition);
 				collectors.remove(definition.getName());
 
@@ -370,4 +386,13 @@ public class DataCollectorController extends DialogController {
 			this.tfBrokerPort.setText(String.valueOf(MQTT_DEFAULT_PORT));
 		}
 	}
-}
+	
+	@FXML
+	private void onClearServers() {
+		cbNotificationServers.getSelectionModel().clearSelection();
+		tfBrokerHost.clear();
+		tfBrokerPort.clear();
+		tfBrokerUserName.clear();
+		pfBrokerUserPassword.clear();
+	}
+} 

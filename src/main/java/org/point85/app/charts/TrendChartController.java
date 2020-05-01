@@ -298,7 +298,7 @@ public class TrendChartController extends DesignerController {
 			throws Exception {
 		eventResolver.setReason(reason);
 		OeeEvent resolvedEvent = equipmentResolver.invokeResolver(eventResolver, context, sourceValue, dateTime);
-		
+
 		if (resolvedEvent == null) {
 			return null;
 		}
@@ -354,7 +354,12 @@ public class TrendChartController extends DesignerController {
 
 	private synchronized void addEvent(OeeEvent event) {
 		if (resolvedItems.size() > dataCount) {
-			resolvedItems.remove(0);
+			try {
+				resolvedItems.remove(0);
+			} catch (Exception e) {
+				// the Open JDK JRE is throwing an exception here which does not appear to be
+				// valid
+			}
 		}
 		resolvedItems.add(event);
 

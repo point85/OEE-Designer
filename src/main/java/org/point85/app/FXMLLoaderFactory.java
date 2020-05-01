@@ -6,6 +6,9 @@ import org.point85.app.charts.SampleChartController;
 import org.point85.app.charts.TrendChartController;
 import org.point85.app.collector.CollectorApplication;
 import org.point85.app.collector.CollectorLocalizer;
+import org.point85.app.cron.CronEditorController;
+import org.point85.app.cron.CronHelpController;
+import org.point85.app.cron.CronTrendController;
 import org.point85.app.dashboard.AvailabilityEditorController;
 import org.point85.app.dashboard.DashboardController;
 import org.point85.app.dashboard.DashboardDialogController;
@@ -25,9 +28,9 @@ import org.point85.app.http.HttpServerController;
 import org.point85.app.http.HttpTrendController;
 import org.point85.app.material.MaterialEditorController;
 import org.point85.app.messaging.JmsTrendController;
+import org.point85.app.messaging.MqBrokerController;
 import org.point85.app.messaging.MqttTrendController;
 import org.point85.app.messaging.RmqTrendController;
-import org.point85.app.messaging.MqBrokerController;
 import org.point85.app.modbus.ModbusMasterController;
 import org.point85.app.modbus.ModbusTrendController;
 import org.point85.app.monitor.MonitorApplication;
@@ -218,6 +221,20 @@ public class FXMLLoaderFactory {
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
+	
+	public static FXMLLoader cronEditorLoader() throws Exception {
+		FXMLLoader fxmlLoader = new FXMLLoader(CronEditorController.class.getResource("CronEditor.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
+		fxmlLoader.load();
+		return fxmlLoader;
+	}
+	
+	public static FXMLLoader cronHelpLoader() throws Exception {
+		FXMLLoader fxmlLoader = new FXMLLoader(CronHelpController.class.getResource("CronHelp.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
+		fxmlLoader.load();
+		return fxmlLoader;
+	}
 
 	public static FXMLLoader dataCollectorLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(DataCollectorController.class.getResource("DataCollector.fxml"));
@@ -284,6 +301,13 @@ public class FXMLLoaderFactory {
 
 	public static FXMLLoader fileTrendLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(FileTrendController.class.getResource("FileTrend.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
+		fxmlLoader.load();
+		return fxmlLoader;
+	}
+	
+	public static FXMLLoader cronTrendLoader() throws Exception {
+		FXMLLoader fxmlLoader = new FXMLLoader(CronTrendController.class.getResource("CronTrend.fxml"));
 		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
