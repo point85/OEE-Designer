@@ -102,7 +102,7 @@ public abstract class AppUtils {
 
 	// get the display strings for custom symbols defined for the specified UOM
 	// type
-	public static ObservableList<String> getCustomSymbols(UnitType unitType) {
+	public static ObservableList<String> getCustomSymbols(UnitType unitType) throws Exception {
 
 		List<String[]> rows = PersistenceService.instance().fetchUomSymbolsAndNamesByType(unitType);
 
@@ -140,15 +140,15 @@ public abstract class AppUtils {
 		int seconds = 0;
 
 		if (fields.length > 0) {
-			hours = Integer.valueOf(fields[0]);
+			hours = Integer.valueOf(fields[0]).intValue();
 		}
 
 		if (fields.length > 1) {
-			minutes = Integer.valueOf(fields[1]);
+			minutes = Integer.valueOf(fields[1]).intValue();
 		}
 
 		if (fields.length > 2) {
-			seconds = Integer.valueOf(fields[2]);
+			seconds = Integer.valueOf(fields[2]).intValue();
 		}
 
 		long totalSeconds = hours * 3600 + minutes * 60 + seconds;
@@ -165,9 +165,9 @@ public abstract class AppUtils {
 
 		int seconds = 0;
 		if (fields.length == 3) {
-			seconds = Integer.valueOf(fields[2]);
+			seconds = Integer.valueOf(fields[2]).intValue();
 		}
-		return LocalTime.of(Integer.valueOf(fields[0]), Integer.valueOf(fields[1]), seconds);
+		return LocalTime.of(Integer.valueOf(fields[0]).intValue(), Integer.valueOf(fields[1]).intValue(), seconds);
 	}
 
 	public static String stringFromLocalTime(LocalTime time, boolean withSeconds) {

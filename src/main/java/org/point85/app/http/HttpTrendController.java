@@ -109,15 +109,23 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 	@Override
 	@FXML
 	protected void onOK() {
-		onStopServer();
-		super.onOK();
+		try {
+			onStopServer();
+			super.onOK();
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
 	}
 
 	@Override
 	@FXML
 	protected void onCancel() {
-		onStopServer();
-		super.onCancel();
+		try {
+			onStopServer();
+			super.onCancel();
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
 	}
 
 	public void onStartServer() {
@@ -160,7 +168,7 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 		}
 	}
 
-	private void onStopServer() {
+	private void onStopServer() throws Exception {
 		if (httpServer != null) {
 			// stop the trend
 			trendChartController.onStopTrending();
@@ -195,7 +203,8 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 
 	@Override
 	public void onHttpEquipmentEvent(EquipmentEventRequestDto dto) {
-		OffsetDateTime odt = DomainUtils.offsetDateTimeFromString(dto.getTimestamp(), DomainUtils.OFFSET_DATE_TIME_8601);
+		OffsetDateTime odt = DomainUtils.offsetDateTimeFromString(dto.getTimestamp(),
+				DomainUtils.OFFSET_DATE_TIME_8601);
 
 		ResolutionService service = new ResolutionService(dto.getValue(), odt, dto.getReason());
 

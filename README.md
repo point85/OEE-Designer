@@ -24,8 +24,9 @@ The Point85 applications supporting OEE are:
 * Designer:  a GUI application for defining the plant equipment, data sources, event resolution scripts, manufacturing work schedule, availability reasons, produced materials and units of measure for data collectors.  The designer also includes a dashboard and trending capabilities.
 * Collector:  a Windows service or Unix deamon to collect the equipment event data and store it in a relational database
 * Monitor:  a GUI application with a dashboard to view the current equipment OEE and status
-* Operator:  a GUI application for manual entry of equipment events
+* Operator Desktop:  a desktop GUI application for manual entry of equipment events
 * Operator Web:  a web-application for manual entry of equipment events
+* Operator Mobile:  an Android application for manual entry of equipment events
 
 In addition, two GUI test applications assist in the development of an OEE solution:
 * HTTP requester and message publisher
@@ -90,7 +91,7 @@ A first-level Pareto chart show the time losses in percentage terms, for example
 A second-level Pareto displays the reasons for an availability category, for example:
 ![Second Level Pareto](https://github.com/point85/OEE-Designer/blob/master/docs/dashboard-second-level-pareto.png)
 
-## Operator Application
+## Operator Desktop Application
 The Operator application is a desktop application that allows a user to enter availability, performance, production, material change and job events.  The events can be recorded in chronological order as they happened or in summary form over a period of time by duration of the event.
 
 For example, the screen for entering a reject production event is:
@@ -110,4 +111,9 @@ The Java Persistence 2.2 API (JPA) as implemented by the Hibernate ORM framework
 Hibernate and JPA abstract-away database specific aspects of inserting, updating, reading and deleting records in the tables.  The API is designed to work with any relational database supported by Hibernate.  
 
 ## What's New
-In version 2.6.0, cron job support was added.  A job has a cron expression as triggered by the Quartz scheduler.  The job executes a resolver script.
+In version 3.0.0 an Android mobile operator application was added.  On Google Play Store, search for "Point85 Overall Equipment Effectiveness" or "OEE" application.
+
+In addition, the Jetty embedded HTTP server replaced NanoHTTPD for increased performance.  The HTTP API was also enhanced.
+
+## Getting Started
+The desktop applications are packaged in the oee-<version>.zip file in the latest Git release link at https://github.com/point85/OEE-Designer/releases.  Download the oee-<version>.zip file and expand the archive into a folder of your choice.  Next, download the Point85 OEE Getting Started Guide and follow instructions in that document.  Additional information may be found in the Point85 OEE User Guide.

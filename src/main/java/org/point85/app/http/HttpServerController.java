@@ -127,7 +127,7 @@ public class HttpServerController extends DialogController {
 				if (type.equals(ButtonType.CANCEL)) {
 					return;
 				}
-				
+
 				PersistenceService.instance().delete(dataSource);
 				servers.remove(dataSource);
 
@@ -207,7 +207,7 @@ public class HttpServerController extends DialogController {
 		}
 	}
 
-	private void populateDataSources() {
+	private void populateDataSources() throws Exception {
 		// fetch the server ids
 		List<CollectorDataSource> sources = PersistenceService.instance().fetchDataSources(DataSourceType.HTTP);
 

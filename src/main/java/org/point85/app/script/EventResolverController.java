@@ -265,38 +265,27 @@ public class EventResolverController extends DesignerDialogController {
 				break;
 
 			case PROD_GOOD:
-				if (result != null) {
-					taResult.appendText(
-							DesignerLocalizer.instance().getLangString("good.production.qty", result.toString()) + '\n');
-				}
+				taResult.appendText(
+						DesignerLocalizer.instance().getLangString("good.production.qty", result.toString()) + '\n');
 				break;
 
 			case PROD_REJECT:
-				if (result != null) {
-					taResult.appendText(
-							DesignerLocalizer.instance().getLangString("reject.production.qty", result.toString()) + '\n');
-				}
+				taResult.appendText(
+						DesignerLocalizer.instance().getLangString("reject.production.qty", result.toString()) + '\n');
 				break;
 
 			case PROD_STARTUP:
-				if (result != null) {
-					taResult.appendText(
-							DesignerLocalizer.instance().getLangString("startup.production.qty", result.toString()) + '\n');
-				}
+				taResult.appendText(
+						DesignerLocalizer.instance().getLangString("startup.production.qty", result.toString()) + '\n');
 				break;
 
 			case JOB_CHANGE:
-				if (result != null) {
-					taResult.appendText(
-							DesignerLocalizer.instance().getLangString("job.change", result.toString()) + '\n');
-				}
+				taResult.appendText(DesignerLocalizer.instance().getLangString("job.change", result.toString()) + '\n');
 				break;
 
 			case MATL_CHANGE:
-				if (result != null) {
-					taResult.appendText(
-							DesignerLocalizer.instance().getLangString("material.change", result.toString()) + '\n');
-				}
+				taResult.appendText(
+						DesignerLocalizer.instance().getLangString("material.change", result.toString()) + '\n');
 				break;
 
 			default:

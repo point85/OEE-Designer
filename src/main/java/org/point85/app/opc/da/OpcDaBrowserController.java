@@ -493,7 +493,7 @@ public class OpcDaBrowserController extends OpcDaController {
 		}
 	}
 
-	private void populateDataSources() {
+	private void populateDataSources() throws Exception {
 		// fetch the prog ids
 		List<String> ids = PersistenceService.instance().fetchProgIds();
 

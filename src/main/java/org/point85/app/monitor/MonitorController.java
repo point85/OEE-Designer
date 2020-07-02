@@ -367,7 +367,7 @@ public class MonitorController {
 		// place holder
 	}
 
-	private void onSelectCollectorStatus() {
+	private void onSelectCollectorStatus() throws Exception {
 		this.onRefresh();
 	}
 
@@ -568,7 +568,7 @@ public class MonitorController {
 		notifications.add(0, notification);
 
 		// check for over limit
-		int maxCount = Integer.valueOf(tfMaxCount.getText());
+		int maxCount = Integer.valueOf(tfMaxCount.getText()).intValue();
 
 		int delta = notifications.size() - maxCount;
 
@@ -594,7 +594,7 @@ public class MonitorController {
 	}
 
 	private Node createMessagesPage(int pageIndex) {
-		int messagesPerPage = Integer.valueOf(tfMessagesPerPage.getText());
+		int messagesPerPage = Integer.valueOf(tfMessagesPerPage.getText()).intValue();
 
 		int fromIndex = pageIndex * messagesPerPage;
 		int toIndex = Math.min(fromIndex + messagesPerPage, notifications.size());
@@ -615,7 +615,7 @@ public class MonitorController {
 	}
 
 	@FXML
-	private void onRefresh() {
+	private void onRefresh() throws Exception {
 		List<DataCollector> collectors = PersistenceService.instance().fetchAllDataCollectors();
 
 		serverStatus.clear();

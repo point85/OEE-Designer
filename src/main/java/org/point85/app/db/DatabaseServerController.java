@@ -134,7 +134,7 @@ public class DatabaseServerController extends DesignerDialogController {
 				if (type.equals(ButtonType.CANCEL)) {
 					return;
 				}
-				
+
 				PersistenceService.instance().delete(dataSource);
 				databaseServers.remove(dataSource);
 
@@ -148,9 +148,9 @@ public class DatabaseServerController extends DesignerDialogController {
 	@FXML
 	private void onNewDataSource() {
 		try {
-			this.tfHost.setText(PersistenceService.getJdbcConnection());
-			this.tfUserName.setText(PersistenceService.getUserName());
-			this.pfPassword.setText(PersistenceService.getUserPassword());
+			this.tfHost.setText(PersistenceService.instance().getJdbcConnection());
+			this.tfUserName.setText(PersistenceService.instance().getUserName());
+			this.pfPassword.setText(PersistenceService.instance().getUserPassword());
 			this.tfDescription.clear();
 			this.cbDataSources.getSelectionModel().clearSelection();
 
@@ -206,7 +206,7 @@ public class DatabaseServerController extends DesignerDialogController {
 		}
 	}
 
-	private void populateDataSources() {
+	private void populateDataSources() throws Exception {
 		// fetch the server ids
 		List<CollectorDataSource> sources = PersistenceService.instance().fetchDataSources(DataSourceType.DATABASE);
 

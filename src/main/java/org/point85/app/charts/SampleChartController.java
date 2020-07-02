@@ -29,7 +29,7 @@ public class SampleChartController {
 	private final ObservableList<StringOrdinal> chartOrdinals = FXCollections.observableArrayList(new ArrayList<>());
 
 	// sample number
-	private Integer sampleNumber = new Integer(0);
+	private Integer sampleNumber = Integer.valueOf(0);
 
 	// linear or stair-step interpolation between points
 	private InterpolationType interpolationType = InterpolationType.LINEAR;

@@ -37,9 +37,9 @@ import org.point85.domain.http.EquipmentEventRequestDto;
 import org.point85.domain.http.HttpSource;
 import org.point85.domain.http.MaterialDto;
 import org.point85.domain.http.MaterialResponseDto;
-import org.point85.domain.http.OeeHttpServer;
 import org.point85.domain.http.PlantEntityDto;
 import org.point85.domain.http.PlantEntityResponseDto;
+import org.point85.domain.http.OeeHttpServer;
 import org.point85.domain.http.ReasonDto;
 import org.point85.domain.http.ReasonResponseDto;
 import org.point85.domain.http.SourceIdResponseDto;
@@ -764,10 +764,10 @@ public class TesterController
 			writeVariant = new OpcDaVariant(Short.valueOf(value));
 			break;
 		case I4:
-			writeVariant = new OpcDaVariant(Integer.valueOf(value));
+			writeVariant = new OpcDaVariant(Integer.valueOf(value).intValue());
 			break;
 		case I8:
-			writeVariant = new OpcDaVariant(Long.valueOf(value));
+			writeVariant = new OpcDaVariant(Long.valueOf(value).longValue());
 			break;
 		case R4:
 			writeVariant = new OpcDaVariant(Float.valueOf(value));
@@ -812,6 +812,10 @@ public class TesterController
 		}
 
 		String sourceId = cbSourceId.getSelectionModel().getSelectedItem();
+		
+		if (sourceId == null) {
+			return;
+		}
 
 		NodeId nodeId = NodeId.parse(sourceId);
 

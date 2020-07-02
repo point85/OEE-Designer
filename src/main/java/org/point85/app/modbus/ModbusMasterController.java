@@ -510,7 +510,7 @@ public class ModbusMasterController extends ModbusController {
 		cbTransports.getSelectionModel().select(ModbusTransport.TCP);
 	}
 
-	private void populateDataSources() {
+	private void populateDataSources() throws Exception {
 		List<CollectorDataSource> sources = PersistenceService.instance().fetchDataSources(DataSourceType.MODBUS);
 
 		dataSources.clear();

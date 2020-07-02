@@ -200,7 +200,7 @@ public class FileShareController extends DesignerDialogController {
 		}
 	}
 
-	private void populateDataSources() {
+	private void populateDataSources() throws Exception {
 		// fetch the file share ids
 		List<CollectorDataSource> sources = PersistenceService.instance().fetchDataSources(DataSourceType.FILE);
 

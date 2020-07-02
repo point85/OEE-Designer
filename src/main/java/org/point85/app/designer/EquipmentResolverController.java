@@ -133,7 +133,7 @@ public class EquipmentResolverController extends DesignerController {
 		return selectedEventResolver;
 	}
 
-	private void setDataCollectors() {
+	private void setDataCollectors() throws Exception {
 		List<DataCollector> collectors = PersistenceService.instance().fetchAllDataCollectors();
 		cbCollectors.getItems().clear();
 		cbCollectors.getItems().addAll(collectors);

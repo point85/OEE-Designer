@@ -650,7 +650,7 @@ public class OpcUaBrowserController extends OpcUaController {
 		}
 	}
 
-	private void populateDataSources() {
+	private void populateDataSources() throws Exception {
 		// fetch the sources
 		List<CollectorDataSource> sources = PersistenceService.instance().fetchDataSources(DataSourceType.OPC_UA);
 

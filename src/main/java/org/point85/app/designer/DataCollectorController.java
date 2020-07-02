@@ -290,7 +290,7 @@ public class DataCollectorController extends DialogController {
 		}
 	}
 
-	private void populateCollectors() {
+	private void populateCollectors() throws Exception {
 		// fetch the collectors
 		List<DataCollector> definitions = PersistenceService.instance().fetchAllDataCollectors();
 

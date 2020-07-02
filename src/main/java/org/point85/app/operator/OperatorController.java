@@ -658,7 +658,7 @@ public class OperatorController {
 		if (equipmentMaterial == null) {
 			return;
 		}
-		
+
 		// equipment
 		if (equipment == null) {
 			throw new Exception(OperatorLocalizer.instance().getErrorString("no.equipment"));
@@ -688,7 +688,7 @@ public class OperatorController {
 				String hours = tfAvailabilityHours.getText();
 
 				if (hours != null && hours.trim().length() > 0) {
-					seconds = Integer.valueOf(hours.trim()) * 3600;
+					seconds = Integer.valueOf(hours.trim()).intValue() * 3600;
 				}
 
 				String minutes = tfAvailabilityMinutes.getText();

@@ -885,7 +885,7 @@ public class PhysicalModelController extends DesignerController {
 			// save modified entity
 			PlantEntity entity = getSelectedEntity();
 
-			// bring children into persistence context
+			// bring children into persistence context (required by JPA)
 			fillPersistenceContext(entity);
 
 			PlantEntity saved = (PlantEntity) PersistenceService.instance().save(entity);

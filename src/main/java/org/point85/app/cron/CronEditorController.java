@@ -216,7 +216,7 @@ public class CronEditorController extends DesignerDialogController {
 		}
 	}
 
-	private void populateDataSources() {
+	private void populateDataSources() throws Exception {
 		// fetch the cron ids
 		List<CollectorDataSource> sources = PersistenceService.instance().fetchDataSources(DataSourceType.CRON);
 

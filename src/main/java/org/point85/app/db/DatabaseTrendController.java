@@ -216,8 +216,7 @@ public class DatabaseTrendController extends DesignerDialogController implements
 			databaseEvent.setEventTime(OffsetDateTime.now());
 			databaseEvent.setReason(values[1]);
 
-			DatabaseEvent saved = databaseClient.save(databaseEvent);
-			databaseEvent = saved;
+			databaseClient.save(databaseEvent);
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}

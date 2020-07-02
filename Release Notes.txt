@@ -123,6 +123,12 @@ Note that version 2.5.0 has the following schema changes:
 	- Updated RabbitMQ client to version 5.9.0
 	- Updated ActiveMQ client to version 5.15.12
 	- Updated j2mod to version 2.6.4
-	
+
+(25) 3.0.0, July 1, 2020:
+    - Added an Android mobile operator app
+	- Changed to an embedded Jetty server for increased performance and functionality
+	- Upgraded to Vaadin 8.10.5
+	- Upgraded Quartz to version 2.3.2
+	- Miscellaneous stability improvements
 
 Please send comments and suggestions to point85.llc@gmail.com.

@@ -967,7 +967,7 @@ public class DashboardController extends DialogController implements CategoryCli
 			initializeRefreshTimer();
 		}
 
-		int refreshSec = Integer.valueOf(tfRefreshPeriod.getText());
+		int refreshSec = Integer.valueOf(tfRefreshPeriod.getText()).intValue();
 		refreshTimer.schedule(refreshTask, 1000, refreshSec * 1000);
 	}
 
@@ -982,22 +982,6 @@ public class DashboardController extends DialogController implements CategoryCli
 			startRefreshTimer();
 		} else {
 			stopRefreshTimer();
-		}
-	}
-
-	// find material
-	@FXML
-	private void onFindMaterial() {
-		try {
-			// get the material from the dialog
-			Material material = null;
-
-			if (material == null) {
-				return;
-			}
-
-		} catch (Exception e) {
-			AppUtils.showErrorDialog(e);
 		}
 	}
 

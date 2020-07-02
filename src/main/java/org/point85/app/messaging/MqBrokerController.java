@@ -289,7 +289,7 @@ public class MqBrokerController extends DesignerDialogController {
 		}
 	}
 
-	private void populateDataSources() {
+	private void populateDataSources() throws Exception {
 		// fetch the server ids
 		List<CollectorDataSource> sources = PersistenceService.instance().fetchDataSources(sourceType);
 

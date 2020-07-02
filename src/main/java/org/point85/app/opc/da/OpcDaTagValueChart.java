@@ -23,7 +23,7 @@ public class OpcDaTagValueChart {
 	private final NumberAxis yAxis = new NumberAxis();
 	private final LineChart<Number, Number> tagValueChart = new LineChart<>(xAxis, yAxis);
 
-	private Integer sampleNo = new Integer(-1);
+	private Integer sampleNo = Integer.valueOf(-1);
 	private int interpolation = OpcDaTagValueChart.LINEAR;
 
 	public LineChart<Number, Number> createChart() {

@@ -416,7 +416,7 @@ public class TrendChartController extends DesignerController {
 	public void onStartTrending() {
 		try {
 			// number of points to display
-			dataCount = Integer.valueOf(tfPointCount.getText());
+			dataCount = Integer.valueOf(tfPointCount.getText()).intValue();
 
 			// update period in msec
 			Integer period = spUpdatePeriod.getValue() * 1000;
@@ -456,7 +456,7 @@ public class TrendChartController extends DesignerController {
 	private void onResetTrending() {
 		try {
 			// number of points to display
-			dataCount = Integer.valueOf(tfPointCount.getText());
+			dataCount = Integer.valueOf(tfPointCount.getText()).intValue();
 
 			resolvedItems.clear();
 			tvResolvedItems.refresh();

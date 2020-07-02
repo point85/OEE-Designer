@@ -337,7 +337,9 @@ public class UomEditorController extends DesignerDialogController {
 			}
 
 			// make sure that there is a non-null category
-			uom.getCategory();
+			if (uom.getCategory() == null) {
+				throw new Exception(DesignerLocalizer.instance().getErrorString("category.cannot.be.null"));
+			}
 
 			PersistenceService.instance().fetchReferencedUnits(uom);
 
