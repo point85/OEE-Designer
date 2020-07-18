@@ -117,7 +117,7 @@ The Java Persistence 2.2 API (JPA) as implemented by the Hibernate ORM framework
 Hibernate and JPA abstract-away database specific aspects of inserting, updating, reading and deleting records in the tables.  The API is designed to work with any relational database supported by Hibernate.  
 
 ## What's New
-In version 3.0.0 an Android mobile operator application was added.  On Google Play Store, search for "Point85 Overall Equipment Effectiveness" or "OEE" application.  The direct URL is https://play.google.com/store/apps/details?id=point85.oee.mobile.app.  An iOS mobile operator application was also released.  On the Apple App Store, search for "Point85 Overall Equipment Effectiveness" or "OEE" application.  
+In version 3.0.0 an Android mobile operator application was added.  On Google Play Store, search for "Point85 Overall Equipment Effectiveness" or "OEE" application.  The direct URL is https://play.google.com/store/apps/details?id=point85.oee.mobile.app.  An iOS mobile operator application was also released.  On the Apple App Store, search for the "Point85 OEE Operator App" or "OEE" application.  
 
 For a video demonstration of the mobile app functionality, please browse to https://www.dropbox.com/s/il8pkx2kmmwvgb7/OEE_Mobile_App.mp4?dl=0.
 
