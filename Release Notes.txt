@@ -1,4 +1,4 @@
-							Point85 OEE
+						    Point85 OEE
 						   RELEASE NOTES
 
 (1)  1.0.0, August 8, 2018:  
@@ -129,6 +129,16 @@ Note that version 2.5.0 has the following schema changes:
 	- Changed to an embedded Jetty server for increased performance and functionality
 	- Upgraded to Vaadin 8.10.5
 	- Upgraded Quartz to version 2.3.2
+	- Miscellaneous stability improvements
+	
+(26) 3.1.0, August 28, 2020:
+	- Released a Linux demonstration system on AWS LightSail
+	- Updated Milo to version 0.4.2
+	- Updated ActiveMQ client to version 5.15.13
+	- Upgraded MQTT Paho client to version 1.2.5
+	- Upgraded Jetty server to version 9.4.31
+	- Upgraded Vaadin to version 8.11.2
+	- Code enhancements per SonarLint recommendations
 	- Miscellaneous stability improvements
 
 Please send comments and suggestions to point85.llc@gmail.com.

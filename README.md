@@ -100,6 +100,10 @@ For example, the screen for entering a reject production event is:
 ## Operator Web Application
 The Operator web application is browser-based and allows a user to enter availability, performance, production, material change and job events.  The events can be recorded in chronological order as they happened or in summary form over a period of time by duration of event.
 
+On Google Play Store, search for "Point85 Overall Equipment Effectiveness" or "OEE" application.  The direct URL is https://play.google.com/store/apps/details?id=point85.oee.mobile.app.  An iOS mobile operator application was also released.  On the Apple App Store, search for the "Point85 OEE Operator App" or "OEE" application.  
+
+For a video demonstration of the mobile app functionality, please browse to https://www.dropbox.com/s/il8pkx2kmmwvgb7/OEE_Mobile_App.mp4?dl=0.
+
 For example, the screen for entering summarized availability is:
 ![Operator Web Availability](https://github.com/point85/OEE-Designer/blob/master/docs/operator-web-availability.png)
 
@@ -117,11 +121,7 @@ The Java Persistence 2.2 API (JPA) as implemented by the Hibernate ORM framework
 Hibernate and JPA abstract-away database specific aspects of inserting, updating, reading and deleting records in the tables.  The API is designed to work with any relational database supported by Hibernate.  
 
 ## What's New
-In version 3.0.0 an Android mobile operator application was added.  On Google Play Store, search for "Point85 Overall Equipment Effectiveness" or "OEE" application.  The direct URL is https://play.google.com/store/apps/details?id=point85.oee.mobile.app.  An iOS mobile operator application was also released.  On the Apple App Store, search for the "Point85 OEE Operator App" or "OEE" application.  
-
-For a video demonstration of the mobile app functionality, please browse to https://www.dropbox.com/s/il8pkx2kmmwvgb7/OEE_Mobile_App.mp4?dl=0.
-
-In addition, the Jetty embedded HTTP server replaced NanoHTTPD for increased performance.  The HTTP API was also enhanced.
+ In version 3.1.0, an AWS LightSail instance at static IP address 52.37.56.187 running an Ubuntu 18.04 O/S has been created to demonstrate basic OEE data collection capabilities.  This instance has a local HyperSQL database server on port 9001 with a database named “OEE”.  The user is “SA” with no password.  
 
 ## Getting Started
 The desktop applications are packaged in the oee-<version>.zip file in the latest Git release link at https://github.com/point85/OEE-Designer/releases.  Download the oee-<version>.zip file and expand the archive into a folder of your choice.  Next, download the Point85 OEE Getting Started Guide and follow instructions in that document.  Additional information may be found in the Point85 OEE User Guide.

@@ -86,7 +86,7 @@ public class UomConversionController extends DesignerDialogController {
 
 	// get the display strings for all prefixes
 	protected ObservableList<String> getPrefixes() {
-		if (prefixes.size() == 0) {
+		if (prefixes.isEmpty()) {
 			for (Prefix prefix : Prefix.getDefinedPrefixes()) {
 				prefixes.add(prefix.getName());
 			}
@@ -98,10 +98,8 @@ public class UomConversionController extends DesignerDialogController {
 
 	// get the display strings for all UOM types
 	protected ObservableList<UnitType> getUnitTypes() {
-		if (unitTypes.size() == 0) {
-			for (UnitType unitType : UnitType.values()) {
-				unitTypes.add(unitType);
-			}
+		if (unitTypes.isEmpty()) {
+			Collections.addAll(unitTypes, UnitType.values());
 			Collections.sort(unitTypes);
 		}
 		return unitTypes;
@@ -113,9 +111,9 @@ public class UomConversionController extends DesignerDialogController {
 		cbUnitTypes.getItems().addAll(getUnitTypes());
 
 		// set prefixes
-		ObservableList<String> prefixes = getPrefixes();
-		cbFromPrefixes.getItems().addAll(prefixes);
-		cbToPrefixes.getItems().addAll(prefixes);
+		ObservableList<String> allPrefixes = getPrefixes();
+		cbFromPrefixes.getItems().addAll(allPrefixes);
+		cbToPrefixes.getItems().addAll(allPrefixes);
 
 		// control images
 		setImages();
@@ -248,7 +246,7 @@ public class UomConversionController extends DesignerDialogController {
 
 	// images for buttons
 	@Override
-	protected void setImages() throws Exception {
+	protected void setImages() {
 		super.setImages();
 
 		// converter

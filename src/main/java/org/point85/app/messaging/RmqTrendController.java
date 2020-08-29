@@ -24,7 +24,7 @@ public class RmqTrendController extends BaseMessagingTrendController implements 
 
 	@Override
 	public boolean isSubscribed() {
-		return pubSub != null ? true : false;
+		return pubSub != null;
 	}
 
 	@Override
@@ -81,7 +81,7 @@ public class RmqTrendController extends BaseMessagingTrendController implements 
 		handleEquipmentEvent((EquipmentEventMessage) message);
 	}
 
-	private void handleEquipmentEvent(EquipmentEventMessage message) throws Exception {
+	private void handleEquipmentEvent(EquipmentEventMessage message) {
 		ResolutionService service = new ResolutionService(message.getValue(), message.getTimestamp(),
 				message.getReason());
 

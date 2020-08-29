@@ -55,13 +55,11 @@ public class AvailabilityEditorController extends EventEditorController {
 		// images for buttons
 		setImages();
 
-		getDialogStage().setOnShown((we) -> {
-			displayAttributes();
-		});
+		getDialogStage().setOnShown(we -> displayAttributes());
 	}
 
 	@Override
-	protected void setImages() throws Exception {
+	protected void setImages() {
 		super.setImages();
 
 		btReasonEditor.setGraphic(ImageManager.instance().getImageView(Images.REASON));

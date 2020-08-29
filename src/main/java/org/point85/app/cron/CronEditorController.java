@@ -72,7 +72,7 @@ public class CronEditorController extends DesignerDialogController {
 
 	// images for buttons
 	@Override
-	protected void setImages() throws Exception {
+	protected void setImages() {
 		super.setImages();
 
 		// new
@@ -188,12 +188,7 @@ public class CronEditorController extends DesignerDialogController {
 	@FXML
 	private void onShowHelp() {
 		try {
-			try {
-				this.getApp().showCronHelp();
-			} catch (Exception e) {
-				AppUtils.showErrorDialog(e);
-			}
-
+			this.getApp().showCronHelp();
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}
@@ -202,15 +197,10 @@ public class CronEditorController extends DesignerDialogController {
 	@FXML
 	private void onTest() {
 		try {
-			try {
-				LocalDateTime ldt = CronEventClient.getFirstFireTime(tfExpression.getText());
+			LocalDateTime ldt = CronEventClient.getFirstFireTime(tfExpression.getText());
 
-				AppUtils.showConfirmationDialog(
-						DesignerLocalizer.instance().getLangString("cron.first.firetime", ldt.toString()));
-			} catch (Exception e) {
-				AppUtils.showErrorDialog(e);
-			}
-
+			AppUtils.showConfirmationDialog(
+					DesignerLocalizer.instance().getLangString("cron.first.firetime", ldt.toString()));
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}

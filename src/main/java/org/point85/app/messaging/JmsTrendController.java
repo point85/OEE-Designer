@@ -19,7 +19,7 @@ public class JmsTrendController extends BaseMessagingTrendController implements 
 
 	@Override
 	public boolean isSubscribed() {
-		return jmsClient != null ? true : false;
+		return jmsClient != null;
 	}
 
 	@Override

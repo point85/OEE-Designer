@@ -103,7 +103,7 @@ public class EquipmentMaterialController extends DesignerController {
 	@FXML
 	private TableColumn<EquipmentMaterial, String> defaultCol;
 
-	void initialize(DesignerApplication app) throws Exception {
+	void initialize(DesignerApplication app) {
 		setApp(app);
 		setImages();
 		initializeMaterialTable();
@@ -204,7 +204,7 @@ public class EquipmentMaterialController extends DesignerController {
 		tvMaterial.refresh();
 	}
 
-	protected void setImages() throws Exception {
+	protected void setImages() {
 		// new equipment material
 		btNewMaterial.setGraphic(ImageManager.instance().getImageView(Images.NEW));
 		btNewMaterial.setContentDisplay(ContentDisplay.RIGHT);
@@ -367,7 +367,7 @@ public class EquipmentMaterialController extends DesignerController {
 
 			// IRR
 			UnitOfMeasure uom = selectedEquipmentMaterial.getRunRateUOM();
-			if (uom == null && lbIRRUnit.getText().length() > 0) {
+			if (uom == null && lbIRRUnit.getText() != null && lbIRRUnit.getText().length() > 0) {
 				uom = PersistenceService.instance().fetchUomBySymbol(lbIRRUnit.getText());
 				selectedEquipmentMaterial.setRunRateUOM(uom);
 			}
@@ -377,7 +377,7 @@ public class EquipmentMaterialController extends DesignerController {
 
 			// reject UOM
 			uom = selectedEquipmentMaterial.getRejectUOM();
-			if (uom == null && lbRejectUnit.getText().length() > 0) {
+			if (uom == null && lbRejectUnit.getText() != null && lbRejectUnit.getText().length() > 0) {
 				uom = PersistenceService.instance().fetchUomBySymbol(lbRejectUnit.getText());
 				selectedEquipmentMaterial.setRejectUOM(uom);
 			}

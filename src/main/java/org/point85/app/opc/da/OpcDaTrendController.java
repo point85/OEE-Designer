@@ -79,16 +79,14 @@ public class OpcDaTrendController extends OpcDaController implements OpcDaDataCh
 
 			setImages();
 
-			getDialogStage().setOnCloseRequest((WindowEvent event1) -> {
-				onDisconnect();
-			});
+			getDialogStage().setOnCloseRequest((WindowEvent event1) -> onDisconnect());
 		}
 		return spTrendChart;
 	}
 
 	// images for buttons
 	@Override
-	protected void setImages() throws Exception {
+	protected void setImages() {
 		super.setImages();
 
 		// connect
@@ -242,18 +240,18 @@ public class OpcDaTrendController extends OpcDaController implements OpcDaDataCh
 		subscribeToDataSource();
 	}
 
-	public void setMonitoredTag(TagItemInfo tagItem) throws Exception {
+	public void setMonitoredTag(TagItemInfo tagItem) {
 		this.monitoredTag = tagItem;
 	}
 
-	private String createGroupName() throws Exception {
+	private String createGroupName() {
 		Equipment equipment = (Equipment) getApp().getPhysicalModelController().getSelectedEntity();
 		return equipment.getName() + '.' + trendChartController.getEventResolver().getSourceId();
 	}
 
 	@Override
 	public boolean isSubscribed() {
-		return opcDaGroup != null ? true : false;
+		return opcDaGroup != null;
 	}
 
 	@Override

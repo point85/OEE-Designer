@@ -25,13 +25,16 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 
 public abstract class AppUtils {
+	// no text
+	public static final String EMPTY_STRING = "";
 
 	// max and min number of decimal places to show
 	private static final int MAX_DIGITS = 9;
 	private static final int MIN_DIGITS = 0;
 
-	// no text
-	public static final String EMPTY_STRING = "";
+	private AppUtils() {
+		throw new IllegalStateException("Utility class");
+	}
 
 	// format a BigDecimal
 	public static String formatDouble(double decimal) {
@@ -43,12 +46,12 @@ public abstract class AppUtils {
 	}
 
 	// display a general alert
-	public static ButtonType showAlert(AlertType type, String title, String header, String errorMessage) {
-		// Show the error message.
+	public static ButtonType showAlert(AlertType type, String title, String header, String message) {
+		// Show the message
 		Alert alert = new Alert(type);
 		alert.setTitle(title);
 		alert.setHeaderText(header);
-		alert.setContentText(errorMessage);
+		alert.setContentText(message);
 		alert.setResizable(true);
 
 		// modal
@@ -56,9 +59,13 @@ public abstract class AppUtils {
 
 		ButtonType buttonType = null;
 		try {
-			buttonType = result.get();
+			if (result.isPresent()) {
+				buttonType = result.get();
+			}
 		} catch (NoSuchElementException e) {
+			// ignore
 		}
+
 		return buttonType;
 	}
 
@@ -140,18 +147,18 @@ public abstract class AppUtils {
 		int seconds = 0;
 
 		if (fields.length > 0) {
-			hours = Integer.valueOf(fields[0]).intValue();
+			hours = Integer.parseInt(fields[0]);
 		}
 
 		if (fields.length > 1) {
-			minutes = Integer.valueOf(fields[1]).intValue();
+			minutes = Integer.parseInt(fields[1]);
 		}
 
 		if (fields.length > 2) {
-			seconds = Integer.valueOf(fields[2]).intValue();
+			seconds = Integer.parseInt(fields[2]);
 		}
 
-		long totalSeconds = hours * 3600 + minutes * 60 + seconds;
+		long totalSeconds = (long) hours * 3600 + (long) minutes * 60 + (long) seconds;
 
 		return Duration.ofSeconds(totalSeconds);
 	}
@@ -165,9 +172,9 @@ public abstract class AppUtils {
 
 		int seconds = 0;
 		if (fields.length == 3) {
-			seconds = Integer.valueOf(fields[2]).intValue();
+			seconds = Integer.parseInt(fields[2]);
 		}
-		return LocalTime.of(Integer.valueOf(fields[0]).intValue(), Integer.valueOf(fields[1]).intValue(), seconds);
+		return LocalTime.of(Integer.parseInt(fields[0]), Integer.parseInt(fields[1]), seconds);
 	}
 
 	public static String stringFromLocalTime(LocalTime time, boolean withSeconds) {

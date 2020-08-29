@@ -20,7 +20,7 @@ public class MqttTrendController extends BaseMessagingTrendController implements
 
 	@Override
 	public boolean isSubscribed() {
-		return mqttClient != null ? true : false;
+		return mqttClient != null;
 	}
 
 	@Override

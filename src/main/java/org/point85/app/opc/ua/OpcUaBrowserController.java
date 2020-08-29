@@ -3,6 +3,7 @@ package org.point85.app.opc.ua;
 import java.lang.reflect.Array;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -182,7 +183,7 @@ public class OpcUaBrowserController extends OpcUaController {
 		cbDataSources.setItems(servers);
 	}
 
-	private void initializeTreeView() throws Exception {
+	private void initializeTreeView()  {
 		tvBrowser.setShowRoot(false);
 
 		// tree node listener
@@ -331,7 +332,7 @@ public class OpcUaBrowserController extends OpcUaController {
 
 	// images for buttons
 	@Override
-	protected void setImages() throws Exception {
+	protected void setImages() {
 		super.setImages();
 
 		// connect
@@ -428,7 +429,7 @@ public class OpcUaBrowserController extends OpcUaController {
 		}
 	}
 
-	private Image getNodeImage(ReferenceDescription ref) throws Exception {
+	private Image getNodeImage(ReferenceDescription ref) {
 		NodeClass nodeClass = ref.getNodeClass();
 		Image image = null;
 		if (nodeClass.equals(NodeClass.Object)) {
@@ -591,6 +592,20 @@ public class OpcUaBrowserController extends OpcUaController {
 
 			this.tfKeystoreFileName.clear();
 			this.pfKeystorePassword.clear();
+			
+			this.lbState.setText(null);
+			this.lbStartTime.setText(null);
+			this.lbEndpoint.setText(null);
+			this.lbProduct.setText(null);
+			this.lbManufacturer.setText(null);
+			
+			this.lbNodeId.setText(null);
+			this.lbNodeDescription.setText(null);
+			this.lbNodeType.setText(null);
+			this.taNodeValue.clear();
+			this.lbNodeTimestamp.setText(null);
+
+			this.tvBrowser.setRoot(null);
 
 			this.setSource(null);
 		} catch (Exception e) {
@@ -635,10 +650,8 @@ public class OpcUaBrowserController extends OpcUaController {
 	private void initializeSecuritySettings() {
 		ObservableList<SecurityPolicy> policies = cbSecurityPolicies.getItems();
 		policies.clear();
-
-		for (SecurityPolicy policy : SecurityPolicy.values()) {
-			policies.add(policy);
-		}
+		
+		Collections.addAll(policies, SecurityPolicy.values());
 
 		ObservableList<MessageSecurityMode> modes = cbMessageModes.getItems();
 		modes.clear();

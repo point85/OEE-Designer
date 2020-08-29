@@ -82,7 +82,7 @@ public class FileTrendController extends DesignerDialogController implements Fil
 
 	// images for buttons
 	@Override
-	protected void setImages() throws Exception {
+	protected void setImages() {
 		super.setImages();
 
 		// write test
@@ -94,7 +94,7 @@ public class FileTrendController extends DesignerDialogController implements Fil
 		btFileBrowser.setContentDisplay(ContentDisplay.LEFT);
 	}
 
-	public void setEventResolver(EventResolver eventResolver) throws Exception {
+	public void setEventResolver(EventResolver eventResolver) {
 		eventResolver.setWatchMode(true);
 		trendChartController.setEventResolver(eventResolver);
 
@@ -129,7 +129,7 @@ public class FileTrendController extends DesignerDialogController implements Fil
 
 	@Override
 	public boolean isSubscribed() {
-		return fileClient != null ? true : false;
+		return fileClient != null;
 	}
 
 	@Override
@@ -231,7 +231,7 @@ public class FileTrendController extends DesignerDialogController implements Fil
 			// move the file to READY folder
 			FileEventSource source = (FileEventSource) eventResolver.getDataSource();
 
-			fileClient.moveFile(selectedFile, source, sourceId, FileEventClient.READY_FOLDER);
+			fileClient.moveFileToReadyFolder(selectedFile, source, sourceId);
 
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
@@ -294,14 +294,10 @@ public class FileTrendController extends DesignerDialogController implements Fil
 							fileClient.moveFile(file, FileEventClient.PROCESSING_FOLDER, FileEventClient.FAIL_FOLDER,
 									e);
 						} catch (IOException ex) {
-							Platform.runLater(() -> {
-								AppUtils.showErrorDialog(ex);
-							});
+							Platform.runLater(() -> AppUtils.showErrorDialog(ex));
 						}
 
-						Platform.runLater(() -> {
-							AppUtils.showErrorDialog(e);
-						});
+						Platform.runLater(() -> AppUtils.showErrorDialog(e));
 					} finally {
 						fileClient.stopProcessing(file);
 					}

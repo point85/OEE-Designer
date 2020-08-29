@@ -155,9 +155,6 @@ public class MonitorController {
 	@FXML
 	private Button btRestart;
 
-	public MonitorController() {
-	}
-
 	// initialize app
 	void initializeApplication(MonitorApplication app) throws Exception {
 		// the app
@@ -222,34 +219,31 @@ public class MonitorController {
 		});
 
 		// collector host
-		tcCollectorHostName.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(cellDataFeatures.getValue().getCollectorHost());
-		});
+		tcCollectorHostName.setCellValueFactory(
+				cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getCollectorHost()));
 
 		// collector IP
-		tcCollectorHostIP.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(cellDataFeatures.getValue().getCollectorIpAddress());
-		});
+		tcCollectorHostIP.setCellValueFactory(
+				cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getCollectorIpAddress()));
 
 		// time
-		tcCollectorTimestamp.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(cellDataFeatures.getValue().getTimestamp());
-		});
+		tcCollectorTimestamp.setCellValueFactory(
+				cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getTimestamp()));
 
 		// used memory
-		this.tcCollectorUsedMemory.setCellValueFactory(cellDataFeatures -> {
+		tcCollectorUsedMemory.setCellValueFactory(cellDataFeatures -> {
 			String memory = String.format("%5.1f", cellDataFeatures.getValue().getUsedMemory());
 			return new SimpleStringProperty(memory);
 		});
 
 		// free memory
-		this.tcCollectorFreeMemory.setCellValueFactory(cellDataFeatures -> {
+		tcCollectorFreeMemory.setCellValueFactory(cellDataFeatures -> {
 			String memory = String.format("%5.1f", cellDataFeatures.getValue().getFreeMemory());
 			return new SimpleStringProperty(memory);
 		});
 
 		// load (%)
-		this.tcCollectorLoad.setCellValueFactory(cellDataFeatures -> {
+		tcCollectorLoad.setCellValueFactory(cellDataFeatures -> {
 			String load = String.format("%4.1f", cellDataFeatures.getValue().getSystemLoadAvg() * 100.0d);
 			return new SimpleStringProperty(load);
 		});
@@ -258,34 +252,28 @@ public class MonitorController {
 		tvCollectorStatus.setItems(serverCollectors);
 
 		// collector name
-		tcCollectorName.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(cellDataFeatures.getValue().getName());
-		});
+		tcCollectorName.setCellValueFactory(
+				cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getName()));
 
 		// collector description
-		tcCollectorDescription.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(cellDataFeatures.getValue().getDescription());
-		});
+		tcCollectorDescription.setCellValueFactory(
+				cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getDescription()));
 
 		// collector state
-		tcCollectorState.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleObjectProperty<CollectorState>(cellDataFeatures.getValue().getCollectorState());
-		});
+		tcCollectorState.setCellValueFactory(cellDataFeatures -> new SimpleObjectProperty<CollectorState>(
+				cellDataFeatures.getValue().getCollectorState()));
 
 		// RMQ broker host
-		tcBrokerHost.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(cellDataFeatures.getValue().getBrokerHost());
-		});
+		tcBrokerHost.setCellValueFactory(
+				cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getBrokerHost()));
 
 		// RMQ broker host
-		tcBrokerPort.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleObjectProperty<Integer>(cellDataFeatures.getValue().getBrokerPort());
-		});
+		tcBrokerPort.setCellValueFactory(
+				cellDataFeatures -> new SimpleObjectProperty<Integer>(cellDataFeatures.getValue().getBrokerPort()));
 
 		// RMQ broker type
-		tcBrokerType.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleObjectProperty<DataSourceType>(cellDataFeatures.getValue().getBrokerType());
-		});
+		tcBrokerType.setCellValueFactory(cellDataFeatures -> new SimpleObjectProperty<DataSourceType>(
+				cellDataFeatures.getValue().getBrokerType()));
 	}
 
 	// notifications
@@ -298,18 +286,16 @@ public class MonitorController {
 		TableColumn<CollectorNotification, String> tcCollectorHost = new TableColumn<>(
 				MonitorLocalizer.instance().getLangString("host"));
 		tcCollectorHost.setPrefWidth(150);
-		tcCollectorHost.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(cellDataFeatures.getValue().getCollectorHost());
-		});
+		tcCollectorHost.setCellValueFactory(
+				cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getCollectorHost()));
 		tcCollector.getColumns().add(tcCollectorHost);
 
 		// collector IP
 		TableColumn<CollectorNotification, String> tcCollectorIp = new TableColumn<>(
 				MonitorLocalizer.instance().getLangString("ip.address"));
 		tcCollectorIp.setPrefWidth(150);
-		tcCollectorIp.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(cellDataFeatures.getValue().getCollectorIpAddress());
-		});
+		tcCollectorIp.setCellValueFactory(
+				cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getCollectorIpAddress()));
 		tcCollector.getColumns().add(tcCollectorIp);
 
 		// timestamp
@@ -341,9 +327,7 @@ public class MonitorController {
 		TableColumn<CollectorNotification, String> tcText = new TableColumn<>(
 				MonitorLocalizer.instance().getLangString("message"));
 		tcText.setPrefWidth(600);
-		tcText.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(cellDataFeatures.getValue().getText());
-		});
+		tcText.setCellValueFactory(cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getText()));
 		tvNotifications.getColumns().add(tcText);
 	}
 
@@ -363,7 +347,7 @@ public class MonitorController {
 		}
 	}
 
-	private void onSelectNotifications() throws Exception {
+	private void onSelectNotifications() {
 		// place holder
 	}
 
@@ -371,7 +355,7 @@ public class MonitorController {
 		this.onRefresh();
 	}
 
-	private void setImages() throws Exception {
+	private void setImages() {
 		// clear messages
 		btClearMessages.setGraphic(ImageManager.instance().getImageView(Images.CLEAR));
 		btClearMessages.setContentDisplay(ContentDisplay.LEFT);
@@ -385,7 +369,7 @@ public class MonitorController {
 		btRestart.setContentDisplay(ContentDisplay.LEFT);
 	}
 
-	private void setEntityGraphic(TreeItem<EntityNode> item) throws Exception {
+	private void setEntityGraphic(TreeItem<EntityNode> item) {
 		ImageView nodeView = null;
 		PlantEntity entity = item.getValue().getPlantEntity();
 		EntityLevel level = entity.getLevel();
@@ -447,7 +431,7 @@ public class MonitorController {
 	}
 
 	// the single root for all entities
-	private TreeItem<EntityNode> getRootEntityItem() throws Exception {
+	private TreeItem<EntityNode> getRootEntityItem() {
 		if (tvEntities.getRoot() == null) {
 			PlantEntity rootEntity = new PlantEntity();
 			rootEntity.setName(PlantEntity.ROOT_ENTITY_NAME);
@@ -503,7 +487,7 @@ public class MonitorController {
 		List<PlantEntity> sortedChildren = new ArrayList<>(children);
 		Collections.sort(sortedChildren);
 
-		boolean hasTreeChildren = newItem.getChildren().size() > 0 ? true : false;
+		boolean hasTreeChildren = !newItem.getChildren().isEmpty();
 
 		// check to see if the node's children have been previously shown
 		if (!hasTreeChildren) {
@@ -568,7 +552,7 @@ public class MonitorController {
 		notifications.add(0, notification);
 
 		// check for over limit
-		int maxCount = Integer.valueOf(tfMaxCount.getText()).intValue();
+		int maxCount = Integer.parseInt(tfMaxCount.getText());
 
 		int delta = notifications.size() - maxCount;
 
@@ -580,7 +564,7 @@ public class MonitorController {
 
 		// calculate page count
 		int numOfPages = 1;
-		int messagesPerPage = Integer.valueOf(tfMessagesPerPage.getText());
+		int messagesPerPage = Integer.parseInt(tfMessagesPerPage.getText());
 		int messageCount = notifications.size();
 
 		if (messageCount % messagesPerPage == 0) {
@@ -594,7 +578,7 @@ public class MonitorController {
 	}
 
 	private Node createMessagesPage(int pageIndex) {
-		int messagesPerPage = Integer.valueOf(tfMessagesPerPage.getText()).intValue();
+		int messagesPerPage = Integer.parseInt(tfMessagesPerPage.getText());
 
 		int fromIndex = pageIndex * messagesPerPage;
 		int toIndex = Math.min(fromIndex + messagesPerPage, notifications.size());
@@ -610,7 +594,7 @@ public class MonitorController {
 		TreeItem<EntityNode> entityItem = tvEntities.getSelectionModel().getSelectedItem();
 
 		if (entityItem != null && (entityItem.getValue().getPlantEntity() instanceof Equipment)) {
-			dashboardController.update((CollectorResolvedEventMessage) message);
+			dashboardController.update(message);
 		}
 	}
 

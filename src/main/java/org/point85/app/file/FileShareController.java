@@ -66,7 +66,7 @@ public class FileShareController extends DesignerDialogController {
 
 	// images for buttons
 	@Override
-	protected void setImages() throws Exception {
+	protected void setImages() {
 		super.setImages();
 
 		// new

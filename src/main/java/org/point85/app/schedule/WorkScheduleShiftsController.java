@@ -97,7 +97,7 @@ public class WorkScheduleShiftsController extends DesignerDialogController {
 
 	// images for editor buttons
 	@Override
-	protected void setImages() throws Exception {
+	protected void setImages() {
 		super.setImages();
 
 		btShowShifts.setGraphic(ImageManager.instance().getImageView(Images.SHIFT));
@@ -121,24 +121,20 @@ public class WorkScheduleShiftsController extends DesignerDialogController {
 		tvShiftInstances.setItems(shiftInstanceList);
 
 		// instance day
-		dayColumn.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleObjectProperty<LocalDate>(cellDataFeatures.getValue().getStartTime().toLocalDate());
-		});
+		dayColumn.setCellValueFactory(cellDataFeatures -> new SimpleObjectProperty<LocalDate>(
+				cellDataFeatures.getValue().getStartTime().toLocalDate()));
 
 		// team name
-		teamNameColumn.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(cellDataFeatures.getValue().getTeam().getName());
-		});
+		teamNameColumn.setCellValueFactory(
+				cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getTeam().getName()));
 
 		// shift name
-		shiftNameColumn.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(cellDataFeatures.getValue().getShift().getName());
-		});
+		shiftNameColumn.setCellValueFactory(
+				cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getShift().getName()));
 
 		// starting time
-		startTimeColumn.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleObjectProperty<LocalTime>(cellDataFeatures.getValue().getShift().getStart());
-		});
+		startTimeColumn.setCellValueFactory(cellDataFeatures -> new SimpleObjectProperty<LocalTime>(
+				cellDataFeatures.getValue().getShift().getStart()));
 
 		// ending time
 		endTimeColumn.setCellValueFactory(cellDataFeatures -> {
@@ -152,10 +148,8 @@ public class WorkScheduleShiftsController extends DesignerDialogController {
 		});
 
 		// duration
-		durationColumn.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(
-					AppUtils.stringFromDuration(cellDataFeatures.getValue().getShift().getDuration(), false));
-		});
+		durationColumn.setCellValueFactory(cellDataFeatures -> new SimpleStringProperty(
+				AppUtils.stringFromDuration(cellDataFeatures.getValue().getShift().getDuration(), false)));
 	}
 
 	@FXML
@@ -206,7 +200,7 @@ public class WorkScheduleShiftsController extends DesignerDialogController {
 				}
 			} else {
 				List<ShiftInstance> instances = currentSchedule.getShiftInstancesForTime(from);
-				
+
 				for (ShiftInstance instance : instances) {
 					this.shiftInstanceList.add(instance);
 				}

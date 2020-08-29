@@ -90,7 +90,7 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 	}
 
 	@Override
-	protected void setImages() throws Exception {
+	protected void setImages() {
 		super.setImages();
 
 		// loopback test
@@ -98,7 +98,7 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 		btLoopback.setContentDisplay(ContentDisplay.LEFT);
 	}
 
-	public void setScriptResolver(EventResolver eventResolver) throws Exception {
+	public void setScriptResolver(EventResolver eventResolver) {
 		eventResolver.setWatchMode(true);
 		trendChartController.setEventResolver(eventResolver);
 
@@ -150,7 +150,7 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 				piConnection.setVisible(true);
 
 				httpServer = new OeeHttpServer(port);
-				httpServer.setDataChangeListener(this);
+				OeeHttpServer.setDataChangeListener(this);
 				httpServer.startup();
 				lbState.setText(httpServer.getState().toString());
 				lbState.setTextFill(STARTED_COLOR);
@@ -309,9 +309,7 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 					try {
 						trendChartController.invokeResolver(getApp().getAppContext(), dataValue, timestamp, reason);
 					} catch (Exception e) {
-						Platform.runLater(() -> {
-							AppUtils.showErrorDialog(e);
-						});
+						Platform.runLater(() -> AppUtils.showErrorDialog(e));
 					}
 					return null;
 				}

@@ -108,9 +108,6 @@ public class DesignerApplication {
 	// script execution context
 	private OeeContext appContext;
 
-	public DesignerApplication() {
-	}
-
 	public void start(Stage primaryStage) {
 		try {
 			FXMLLoader loader = FXMLLoaderFactory.designerApplicationLoader();
@@ -597,7 +594,7 @@ public class DesignerApplication {
 		}
 	}
 
-	void showAboutDialog() throws Exception {
+	void showAboutDialog()  {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle(DesignerLocalizer.instance().getLangString("about"));
 		alert.setHeaderText(DesignerLocalizer.instance().getLangString("about.header"));
@@ -650,7 +647,6 @@ public class DesignerApplication {
 		Stage dialogStage = new Stage(StageStyle.DECORATED);
 		dialogStage.setTitle(DesignerLocalizer.instance().getLangString("opc.ua.trend"));
 		dialogStage.initModality(Modality.NONE);
-		// dialogStage.initOwner(primaryStage);
 		Scene scene = new Scene(page);
 		dialogStage.setScene(scene);
 

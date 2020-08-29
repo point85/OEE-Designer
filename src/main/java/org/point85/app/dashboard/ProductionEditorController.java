@@ -49,7 +49,7 @@ public class ProductionEditorController extends EventEditorController {
 		// images for buttons
 		setImages();
 
-		getDialogStage().setOnShown((we) -> {
+		getDialogStage().setOnShown(we -> {
 			try {
 				displayAttributes();
 			} catch (Exception e) {
@@ -100,7 +100,7 @@ public class ProductionEditorController extends EventEditorController {
 		return equipmentMaterial;
 	}
 
-	void displayAttributes() throws Exception {
+	void displayAttributes() {
 		// start date and time
 		super.displayAttributes(productionEvent);
 

@@ -154,7 +154,7 @@ public class OpcDaBrowserController extends OpcDaController {
 		cbProgIds.setItems(progIds);
 	}
 
-	private void initializeTreeView() throws Exception {
+	private void initializeTreeView()  {
 
 		tvBrowser.setShowRoot(false);
 
@@ -249,7 +249,7 @@ public class OpcDaBrowserController extends OpcDaController {
 
 	// images for buttons
 	@Override
-	protected void setImages() throws Exception {
+	protected void setImages() {
 		super.setImages();
 
 		// connect
@@ -462,6 +462,16 @@ public class OpcDaBrowserController extends OpcDaController {
 			this.tfUserName.clear();
 			this.pfPassword.clear();
 			this.tfDescription.clear();
+			
+			this.clearTagData();
+			
+			this.lbState.setText(null);
+			this.lbStartTime.setText(null);
+			this.lbVendor.setText(null);
+			this.lbVersion.setText(null);
+
+			this.tvBrowser.setRoot(null);
+			this.availableTags.clear();
 
 			this.setSource(null);
 		} catch (Exception e) {
@@ -542,9 +552,9 @@ public class OpcDaBrowserController extends OpcDaController {
 				// fill in the possible tags
 				OpcDaTagTreeBranch selectedNode = selectedItem.getValue();
 
-				OpcDaTreeBrowser treeBrowser = getApp().getOpcDaClient().getTreeBrowser();
+				OpcDaTreeBrowser daTreeBrowser = getApp().getOpcDaClient().getTreeBrowser();
 
-				Collection<OpcDaBrowserLeaf> tags = treeBrowser.getLeaves(selectedNode);
+				Collection<OpcDaBrowserLeaf> tags = daTreeBrowser.getLeaves(selectedNode);
 
 				availableTags.clear();
 				for (OpcDaBrowserLeaf tag : tags) {

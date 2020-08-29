@@ -124,9 +124,7 @@ public class ReasonEditorController extends DesignerDialogController {
 		// loss categories
 		List<TimeLoss> losses = new ArrayList<>();
 
-		for (TimeLoss loss : TimeLoss.values()) {
-			losses.add(loss);
-		}
+		Collections.addAll(losses, TimeLoss.values());
 
 		Collections.sort(losses, new Comparator<TimeLoss>() {
 			@Override
@@ -149,7 +147,7 @@ public class ReasonEditorController extends DesignerDialogController {
 	}
 
 	// reason selected in the hierarchy
-	private void onSelectReason(TreeItem<ReasonNode> oldItem, TreeItem<ReasonNode> newItem) throws Exception {
+	private void onSelectReason(TreeItem<ReasonNode> oldItem, TreeItem<ReasonNode> newItem) {
 		if (newItem == null) {
 			return;
 		}
@@ -164,7 +162,7 @@ public class ReasonEditorController extends DesignerDialogController {
 		List<Reason> sortedChildren = new ArrayList<>(children);
 		Collections.sort(sortedChildren);
 
-		boolean hasTreeChildren = newItem.getChildren().size() > 0 ? true : false;
+		boolean hasTreeChildren = !newItem.getChildren().isEmpty();
 
 		// check to see if the node's children have been previously shown
 		if (!hasTreeChildren) {
@@ -180,7 +178,7 @@ public class ReasonEditorController extends DesignerDialogController {
 
 	// images for editor buttons
 	@Override
-	protected void setImages() throws Exception {
+	protected void setImages() {
 		super.setImages();
 
 		// new
@@ -249,7 +247,7 @@ public class ReasonEditorController extends DesignerDialogController {
 	}
 
 	// the single root for all reasons
-	private TreeItem<ReasonNode> getRootReasonItem() throws Exception {
+	private TreeItem<ReasonNode> getRootReasonItem() {
 		if (tvReasons.getRoot() == null) {
 			Reason rootReason = new Reason();
 			rootReason.setName(Reason.ROOT_REASON_NAME);
@@ -457,9 +455,9 @@ public class ReasonEditorController extends DesignerDialogController {
 			}
 
 			// remove this reason from the tree
-			TreeItem<ReasonNode> selectedReasonItem = tvReasons.getSelectionModel().getSelectedItem();
-			TreeItem<ReasonNode> parentNode = selectedReasonItem.getParent();
-			parentNode.getChildren().remove(selectedReasonItem);
+			TreeItem<ReasonNode> reasonItem = tvReasons.getSelectionModel().getSelectedItem();
+			TreeItem<ReasonNode> parentNode = reasonItem.getParent();
+			parentNode.getChildren().remove(reasonItem);
 
 			// clear fields
 			onNewReason();
@@ -596,8 +594,6 @@ public class ReasonEditorController extends DesignerDialogController {
 						parentReasons.put(savedReason, parentName);
 					}
 				}
-			} catch (Exception e) {
-				throw e;
 			} finally {
 				br.close();
 			}

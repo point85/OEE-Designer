@@ -73,13 +73,11 @@ public class SampleChartController {
 		// bind to list of points
 		tvChartOrdinals.setItems(chartOrdinals);
 
-		tcOrdinalY.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleObjectProperty<Integer>(cellDataFeatures.getValue().getAxisKey());
-		});
+		tcOrdinalY.setCellValueFactory(
+				cellDataFeatures -> new SimpleObjectProperty<Integer>(cellDataFeatures.getValue().getAxisKey()));
 
-		tcStringY.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(cellDataFeatures.getValue().getAxisValue());
-		});
+		tcStringY.setCellValueFactory(
+				cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getAxisValue()));
 	}
 
 	public LineChart<Integer, Number> getChart() {
@@ -165,7 +163,7 @@ public class SampleChartController {
 
 		this.numberSamplesToDisplay = upperBound;
 	}
-	
+
 	public void setYAxis(int tickUnit, int upperBound) {
 		this.yAxis.setLowerBound(0);
 		this.yAxis.setUpperBound(upperBound);

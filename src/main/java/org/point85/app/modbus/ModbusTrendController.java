@@ -76,7 +76,7 @@ public class ModbusTrendController extends ModbusController implements ModbusEve
 
 	// images for buttons
 	@Override
-	protected void setImages() throws Exception {
+	protected void setImages() {
 		super.setImages();
 
 		// connect
@@ -92,7 +92,7 @@ public class ModbusTrendController extends ModbusController implements ModbusEve
 		btCancelConnect.setContentDisplay(ContentDisplay.LEFT);
 	}
 
-	public void setEventResolver(EventResolver eventResolver) throws Exception {
+	public void setEventResolver(EventResolver eventResolver) {
 		eventResolver.setWatchMode(true);
 		trendChartController.setEventResolver(eventResolver);
 
@@ -123,7 +123,7 @@ public class ModbusTrendController extends ModbusController implements ModbusEve
 		}
 	}
 
-	private void updateConnectionStatus(ConnectionState state) throws Exception {
+	private void updateConnectionStatus(ConnectionState state) {
 		connectionState = state;
 
 		switch (state) {
@@ -199,7 +199,7 @@ public class ModbusTrendController extends ModbusController implements ModbusEve
 		return getApp().getModbusMaster().isPolling();
 	}
 
-	public void createModbusMaster() throws Exception {
+	public void createModbusMaster() {
 		EventResolver eventResolver = trendChartController.getEventResolver();
 		ModbusSource source = (ModbusSource) eventResolver.getDataSource();
 
@@ -299,9 +299,7 @@ public class ModbusTrendController extends ModbusController implements ModbusEve
 						trendChartController.invokeResolver(getApp().getAppContext(), modbusEvent.getValues(),
 								modbusEvent.getEventTime(), modbusEvent.getReason());
 					} catch (Exception e) {
-						Platform.runLater(() -> {
-							AppUtils.showErrorDialog(e);
-						});
+						Platform.runLater(() -> AppUtils.showErrorDialog(e));
 					}
 					return null;
 				}

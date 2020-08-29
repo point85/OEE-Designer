@@ -23,7 +23,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<SplitPane dividerPositions="0.33" orientation="VERTICAL" prefHeight="900.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.dashboard.DashboardController">
+<SplitPane dividerPositions="0.33" orientation="VERTICAL" prefHeight="1000.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.dashboard.DashboardController">
   <items>
       <VBox>
          <children>
@@ -47,6 +47,7 @@
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
                         <Label text="%from" GridPane.halignment="RIGHT" />
@@ -66,9 +67,10 @@
                               <Insets right="5.0" />
                            </GridPane.margin>
                         </TextField>
+                        <Label fx:id="lblNotification" GridPane.columnSpan="13" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
-                  <AnchorPane fx:id="apTileLayout" layoutY="30.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0" />
+                  <AnchorPane fx:id="apTileLayout" layoutY="30.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="75.0" />
                </children>
             </AnchorPane>
          </children>

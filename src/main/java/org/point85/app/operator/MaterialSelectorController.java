@@ -62,7 +62,7 @@ public class MaterialSelectorController extends DialogController {
 				.fetchMaterialsByCategory(newItem.getValue().getCategory());
 		Collections.sort(children);
 
-		boolean hasTreeChildren = newItem.getChildren().size() > 0 ? true : false;
+		boolean hasTreeChildren = !newItem.getChildren().isEmpty();
 
 		// check to see if the node's children have been previously shown
 		if (!hasTreeChildren) {
@@ -78,7 +78,7 @@ public class MaterialSelectorController extends DialogController {
 	}
 
 	// the single root for all material categories
-	private TreeItem<MaterialNode> getRootMaterialItem() throws Exception {
+	private TreeItem<MaterialNode> getRootMaterialItem() {
 		if (tvMaterials.getRoot() == null) {
 			Material rootMaterial = new Material();
 			rootMaterial.setName(Material.ROOT_MATERIAL_NAME);

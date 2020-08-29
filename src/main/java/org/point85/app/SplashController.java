@@ -23,7 +23,7 @@ public class SplashController {
 	@FXML
 	private Label lbVersion;
 
-	void initialize() throws Exception {
+	void initialize() {
 		// Point85
 		ivPoint85.setImage(ImageManager.instance().getImage(Images.POINT85));
 

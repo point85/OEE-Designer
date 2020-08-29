@@ -37,9 +37,9 @@ import org.point85.domain.http.EquipmentEventRequestDto;
 import org.point85.domain.http.HttpSource;
 import org.point85.domain.http.MaterialDto;
 import org.point85.domain.http.MaterialResponseDto;
+import org.point85.domain.http.OeeHttpServer;
 import org.point85.domain.http.PlantEntityDto;
 import org.point85.domain.http.PlantEntityResponseDto;
-import org.point85.domain.http.OeeHttpServer;
 import org.point85.domain.http.ReasonDto;
 import org.point85.domain.http.ReasonResponseDto;
 import org.point85.domain.http.SourceIdResponseDto;
@@ -238,7 +238,7 @@ public class TesterController
 	@FXML
 	private Label lbNotification;
 
-	void initialize() throws Exception {
+	void initialize() {
 		setImages();
 
 		initializeEntityTable();
@@ -249,7 +249,7 @@ public class TesterController
 		onSelectSourceType();
 	}
 
-	private void setImages() throws Exception {
+	private void setImages() {
 		// entity
 		btHttpGetEntities.setGraphic(ImageManager.instance().getImageView(Images.EQUIPMENT));
 		btHttpGetEntities.setContentDisplay(ContentDisplay.LEFT);
@@ -319,7 +319,6 @@ public class TesterController
 		dataSource.setDescription("internal server");
 
 		OeeHttpServer httpServer = new OeeHttpServer(OeeHttpServer.DEFAULT_PORT);
-		// httpServer.setDataChangeListener(this);
 		httpServer.startup();
 
 		return dataSource;
@@ -391,19 +390,16 @@ public class TesterController
 		});
 
 		// entity name column
-		ttcEntityName.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(cellDataFeatures.getValue().getValue().getName());
-		});
+		ttcEntityName.setCellValueFactory(
+				cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getValue().getName()));
 
 		// entity description column
-		ttcEntityDescription.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(cellDataFeatures.getValue().getValue().getDescription());
-		});
+		ttcEntityDescription.setCellValueFactory(
+				cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getValue().getDescription()));
 
 		// entity level column
-		ttcEntityLevel.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(cellDataFeatures.getValue().getValue().getLevel().toString());
-		});
+		ttcEntityLevel.setCellValueFactory(cellDataFeatures -> new SimpleStringProperty(
+				cellDataFeatures.getValue().getValue().getLevel().toString()));
 
 		PlantEntity rootEntity = new PlantEntity("root", "root", null);
 		TreeItem<PlantEntity> root = new TreeItem<>(rootEntity);
@@ -426,14 +422,12 @@ public class TesterController
 		});
 
 		// reason name column
-		ttcReasonName.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(cellDataFeatures.getValue().getValue().getName());
-		});
+		ttcReasonName.setCellValueFactory(
+				cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getValue().getName()));
 
 		// reason description column
-		ttcReasonDescription.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(cellDataFeatures.getValue().getValue().getDescription());
-		});
+		ttcReasonDescription.setCellValueFactory(
+				cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getValue().getDescription()));
 
 		// reason loss category
 		ttcLossCategory.setCellValueFactory(cellDataFeatures -> {
@@ -471,19 +465,16 @@ public class TesterController
 		});
 
 		// material name column
-		tcMaterialName.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(cellDataFeatures.getValue().getName());
-		});
+		tcMaterialName.setCellValueFactory(
+				cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getName()));
 
 		// material description column
-		tcMaterialDescription.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(cellDataFeatures.getValue().getDescription());
-		});
+		tcMaterialDescription.setCellValueFactory(
+				cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getDescription()));
 
 		// material category column
-		tcMaterialCategory.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(cellDataFeatures.getValue().getCategory());
-		});
+		tcMaterialCategory.setCellValueFactory(
+				cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getCategory()));
 	}
 
 	private String buildHttpUrl(String endpoint) throws Exception {
@@ -690,7 +681,7 @@ public class TesterController
 		String sourceId = cbSourceId.getSelectionModel().getSelectedItem();
 
 		// move the file to READY folder
-		fileClient.moveFile(file, source, sourceId, FileEventClient.READY_FOLDER);
+		fileClient.moveFileToReadyFolder(file, source, sourceId);
 
 		if (logger.isInfoEnabled()) {
 			logger.info("Moved file " + fileName + " to ready folder.");
@@ -764,10 +755,10 @@ public class TesterController
 			writeVariant = new OpcDaVariant(Short.valueOf(value));
 			break;
 		case I4:
-			writeVariant = new OpcDaVariant(Integer.valueOf(value).intValue());
+			writeVariant = new OpcDaVariant(Integer.parseInt(value));
 			break;
 		case I8:
-			writeVariant = new OpcDaVariant(Long.valueOf(value).longValue());
+			writeVariant = new OpcDaVariant(Long.parseLong(value));
 			break;
 		case R4:
 			writeVariant = new OpcDaVariant(Float.valueOf(value));
@@ -812,7 +803,7 @@ public class TesterController
 		}
 
 		String sourceId = cbSourceId.getSelectionModel().getSelectedItem();
-		
+
 		if (sourceId == null) {
 			return;
 		}
@@ -883,7 +874,7 @@ public class TesterController
 			conn.setRequestMethod("POST");
 			conn.setRequestProperty("Content-Type", "application/json");
 
-			String sourceId = (String) cbSourceId.getSelectionModel().getSelectedItem();
+			String sourceId = cbSourceId.getSelectionModel().getSelectedItem();
 			String input = tfValue.getText();
 
 			// for production, a reason can be attached
@@ -895,7 +886,6 @@ public class TesterController
 			dto.setTimestamp(timestamp);
 			dto.setReason(values[1]);
 
-			Gson gson = new Gson();
 			String payload = gson.toJson(dto);
 
 			OutputStream os = conn.getOutputStream();
@@ -1123,7 +1113,9 @@ public class TesterController
 
 	@Override
 	public void onRmqMessage(ApplicationMessage message) {
-		logger.warn("Received unhandled RMQ message: " + message.toString());
+		if (logger.isWarnEnabled()) {
+			logger.warn("Received unhandled RMQ message: " + message.toString());
+		}
 	}
 
 	@FXML
@@ -1140,7 +1132,7 @@ public class TesterController
 				throw new Exception(TesterLocalizer.instance().getErrorString("no.source"));
 			}
 
-			String sourceId = (String) cbSourceId.getSelectionModel().getSelectedItem();
+			String sourceId = cbSourceId.getSelectionModel().getSelectedItem();
 
 			String input = tfValue.getText();
 			// for production, a reason can be attached
@@ -1246,12 +1238,16 @@ public class TesterController
 
 	@Override
 	public void onJmsMessage(ApplicationMessage message) {
-		logger.info("Received AMQ message: " + message.toString());
+		if (logger.isInfoEnabled()) {
+			logger.info("Received AMQ message: " + message.toString());
+		}
 	}
 
 	@Override
 	public void onMqttMessage(ApplicationMessage message) {
-		logger.info("Received MQTT message: " + message.toString());
+		if (logger.isInfoEnabled()) {
+			logger.info("Received MQTT message: " + message.toString());
+		}
 	}
 
 	@Override

@@ -132,8 +132,8 @@ public class OeeApplication extends Application {
 
 		// center in main stage
 		final Rectangle2D bounds = Screen.getPrimary().getBounds();
-		stage.setX(bounds.getMinX() + bounds.getWidth() / 2 - SplashController.SPLASH_WIDTH / 2);
-		stage.setY(bounds.getMinY() + bounds.getHeight() / 2 - SplashController.SPLASH_HEIGHT / 2);
+		stage.setX(bounds.getMinX() + bounds.getWidth() / 2.0d - SplashController.SPLASH_WIDTH / 2.0d);
+		stage.setY(bounds.getMinY() + bounds.getHeight() / 2.0d - SplashController.SPLASH_HEIGHT / 2.0d);
 		stage.initStyle(StageStyle.TRANSPARENT);
 		stage.setAlwaysOnTop(true);
 		stage.show();

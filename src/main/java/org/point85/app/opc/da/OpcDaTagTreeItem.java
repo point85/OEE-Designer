@@ -52,6 +52,7 @@ public class OpcDaTagTreeItem extends TreeItem<OpcDaTagTreeBranch> {
 			try {
 				super.getChildren().setAll(buildChildren(this));
 			} catch (Exception e) {
+				// ignore
 			}
 		}
 		return super.getChildren();
@@ -63,7 +64,7 @@ public class OpcDaTagTreeItem extends TreeItem<OpcDaTagTreeBranch> {
 			isFirstTimeLeaf = false;
 
 			try {
-				OpcDaTagTreeBranch tagNode = (OpcDaTagTreeBranch) getValue();
+				OpcDaTagTreeBranch tagNode =  getValue();
 				isLeaf = treeBrowser.isLastNode(tagNode);
 			} catch (Exception ex) {
 				isLeaf = false;
@@ -74,7 +75,7 @@ public class OpcDaTagTreeItem extends TreeItem<OpcDaTagTreeBranch> {
 	}
 
 	private ObservableList<OpcDaTagTreeItem> buildChildren(OpcDaTagTreeItem treeItem) throws Exception {
-		OpcDaTagTreeBranch tagBranch = (OpcDaTagTreeBranch) treeItem.getValue();
+		OpcDaTagTreeBranch tagBranch =  treeItem.getValue();
 		ObservableList<OpcDaTagTreeItem> children = FXCollections.observableArrayList();
 
 		if (treeBrowser != null) {

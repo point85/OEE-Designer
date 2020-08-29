@@ -17,16 +17,14 @@ public class OperatorApplication {
 	// logger
 	private static final Logger logger = LoggerFactory.getLogger(OperatorApplication.class);
 
-	// controller for main screen
-	private OperatorController operatorController;
-
 	public void start(Stage primaryStage) {
 		try {
 			// load FXML
 			FXMLLoader loader = FXMLLoaderFactory.operatorApplicationLoader();
 			AnchorPane mainLayout = (AnchorPane) loader.getRoot();
-			
-			operatorController = loader.getController();
+
+			// controller for main screen
+			OperatorController operatorController = loader.getController();
 			operatorController.initialize();
 
 			Scene scene = new Scene(mainLayout);
@@ -54,5 +52,6 @@ public class OperatorApplication {
 	}
 
 	public void stop() {
+		// nothing to do
 	}
 }

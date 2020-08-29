@@ -65,7 +65,7 @@ public abstract class BaseMessagingTrendController extends DesignerDialogControl
 
 	// images for buttons
 	@Override
-	protected void setImages() throws Exception {
+	protected void setImages() {
 		super.setImages();
 
 		// loopback test
@@ -73,7 +73,7 @@ public abstract class BaseMessagingTrendController extends DesignerDialogControl
 		btLoopback.setContentDisplay(ContentDisplay.LEFT);
 	}
 
-	public void setEventResolver(EventResolver eventResolver) throws Exception {
+	public void setEventResolver(EventResolver eventResolver) {
 		eventResolver.setWatchMode(true);
 		trendChartController.setEventResolver(eventResolver);
 
@@ -164,9 +164,7 @@ public abstract class BaseMessagingTrendController extends DesignerDialogControl
 								DomainUtils.OFFSET_DATE_TIME_8601);
 						trendChartController.invokeResolver(getApp().getAppContext(), dataValue, odt, reason);
 					} catch (Exception e) {
-						Platform.runLater(() -> {
-							AppUtils.showErrorDialog(e);
-						});
+						Platform.runLater(() -> AppUtils.showErrorDialog(e));
 					}
 					return null;
 				}

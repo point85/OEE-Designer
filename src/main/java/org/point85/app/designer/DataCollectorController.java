@@ -110,7 +110,7 @@ public class DataCollectorController extends DialogController {
 
 	// images for buttons
 	@Override
-	protected void setImages() throws Exception {
+	protected void setImages() {
 		super.setImages();
 
 		// new
@@ -251,9 +251,7 @@ public class DataCollectorController extends DialogController {
 	}
 	
 	private String validateHost(String hostId) throws Exception {
-		if (hostId.equalsIgnoreCase("localhost")) {
-			throw new Exception(DesignerLocalizer.instance().getErrorString("host.or.ip", hostId));
-		}
+		// allow "localhost"
 		return hostId;
 	}
 
@@ -261,25 +259,30 @@ public class DataCollectorController extends DialogController {
 	private void onSaveCollector() {
 		// set attributes
 		try {
-			DataCollector dataCollector = getCollector();
+			DataCollector collector = getCollector();
 
 			DataSourceType brokerType = cbNotificationServers.getSelectionModel().getSelectedItem();
+			collector.setBrokerType(brokerType);
 
 			if (brokerType != null) {
-				dataCollector.setBrokerType(brokerType);
-				dataCollector.setBrokerHost(validateHost(getBrokerHost()));
-				dataCollector.setBrokerPort(getBrokerPort());
-				dataCollector.setBrokerUserName(getBrokerUserName());
-				dataCollector.setBrokerUserPassword(getBrokerUserPassword());
+				collector.setBrokerHost(validateHost(getBrokerHost()));
+				collector.setBrokerPort(getBrokerPort());
+				collector.setBrokerUserName(getBrokerUserName());
+				collector.setBrokerUserPassword(getBrokerUserPassword());
+			} else {
+				collector.setBrokerHost(null);
+				collector.setBrokerPort(null);
+				collector.setBrokerUserName(null);
+				collector.setBrokerUserPassword(null);
 			}
 
-			dataCollector.setHost(validateHost(getHost()));
-			dataCollector.setName(getName());
-			dataCollector.setDescription(getDescription());
-			dataCollector.setCollectorState(getCollectorState());
+			collector.setHost(validateHost(getHost()));
+			collector.setName(getName());
+			collector.setDescription(getDescription());
+			collector.setCollectorState(getCollectorState());
 
 			// save collector
-			DataCollector saved = (DataCollector) PersistenceService.instance().save(dataCollector);
+			DataCollector saved = (DataCollector) PersistenceService.instance().save(collector);
 			setCollector(saved);
 
 			// update list

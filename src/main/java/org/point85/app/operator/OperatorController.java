@@ -245,15 +245,13 @@ public class OperatorController {
 			// startup server
 			collectorService.startup();
 		} catch (Exception e) {
-			if (collectorService != null) {
-				collectorService.shutdown();
-			}
+			collectorService.shutdown();
 			throw e;
 		}
 	}
 
 	// images for buttons
-	protected void setImages() throws Exception {
+	protected void setImages() {
 		// find availability reason
 		btFindAvailabilityReason.setGraphic(ImageManager.instance().getImageView(Images.REASON));
 		btFindAvailabilityReason.setContentDisplay(ContentDisplay.LEFT);
@@ -327,7 +325,7 @@ public class OperatorController {
 
 	// show the entity attributes
 	private void displayEntityAttributes(PlantEntity entity) throws Exception {
-		if (entity == null || (!(entity instanceof Equipment))) {
+		if (!(entity instanceof Equipment)) {
 			return;
 		}
 
@@ -362,7 +360,7 @@ public class OperatorController {
 		List<PlantEntity> sortedChildren = new ArrayList<>(children);
 		Collections.sort(sortedChildren);
 
-		boolean hasTreeChildren = newItem.getChildren().size() > 0 ? true : false;
+		boolean hasTreeChildren = !newItem.getChildren().isEmpty();
 
 		// check to see if the node's children have been previously shown
 		if (!hasTreeChildren) {
@@ -456,7 +454,7 @@ public class OperatorController {
 		}
 	}
 
-	private void setEntityGraphic(TreeItem<EntityNode> item) throws Exception {
+	private void setEntityGraphic(TreeItem<EntityNode> item) {
 		ImageView nodeView = null;
 		PlantEntity entity = item.getValue().getPlantEntity();
 		EntityLevel level = entity.getLevel();
@@ -496,7 +494,7 @@ public class OperatorController {
 	}
 
 	// the single root for all entities
-	private TreeItem<EntityNode> getRootEntityItem() throws Exception {
+	private TreeItem<EntityNode> getRootEntityItem() {
 		if (tvEntities.getRoot() == null) {
 			PlantEntity rootEntity = new PlantEntity();
 			rootEntity.setName(PlantEntity.ROOT_ENTITY_NAME);
@@ -688,12 +686,12 @@ public class OperatorController {
 				String hours = tfAvailabilityHours.getText();
 
 				if (hours != null && hours.trim().length() > 0) {
-					seconds = Integer.valueOf(hours.trim()).intValue() * 3600;
+					seconds = Integer.parseInt(hours.trim()) * 3600;
 				}
 
 				String minutes = tfAvailabilityMinutes.getText();
 				if (minutes != null && minutes.trim().length() > 0) {
-					seconds += Integer.valueOf(minutes.trim()) * 60;
+					seconds += Integer.parseInt(minutes.trim()) * 60;
 				}
 
 				duration = Duration.ofSeconds(seconds);
@@ -808,7 +806,7 @@ public class OperatorController {
 		}
 	}
 
-	private OeeEvent createEvent(OeeEventType type, Equipment equipment) throws Exception {
+	private OeeEvent createEvent(OeeEventType type, Equipment equipment) {
 		OeeEvent event = new OeeEvent(equipment);
 		event.setEventType(type);
 		event.setSourceId(OPER_SOURCE_ID);

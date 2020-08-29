@@ -147,7 +147,7 @@ public class MaterialEditorController extends DesignerDialogController {
 				.fetchMaterialsByCategory(newItem.getValue().getCategory());
 		Collections.sort(children);
 
-		boolean hasTreeChildren = newItem.getChildren().size() > 0 ? true : false;
+		boolean hasTreeChildren = !newItem.getChildren().isEmpty();
 
 		// check to see if the node's children have been previously shown
 		if (!hasTreeChildren) {
@@ -165,7 +165,7 @@ public class MaterialEditorController extends DesignerDialogController {
 
 	// images for controls
 	@Override
-	protected void setImages() throws Exception {
+	protected void setImages() {
 		super.setImages();
 
 		// new
@@ -210,7 +210,7 @@ public class MaterialEditorController extends DesignerDialogController {
 	}
 
 	// the single root for all material categories (not persistent)
-	private TreeItem<MaterialNode> getRootMaterialItem() throws Exception {
+	private TreeItem<MaterialNode> getRootMaterialItem() {
 		if (tvMaterials.getRoot() == null) {
 			Material rootMaterial = new Material();
 			rootMaterial.setName(Material.ROOT_MATERIAL_NAME);
@@ -352,7 +352,7 @@ public class MaterialEditorController extends DesignerDialogController {
 		}
 	}
 
-	private void resetGraphic(TreeItem<MaterialNode> materialItem) throws Exception {
+	private void resetGraphic(TreeItem<MaterialNode> materialItem) {
 		materialItem.setGraphic(ImageManager.instance().getImageView(Images.MATERIAL));
 	}
 
@@ -379,7 +379,7 @@ public class MaterialEditorController extends DesignerDialogController {
 			updateCategory(selectedMaterialItem);
 
 			tvMaterials.refresh();
-			
+
 			tvMaterials.getSelectionModel().clearSelection();
 			selectedMaterialItem = null;
 
@@ -388,7 +388,7 @@ public class MaterialEditorController extends DesignerDialogController {
 		}
 	}
 
-	private void updateCategory(TreeItem<MaterialNode> materialItem) throws Exception {
+	private void updateCategory(TreeItem<MaterialNode> materialItem) {
 
 		Material material = materialItem.getValue().getMaterial();
 
@@ -399,7 +399,7 @@ public class MaterialEditorController extends DesignerDialogController {
 			TreeItem<MaterialNode> categoryNode = materialItem.getParent();
 			categoryNode.getChildren().remove(materialItem);
 
-			if (categoryNode.getChildren().size() == 0) {
+			if (categoryNode.getChildren().isEmpty()) {
 				// remove category too
 				categoryNode.getParent().getChildren().remove(categoryNode);
 			}
@@ -595,8 +595,6 @@ public class MaterialEditorController extends DesignerDialogController {
 
 				PersistenceService.instance().save(material);
 			}
-		} catch (Exception e) {
-			throw e;
 		} finally {
 			br.close();
 		}

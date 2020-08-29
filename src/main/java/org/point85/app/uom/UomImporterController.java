@@ -39,13 +39,10 @@ public class UomImporterController extends DialogController {
 	@FXML
 	public void initialize() throws Exception {
 		// set unit types
-		for (UnitType unitType : UnitType.values()) {
-			unitTypes.add(unitType);
-		}
+		Collections.addAll(unitTypes, UnitType.values());
 		Collections.sort(unitTypes);
 
 		cbUnitTypes.setItems(unitTypes);
-
 		cbAvailableUnits.setItems(unitItems);
 
 		// control images

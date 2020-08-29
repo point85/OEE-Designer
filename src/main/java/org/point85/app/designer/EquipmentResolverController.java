@@ -162,7 +162,7 @@ public class EquipmentResolverController extends DesignerController {
 		initializeResolverTable();
 	}
 
-	private void initializeResolverTable() throws Exception {
+	private void initializeResolverTable() {
 		// bind to list of event resolvers
 		tvResolvers.setItems(eventResolvers);
 
@@ -227,14 +227,12 @@ public class EquipmentResolverController extends DesignerController {
 		});
 
 		// data source id column
-		tcSourceId.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(cellDataFeatures.getValue().getSourceId());
-		});
+		tcSourceId.setCellValueFactory(
+				cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getSourceId()));
 
 		// data type column
-		tcDataType.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(cellDataFeatures.getValue().getDataType());
-		});
+		tcDataType.setCellValueFactory(
+				cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getDataType()));
 
 		// script column
 		tcScript.setCellValueFactory(cellDataFeatures -> {
@@ -293,6 +291,7 @@ public class EquipmentResolverController extends DesignerController {
 				ResolverFunction resolver = new ResolverFunction(functionScript);
 				lbScript.setText(resolver.getDisplayString());
 			} catch (Exception e) {
+				// ignore
 			}
 		}
 
@@ -307,7 +306,7 @@ public class EquipmentResolverController extends DesignerController {
 		btAddResolver.setText(DesignerLocalizer.instance().getLangString("update"));
 	}
 
-	void showResolvers(Equipment equipment) throws Exception {
+	void showResolvers(Equipment equipment) {
 		if (equipment == null) {
 			return;
 		}
@@ -348,7 +347,7 @@ public class EquipmentResolverController extends DesignerController {
 		}
 	}
 
-	protected void setImages() throws Exception {
+	protected void setImages() {
 		// new resolver
 		btNewResolver.setGraphic(ImageManager.instance().getImageView(Images.NEW));
 		btNewResolver.setContentDisplay(ContentDisplay.RIGHT);
@@ -388,7 +387,7 @@ public class EquipmentResolverController extends DesignerController {
 	}
 
 	@FXML
-	private void onSelectDataSource() throws Exception {
+	private void onSelectDataSource() {
 		DataSourceType sourceType = this.cbDataSources.getSelectionModel().getSelectedItem();
 
 		if (sourceType == null) {

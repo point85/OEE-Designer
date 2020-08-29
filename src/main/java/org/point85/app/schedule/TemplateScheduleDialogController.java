@@ -59,14 +59,11 @@ public class TemplateScheduleDialogController extends DesignerDialogController {
 		tvTemplates.setItems(scheduleList);
 
 		// name
-		tcName.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(cellDataFeatures.getValue().getName());
-		});
+		tcName.setCellValueFactory(cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getName()));
 
 		// description
-		tcDescription.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(cellDataFeatures.getValue().getDescription());
-		});
+		tcDescription.setCellValueFactory(
+				cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getDescription()));
 
 		tcDescription.setCellFactory(tablecol -> {
 			TableCell<WorkSchedule, String> cell = new TableCell<>();
@@ -78,21 +75,19 @@ public class TemplateScheduleDialogController extends DesignerDialogController {
 		});
 
 		// shifts
-		tcShifts.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleObjectProperty<Integer>(cellDataFeatures.getValue().getShifts().size());
-		});
+		tcShifts.setCellValueFactory(
+				cellDataFeatures -> new SimpleObjectProperty<Integer>(cellDataFeatures.getValue().getShifts().size()));
 
 		// teams
-		tcTeams.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleObjectProperty<Integer>(cellDataFeatures.getValue().getTeams().size());
-		});
+		tcTeams.setCellValueFactory(
+				cellDataFeatures -> new SimpleObjectProperty<Integer>(cellDataFeatures.getValue().getTeams().size()));
 
 		// rotation days
 		tcRotations.setCellValueFactory(cellDataFeatures -> {
 			SimpleObjectProperty<Long> days = null;
 			try {
 				Duration duration = cellDataFeatures.getValue().getTeams().get(0).getRotationDuration();
-				days = new SimpleObjectProperty<Long>(duration.toDays());
+				days = new SimpleObjectProperty<>(duration.toDays());
 			} catch (Exception e) {
 				logger.error(e.getMessage());
 			}

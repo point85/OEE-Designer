@@ -136,7 +136,7 @@ public class EventResolverController extends DesignerDialogController {
 
 	// images for buttons
 	@Override
-	protected void setImages() throws Exception {
+	protected void setImages() {
 		super.setImages();
 
 		// execute
@@ -185,7 +185,7 @@ public class EventResolverController extends DesignerDialogController {
 		taResult.clear();
 	}
 
-	private ResolverFunction evaluateFunction(String functionScript) throws Exception {
+	private ResolverFunction evaluateFunction(String functionScript)  {
 		// evaluate function for subsequent execution
 		return new ResolverFunction(functionScript);
 	}
@@ -213,7 +213,7 @@ public class EventResolverController extends DesignerDialogController {
 		this.value = value;
 	}
 
-	public void showFunctionScript(EventResolver scriptResolver) throws Exception {
+	public void showFunctionScript(EventResolver scriptResolver)  {
 		if (scriptResolver == null) {
 			return;
 		}
@@ -349,7 +349,7 @@ public class EventResolverController extends DesignerDialogController {
 				return;
 			}
 
-			Object value = valueStr;
+			Object objValue = valueStr;
 
 			if (eventResolver.getDataSource() instanceof ModbusSource) {
 				ModbusEndpoint source = new ModbusEndpoint(eventResolver.getSourceId());
@@ -357,9 +357,9 @@ public class EventResolverController extends DesignerDialogController {
 				ModbusVariant variant = ModbusUtils.toVariant(dataType, valueStr);
 				List<ModbusVariant> variants = new ArrayList<>(1);
 				variants.add(variant);
-				value = variants;
+				objValue = variants;
 			}
-			setValue(value);
+			setValue(objValue);
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}

@@ -69,7 +69,7 @@ public class ReasonSelectorController extends DialogController {
 	}
 
 	// the single root for all reasons
-	private TreeItem<ReasonNode> getRootReasonItem() throws Exception {
+	private TreeItem<ReasonNode> getRootReasonItem() {
 		if (tvReasons.getRoot() == null) {
 			Reason rootReason = new Reason();
 			rootReason.setName(Reason.ROOT_REASON_NAME);
@@ -79,7 +79,7 @@ public class ReasonSelectorController extends DialogController {
 	}
 
 	// reason selected in the hierarchy
-	private void onSelectReason(TreeItem<ReasonNode> oldItem, TreeItem<ReasonNode> newItem) throws Exception {
+	private void onSelectReason(TreeItem<ReasonNode> oldItem, TreeItem<ReasonNode> newItem) {
 		if (newItem == null) {
 			return;
 		}
@@ -92,7 +92,7 @@ public class ReasonSelectorController extends DialogController {
 		List<Reason> sortedChildren = new ArrayList<>(children);
 		Collections.sort(sortedChildren);
 
-		boolean hasTreeChildren = newItem.getChildren().size() > 0 ? true : false;
+		boolean hasTreeChildren = !newItem.getChildren().isEmpty();
 
 		// check to see if the node's children have been previously shown
 		if (!hasTreeChildren) {

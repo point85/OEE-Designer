@@ -75,6 +75,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableCell;
@@ -162,6 +163,9 @@ public class DashboardController extends DialogController implements CategoryCli
 
 	@FXML
 	private TextField tfRefreshPeriod;
+
+	@FXML
+	private Label lblNotification;
 
 	// event editors
 	@FXML
@@ -411,6 +415,10 @@ public class DashboardController extends DialogController implements CategoryCli
 	@FXML
 	private AnchorPane apPlannedDowntimePareto;
 
+	private void postNotification(String message) {
+		lblNotification.setText(message);
+	}
+
 	private float determineTimeUnits(Duration duration) {
 		float divisor = 1.0f;
 		float seconds = duration.getSeconds();
@@ -433,12 +441,11 @@ public class DashboardController extends DialogController implements CategoryCli
 	}
 
 	private Float convertDuration(Duration duration, float divisor) {
-		float time = ((float) duration.getSeconds()) / divisor;
-		return new Float(time);
+		return ((float) duration.getSeconds()) / divisor;
 	}
 
 	private void onSelectTimeLosses() {
-		if (bcLosses.getData() == null || bcLosses.getData().size() == 0) {
+		if (bcLosses.getData() == null || bcLosses.getData().isEmpty()) {
 			createLossChart();
 		}
 	}
@@ -455,7 +462,7 @@ public class DashboardController extends DialogController implements CategoryCli
 		tvResolvedEvents.refresh();
 	}
 
-	private void onSelectMinorStoppagesPareto() throws Exception {
+	private void onSelectMinorStoppagesPareto() {
 		List<ParetoItem> items = EquipmentLossManager.getParetoData(equipmentLoss, TimeLoss.MINOR_STOPPAGES);
 
 		Number divisor = equipmentLoss.getLoss(TimeLoss.MINOR_STOPPAGES).getSeconds();
@@ -475,7 +482,7 @@ public class DashboardController extends DialogController implements CategoryCli
 				spMinorStoppagesPareto, items, divisor, DesignerLocalizer.instance().getLangString("time.by.reason"));
 	}
 
-	private void onSelectRejectsPareto() throws Exception {
+	private void onSelectRejectsPareto() {
 		List<ParetoItem> items = EquipmentLossManager.getParetoData(equipmentLoss, TimeLoss.REJECT_REWORK);
 
 		Number divisor = equipmentLoss.getLoss(TimeLoss.REJECT_REWORK).getSeconds();
@@ -495,7 +502,7 @@ public class DashboardController extends DialogController implements CategoryCli
 				items, divisor, DesignerLocalizer.instance().getLangString("time.by.reason"));
 	}
 
-	private void onSelectReducedSpeedPareto() throws Exception {
+	private void onSelectReducedSpeedPareto() {
 		List<ParetoItem> items = EquipmentLossManager.getParetoData(equipmentLoss, TimeLoss.REDUCED_SPEED);
 
 		Number divisor = equipmentLoss.getLoss(TimeLoss.REDUCED_SPEED).getSeconds();
@@ -515,7 +522,7 @@ public class DashboardController extends DialogController implements CategoryCli
 				divisor, DesignerLocalizer.instance().getLangString("time.by.reason"));
 	}
 
-	private void onSelectStartupAndYieldPareto() throws Exception {
+	private void onSelectStartupAndYieldPareto() {
 		List<ParetoItem> items = EquipmentLossManager.getParetoData(equipmentLoss, TimeLoss.STARTUP_YIELD);
 
 		Number divisor = equipmentLoss.getLoss(TimeLoss.STARTUP_YIELD).getSeconds();
@@ -535,7 +542,7 @@ public class DashboardController extends DialogController implements CategoryCli
 				divisor, DesignerLocalizer.instance().getLangString("time.by.reason"));
 	}
 
-	private void onSelectUnplannedDowntimePareto() throws Exception {
+	private void onSelectUnplannedDowntimePareto() {
 		List<ParetoItem> items = EquipmentLossManager.getParetoData(equipmentLoss, TimeLoss.UNPLANNED_DOWNTIME);
 
 		Number divisor = equipmentLoss.getLoss(TimeLoss.UNPLANNED_DOWNTIME).getSeconds();
@@ -556,7 +563,7 @@ public class DashboardController extends DialogController implements CategoryCli
 				DesignerLocalizer.instance().getLangString("time.by.reason"));
 	}
 
-	private void onSelectSetupPareto() throws Exception {
+	private void onSelectSetupPareto() {
 		List<ParetoItem> items = EquipmentLossManager.getParetoData(equipmentLoss, TimeLoss.SETUP);
 
 		Number divisor = equipmentLoss.getLoss(TimeLoss.SETUP).getSeconds();
@@ -576,7 +583,7 @@ public class DashboardController extends DialogController implements CategoryCli
 				divisor, DesignerLocalizer.instance().getLangString("time.by.reason"));
 	}
 
-	private void onSelectPlannedDowntimePareto() throws Exception {
+	private void onSelectPlannedDowntimePareto() {
 		List<ParetoItem> items = EquipmentLossManager.getParetoData(equipmentLoss, TimeLoss.PLANNED_DOWNTIME);
 
 		Number divisor = equipmentLoss.getLoss(TimeLoss.PLANNED_DOWNTIME).getSeconds();
@@ -645,34 +652,33 @@ public class DashboardController extends DialogController implements CategoryCli
 		Number netTime = convertDuration(equipmentLoss.getValueAddingTime(), divisor);
 		Number yield = convertDuration(equipmentLoss.getLoss(TimeLoss.STARTUP_YIELD), divisor);
 
-		netTimePoints.add(new XYChart.Data<Number, String>(netTime, category));
-		yieldPoints.add(new XYChart.Data<Number, String>(yield, category));
+		netTimePoints.add(new XYChart.Data<>(netTime, category));
+		yieldPoints.add(new XYChart.Data<>(yield, category));
 
 		// effective net production time
 		category = TimeCategory.EFFECTIVE_NET_PRODUCTION.toString();
 		netTime = convertDuration(equipmentLoss.getEffectiveNetProductionTime(), divisor);
 		Number rejects = convertDuration(equipmentLoss.getLoss(TimeLoss.REJECT_REWORK), divisor);
 
-		netTimePoints.add(new XYChart.Data<Number, String>(netTime, category));
-		rejectPoints.add(new XYChart.Data<Number, String>(rejects, category));
+		netTimePoints.add(new XYChart.Data<>(netTime, category));
+		rejectPoints.add(new XYChart.Data<>(rejects, category));
 
 		// efficient net production time
 		category = TimeCategory.EFFICIENT_NET_PRODUCTION.toString();
 		netTime = convertDuration(equipmentLoss.getEfficientNetProductionTime(), divisor);
 		Number reducedSpeed = convertDuration(equipmentLoss.getLoss(TimeLoss.REDUCED_SPEED), divisor);
 
-		netTimePoints.add(new XYChart.Data<Number, String>(netTime, category));
-		reducedSpeedPoints.add(new XYChart.Data<Number, String>(reducedSpeed, category));
+		netTimePoints.add(new XYChart.Data<>(netTime, category));
+		reducedSpeedPoints.add(new XYChart.Data<>(reducedSpeed, category));
 
 		// net production time
 		category = TimeCategory.NET_PRODUCTION.toString();
 		netTime = convertDuration(equipmentLoss.getNetProductionTime(), divisor);
 		Number minorStoppagesLoss = convertDuration(equipmentLoss.getLoss(TimeLoss.MINOR_STOPPAGES), divisor);
 
-		netTimePoints.add(new XYChart.Data<Number, String>(netTime, category));
+		netTimePoints.add(new XYChart.Data<>(netTime, category));
 
-		XYChart.Data<Number, String> minorStoppagesData = new XYChart.Data<Number, String>(minorStoppagesLoss,
-				category);
+		XYChart.Data<Number, String> minorStoppagesData = new XYChart.Data<>(minorStoppagesLoss, category);
 
 		minorStoppagePoints.add(minorStoppagesData);
 
@@ -681,40 +687,40 @@ public class DashboardController extends DialogController implements CategoryCli
 		netTime = convertDuration(equipmentLoss.getReportedProductionTime(), divisor);
 		Number unplannedDowntime = convertDuration(equipmentLoss.getLoss(TimeLoss.UNPLANNED_DOWNTIME), divisor);
 
-		netTimePoints.add(new XYChart.Data<Number, String>(netTime, category));
-		unplannedDowntimePoints.add(new XYChart.Data<Number, String>(unplannedDowntime, category));
+		netTimePoints.add(new XYChart.Data<>(netTime, category));
+		unplannedDowntimePoints.add(new XYChart.Data<>(unplannedDowntime, category));
 
 		// production time
 		category = TimeCategory.PRODUCTION.toString();
 		netTime = convertDuration(equipmentLoss.getProductionTime(), divisor);
 		Number setup = convertDuration(equipmentLoss.getLoss(TimeLoss.SETUP), divisor);
 
-		netTimePoints.add(new XYChart.Data<Number, String>(netTime, category));
-		setupPoints.add(new XYChart.Data<Number, String>(setup, category));
+		netTimePoints.add(new XYChart.Data<>(netTime, category));
+		setupPoints.add(new XYChart.Data<>(setup, category));
 
 		// scheduled time
 		category = TimeCategory.SCHEDULED_PRODUCTION.toString();
 		netTime = convertDuration(equipmentLoss.getScheduledProductionTime(), divisor);
 		Number plannedDowntime = convertDuration(equipmentLoss.getLoss(TimeLoss.PLANNED_DOWNTIME), divisor);
 
-		netTimePoints.add(new XYChart.Data<Number, String>(netTime, category));
-		plannedDowntimePoints.add(new XYChart.Data<Number, String>(plannedDowntime, category));
+		netTimePoints.add(new XYChart.Data<>(netTime, category));
+		plannedDowntimePoints.add(new XYChart.Data<>(plannedDowntime, category));
 
 		// available time
 		category = TimeCategory.AVAILABLE.toString();
 		netTime = convertDuration(equipmentLoss.getAvailableTime(), divisor);
 		Number specialEventsLosses = convertDuration(equipmentLoss.getLoss(TimeLoss.UNSCHEDULED), divisor);
 
-		netTimePoints.add(new XYChart.Data<Number, String>(netTime, category));
-		unscheduledPoints.add(new XYChart.Data<Number, String>(specialEventsLosses, category));
+		netTimePoints.add(new XYChart.Data<>(netTime, category));
+		unscheduledPoints.add(new XYChart.Data<>(specialEventsLosses, category));
 
 		// operations time
 		category = TimeCategory.REQUIRED_OPERATIONS.toString();
 		netTime = convertDuration(equipmentLoss.getRequiredOperationsTime(), divisor);
 		Number noDemand = convertDuration(equipmentLoss.getLoss(TimeLoss.NOT_SCHEDULED), divisor);
 
-		netTimePoints.add(new XYChart.Data<Number, String>(netTime, category));
-		notScheduledPoints.add(new XYChart.Data<Number, String>(noDemand, category));
+		netTimePoints.add(new XYChart.Data<>(netTime, category));
+		notScheduledPoints.add(new XYChart.Data<>(noDemand, category));
 
 		// add the data to each series
 		netTimeList.addAll(netTimePoints);
@@ -790,9 +796,7 @@ public class DashboardController extends DialogController implements CategoryCli
 		// add listener for mouse click on bar and tooltip
 		for (Series<Number, String> series : bcLosses.getData()) {
 			for (XYChart.Data<Number, String> item : series.getData()) {
-				item.getNode().setOnMouseClicked((MouseEvent event) -> {
-					onClickLossCategory(series, item);
-				});
+				item.getNode().setOnMouseClicked((MouseEvent event) -> onClickLossCategory(series, item));
 
 				Tooltip tooltip = new Tooltip(item.getXValue().toString());
 				Tooltip.install(item.getNode(), tooltip);
@@ -887,7 +891,7 @@ public class DashboardController extends DialogController implements CategoryCli
 	}
 
 	@Override
-	protected void setImages() throws Exception {
+	protected void setImages() {
 		// refresh
 		btRefresh.setGraphic(ImageManager.instance().getImageView(Images.REFRESH));
 
@@ -967,8 +971,8 @@ public class DashboardController extends DialogController implements CategoryCli
 			initializeRefreshTimer();
 		}
 
-		int refreshSec = Integer.valueOf(tfRefreshPeriod.getText()).intValue();
-		refreshTimer.schedule(refreshTask, 1000, refreshSec * 1000);
+		int refreshSec = Integer.parseInt(tfRefreshPeriod.getText());
+		refreshTimer.schedule(refreshTask, 1000l, refreshSec * 1000l);
 	}
 
 	private void stopRefreshTimer() {
@@ -989,20 +993,18 @@ public class DashboardController extends DialogController implements CategoryCli
 		tvResolvedEvents.setItems(resolvedEvents);
 
 		// loss category
-		tcAvailability.setCellFactory(column -> {
-			return new TableCell<OeeEvent, Reason>() {
-				@Override
-				protected void updateItem(Reason reason, boolean empty) {
-					super.updateItem(reason, empty);
+		tcAvailability.setCellFactory(column -> new TableCell<OeeEvent, Reason>() {
+			@Override
+			protected void updateItem(Reason reason, boolean empty) {
+				super.updateItem(reason, empty);
 
-					if (reason != null && reason.getLossCategory() != null) {
-						Color color = reason.getLossCategory().getColor();
+				if (reason != null && reason.getLossCategory() != null) {
+					Color color = reason.getLossCategory().getColor();
 
-						// remove 0x
-						setStyle("-fx-background-color: #" + color.toString().substring(2));
-					}
+					// remove 0x
+					setStyle("-fx-background-color: #" + color.toString().substring(2));
 				}
-			};
+			}
 		});
 
 		tcAvailability.setCellValueFactory(cellDataFeatures -> {
@@ -1025,16 +1027,12 @@ public class DashboardController extends DialogController implements CategoryCli
 		});
 
 		// start time
-		tcStartTime.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(DomainUtils.offsetDateTimeToString(
-					cellDataFeatures.getValue().getStartTime(), DomainUtils.OFFSET_DATE_TIME_PATTERN));
-		});
+		tcStartTime.setCellValueFactory(cellDataFeatures -> new SimpleStringProperty(DomainUtils.offsetDateTimeToString(
+				cellDataFeatures.getValue().getStartTime(), DomainUtils.OFFSET_DATE_TIME_PATTERN)));
 
 		// end time
-		tcEndTime.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(DomainUtils.offsetDateTimeToString(cellDataFeatures.getValue().getEndTime(),
-					DomainUtils.OFFSET_DATE_TIME_PATTERN));
-		});
+		tcEndTime.setCellValueFactory(cellDataFeatures -> new SimpleStringProperty(DomainUtils.offsetDateTimeToString(
+				cellDataFeatures.getValue().getEndTime(), DomainUtils.OFFSET_DATE_TIME_PATTERN)));
 
 		// duration
 		tcDuration.setCellValueFactory(cellDataFeatures -> {
@@ -1092,7 +1090,7 @@ public class DashboardController extends DialogController implements CategoryCli
 				Color color = reason.getLossCategory().getColor();
 				Text text = new Text(reason.getLossCategory().toString());
 				text.setFill(color);
-				lossProperty = new SimpleObjectProperty<Text>(text);
+				lossProperty = new SimpleObjectProperty<>(text);
 			}
 			return lossProperty;
 		});
@@ -1364,9 +1362,7 @@ public class DashboardController extends DialogController implements CategoryCli
 		}
 		LocalTime startTime = LocalTime.ofSecondOfDay(startSeconds.getSeconds());
 		LocalDateTime ldtStart = LocalDateTime.of(startDate, startTime);
-		OffsetDateTime odtStart = DomainUtils.fromLocalDateTime(ldtStart);
-
-		return odtStart;
+		return DomainUtils.fromLocalDateTime(ldtStart);
 	}
 
 	private OffsetDateTime getEndTime() throws Exception {
@@ -1385,8 +1381,7 @@ public class DashboardController extends DialogController implements CategoryCli
 		LocalTime endTime = LocalTime.ofSecondOfDay(endSeconds.getSeconds());
 		LocalDateTime ldtEnd = LocalDateTime.of(endDate, endTime);
 
-		OffsetDateTime odtEnd = DomainUtils.fromLocalDateTime(ldtEnd);
-		return odtEnd;
+		return DomainUtils.fromLocalDateTime(ldtEnd);
 	}
 
 	@FXML
@@ -1495,7 +1490,7 @@ public class DashboardController extends DialogController implements CategoryCli
 
 			// show the production
 			String symbol = null;
-			double amount = 0.0d;
+			double amount;
 
 			Quantity goodQty = equipmentLoss.getGoodQuantity();
 
@@ -1543,22 +1538,22 @@ public class DashboardController extends DialogController implements CategoryCli
 				}
 			});
 
-			OeeEvent lastAvailability = null;
+			OeeEvent lastAvailabilityEvent = null;
 
 			int i = historyRecords.size() - 1;
 
 			while (i > -1) {
 				if (historyRecords.get(i).isAvailability()) {
-					lastAvailability = historyRecords.get(i);
+					lastAvailabilityEvent = historyRecords.get(i);
 					break;
 				}
 				i--;
 			}
 
 			// last availability
-			if (lastAvailability != null) {
+			if (lastAvailabilityEvent != null) {
 				// availability reason
-				Reason reason = lastAvailability.getReason();
+				Reason reason = lastAvailabilityEvent.getReason();
 
 				if (reason != null) {
 					tiAvailability.setText(reason.getName() + " (" + reason.getDescription() + ")");
@@ -1620,8 +1615,14 @@ public class DashboardController extends DialogController implements CategoryCli
 			clearLossData();
 			refreshCharts(tpParetoCharts.getSelectionModel().getSelectedItem());
 
+			String timestamp = DomainUtils.offsetDateTimeToString(OffsetDateTime.now(),
+					"yyyy-MM-dd HH:mm:ss ZZZZZ");
+			postNotification(DesignerLocalizer.instance().getLangString("data.refreshed", timestamp));
+
 		} catch (Exception e) {
-			AppUtils.showErrorDialog(e);
+			String timestamp = DomainUtils.offsetDateTimeToString(OffsetDateTime.now(),
+					"yyyy-MM-dd HH:mm:ss ZZZZZ");
+			postNotification(timestamp + ": " + e.getMessage());
 		}
 	}
 
@@ -1841,9 +1842,7 @@ public class DashboardController extends DialogController implements CategoryCli
 	private class RefreshTask extends TimerTask {
 		@Override
 		public void run() {
-			Platform.runLater(() -> {
-				onRefresh();
-			});
+			Platform.runLater(() -> onRefresh());
 		}
 	}
 }

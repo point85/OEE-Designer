@@ -59,26 +59,26 @@ public class ParetoChartController {
 	}
 
 	public void createParetoChart(String title, StackPane spPareto, List<ParetoItem> items, String categoryLabel) {
-		Number totalCount = null;
+		Number countTotal = null;
 
 		for (int i = 0; i < items.size(); i++) {
 			Number value = items.get(i).getValue();
 
 			if (i == 0) {
-				totalCount = value;
+				countTotal = value;
 			} else {
 				if (value instanceof BigDecimal) {
-					totalCount = ((BigDecimal) totalCount).add((BigDecimal) value);
+					countTotal = ((BigDecimal) countTotal).add((BigDecimal) value);
 				} else if (value instanceof Integer) {
-					totalCount = (Integer) totalCount + (Integer) value;
+					countTotal = (Integer) countTotal + (Integer) value;
 				} else if (value instanceof Float) {
-					totalCount = (Float) totalCount + (Float) value;
+					countTotal = (Float) countTotal + (Float) value;
 				} else if (value instanceof Double) {
-					totalCount = (Double) totalCount + (Double) value;
+					countTotal = (Double) countTotal + (Double) value;
 				}
 			}
 		}
-		createParetoChart(title, spPareto, items, totalCount, categoryLabel);
+		createParetoChart(title, spPareto, items, countTotal, categoryLabel);
 	}
 
 	public void clearData() {
@@ -126,9 +126,7 @@ public class ParetoChartController {
 		for (Series<String, Number> series : chBarChart.getData()) {
 			for (XYChart.Data<String, Number> item : series.getData()) {
 
-				item.getNode().setOnMouseClicked((MouseEvent event) -> {
-					onBarChartNodeSelected(item);
-				});
+				item.getNode().setOnMouseClicked((MouseEvent event) -> onBarChartNodeSelected(item));
 			}
 		}
 
@@ -165,7 +163,7 @@ public class ParetoChartController {
 
 		// plot the points
 		double total = totalCount.doubleValue();
-		Float cumulative = new Float(0f);
+		Float cumulative = 0.0f;
 
 		for (ParetoItem paretoItem : this.paretoItems) {
 			cumulative += new Float(paretoItem.getValue().floatValue() / total * 100.0f);

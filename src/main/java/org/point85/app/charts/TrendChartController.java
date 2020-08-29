@@ -202,19 +202,9 @@ public class TrendChartController extends DesignerController {
 	}
 
 	private void intializeItemTable() {
-		// table view row selection listener
-		tvResolvedItems.getSelectionModel().selectedItemProperty()
-				.addListener((observableValue, oldValue, newValue) -> {
-					try {
-					} catch (Exception e) {
-						AppUtils.showErrorDialog(e);
-					}
-				});
-
 		// item id
-		tcItem.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(cellDataFeatures.getValue().getSourceId());
-		});
+		tcItem.setCellValueFactory(
+				cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getSourceId()));
 
 		// input value
 		tcInputValue.setCellValueFactory(cellDataFeatures -> {
@@ -255,7 +245,7 @@ public class TrendChartController extends DesignerController {
 		});
 	}
 
-	public void toggleTrendButton() throws Exception {
+	public void toggleTrendButton() {
 		if (subscriber.isSubscribed()) {
 			btToggleTrend.setGraphic(ImageManager.instance().getImageView(Images.STOP));
 			btToggleTrend.setText(DesignerLocalizer.instance().getLangString("stop"));
@@ -266,7 +256,7 @@ public class TrendChartController extends DesignerController {
 	}
 
 	// images for buttons
-	protected void setButtonImages() throws Exception {
+	protected void setButtonImages() {
 		// trend auto starts
 		btToggleTrend.setGraphic(ImageManager.instance().getImageView(Images.STOP));
 		btToggleTrend.setContentDisplay(ContentDisplay.LEFT);
@@ -289,7 +279,7 @@ public class TrendChartController extends DesignerController {
 		return this.eventResolver;
 	}
 
-	public void setEventResolver(EventResolver eventResolver) throws Exception {
+	public void setEventResolver(EventResolver eventResolver) {
 		this.eventResolver = eventResolver;
 		this.setUpdatePeriodMsec(eventResolver.getUpdatePeriod());
 	}
@@ -335,6 +325,7 @@ public class TrendChartController extends DesignerController {
 				try {
 					plottedValue = Double.valueOf((String) plottedValue);
 				} catch (NumberFormatException e) {
+					AppUtils.showErrorDialog(e);
 				}
 			}
 
@@ -367,7 +358,7 @@ public class TrendChartController extends DesignerController {
 		tvResolvedItems.refresh();
 	}
 
-	private void plotData(final Object inputValue, final Object plottedValue) throws Exception {
+	private void plotData(final Object inputValue, final Object plottedValue) {
 		if (inputValue == null) {
 			return;
 		}
@@ -416,7 +407,7 @@ public class TrendChartController extends DesignerController {
 	public void onStartTrending() {
 		try {
 			// number of points to display
-			dataCount = Integer.valueOf(tfPointCount.getText()).intValue();
+			dataCount = Integer.parseInt(tfPointCount.getText());
 
 			// update period in msec
 			Integer period = spUpdatePeriod.getValue() * 1000;
@@ -456,7 +447,7 @@ public class TrendChartController extends DesignerController {
 	private void onResetTrending() {
 		try {
 			// number of points to display
-			dataCount = Integer.valueOf(tfPointCount.getText()).intValue();
+			dataCount = Integer.parseInt(tfPointCount.getText());
 
 			resolvedItems.clear();
 			tvResolvedItems.refresh();

@@ -93,7 +93,7 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 
 	// images for buttons
 	@Override
-	protected void setImages() throws Exception {
+	protected void setImages() {
 		super.setImages();
 
 		// connect
@@ -116,7 +116,7 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 
 	@Override
 	public boolean isSubscribed() {
-		return monitoredNodeId != null ? true : false;
+		return monitoredNodeId != null;
 	}
 
 	public void subscribeToDataSource() throws Exception {

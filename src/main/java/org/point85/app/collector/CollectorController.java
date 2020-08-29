@@ -40,12 +40,12 @@ public class CollectorController {
 	@FXML
 	private TextArea taNotification;
 
-	void initialize(String collectorName) throws Exception {
+	void initialize(String collectorName) {
 		setImages();
 		setCollectorName(collectorName);
 	}
 
-	private void setImages() throws Exception {
+	private void setImages() {
 		// startup
 		btStartup.setGraphic(ImageManager.instance().getImageView(Images.STARTUP));
 		btStartup.setContentDisplay(ContentDisplay.LEFT);
@@ -118,10 +118,10 @@ public class CollectorController {
 				logger.error(e.getMessage());
 			}
 		}
-	};
+	}
 
 	@FXML
-	private void onShutdown() throws Exception {
+	private void onShutdown() {
 		if (collectorService != null) {
 			collectorService.shutdown();
 

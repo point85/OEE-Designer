@@ -69,7 +69,7 @@ public class OeeEventTrendController extends DesignerDialogController {
 
 	// initialize the production and availability charts and plot the points
 	public void buildTrend(List<OeeEvent> records, OffsetDateTime odtStart, OffsetDateTime odtEnd) throws Exception {
-		if (records == null || records.size() == 0) {
+		if (records == null || records.isEmpty()) {
 			return;
 		}
 
@@ -117,7 +117,7 @@ public class OeeEventTrendController extends DesignerDialogController {
 	}
 
 	private void plotValues() throws Exception {
-		if (oeeRecords.size() == 0) {
+		if (oeeRecords.isEmpty()) {
 			return;
 		}
 
@@ -150,7 +150,8 @@ public class OeeEventTrendController extends DesignerDialogController {
 		Duration delta = computeDeltaTime(event);
 		Long deltaMinutes = delta.toMinutes();
 
-		TimeLoss loss = event.getReason().getLossCategory();
+		// no loss by default
+		TimeLoss loss = event.getReason() != null ? event.getReason().getLossCategory() : TimeLoss.NO_LOSS;
 
 		return new XYChart.Data<>(deltaMinutes.intValue(), loss.toString());
 	}
@@ -172,7 +173,7 @@ public class OeeEventTrendController extends DesignerDialogController {
 			produced = produced.convert(uom);
 		}
 
-		Double value = new Double(produced.getAmount());
+		Double value = produced.getAmount();
 		return new XYChart.Data<>(deltaMinutes.intValue(), value);
 	}
 

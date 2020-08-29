@@ -133,6 +133,7 @@ abstract class EventEditorController extends DialogController {
 	}
 
 	@FXML
+	@Override
 	protected void onOK() {
 		try {
 			// save data

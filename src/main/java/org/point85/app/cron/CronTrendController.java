@@ -61,13 +61,7 @@ public class CronTrendController extends DesignerDialogController implements Cro
 		return spTrendChart;
 	}
 
-	// images for buttons
-	@Override
-	protected void setImages() throws Exception {
-		super.setImages();
-	}
-
-	public void setEventResolver(EventResolver eventResolver) throws Exception {
+	public void setEventResolver(EventResolver eventResolver) {
 		eventResolver.setWatchMode(true);
 		trendChartController.setEventResolver(eventResolver);
 
@@ -102,7 +96,7 @@ public class CronTrendController extends DesignerDialogController implements Cro
 
 	@Override
 	public boolean isSubscribed() {
-		return cronClient != null ? true : false;
+		return cronClient != null;
 	}
 
 	@Override
@@ -188,10 +182,6 @@ public class CronTrendController extends DesignerDialogController implements Cro
 
 	// service class for call backs on received events
 	private class ResolutionService extends Service<Void> {
-
-		public ResolutionService() {
-		}
-
 		@Override
 		protected Task<Void> createTask() {
 			return new Task<Void>() {
@@ -204,9 +194,7 @@ public class CronTrendController extends DesignerDialogController implements Cro
 
 						trendChartController.invokeResolver(getApp().getAppContext(), odt, odt, null);
 					} catch (Exception e) {
-						Platform.runLater(() -> {
-							AppUtils.showErrorDialog(e);
-						});
+						Platform.runLater(() -> AppUtils.showErrorDialog(e));
 					}
 					return null;
 				}

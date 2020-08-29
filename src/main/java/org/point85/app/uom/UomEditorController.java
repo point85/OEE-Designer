@@ -181,10 +181,8 @@ public class UomEditorController extends DesignerDialogController {
 
 	// get the display strings for all UOM types
 	protected ObservableList<UnitType> getUnitTypes() {
-		if (unitTypes.size() == 0) {
-			for (UnitType unitType : UnitType.values()) {
-				unitTypes.add(unitType);
-			}
+		if (unitTypes.isEmpty()) {
+			Collections.addAll(unitTypes, UnitType.values());
 			Collections.sort(unitTypes);
 		}
 		return unitTypes;
@@ -192,10 +190,11 @@ public class UomEditorController extends DesignerDialogController {
 
 	// get the display strings for all prefixes
 	protected ObservableList<String> getPrefixes() {
-		if (prefixes.size() == 0) {
+		if (prefixes.isEmpty()) {
 			for (Prefix prefix : Prefix.getDefinedPrefixes()) {
 				prefixes.add(prefix.getName());
 			}
+
 			prefixes.add(AppUtils.EMPTY_STRING);
 			Collections.sort(prefixes);
 		}
@@ -219,20 +218,20 @@ public class UomEditorController extends DesignerDialogController {
 		setImages();
 
 		// unit types
-		ObservableList<UnitType> unitTypes = getUnitTypes();
+		ObservableList<UnitType> uomTypes = getUnitTypes();
 
 		// scalar unit type
-		cbUnitTypes.getItems().addAll(unitTypes);
+		cbUnitTypes.getItems().addAll(uomTypes);
 		cbUnitTypes.getSelectionModel().select(UnitType.UNCLASSIFIED);
 
 		// UOM1 unit type
-		cbUom1Types.getItems().addAll(unitTypes);
+		cbUom1Types.getItems().addAll(uomTypes);
 
 		// UOM2 unit type
-		cbUom2Types.getItems().addAll(unitTypes);
+		cbUom2Types.getItems().addAll(uomTypes);
 
 		// power type
-		cbPowerTypes.getItems().addAll(unitTypes);
+		cbPowerTypes.getItems().addAll(uomTypes);
 
 		// add the tree view listener for UOM selection
 		tvUoms.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
@@ -248,8 +247,8 @@ public class UomEditorController extends DesignerDialogController {
 		populateCategories();
 
 		// set scaling factor prefixes
-		ObservableList<String> prefixes = getPrefixes();
-		cbScalingFactor.getItems().addAll(prefixes);
+		ObservableList<String> factorPrefixes = getPrefixes();
+		cbScalingFactor.getItems().addAll(factorPrefixes);
 
 		// refresh tree view
 		tvUoms.setRoot(getRootUomItem());
@@ -258,14 +257,14 @@ public class UomEditorController extends DesignerDialogController {
 	}
 
 	// initialize
-	public void initializeApp(DesignerApplication app) throws Exception {
+	public void initializeApp(DesignerApplication app) {
 		// main app
 		setApp(app);
 
 	}
 
 	// the single root for all UOM categories (not persistent)
-	private TreeItem<UomNode> getRootUomItem() throws Exception {
+	private TreeItem<UomNode> getRootUomItem() {
 		if (tvUoms.getRoot() == null) {
 			UnitOfMeasure rootUom = new UnitOfMeasure();
 			rootUom.setName(UnitOfMeasure.ROOT_UOM_NAME);
@@ -276,7 +275,7 @@ public class UomEditorController extends DesignerDialogController {
 
 	// images for controls
 	@Override
-	protected void setImages() throws Exception {
+	protected void setImages() {
 		super.setImages();
 
 		// new
@@ -372,7 +371,7 @@ public class UomEditorController extends DesignerDialogController {
 
 		// show the UOM children too
 		List<UnitOfMeasure> children = PersistenceService.instance().fetchUomsByCategory(item.getValue().getCategory());
-		boolean hasTreeChildren = item.getChildren().size() > 0 ? true : false;
+		boolean hasTreeChildren = !item.getChildren().isEmpty();
 
 		// check to see if the node's children have been previously shown
 		if (!hasTreeChildren) {
@@ -664,7 +663,7 @@ public class UomEditorController extends DesignerDialogController {
 	}
 
 	@FXML
-	private void markedChanged() throws Exception {
+	private void markedChanged() {
 		if (selectedUomItem != null) {
 			selectedUomItem.setGraphic(ImageManager.instance().getImageView(Images.CHANGED));
 		}
@@ -912,7 +911,7 @@ public class UomEditorController extends DesignerDialogController {
 		}
 	}
 
-	private void resetGraphic(TreeItem<UomNode> uomItem) throws Exception {
+	private void resetGraphic(TreeItem<UomNode> uomItem) {
 		uomItem.setGraphic(ImageManager.instance().getImageView(Images.UOM));
 	}
 
@@ -925,8 +924,7 @@ public class UomEditorController extends DesignerDialogController {
 
 			if (getSelectedUom().getKey() != null) {
 				// read from database
-				UnitOfMeasure uom = (UnitOfMeasure) PersistenceService.instance()
-						.fetchUomByKey(getSelectedUom().getKey());
+				UnitOfMeasure uom = PersistenceService.instance().fetchUomByKey(getSelectedUom().getKey());
 				selectedUomItem.getValue().setUnitOfMeasure(uom);
 				resetGraphic(selectedUomItem);
 				displayAttributes(uom);
@@ -1085,7 +1083,7 @@ public class UomEditorController extends DesignerDialogController {
 		}
 
 		private boolean isUnitOfMeasure() {
-			return uom != null ? true : false;
+			return uom != null;
 		}
 
 		@Override

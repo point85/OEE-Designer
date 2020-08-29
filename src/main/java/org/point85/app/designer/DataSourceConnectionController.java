@@ -33,7 +33,7 @@ public abstract class DataSourceConnectionController extends DesignerDialogContr
 	}
 
 	protected boolean isConnected() {
-		return service != null ? true : false;
+		return service != null;
 	}
 
 	protected void startConnectionService() {
@@ -89,13 +89,11 @@ public abstract class DataSourceConnectionController extends DesignerDialogContr
 		service = null;
 	}
 
-	protected void cancelConnectionService() throws Exception {
+	protected void cancelConnectionService() {
 		if (service == null) {
 			return;
 		}
-		Platform.runLater(() -> {
-			service.cancel();
-		});
+		Platform.runLater(() -> service.cancel());
 	}
 
 	protected abstract void connectToDataSource() throws Exception;

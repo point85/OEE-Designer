@@ -110,7 +110,7 @@ public class PhysicalModelController extends DesignerController {
 
 	@FXML
 	private Button btFileShareEditor;
-	
+
 	@FXML
 	private Button btCronEditor;
 
@@ -211,7 +211,7 @@ public class PhysicalModelController extends DesignerController {
 	}
 
 	// the single root for all entities
-	private TreeItem<EntityNode> getRootEntityItem() throws Exception {
+	private TreeItem<EntityNode> getRootEntityItem() {
 		if (tvEntities.getRoot() == null) {
 			PlantEntity rootEntity = new PlantEntity();
 			rootEntity.setName(PlantEntity.ROOT_ENTITY_NAME);
@@ -221,7 +221,7 @@ public class PhysicalModelController extends DesignerController {
 	}
 
 	// initialize app
-	void initialize(DesignerApplication app) throws Exception {
+	void initialize(DesignerApplication app) {
 		// main app
 		setApp(app);
 
@@ -312,7 +312,7 @@ public class PhysicalModelController extends DesignerController {
 		List<PlantEntity> sortedChildren = new ArrayList<>(children);
 		Collections.sort(sortedChildren);
 
-		boolean hasTreeChildren = newItem.getChildren().size() > 0 ? true : false;
+		boolean hasTreeChildren = !newItem.getChildren().isEmpty();
 
 		// check to see if the node's children have been previously shown
 		if (!hasTreeChildren) {
@@ -345,7 +345,7 @@ public class PhysicalModelController extends DesignerController {
 		}
 	}
 
-	private void initializeToolbar() throws Exception {
+	private void initializeToolbar() {
 		// toolbar
 		I18n i18n = DesignerLocalizer.instance().getLangI18n();
 		btMaterialEditor.setGraphic(ImageManager.instance().getImageView(Images.MATERIAL));
@@ -386,7 +386,7 @@ public class PhysicalModelController extends DesignerController {
 
 		btFileShareEditor.setGraphic(ImageManager.instance().getImageView(Images.FILE));
 		btFileShareEditor.setTooltip(new Tooltip(i18n.getString("file.tt")));
-		
+
 		btCronEditor.setGraphic(ImageManager.instance().getImageView(Images.CRON));
 		btCronEditor.setTooltip(new Tooltip(i18n.getString("cron.tt")));
 
@@ -404,7 +404,7 @@ public class PhysicalModelController extends DesignerController {
 	}
 
 	// images for editor buttons
-	protected void setImages() throws Exception {
+	protected void setImages() {
 		// new entity
 		btNew.setGraphic(ImageManager.instance().getImageView(Images.NEW));
 		btNew.setContentDisplay(ContentDisplay.RIGHT);
@@ -502,7 +502,7 @@ public class PhysicalModelController extends DesignerController {
 			AppUtils.showErrorDialog(e);
 		}
 	}
-	
+
 	@FXML
 	private void onShowCronEditor() {
 		try {
@@ -737,7 +737,7 @@ public class PhysicalModelController extends DesignerController {
 		return true;
 	}
 
-	private void setEntityGraphic(TreeItem<EntityNode> item) throws Exception {
+	private void setEntityGraphic(TreeItem<EntityNode> item) {
 		ImageView nodeView = null;
 		PlantEntity entity = item.getValue().getPlantEntity();
 		EntityLevel level = entity.getLevel();
@@ -846,9 +846,9 @@ public class PhysicalModelController extends DesignerController {
 			}
 
 			// remove this entity from the tree
-			TreeItem<EntityNode> selectedEntityItem = tvEntities.getSelectionModel().getSelectedItem();
-			TreeItem<EntityNode> parentNode = selectedEntityItem.getParent();
-			parentNode.getChildren().remove(selectedEntityItem);
+			TreeItem<EntityNode> entityItem = tvEntities.getSelectionModel().getSelectedItem();
+			TreeItem<EntityNode> parentNode = entityItem.getParent();
+			parentNode.getChildren().remove(entityItem);
 			tvEntities.getSelectionModel().clearSelection();
 
 			tvEntities.refresh();
@@ -935,7 +935,7 @@ public class PhysicalModelController extends DesignerController {
 	}
 
 	// show the entity attributes
-	private void displayAttributes(PlantEntity entity) throws Exception {
+	private void displayAttributes(PlantEntity entity) {
 		if (entity == null) {
 			return;
 		}
@@ -1009,21 +1009,21 @@ public class PhysicalModelController extends DesignerController {
 		addEditedPlantEntity(entityItem);
 	}
 
-	private void addEditedPlantEntity(TreeItem<EntityNode> item) throws Exception {
+	private void addEditedPlantEntity(TreeItem<EntityNode> item) {
 		if (item != null && !editedEntityItems.contains(item)) {
 			item.setGraphic(ImageManager.instance().getImageView(Images.CHANGED));
 			editedEntityItems.add(item);
 		}
 	}
 
-	private void removeEditedPlantEntity(TreeItem<EntityNode> item) throws Exception {
+	private void removeEditedPlantEntity(TreeItem<EntityNode> item) {
 		if (item != null && editedEntityItems.contains(item)) {
 			setEntityGraphic(item);
 			editedEntityItems.remove(item);
 		}
 	}
 
-	void markSelectedPlantEntity() throws Exception {
+	void markSelectedPlantEntity() {
 		this.addEditedPlantEntity(selectedEntityItem);
 	}
 
@@ -1092,7 +1092,6 @@ public class PhysicalModelController extends DesignerController {
 			getApp().showDashboard();
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
-			return;
 		}
 	}
 }

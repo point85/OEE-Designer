@@ -44,7 +44,7 @@ public abstract class DialogController {
 	}
 
 	// images for controls
-	protected void setImages() throws Exception {
+	protected void setImages() {
 		// OK or Done
 		btOK.setGraphic(ImageManager.instance().getImageView(Images.OK));
 		btOK.setContentDisplay(ContentDisplay.LEFT);

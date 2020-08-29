@@ -12,14 +12,14 @@ public class OpcDaTagValueChart {
 	public static final int STAIR_STEP = 1;
 	private static final int NUM_POINTS = 100;
 
-	private static final String title = DesignerLocalizer.instance().getLangString("tag.chart.title");
-	private static final String yAxisLabel = DesignerLocalizer.instance().getLangString("tag.value");
-	private static final String xAxisLabel = DesignerLocalizer.instance().getLangString("sample.number");
-	private static final String chartId = "tagValueChart";
-	private static final String seriesName = "tagValueSeries";
+	private static final String CHART_TITLE = DesignerLocalizer.instance().getLangString("tag.chart.title");
+	private static final String YAXIS_LABEL = DesignerLocalizer.instance().getLangString("tag.value");
+	private static final String XAXIS_LABEL = DesignerLocalizer.instance().getLangString("sample.number");
+	private static final String CHART_ID = "tagValueChart";
+	private static final String SERIES_NAME = "tagValueSeries";
 
 	private final XYChart.Series<Number, Number> valueDataSeries = new XYChart.Series<>();
-	private final NumberAxis xAxis = new NumberAxis(0, NUM_POINTS, NUM_POINTS / 10);
+	private final NumberAxis xAxis = new NumberAxis(0, NUM_POINTS, NUM_POINTS / 10.0d);
 	private final NumberAxis yAxis = new NumberAxis();
 	private final LineChart<Number, Number> tagValueChart = new LineChart<>(xAxis, yAxis);
 
@@ -28,20 +28,20 @@ public class OpcDaTagValueChart {
 
 	public LineChart<Number, Number> createChart() {
 
-		tagValueChart.setId(chartId);
+		tagValueChart.setId(CHART_ID);
 		tagValueChart.setCreateSymbols(true);
 		tagValueChart.setAnimated(false);
 		tagValueChart.setLegendVisible(false);
 
-		xAxis.setLabel(xAxisLabel);
+		xAxis.setLabel(XAXIS_LABEL);
 		xAxis.setForceZeroInRange(false);
-		yAxis.setLabel(yAxisLabel);
+		yAxis.setLabel(YAXIS_LABEL);
 		yAxis.setAutoRanging(true);
 
-		valueDataSeries.setName(seriesName);
+		valueDataSeries.setName(SERIES_NAME);
 		tagValueChart.getData().add(valueDataSeries);
 
-		reset(title);
+		reset(CHART_TITLE);
 
 		return tagValueChart;
 	}
@@ -95,6 +95,6 @@ public class OpcDaTagValueChart {
 	}
 
 	public void reset() {
-		reset(title);
+		reset(CHART_TITLE);
 	}
 }

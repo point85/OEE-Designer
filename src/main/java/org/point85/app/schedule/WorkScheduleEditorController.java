@@ -282,7 +282,8 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 	@FXML
 	private Button btRemoveRotationSegment;
 
-	// ***** non-working and overtime periods *******************************************
+	// ***** non-working and overtime periods
+	// *******************************************
 	@FXML
 	private TextField tfPeriodName;
 
@@ -371,27 +372,21 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 			}
 		});
 
-		// shift table callbacks
 		// shift name
-		shiftNameColumn.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(cellDataFeatures.getValue().getName());
-		});
+		shiftNameColumn.setCellValueFactory(
+				cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getName()));
 
 		// shift description
-		shiftDescriptionColumn.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(cellDataFeatures.getValue().getDescription());
-		});
+		shiftDescriptionColumn.setCellValueFactory(
+				cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getDescription()));
 
 		// shift start time
-		shiftStartColumn.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleObjectProperty<LocalTime>(cellDataFeatures.getValue().getStart());
-		});
+		shiftStartColumn.setCellValueFactory(
+				cellDataFeatures -> new SimpleObjectProperty<LocalTime>(cellDataFeatures.getValue().getStart()));
 
 		// shift duration
-		shiftDurationColumn.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(
-					AppUtils.stringFromDuration(cellDataFeatures.getValue().getDuration(), false));
-		});
+		shiftDurationColumn.setCellValueFactory(cellDataFeatures -> new SimpleStringProperty(
+				AppUtils.stringFromDuration(cellDataFeatures.getValue().getDuration(), false)));
 	}
 
 	private void initializeRotationEditor() {
@@ -423,22 +418,17 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 			}
 		});
 
-		// rotation table callbacks
 		// rotation name
-		rotationNameColumn.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(cellDataFeatures.getValue().getName());
-		});
+		rotationNameColumn.setCellValueFactory(
+				cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getName()));
 
 		// rotation description
-		rotationDescriptionColumn.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(cellDataFeatures.getValue().getDescription());
-		});
+		rotationDescriptionColumn.setCellValueFactory(
+				cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getDescription()));
 
 		// rotation duration
-		rotationDurationColumn.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(
-					AppUtils.stringFromDuration(cellDataFeatures.getValue().getDuration(), false));
-		});
+		rotationDurationColumn.setCellValueFactory(cellDataFeatures -> new SimpleStringProperty(
+				AppUtils.stringFromDuration(cellDataFeatures.getValue().getDuration(), false)));
 
 		// rotation table view row selection listener
 		tvRotationSegments.getSelectionModel().selectedItemProperty()
@@ -453,31 +443,27 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 				});
 
 		// segment start shift
-		rotationSegmentShiftColumn.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(cellDataFeatures.getValue().getStartingShift().getName());
-		});
+		rotationSegmentShiftColumn.setCellValueFactory(
+				cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getStartingShift().getName()));
 
 		// segment days on
-		rotationSegmentDaysOnColumn.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(String.valueOf(cellDataFeatures.getValue().getDaysOn()));
-		});
+		rotationSegmentDaysOnColumn.setCellValueFactory(
+				cellDataFeatures -> new SimpleStringProperty(String.valueOf(cellDataFeatures.getValue().getDaysOn())));
 
 		// segment days off
-		rotationSegmentDaysOffColumn.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(String.valueOf(cellDataFeatures.getValue().getDaysOff()));
-		});
+		rotationSegmentDaysOffColumn.setCellValueFactory(
+				cellDataFeatures -> new SimpleStringProperty(String.valueOf(cellDataFeatures.getValue().getDaysOff())));
 
 		// sequence
-		rotationSegmentSequenceColumn.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(String.valueOf(cellDataFeatures.getValue().getSequence()));
-		});
+		rotationSegmentSequenceColumn.setCellValueFactory(cellDataFeatures -> new SimpleStringProperty(
+				String.valueOf(cellDataFeatures.getValue().getSequence())));
 
 		// starting shift names
-		this.cbRotationSegmentShifts.setItems(shiftNames);
+		cbRotationSegmentShifts.setItems(shiftNames);
 
 	}
 
-	private void initializeTeamEditor() throws Exception {
+	private void initializeTeamEditor() {
 		// list of rotations to choose from
 		this.cbTeamRotations.setItems(rotationNames);
 
@@ -495,16 +481,13 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 			}
 		});
 
-		// team table call backs
 		// team name
-		teamNameColumn.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(cellDataFeatures.getValue().getName());
-		});
+		teamNameColumn.setCellValueFactory(
+				cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getName()));
 
 		// team description
-		teamDescriptionColumn.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(cellDataFeatures.getValue().getDescription());
-		});
+		teamDescriptionColumn.setCellValueFactory(
+				cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getDescription()));
 
 		// team rotation name
 		teamRotationColumn.setCellValueFactory(cellDataFeatures -> {
@@ -518,18 +501,15 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		});
 
 		// rotation start
-		teamRotationStartColumn.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleObjectProperty<LocalDate>(cellDataFeatures.getValue().getRotationStart());
-		});
+		teamRotationStartColumn.setCellValueFactory(cellDataFeatures -> new SimpleObjectProperty<LocalDate>(
+				cellDataFeatures.getValue().getRotationStart()));
 
 		// team average hours worked per week
-		teamAvgHoursColumn.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(
-					AppUtils.stringFromDuration(cellDataFeatures.getValue().getHoursWorkedPerWeek(), false));
-		});
+		teamAvgHoursColumn.setCellValueFactory(cellDataFeatures -> new SimpleStringProperty(
+				AppUtils.stringFromDuration(cellDataFeatures.getValue().getHoursWorkedPerWeek(), false)));
 	}
 
-	private void initializeExceptionPeriodEditor() throws Exception {
+	private void initializeExceptionPeriodEditor() {
 		// bind to list of periods
 		this.tvExceptionPeriods.setItems(periodList);
 
@@ -547,25 +527,20 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 
 		// exception period table
 		// period name
-		periodNameColumn.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(cellDataFeatures.getValue().getName());
-		});
+		periodNameColumn.setCellValueFactory(
+				cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getName()));
 
 		// period description
-		periodDescriptionColumn.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(cellDataFeatures.getValue().getDescription());
-		});
+		periodDescriptionColumn.setCellValueFactory(
+				cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getDescription()));
 
 		// period start
-		periodStartColumn.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleObjectProperty<LocalDateTime>(cellDataFeatures.getValue().getStartDateTime());
-		});
+		periodStartColumn.setCellValueFactory(cellDataFeatures -> new SimpleObjectProperty<LocalDateTime>(
+				cellDataFeatures.getValue().getStartDateTime()));
 
 		// period duration
-		periodDurationColumn.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleStringProperty(
-					AppUtils.stringFromDuration(cellDataFeatures.getValue().getDuration(), false));
-		});
+		periodDurationColumn.setCellValueFactory(cellDataFeatures -> new SimpleStringProperty(
+				AppUtils.stringFromDuration(cellDataFeatures.getValue().getDuration(), false)));
 
 		// period loss
 		periodCatColumn.setCellValueFactory(cellDataFeatures -> {
@@ -626,7 +601,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 	}
 
 	// the single root for all schedules (not persistent)
-	private TreeItem<ScheduleNode> getRootScheduleItem() throws Exception {
+	private TreeItem<ScheduleNode> getRootScheduleItem() {
 		if (tvSchedules.getRoot() == null) {
 			WorkSchedule rootSchedule = new WorkSchedule();
 			rootSchedule.setName(ROOT_SCHEDULE_NAME);
@@ -636,7 +611,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 	}
 
 	// update the editor upon selection of a work schedule or refresh
-	private void onSelectSchedule(TreeItem<ScheduleNode> oldItem, TreeItem<ScheduleNode> newItem) throws Exception {
+	private void onSelectSchedule(TreeItem<ScheduleNode> oldItem, TreeItem<ScheduleNode> newItem) {
 		if (newItem == null) {
 			return;
 		}
@@ -765,7 +740,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 
 	@Override
 	// images for editor buttons
-	protected void setImages() throws Exception {
+	protected void setImages() {
 		super.setImages();
 
 		// new schedule
@@ -925,9 +900,9 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 			PersistenceService.instance().delete(toDelete);
 
 			// remove this schedule from the tree
-			TreeItem<ScheduleNode> selectedScheduleItem = tvSchedules.getSelectionModel().getSelectedItem();
+			TreeItem<ScheduleNode> selectedItem = tvSchedules.getSelectionModel().getSelectedItem();
 			TreeItem<ScheduleNode> rootNode = tvSchedules.getRoot();
-			rootNode.getChildren().remove(selectedScheduleItem);
+			rootNode.getChildren().remove(selectedItem);
 			tvSchedules.refresh();
 
 			onNewSchedule();
@@ -937,7 +912,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		}
 	}
 
-	private void resetGraphic(TreeItem<ScheduleNode> scheduleItem) throws Exception {
+	private void resetGraphic(TreeItem<ScheduleNode> scheduleItem) {
 		scheduleItem.setGraphic(ImageManager.instance().getImageView(Images.SCHEDULE));
 	}
 
@@ -994,7 +969,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		}
 	}
 
-	private boolean setAttributes(TreeItem<ScheduleNode> scheduleItem) throws Exception {
+	private boolean setAttributes(TreeItem<ScheduleNode> scheduleItem) {
 		boolean isDirty = false;
 
 		if (scheduleItem == null) {
@@ -1024,7 +999,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		return isDirty;
 	}
 
-	private void addEditedSchedule(TreeItem<ScheduleNode> scheduleItem) throws Exception {
+	private void addEditedSchedule(TreeItem<ScheduleNode> scheduleItem) {
 		if (!editedScheduleItems.contains(scheduleItem)) {
 			editedScheduleItems.add(scheduleItem);
 			scheduleItem.setGraphic(ImageManager.instance().getImageView(Images.CHANGED));
@@ -1050,7 +1025,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		}
 	}
 
-	private void removeEditedSchedule(TreeItem<ScheduleNode> scheduleItem) throws Exception {
+	private void removeEditedSchedule(TreeItem<ScheduleNode> scheduleItem) {
 		resetGraphic(scheduleItem);
 		editedScheduleItems.remove(scheduleItem);
 	}

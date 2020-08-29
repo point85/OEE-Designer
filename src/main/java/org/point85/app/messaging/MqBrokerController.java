@@ -14,8 +14,8 @@ import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.DataSourceType;
 import org.point85.domain.jms.JmsClient;
 import org.point85.domain.jms.JmsSource;
-import org.point85.domain.mqtt.MqttSource;
 import org.point85.domain.mqtt.MqttOeeClient;
+import org.point85.domain.mqtt.MqttSource;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.rmq.RmqClient;
 import org.point85.domain.rmq.RmqSource;
@@ -91,7 +91,7 @@ public class MqBrokerController extends DesignerDialogController {
 
 	// images for buttons
 	@Override
-	protected void setImages() throws Exception {
+	protected void setImages() {
 		super.setImages();
 
 		// new
@@ -158,6 +158,7 @@ public class MqBrokerController extends DesignerDialogController {
 					try {
 						pubsub.disconnect();
 					} catch (Exception e) {
+						// ignore
 					}
 				}
 			} else if (sourceType.equals(DataSourceType.JMS)) {
@@ -165,12 +166,14 @@ public class MqBrokerController extends DesignerDialogController {
 					try {
 						jmsClient.disconnect();
 					} catch (Exception e) {
+						// ignore
 					}
 				}
 			} else if (sourceType.equals(DataSourceType.MQTT)) {
 				try {
 					mqttClient.disconnect();
 				} catch (Exception e) {
+					// ignore
 				}
 			}
 		}
@@ -207,11 +210,11 @@ public class MqBrokerController extends DesignerDialogController {
 				if (type.equals(ButtonType.CANCEL)) {
 					return;
 				}
-				
+
 				PersistenceService.instance().delete(dataSource);
 				brokers.remove(dataSource);
 
-				 clearEditor();
+				onNewDataSource();
 			}
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
@@ -224,7 +227,7 @@ public class MqBrokerController extends DesignerDialogController {
 		this.pfPassword.clear();
 		this.tfDescription.clear();
 		this.tfPort.clear();
-		
+
 		this.cbDataSources.getSelectionModel().clearSelection();
 	}
 
@@ -250,11 +253,9 @@ public class MqBrokerController extends DesignerDialogController {
 			AppUtils.showErrorDialog(e);
 		}
 	}
-	
+
 	private String validateHost(String hostId) throws Exception {
-		if (hostId.equalsIgnoreCase("localhost")) {
-			throw new Exception(DesignerLocalizer.instance().getErrorString("host.or.ip", hostId));
-		}
+		// "localhost" allowed
 		return hostId;
 	}
 

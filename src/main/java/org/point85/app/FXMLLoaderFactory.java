@@ -58,6 +58,10 @@ import org.point85.app.uom.UomImporterController;
 import javafx.fxml.FXMLLoader;
 
 public class FXMLLoaderFactory {
+	private FXMLLoaderFactory() {
+		throw new IllegalStateException("Utility class");
+	}
+
 	// name of Designer application resource bundle with translatable strings
 	private static ResourceBundle designerLangBundle;
 
@@ -200,7 +204,7 @@ public class FXMLLoaderFactory {
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
-	
+
 	public static FXMLLoader modbusLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(ModbusMasterController.class.getResource("ModbusMaster.fxml"));
 		fxmlLoader.setResources(getDesignerLangBundle());
@@ -221,14 +225,14 @@ public class FXMLLoaderFactory {
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
-	
+
 	public static FXMLLoader cronEditorLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(CronEditorController.class.getResource("CronEditor.fxml"));
 		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
-	
+
 	public static FXMLLoader cronHelpLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(CronHelpController.class.getResource("CronHelp.fxml"));
 		fxmlLoader.setResources(getDesignerLangBundle());
@@ -305,14 +309,14 @@ public class FXMLLoaderFactory {
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
-	
+
 	public static FXMLLoader cronTrendLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(CronTrendController.class.getResource("CronTrend.fxml"));
 		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
-	
+
 	public static FXMLLoader modbusTrendLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(ModbusTrendController.class.getResource("ModbusTrend.fxml"));
 		fxmlLoader.setResources(getDesignerLangBundle());
@@ -340,9 +344,10 @@ public class FXMLLoaderFactory {
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
-	
+
 	public static FXMLLoader entityWorkScheduleLoader() throws Exception {
-		FXMLLoader fxmlLoader = new FXMLLoader(EntityWorkScheduleController.class.getResource("EntityWorkSchedule.fxml"));
+		FXMLLoader fxmlLoader = new FXMLLoader(
+				EntityWorkScheduleController.class.getResource("EntityWorkSchedule.fxml"));
 		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
@@ -440,7 +445,7 @@ public class FXMLLoaderFactory {
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
-	
+
 	public static FXMLLoader oeeEventTrendLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(OeeEventTrendController.class.getResource("OeeEventTrend.fxml"));
 		fxmlLoader.setResources(getDesignerLangBundle());

@@ -34,7 +34,7 @@ public class MaterialNode {
 	}
 
 	public boolean isMaterial() {
-		return material != null ? true : false;
+		return material != null;
 	}
 
 	@Override

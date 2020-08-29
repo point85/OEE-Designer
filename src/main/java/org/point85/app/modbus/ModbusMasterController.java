@@ -181,7 +181,7 @@ public class ModbusMasterController extends ModbusController {
 
 	// images for buttons
 	@Override
-	protected void setImages() throws Exception {
+	protected void setImages() {
 		super.setImages();
 
 		// new
@@ -285,7 +285,7 @@ public class ModbusMasterController extends ModbusController {
 				if (type.equals(ButtonType.CANCEL)) {
 					return;
 				}
-				
+
 				PersistenceService.instance().delete(source);
 				dataSources.remove(source);
 				cbDataSources.setItems(dataSources);
@@ -308,6 +308,9 @@ public class ModbusMasterController extends ModbusController {
 			tfUnitId.clear();
 			tfValueCount.setText("1");
 			ckReverseEndianess.setSelected(true);
+			
+			lbState.setText(null);
+			taValues.clear();
 
 			setSource(new ModbusSource());
 
@@ -537,7 +540,7 @@ public class ModbusMasterController extends ModbusController {
 		return tfDescription.getText();
 	}
 
-	private void updateConnectionStatus(ConnectionState state) throws Exception {
+	private void updateConnectionStatus(ConnectionState state) {
 		connectionState = state;
 
 		switch (state) {
@@ -576,7 +579,7 @@ public class ModbusMasterController extends ModbusController {
 
 			// connect
 			updateConnectionStatus(ConnectionState.CONNECTING);
-			
+
 			updateSource();
 
 			startConnectionService();
@@ -591,7 +594,7 @@ public class ModbusMasterController extends ModbusController {
 		try {
 			// disconnect
 			disconnectFromDataSource();
-			
+
 			terminateConnectionService();
 			updateConnectionStatus(ConnectionState.DISCONNECTED);
 

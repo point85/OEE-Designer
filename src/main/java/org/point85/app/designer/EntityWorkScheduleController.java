@@ -75,7 +75,7 @@ public class EntityWorkScheduleController extends DesignerController {
 	@FXML
 	private TableColumn<EntitySchedule, LocalDateTime> periodEndColumn;
 
-	void initialize(DesignerApplication app) throws Exception {
+	void initialize(DesignerApplication app) {
 		setApp(app);
 		setImages();
 		initializeScheduleTable();
@@ -108,14 +108,12 @@ public class EntityWorkScheduleController extends DesignerController {
 		});
 
 		// period start
-		periodStartColumn.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleObjectProperty<LocalDateTime>(cellDataFeatures.getValue().getStartDateTime());
-		});
+		periodStartColumn.setCellValueFactory(cellDataFeatures -> new SimpleObjectProperty<LocalDateTime>(
+				cellDataFeatures.getValue().getStartDateTime()));
 
 		// period end
-		periodEndColumn.setCellValueFactory(cellDataFeatures -> {
-			return new SimpleObjectProperty<LocalDateTime>(cellDataFeatures.getValue().getEndDateTime());
-		});
+		periodEndColumn.setCellValueFactory(cellDataFeatures -> new SimpleObjectProperty<LocalDateTime>(
+				cellDataFeatures.getValue().getEndDateTime()));
 	}
 
 	void showSchedules(PlantEntity entity) {
@@ -131,7 +129,7 @@ public class EntityWorkScheduleController extends DesignerController {
 		tvSchedules.refresh();
 	}
 
-	protected void setImages() throws Exception {
+	protected void setImages() {
 		// new entity schedule
 		btNewSchedule.setGraphic(ImageManager.instance().getImageView(Images.NEW));
 		btNewSchedule.setContentDisplay(ContentDisplay.RIGHT);
@@ -290,7 +288,6 @@ public class EntityWorkScheduleController extends DesignerController {
 				return;
 			}
 
-			// PlantEntity entity = currentEntitySchedule.getPlantEntity();
 			PlantEntity entity = getApp().getPhysicalModelController().getSelectedEntity();
 			entity.removeEntitySchedule(currentEntitySchedule);
 

@@ -77,7 +77,7 @@ public class DatabaseTrendController extends DesignerDialogController implements
 
 	// images for buttons
 	@Override
-	protected void setImages() throws Exception {
+	protected void setImages() {
 		super.setImages();
 
 		// write test
@@ -85,7 +85,7 @@ public class DatabaseTrendController extends DesignerDialogController implements
 		btTest.setContentDisplay(ContentDisplay.LEFT);
 	}
 
-	public void setEventResolver(EventResolver eventResolver) throws Exception {
+	public void setEventResolver(EventResolver eventResolver) {
 		eventResolver.setWatchMode(true);
 		trendChartController.setEventResolver(eventResolver);
 
@@ -119,7 +119,7 @@ public class DatabaseTrendController extends DesignerDialogController implements
 
 	@Override
 	public boolean isSubscribed() {
-		return databaseClient != null ? true : false;
+		return databaseClient != null;
 	}
 
 	@Override
@@ -246,9 +246,7 @@ public class DatabaseTrendController extends DesignerDialogController implements
 						try {
 							dbClient.save(databaseEvent);
 						} catch (Exception ex) {
-							Platform.runLater(() -> {
-								AppUtils.showErrorDialog(ex);
-							});
+							Platform.runLater(() -> AppUtils.showErrorDialog(ex));
 							return null;
 						}
 
@@ -264,16 +262,12 @@ public class DatabaseTrendController extends DesignerDialogController implements
 						databaseEvent.setStatus(DatabaseEventStatus.FAIL);
 						databaseEvent.setError(e.getMessage());
 
-						Platform.runLater(() -> {
-							AppUtils.showErrorDialog(e);
-						});
+						Platform.runLater(() -> AppUtils.showErrorDialog(e));
 					} finally {
 						try {
 							dbClient.save(databaseEvent);
 						} catch (Exception ex) {
-							Platform.runLater(() -> {
-								AppUtils.showErrorDialog(ex);
-							});
+							Platform.runLater(() -> AppUtils.showErrorDialog(ex));
 						}
 					}
 					return null;

@@ -51,13 +51,11 @@ public class SetupEditorController extends EventEditorController {
 		// images for buttons
 		setImages();
 
-		getDialogStage().setOnShown((we) -> {
-			displayAttributes();
-		});
+		getDialogStage().setOnShown(we -> displayAttributes());
 	}
 
 	@Override
-	protected void setImages() throws Exception {
+	protected void setImages() {
 		super.setImages();
 
 		btMaterialEditor.setGraphic(ImageManager.instance().getImageView(Images.MATERIAL));

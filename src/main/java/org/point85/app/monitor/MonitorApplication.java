@@ -73,9 +73,6 @@ public class MonitorApplication implements RmqMessageListener, JmsMessageListene
 	// JVM host IP address
 	private String ip;
 
-	public MonitorApplication() {
-	}
-
 	String getHostname() {
 		return hostname;
 	}
