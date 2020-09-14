@@ -1,5 +1,7 @@
 package org.point85.app;
 
+import javax.persistence.EntityManager;
+
 import org.apache.log4j.PropertyConfigurator;
 import org.point85.app.collector.CollectorApplication;
 import org.point85.app.designer.DesignerApplication;
@@ -67,7 +69,8 @@ public class OeeApplication extends Application {
 			@Override
 			protected String call() throws Exception {
 				// wait for a database connection by requesting an EntityManager
-				PersistenceService.instance().getEntityManager();
+				EntityManager em = PersistenceService.instance().getEntityManager();
+				em.close();
 				return getClass().getSimpleName();
 			}
 		};

@@ -653,10 +653,6 @@ public class OperatorController {
 	}
 
 	private void recordEvent(OeeEventType eventType) throws Exception {
-		if (equipmentMaterial == null) {
-			return;
-		}
-
 		// equipment
 		if (equipment == null) {
 			throw new Exception(OperatorLocalizer.instance().getErrorString("no.equipment"));
@@ -723,9 +719,11 @@ public class OperatorController {
 			event.setInputValue(String.valueOf(amount));
 
 			if (eventType.equals(OeeEventType.PROD_REJECT)) {
-				event.setUOM(equipmentMaterial.getRejectUOM());
+				UnitOfMeasure uom = equipmentMaterial != null ? equipmentMaterial.getRejectUOM() : null;
+				event.setUOM(uom);
 			} else {
-				event.setUOM(equipmentMaterial.getRunRateUOM().getDividend());
+				UnitOfMeasure uom = equipmentMaterial != null ? equipmentMaterial.getRunRateUOM().getDividend() : null;
+				event.setUOM(uom);
 			}
 
 			event.setReason(selectedReason);

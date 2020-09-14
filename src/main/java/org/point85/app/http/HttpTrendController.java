@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.Iterator;
@@ -203,8 +204,16 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 
 	@Override
 	public void onHttpEquipmentEvent(EquipmentEventRequestDto dto) {
-		OffsetDateTime odt = DomainUtils.offsetDateTimeFromString(dto.getTimestamp(),
-				DomainUtils.OFFSET_DATE_TIME_8601);
+		String timestamp = dto.getTimestamp();
+		OffsetDateTime odt = null;
+
+		if (timestamp.length() > DomainUtils.LOCAL_DATE_TIME_8601.length()) {
+			odt = DomainUtils.offsetDateTimeFromString(dto.getTimestamp(), DomainUtils.OFFSET_DATE_TIME_8601);
+		} else {
+			LocalDateTime ldt = DomainUtils.localDateTimeFromString(dto.getTimestamp(),
+					DomainUtils.LOCAL_DATE_TIME_8601);
+			odt = DomainUtils.fromLocalDateTime(ldt);
+		}
 
 		ResolutionService service = new ResolutionService(dto.getValue(), odt, dto.getReason());
 

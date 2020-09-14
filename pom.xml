@@ -4,14 +4,14 @@
 
   <groupId>org.point85</groupId>
   <artifactId>oee-apps</artifactId>
-  <version>3.1.0</version>
+  <version>3.1.1</version>
   <packaging>jar</packaging>
   
   <name>Point85 OEE JavaFX Applications</name>
   <url>https://github.com/point85</url>
 
   <properties>
-  	<domain.version>3.1.0</domain.version>
+  	<domain.version>3.1.1</domain.version>
     <maven.compiler.source>1.8</maven.compiler.source>
 	<maven.compiler.target>1.8</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
