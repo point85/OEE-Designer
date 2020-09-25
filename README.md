@@ -128,6 +128,8 @@ Hibernate and JPA abstract-away database specific aspects of inserting, updating
 ## Getting Started
 The desktop applications are packaged in the oee-<version>.zip file in the latest Git release link at https://github.com/point85/OEE-Designer/releases.  Download the oee-<version>.zip file and expand the archive into a folder of your choice.  Next, download the Point85 OEE Getting Started Guide and follow instructions in that document.  Additional information may be found in the Point85 OEE User Guide.
 
+The file "docs/MobileApp.mp4" is s short video of using the iOS and Android mobile app.
+
 ## Related Github Projects
 * Java FX applications:  https://github.com/point85/OEE-Designer 
 * Business domain library: https://github.com/point85/OEE-Domain 
