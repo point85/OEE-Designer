@@ -35,7 +35,7 @@ public class ProductionEditorController extends EventEditorController {
 	@FXML
 	private Label lbUOM;
 
-	public void initializeEditor(OeeEvent event) throws Exception {
+	public void initializeEditor(OeeEvent event) {
 		productionEvent = event;
 
 		equipmentMaterial = null;

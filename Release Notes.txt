@@ -143,6 +143,9 @@ Note that version 2.5.0 has the following schema changes:
 	
 (27) 3.1.1, September 14, 2020:
 	- Fixed a Hikari connection pool resource leak for queries
+	
+(28) 3.1.2, September 25, 2020:
+	- Added HTTPS in addition to HTTP data source
 	- Miscellaneous stability improvements	
 
 Please send comments and suggestions to point85.llc@gmail.com.

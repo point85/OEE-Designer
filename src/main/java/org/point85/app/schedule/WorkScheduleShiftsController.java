@@ -81,7 +81,7 @@ public class WorkScheduleShiftsController extends DesignerDialogController {
 	private TableColumn<ShiftInstance, String> durationColumn;
 
 	// initialize app
-	public void initializeApp(DesignerApplication app) throws Exception {
+	public void initializeApp(DesignerApplication app) {
 		setApp(app);
 
 		setImages();

@@ -40,6 +40,9 @@ public class HttpServerController extends DialogController {
 	private TextField tfPort;
 
 	@FXML
+	private TextField tfHttpsPort;
+
+	@FXML
 	private ComboBox<HttpSource> cbDataSources;
 
 	@FXML
@@ -108,7 +111,12 @@ public class HttpServerController extends DialogController {
 			}
 
 			this.tfHost.setText(dataSource.getHost());
-			this.tfPort.setText(String.valueOf(dataSource.getPort()));
+
+			String port = dataSource.getPort() != null ? String.valueOf(dataSource.getPort()) : "";
+			this.tfPort.setText(String.valueOf(port));
+
+			String httpsPort = dataSource.getHttpsPort() != null ? String.valueOf(dataSource.getHttpsPort()) : "";
+			this.tfHttpsPort.setText(httpsPort);
 			this.tfDescription.setText(dataSource.getDescription());
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
@@ -144,6 +152,7 @@ public class HttpServerController extends DialogController {
 			this.tfHost.clear();
 			this.tfDescription.clear();
 			this.tfPort.setText(String.valueOf(OeeHttpServer.DEFAULT_PORT));
+			this.tfHttpsPort.clear();
 			this.cbDataSources.getSelectionModel().clearSelection();
 
 			this.setSource(null);
@@ -186,6 +195,7 @@ public class HttpServerController extends DialogController {
 
 			eventSource.setHost(getHost());
 			eventSource.setPort(getPort());
+			eventSource.setHttpsPort(getHttpsPort());
 			eventSource.setDescription(getDescription());
 
 			// name is URL
@@ -223,15 +233,21 @@ public class HttpServerController extends DialogController {
 		}
 	}
 
-	String getHost() {
+	private String getHost() {
 		return this.tfHost.getText();
 	}
 
-	Integer getPort() {
-		return Integer.valueOf(tfPort.getText());
+	private Integer getPort() {
+		String text = tfPort.getText();
+		return (text != null && text.length() > 0) ? Integer.parseInt(text) : null;
 	}
 
-	String getDescription() {
+	private Integer getHttpsPort() {
+		String text = tfHttpsPort.getText();
+		return (text != null && text.length() > 0) ? Integer.parseInt(text) : null;
+	}
+
+	private String getDescription() {
 		return this.tfDescription.getText();
 	}
 }

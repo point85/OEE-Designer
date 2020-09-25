@@ -250,7 +250,7 @@ public class DataCollectorController extends DialogController {
 		}
 	}
 	
-	private String validateHost(String hostId) throws Exception {
+	private String validateHost(String hostId)  {
 		// allow "localhost"
 		return hostId;
 	}

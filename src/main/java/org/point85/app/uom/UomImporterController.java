@@ -37,7 +37,7 @@ public class UomImporterController extends DialogController {
 	}
 
 	@FXML
-	public void initialize() throws Exception {
+	public void initialize() {
 		// set unit types
 		Collections.addAll(unitTypes, UnitType.values());
 		Collections.sort(unitTypes);

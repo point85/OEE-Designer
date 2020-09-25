@@ -106,7 +106,7 @@ public class UomConversionController extends DesignerDialogController {
 	}
 
 	@FXML
-	public void initialize() throws Exception {
+	public void initialize() {
 		// set unit types
 		cbUnitTypes.getItems().addAll(getUnitTypes());
 

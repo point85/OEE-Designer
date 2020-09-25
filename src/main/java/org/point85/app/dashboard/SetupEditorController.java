@@ -44,7 +44,7 @@ public class SetupEditorController extends EventEditorController {
 	@FXML
 	private TextField tfJob;
 
-	public void initializeEditor(OeeEvent event) throws Exception {
+	public void initializeEditor(OeeEvent event) {
 		setupEvent = event;
 		setupEvent.setEventType(OeeEventType.MATL_CHANGE);
 

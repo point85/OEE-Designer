@@ -16,7 +16,7 @@ public class DashboardDialogController extends DesignerDialogController {
 	}
 
 	@FXML
-	public void initialize() throws Exception {
+	public void initialize() {
 		// images for buttons
 		setImages();
 	}

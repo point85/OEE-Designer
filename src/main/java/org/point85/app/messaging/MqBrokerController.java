@@ -254,8 +254,8 @@ public class MqBrokerController extends DesignerDialogController {
 		}
 	}
 
-	private String validateHost(String hostId) throws Exception {
-		// "localhost" allowed
+	private String validateHost(String hostId) {
+		// "localhost" is allowed, but not recommended
 		return hostId;
 	}
 

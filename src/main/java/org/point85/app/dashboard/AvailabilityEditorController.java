@@ -43,7 +43,7 @@ public class AvailabilityEditorController extends EventEditorController {
 	@FXML
 	private TextField tfDuration;
 
-	public void initializeEditor(OeeEvent event) throws Exception {
+	public void initializeEditor(OeeEvent event) {
 		availabilityEvent = event;
 
 		reasonController = null;

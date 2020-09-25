@@ -85,6 +85,7 @@ public abstract class DataSourceConnectionController extends DesignerDialogContr
 		service.start();
 	}
 
+	// throws is clause for overrides!
 	protected void terminateConnectionService() throws Exception {
 		service = null;
 	}

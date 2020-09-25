@@ -915,7 +915,7 @@ public class DashboardController extends DialogController implements CategoryCli
 	}
 
 	@FXML
-	public void initialize() throws Exception {
+	public void initialize() {
 		setImages();
 
 		// listen to tab selections

@@ -97,7 +97,7 @@ public class EventResolverController extends DesignerDialogController {
 	@FXML
 	private Label lbDataType;
 
-	public void initialize(DesignerApplication app, EventResolver resolver) throws Exception {
+	public void initialize(DesignerApplication app, EventResolver resolver) {
 		// script engine
 		scriptEngine = new ScriptEngineManager().getEngineByName(EquipmentEventResolver.SCRIPT_ENGINE_NAME);
 
