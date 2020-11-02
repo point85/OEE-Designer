@@ -1,4 +1,4 @@
--- MySQL schema creation script file, schema version 3, release 2.5.0
+-- MySQL schema creation script file, schema version 4
 -- set to your database name
 USE oee;
 
@@ -217,6 +217,7 @@ CREATE TABLE COLLECTOR (
 	BROKER_PORT int NULL,
 	BROKER_USER varchar(64) NULL,
 	BROKER_PWD varchar(64) NULL,
+	SOURCE_KEY bigint NULL,
 	PRIMARY KEY (COLLECT_KEY)
 )  ENGINE=INNODB;
 CREATE UNIQUE INDEX IDX_COLLECT_NAME ON COLLECTOR (NAME);

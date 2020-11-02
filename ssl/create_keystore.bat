@@ -1,1 +1,0 @@
-C:\jdk\jdk1.8.0_152-64\jre\bin\keytool -importkeystore -srckeystore out/point85.p12 -destkeystore out/point85.keystore -deststoretype pkcs12 -alias opcua

@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.Set;
 
 import org.eclipse.milo.opcua.stack.core.BuiltinDataType;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
@@ -45,6 +46,9 @@ import org.point85.domain.http.ReasonResponseDto;
 import org.point85.domain.http.SourceIdResponseDto;
 import org.point85.domain.jms.JmsClient;
 import org.point85.domain.jms.JmsMessageListener;
+import org.point85.domain.kafka.KafkaMessageListener;
+import org.point85.domain.kafka.KafkaOeeClient;
+import org.point85.domain.kafka.KafkaSource;
 import org.point85.domain.messaging.ApplicationMessage;
 import org.point85.domain.messaging.EquipmentEventMessage;
 import org.point85.domain.modbus.ModbusEndpoint;
@@ -90,8 +94,8 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 
-public class TesterController
-		implements RmqMessageListener, JmsMessageListener, MqttMessageListener, CronEventListener {
+public class TesterController implements RmqMessageListener, JmsMessageListener, MqttMessageListener,
+		KafkaMessageListener, CronEventListener {
 	// logger
 	private static final Logger logger = LoggerFactory.getLogger(TesterController.class);
 
@@ -100,6 +104,9 @@ public class TesterController
 
 	// JMS message publisher/subscriber
 	private final Map<String, JmsClient> jmsClients = new HashMap<>();
+
+	// Kafka message publisher/subscriber
+	private final Map<String, KafkaOeeClient> kafkaClients = new HashMap<>();
 
 	// MQTT message publisher/subscriber
 	private final Map<String, MqttOeeClient> mqttClients = new HashMap<>();
@@ -181,6 +188,7 @@ public class TesterController
 	@FXML
 	private ComboBox<CollectorDataSource> cbHost;
 
+	// source ids
 	@FXML
 	private ComboBox<String> cbSourceId;
 
@@ -197,19 +205,22 @@ public class TesterController
 	private Button btReset;
 
 	@FXML
-	private Button btHttpGetMaterials;
+	private Button btGetMaterials;
 
 	@FXML
-	private Button btHttpGetReasons;
+	private Button btGetReasons;
 
 	@FXML
-	private Button btHttpGetEntities;
+	private Button btGetEntities;
 
 	@FXML
 	private RadioButton rbRMQ;
 
 	@FXML
 	private RadioButton rbJMS;
+
+	@FXML
+	private RadioButton rbKafka;
 
 	@FXML
 	private RadioButton rbMQTT;
@@ -245,22 +256,21 @@ public class TesterController
 		initializeMaterialTable();
 		initializeReasonTable();
 
-		rbHTTP.setSelected(true);
 		onSelectSourceType();
 	}
 
 	private void setImages() {
 		// entity
-		btHttpGetEntities.setGraphic(ImageManager.instance().getImageView(Images.EQUIPMENT));
-		btHttpGetEntities.setContentDisplay(ContentDisplay.LEFT);
+		btGetEntities.setGraphic(ImageManager.instance().getImageView(Images.EQUIPMENT));
+		btGetEntities.setContentDisplay(ContentDisplay.LEFT);
 
 		// materials
-		btHttpGetMaterials.setGraphic(ImageManager.instance().getImageView(Images.MATERIAL));
-		btHttpGetMaterials.setContentDisplay(ContentDisplay.LEFT);
+		btGetMaterials.setGraphic(ImageManager.instance().getImageView(Images.MATERIAL));
+		btGetMaterials.setContentDisplay(ContentDisplay.LEFT);
 
 		// reasons
-		btHttpGetReasons.setGraphic(ImageManager.instance().getImageView(Images.REASON));
-		btHttpGetReasons.setContentDisplay(ContentDisplay.LEFT);
+		btGetReasons.setGraphic(ImageManager.instance().getImageView(Images.REASON));
+		btGetReasons.setContentDisplay(ContentDisplay.LEFT);
 
 		// execute
 		btTest.setGraphic(ImageManager.instance().getImageView(Images.EXECUTE));
@@ -278,6 +288,8 @@ public class TesterController
 				populateDataSources(DataSourceType.RMQ);
 			} else if (rbJMS.isSelected()) {
 				populateDataSources(DataSourceType.JMS);
+			} else if (rbKafka.isSelected()) {
+				populateDataSources(DataSourceType.KAFKA);
 			} else if (rbMQTT.isSelected()) {
 				populateDataSources(DataSourceType.MQTT);
 			} else if (rbHTTP.isSelected()) {
@@ -331,6 +343,8 @@ public class TesterController
 				populateSourceIds(DataSourceType.RMQ);
 			} else if (rbJMS.isSelected()) {
 				populateSourceIds(DataSourceType.JMS);
+			} else if (rbKafka.isSelected()) {
+				populateSourceIds(DataSourceType.KAFKA);
 			} else if (rbMQTT.isSelected()) {
 				populateSourceIds(DataSourceType.MQTT);
 			} else if (rbHTTP.isSelected()) {
@@ -366,6 +380,12 @@ public class TesterController
 				entry.getValue().disconnect();
 			}
 			jmsClients.clear();
+
+			// disconnect Kafka brokers
+			for (Entry<String, KafkaOeeClient> entry : kafkaClients.entrySet()) {
+				entry.getValue().disconnect();
+			}
+			kafkaClients.clear();
 
 			// disconnect MQTT brokers
 			for (Entry<String, MqttOeeClient> entry : mqttClients.entrySet()) {
@@ -505,11 +525,7 @@ public class TesterController
 		return url + sb.toString();
 	}
 
-	private void populateSourceIds(DataSourceType sourceType) throws Exception {
-		if (selectedEntity == null) {
-			return;
-		}
-
+	private List<String> getSourceIdsViaHttp(DataSourceType sourceType) throws Exception {
 		HttpURLConnection conn = null;
 		try {
 			// refresh list of source Ids
@@ -539,20 +555,39 @@ public class TesterController
 
 			SourceIdResponseDto idDto = gson.fromJson(entityString, SourceIdResponseDto.class);
 
-			List<String> sources = idDto.getSourceIds();
+			return idDto.getSourceIds();
 
-			cbSourceId.getSelectionModel().clearSelection();
-
-			cbSourceId.getItems().clear();
-			cbSourceId.getItems().addAll(sources);
-
-			if (sources.size() == 1) {
-				cbSourceId.getSelectionModel().select(0);
-			}
 		} finally {
 			if (conn != null) {
 				conn.disconnect();
 			}
+		}
+	}
+
+	private List<String> fetchSourceIds(DataSourceType sourceType) throws Exception {
+		return PersistenceService.instance().fetchResolverSourceIds(selectedEntity.getName(), sourceType);
+	}
+
+	private void populateSourceIds(DataSourceType sourceType) throws Exception {
+		if (selectedEntity == null) {
+			lbNotification.setText(TesterLocalizer.instance().getLangString("no.entity"));
+			return;
+		}
+
+		List<String> sources = null;
+		if (rbHTTP.isSelected()) {
+			sources = getSourceIdsViaHttp(sourceType);
+		} else {
+			sources = fetchSourceIds(sourceType);
+		}
+
+		cbSourceId.getSelectionModel().clearSelection();
+
+		cbSourceId.getItems().clear();
+		cbSourceId.getItems().addAll(sources);
+
+		if (sources.size() == 1) {
+			cbSourceId.getSelectionModel().select(0);
 		}
 	}
 
@@ -590,7 +625,7 @@ public class TesterController
 		try {
 			if (rbHTTP.isSelected()) {
 				onHttpPostEvent();
-			} else if (rbJMS.isSelected() || rbRMQ.isSelected() || rbMQTT.isSelected()) {
+			} else if (rbJMS.isSelected() || rbRMQ.isSelected() || rbMQTT.isSelected() || rbKafka.isSelected()) {
 				onSendEquipmentEventMsg();
 			} else if (rbDatabase.isSelected()) {
 				onWriteDatabaseEvent();
@@ -934,6 +969,24 @@ public class TesterController
 		}
 	}
 
+	private void addChildEntities(Set<PlantEntity> children, TreeItem<PlantEntity> parentItem) {
+		for (PlantEntity childEntity : children) {
+			TreeItem<PlantEntity> childItem = new TreeItem<>(childEntity);
+			parentItem.getChildren().add(childItem);
+
+			addChildEntities(childEntity.getChildren(), childItem);
+		}
+	}
+
+	private void addChildReasons(Set<Reason> children, TreeItem<Reason> parentItem) {
+		for (Reason childEntity : children) {
+			TreeItem<Reason> childItem = new TreeItem<>(childEntity);
+			parentItem.getChildren().add(childItem);
+
+			addChildReasons(childEntity.getChildren(), childItem);
+		}
+	}
+
 	private void checkResponseCode(HttpURLConnection conn) throws Exception {
 		int codeGroup = conn.getResponseCode() / 100;
 
@@ -950,8 +1003,52 @@ public class TesterController
 		}
 	}
 
+	private void fetchPlantEntities() throws Exception {
+		List<PlantEntity> entities = PersistenceService.instance().fetchAllPlantEntities();
+
+		ttvEntities.getRoot().getChildren().clear();
+
+		for (PlantEntity entity : entities) {
+			if (entity.getParent() == null) {
+				// top level
+				TreeItem<PlantEntity> entityItem = new TreeItem<>(entity);
+				addChildEntities(entity.getChildren(), entityItem);
+				ttvEntities.getRoot().getChildren().add(entityItem);
+			}
+		}
+		ttvEntities.refresh();
+	}
+
+	private void fetchReasons() throws Exception {
+		List<Reason> reasons = PersistenceService.instance().fetchAllReasons();
+
+		ttvReasons.getRoot().getChildren().clear();
+
+		for (Reason reason : reasons) {
+			if (reason.getParent() == null) {
+				// top level
+				TreeItem<Reason> entityItem = new TreeItem<>(reason);
+				addChildReasons(reason.getChildren(), entityItem);
+				ttvReasons.getRoot().getChildren().add(entityItem);
+			}
+		}
+		ttvReasons.refresh();
+	}
+
 	@FXML
-	private void onHttpGetPlantEntities() {
+	private void onGetPlantEntities() {
+		try {
+			if (rbHTTP.isSelected()) {
+				getPlantEntitiesViaHttp();
+			} else {
+				fetchPlantEntities();
+			}
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+
+	private void getPlantEntitiesViaHttp() throws Exception {
 		HttpURLConnection conn = null;
 		try {
 			// GET plant entities
@@ -986,7 +1083,7 @@ public class TesterController
 
 			ttvEntities.getRoot().getChildren().clear();
 
-			// top-level reasons
+			// top-level entities
 			for (PlantEntityDto dto : dtoList) {
 				EntityLevel level = EntityLevel.valueOf(dto.getLevel());
 				PlantEntity entity = new PlantEntity(dto.getName(), dto.getDescription(), level);
@@ -998,8 +1095,6 @@ public class TesterController
 			}
 			ttvEntities.refresh();
 
-		} catch (Exception e) {
-			AppUtils.showErrorDialog(e);
 		} finally {
 			if (conn != null) {
 				conn.disconnect();
@@ -1008,7 +1103,19 @@ public class TesterController
 	}
 
 	@FXML
-	private void onHttpGetReasons() {
+	private void onGetReasons() {
+		try {
+			if (rbHTTP.isSelected()) {
+				getReasonsViaHttp();
+			} else {
+				fetchReasons();
+			}
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+
+	private void getReasonsViaHttp() throws Exception {
 		HttpURLConnection conn = null;
 		try {
 			// GET reason
@@ -1055,8 +1162,6 @@ public class TesterController
 			}
 			ttvReasons.refresh();
 
-		} catch (Exception e) {
-			AppUtils.showErrorDialog(e);
 		} finally {
 			if (conn != null) {
 				conn.disconnect();
@@ -1064,8 +1169,27 @@ public class TesterController
 		}
 	}
 
+	private List<Material> fetchMaterials() throws Exception {
+		return PersistenceService.instance().fetchAllMaterials();
+	}
+
 	@FXML
-	private void onHttpGetMaterials() {
+	private void onGetMaterials() {
+		try {
+			materials.clear();
+			if (rbHTTP.isSelected()) {
+				materials.addAll(getMaterialsViaHttp());
+			} else {
+				materials.addAll(fetchMaterials());
+			}
+			tvMaterials.refresh();
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+
+	private List<Material> getMaterialsViaHttp() throws Exception {
+		List<Material> materialList = new ArrayList<>();
 		HttpURLConnection conn = null;
 		try {
 			// GET materials
@@ -1093,29 +1217,23 @@ public class TesterController
 			MaterialResponseDto listDto = gson.fromJson(entityString, MaterialResponseDto.class);
 			List<MaterialDto> dtoList = listDto.getMaterialList();
 
-			materials.clear();
-
 			for (MaterialDto dto : dtoList) {
 				// avoid a database query
 				Material material = new Material(dto.getName(), dto.getDescription());
 				material.setCategory(dto.getCategory());
-				materials.add(material);
+				materialList.add(material);
 			}
-			tvMaterials.refresh();
-		} catch (Exception e) {
-			AppUtils.showErrorDialog(e);
 		} finally {
 			if (conn != null) {
 				conn.disconnect();
 			}
 		}
+		return materialList;
 	}
 
 	@Override
 	public void onRmqMessage(ApplicationMessage message) {
-		if (logger.isWarnEnabled()) {
-			logger.warn("Received unhandled RMQ message: " + message.toString());
-		}
+		postNotification(message);
 	}
 
 	@FXML
@@ -1149,15 +1267,17 @@ public class TesterController
 
 			if (rbRMQ.isSelected()) {
 
-				RmqClient pubsub = rmqClients.get(hostPort);
+				RmqClient rmqClient = rmqClients.get(hostPort);
 
-				if (pubsub == null) {
-					pubsub = new RmqClient();
-					rmqClients.put(hostPort, pubsub);
+				if (rmqClient == null) {
+					rmqClient = new RmqClient();
+					rmqClients.put(hostPort, rmqClient);
+					rmqClient.registerListener(this);
 
-					pubsub.connect(source.getHost(), source.getPort(), source.getUserName(), source.getUserPassword());
+					rmqClient.connect(source.getHost(), source.getPort(), source.getUserName(),
+							source.getUserPassword());
 				}
-				pubsub.sendEquipmentEventMessage(msg);
+				rmqClient.sendEquipmentEventMessage(msg);
 				notification = TesterLocalizer.instance().getLangString("sent.message", source.getHost(),
 						source.getPort());
 			} else if (rbJMS.isSelected()) {
@@ -1166,11 +1286,31 @@ public class TesterController
 				if (jmsClient == null) {
 					jmsClient = new JmsClient();
 					jmsClients.put(hostPort, jmsClient);
+					jmsClient.registerListener(this);
 
 					jmsClient.connect(source.getHost(), source.getPort(), source.getUserName(),
 							source.getUserPassword());
 				}
 				jmsClient.sendEventMessage(msg);
+				notification = TesterLocalizer.instance().getLangString("sent.message", source.getHost(),
+						source.getPort());
+			} else if (rbKafka.isSelected()) {
+				KafkaOeeClient kafkaClient = kafkaClients.get(hostPort);
+
+				if (kafkaClient == null) {
+					kafkaClient = new KafkaOeeClient();
+					kafkaClients.put(hostPort, kafkaClient);
+
+					// to send equipment event messages
+					kafkaClient.createProducer((KafkaSource) source, KafkaOeeClient.EVENT_TOPIC);
+
+					// to consume notifications
+					// subscribe to event messages
+					kafkaClient.registerListener(this);
+					kafkaClient.createConsumer((KafkaSource) source, KafkaOeeClient.NOTIFICATION_TOPIC);
+					kafkaClient.startPolling();
+				}
+				kafkaClient.sendEventMessage(msg);
 				notification = TesterLocalizer.instance().getLangString("sent.message", source.getHost(),
 						source.getPort());
 			} else if (rbMQTT.isSelected()) {
@@ -1179,6 +1319,7 @@ public class TesterController
 				if (mqttClient == null) {
 					mqttClient = new MqttOeeClient();
 					mqttClients.put(hostPort, mqttClient);
+					mqttClient.registerListener(this);
 
 					mqttClient.connect(source.getHost(), source.getPort(), source.getUserName(),
 							source.getUserPassword());
@@ -1238,16 +1379,12 @@ public class TesterController
 
 	@Override
 	public void onJmsMessage(ApplicationMessage message) {
-		if (logger.isInfoEnabled()) {
-			logger.info("Received AMQ message: " + message.toString());
-		}
+		postNotification(message);
 	}
 
 	@Override
 	public void onMqttMessage(ApplicationMessage message) {
-		if (logger.isInfoEnabled()) {
-			logger.info("Received MQTT message: " + message.toString());
-		}
+		postNotification(message);
 	}
 
 	@Override
@@ -1269,4 +1406,19 @@ public class TesterController
 			lbNotification.setText(TesterLocalizer.instance().getLangString("triggered.job", jobName, expression));
 		});
 	}
+
+	private void postNotification(ApplicationMessage message) {
+		Platform.runLater(() -> lbNotification
+				.setText(TesterLocalizer.instance().getLangString("received.message") + ", " + message.toString()));
+
+		if (logger.isInfoEnabled()) {
+			logger.info("Received Kafka message: " + message.toString());
+		}
+	}
+
+	@Override
+	public void onKafkaMessage(ApplicationMessage message) {
+		postNotification(message);
+	}
+
 }

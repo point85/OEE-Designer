@@ -147,5 +147,15 @@ Note that version 2.5.0 has the following schema changes:
 (28) 3.1.2, September 25, 2020:
 	- Added HTTPS in addition to HTTP data source
 	- Miscellaneous stability improvements	
+	
+(29) 3.2.0, November 6, 2020:
+	- Added a Kafka data source	
+	- Miscellaneous stability improvements	
+	
+Note that version 3.2.0 has the following schema changes:
+(1)  Added SOURCE_KEY 64 bit integer nullable column to the COLLECTOR table for the primary key of the notification messaging server.
+     Use ALTER TABLE to add this column to an existing COLLECTOR table.  For example for HSQL:
+	 ALTER TABLE PUBLIC.PUBLIC.COLLECTOR ADD SOURCE_KEY BIGINT;
+	 The Collector editor will need to be used to re-establish existing notification settings.
 
 Please send comments and suggestions to point85.llc@gmail.com.

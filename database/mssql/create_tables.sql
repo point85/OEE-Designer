@@ -1,4 +1,4 @@
--- SQL Server script file, schema version 3 as of release 2.5.0
+-- SQL Server script file, schema version 4
 -- set to your database name
 USE [OEE]
 GO
@@ -346,6 +346,7 @@ CREATE TABLE [dbo].[COLLECTOR](
 	[BROKER_USER] [nvarchar](64) NULL,
 	[BROKER_PWD] [nvarchar](64) NULL,
 	[BROKER_TYPE] [nvarchar](16) NULL,
+	[SOURCE_KEY] [bigint] NULL
 	CONSTRAINT [PK_COLLECTOR] PRIMARY KEY CLUSTERED 
 (
 	[COLLECT_KEY] ASC

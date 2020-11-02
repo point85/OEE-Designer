@@ -7,10 +7,13 @@ import org.point85.app.AppUtils;
 import org.point85.app.DialogController;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
+import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.CollectorState;
 import org.point85.domain.collector.DataCollector;
 import org.point85.domain.collector.DataSourceType;
 import org.point85.domain.jms.JmsClient;
+import org.point85.domain.kafka.KafkaOeeClient;
+import org.point85.domain.kafka.KafkaSource;
 import org.point85.domain.messaging.NotificationSeverity;
 import org.point85.domain.mqtt.MqttOeeClient;
 import org.point85.domain.persistence.PersistenceService;
@@ -23,15 +26,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
 public class DataCollectorController extends DialogController {
-	// default ports
-	private static final int RMQ_DEFAULT_PORT = 5672;
-	private static final int JMS_DEFAULT_PORT = 61616;
-	private static final int MQTT_DEFAULT_PORT = 1883;
-
 	// the collector
 	private DataCollector dataCollector;
 
@@ -48,18 +45,6 @@ public class DataCollectorController extends DialogController {
 	private TextField tfHost;
 
 	@FXML
-	private TextField tfBrokerHost;
-
-	@FXML
-	private TextField tfBrokerPort;
-
-	@FXML
-	private TextField tfBrokerUserName;
-
-	@FXML
-	private PasswordField pfBrokerUserPassword;
-
-	@FXML
 	private Button btNew;
 
 	@FXML
@@ -70,6 +55,9 @@ public class DataCollectorController extends DialogController {
 
 	@FXML
 	private Button btTest;
+	
+	@FXML
+	private Button btClearMessagingServer;
 
 	@FXML
 	private ComboBox<String> cbCollectors;
@@ -78,10 +66,7 @@ public class DataCollectorController extends DialogController {
 	private ComboBox<CollectorState> cbCollectorStates;
 
 	@FXML
-	private ComboBox<DataSourceType> cbNotificationServers;
-	
-	@FXML
-	private Button btClearServers;
+	private ComboBox<CollectorDataSource> cbNotificationServers;
 
 	public void initialize(DesignerApplication app) throws Exception {
 		// button images
@@ -94,14 +79,22 @@ public class DataCollectorController extends DialogController {
 
 		cbCollectors.setItems(collectors);
 
-		// notification server types
-		cbNotificationServers.getItems().add(DataSourceType.RMQ);
-		cbNotificationServers.getItems().add(DataSourceType.JMS);
-		cbNotificationServers.getItems().add(DataSourceType.MQTT);
+		// messaging notification servers
+		List<DataSourceType> messagingTypes = new ArrayList<>();
+		messagingTypes.add(DataSourceType.RMQ);
+		messagingTypes.add(DataSourceType.JMS);
+		messagingTypes.add(DataSourceType.MQTT);
+		messagingTypes.add(DataSourceType.KAFKA);
+
+		List<CollectorDataSource> messagingServers = PersistenceService.instance().fetchDataSources(messagingTypes);
+
+		for (CollectorDataSource server : messagingServers) {
+			cbNotificationServers.getItems().add(server);
+		}
 
 		// retrieve the defined collectors
 		populateCollectors();
-		
+
 		if (collectors.size() == 1) {
 			cbCollectors.getSelectionModel().select(0);
 			onSelectCollector();
@@ -129,9 +122,8 @@ public class DataCollectorController extends DialogController {
 		btTest.setGraphic(ImageManager.instance().getImageView(Images.EXECUTE));
 		btTest.setContentDisplay(ContentDisplay.LEFT);
 		
-		// clear servers
-		btClearServers.setGraphic(ImageManager.instance().getImageView(Images.CLEAR));
-		btClearServers.setContentDisplay(ContentDisplay.LEFT);
+		// clear
+		btClearMessagingServer.setGraphic(ImageManager.instance().getImageView(Images.CLEAR));
 	}
 
 	public DataCollector getCollector() {
@@ -148,53 +140,31 @@ public class DataCollectorController extends DialogController {
 	@FXML
 	private void onSelectCollector() {
 		try {
-			String collector = cbCollectors.getSelectionModel().getSelectedItem();
+			String collectorName = cbCollectors.getSelectionModel().getSelectedItem();
 
 			// JFX fires this event with a null selected item!
-			if (collector == null) {
+			if (collectorName == null) {
 				onNewCollector();
 				return;
 			}
 
 			// retrieve collector by name
-			DataCollector configuration = PersistenceService.instance().fetchCollectorByName(collector);
-			setCollector(configuration);
+			DataCollector collector = PersistenceService.instance().fetchCollectorByName(collectorName);
+			setCollector(collector);
 
-			this.tfHost.setText(configuration.getHost());
-			this.tfName.setText(configuration.getName());
-			this.tfDescription.setText(configuration.getDescription());
+			this.tfHost.setText(collector.getHost());
+			this.tfName.setText(collector.getName());
+			this.tfDescription.setText(collector.getDescription());
 
-			DataSourceType messagingSourceType = configuration.getBrokerType();
+			// notification servers
+			CollectorDataSource messagingSource = collector.getNotificationServer();
 
-			if (messagingSourceType != null) {
-				cbNotificationServers.getSelectionModel().select(messagingSourceType);
+			if (messagingSource != null) {
+				cbNotificationServers.getSelectionModel().select(messagingSource);
 			}
 
-			if (configuration.getBrokerHost() != null) {
-				this.tfBrokerHost.setText(configuration.getBrokerHost());
-			} else {
-				this.tfBrokerHost.clear();
-			}
-
-			if (configuration.getBrokerPort() != null) {
-				this.tfBrokerPort.setText(String.valueOf(configuration.getBrokerPort()));
-			} else {
-				this.tfBrokerPort.clear();
-			}
-
-			if (configuration.getBrokerUserName() != null) {
-				this.tfBrokerUserName.setText(configuration.getBrokerUserName());
-			} else {
-				this.tfBrokerUserName.clear();
-			}
-
-			if (configuration.getBrokerUserPassword() != null) {
-				this.pfBrokerUserPassword.setText(configuration.getBrokerUserPassword());
-			} else {
-				this.pfBrokerUserPassword.clear();
-			}
-
-			this.cbCollectorStates.getSelectionModel().select(configuration.getCollectorState());
+			// collector state
+			cbCollectorStates.getSelectionModel().select(collector.getCollectorState());
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}
@@ -214,7 +184,7 @@ public class DataCollectorController extends DialogController {
 				if (type.equals(ButtonType.CANCEL)) {
 					return;
 				}
-				
+
 				PersistenceService.instance().delete(definition);
 				collectors.remove(definition.getName());
 
@@ -225,20 +195,13 @@ public class DataCollectorController extends DialogController {
 		}
 	}
 
-	private void clearBrokerSettings() {
-		this.tfBrokerHost.clear();
-		this.tfBrokerPort.clear();
-		this.tfBrokerUserName.clear();
-		this.pfBrokerUserPassword.clear();
-	}
-
 	@FXML
 	private void onNewCollector() {
 		try {
 			this.tfHost.clear();
 			this.tfName.clear();
 			this.tfDescription.clear();
-			clearBrokerSettings();
+			this.cbNotificationServers.getSelectionModel().select(null);
 
 			this.cbCollectors.getSelectionModel().clearSelection();
 			this.cbCollectorStates.getSelectionModel().select(null);
@@ -249,8 +212,8 @@ public class DataCollectorController extends DialogController {
 			AppUtils.showErrorDialog(e);
 		}
 	}
-	
-	private String validateHost(String hostId)  {
+
+	private String validateHost(String hostId) {
 		// allow "localhost"
 		return hostId;
 	}
@@ -261,20 +224,8 @@ public class DataCollectorController extends DialogController {
 		try {
 			DataCollector collector = getCollector();
 
-			DataSourceType brokerType = cbNotificationServers.getSelectionModel().getSelectedItem();
-			collector.setBrokerType(brokerType);
-
-			if (brokerType != null) {
-				collector.setBrokerHost(validateHost(getBrokerHost()));
-				collector.setBrokerPort(getBrokerPort());
-				collector.setBrokerUserName(getBrokerUserName());
-				collector.setBrokerUserPassword(getBrokerUserPassword());
-			} else {
-				collector.setBrokerHost(null);
-				collector.setBrokerPort(null);
-				collector.setBrokerUserName(null);
-				collector.setBrokerUserPassword(null);
-			}
+			CollectorDataSource notificationServer = cbNotificationServers.getSelectionModel().getSelectedItem();
+			collector.setNotificationServer(notificationServer);
 
 			collector.setHost(validateHost(getHost()));
 			collector.setName(getName());
@@ -315,87 +266,55 @@ public class DataCollectorController extends DialogController {
 		return this.tfDescription.getText();
 	}
 
-	String getBrokerHost() {
-		return this.tfBrokerHost.getText();
-	}
-
-	Integer getBrokerPort() {
-		String portText = tfBrokerPort.getText();
-
-		Integer port = 0;
-		if (portText != null && portText.trim().length() > 0) {
-			port = Integer.valueOf(portText.trim());
-		}
-		return port;
-	}
-
-	String getBrokerUserName() {
-		return this.tfBrokerUserName.getText();
-	}
-
-	String getBrokerUserPassword() {
-		return this.pfBrokerUserPassword.getText();
-	}
-
 	CollectorState getCollectorState() {
 		return this.cbCollectorStates.getSelectionModel().getSelectedItem();
 	}
 
 	@FXML
-	private void onTest() {
+	private void onTest() {		
 		String content = "This is a test.";
 
-		DataSourceType sourceType = cbNotificationServers.getSelectionModel().getSelectedItem();
+		CollectorDataSource notificationServer = cbNotificationServers.getSelectionModel().getSelectedItem();
 
-		if (sourceType == null) {
+		if (notificationServer == null) {
 			return;
 		}
 
 		try {
-			if (sourceType.equals(DataSourceType.RMQ)) {
+			if (notificationServer.getDataSourceType().equals(DataSourceType.RMQ)) {
 				RmqClient rmqClient = new RmqClient();
-				rmqClient.connect(getBrokerHost(), getBrokerPort(), getBrokerUserName(), getBrokerUserPassword());
+				rmqClient.connect(notificationServer.getHost(), notificationServer.getPort(),
+						notificationServer.getUserName(), notificationServer.getUserPassword());
 				rmqClient.sendNotification(content, NotificationSeverity.INFO);
-			} else if (sourceType.equals(DataSourceType.JMS)) {
+				
+			} else if (notificationServer.getDataSourceType().equals(DataSourceType.JMS)) {
 				JmsClient jmsClient = new JmsClient();
-				jmsClient.connect(getBrokerHost(), getBrokerPort(), getBrokerUserName(), getBrokerUserPassword());
+				jmsClient.connect(notificationServer.getHost(), notificationServer.getPort(),
+						notificationServer.getUserName(), notificationServer.getUserPassword());
 				jmsClient.sendNotification(content, NotificationSeverity.INFO);
-			} else if (sourceType.equals(DataSourceType.MQTT)) {
+				
+			} else if (notificationServer.getDataSourceType().equals(DataSourceType.MQTT)) {
 				MqttOeeClient mqttClient = new MqttOeeClient();
-				mqttClient.connect(getBrokerHost(), getBrokerPort(), getBrokerUserName(), getBrokerUserPassword());
+				mqttClient.connect(notificationServer.getHost(), notificationServer.getPort(),
+						notificationServer.getUserName(), notificationServer.getUserPassword());
 				mqttClient.sendNotification(content, NotificationSeverity.INFO);
+				
+			} else if (notificationServer.getDataSourceType().equals(DataSourceType.KAFKA)) {
+				KafkaSource server = (KafkaSource) notificationServer;
+				KafkaOeeClient kafkaClient = new KafkaOeeClient();
+				kafkaClient.createProducer(server, KafkaOeeClient.NOTIFICATION_TOPIC);
+				kafkaClient.sendNotification(content, NotificationSeverity.INFO);
+				
 			}
 			AppUtils.showConfirmationDialog(DesignerLocalizer.instance().getLangString("connection.successful"));
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}
 	}
-
-	@FXML
-	private void onSelectSourceType() {
-		clearBrokerSettings();
-
-		DataSourceType sourceType = cbNotificationServers.getSelectionModel().getSelectedItem();
-
-		if (sourceType == null) {
-			return;
-		}
-
-		if (sourceType.equals(DataSourceType.RMQ)) {
-			this.tfBrokerPort.setText(String.valueOf(RMQ_DEFAULT_PORT));
-		} else if (sourceType.equals(DataSourceType.JMS)) {
-			this.tfBrokerPort.setText(String.valueOf(JMS_DEFAULT_PORT));
-		} else if (sourceType.equals(DataSourceType.MQTT)) {
-			this.tfBrokerPort.setText(String.valueOf(MQTT_DEFAULT_PORT));
-		}
-	}
 	
 	@FXML
-	private void onClearServers() {
+	private void onClearMessagingServer() {
+		cbNotificationServers.getSelectionModel().select(null);
 		cbNotificationServers.getSelectionModel().clearSelection();
-		tfBrokerHost.clear();
-		tfBrokerPort.clear();
-		tfBrokerUserName.clear();
-		pfBrokerUserPassword.clear();
 	}
-} 
+}

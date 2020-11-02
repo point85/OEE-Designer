@@ -17,6 +17,8 @@ import org.point85.app.http.HttpServerController;
 import org.point85.app.http.HttpTrendController;
 import org.point85.app.material.MaterialEditorController;
 import org.point85.app.messaging.JmsTrendController;
+import org.point85.app.messaging.KafkaServerController;
+import org.point85.app.messaging.KafkaTrendController;
 import org.point85.app.messaging.MqBrokerController;
 import org.point85.app.messaging.MqttTrendController;
 import org.point85.app.messaging.RmqTrendController;
@@ -40,6 +42,7 @@ import org.point85.domain.cron.CronEventSource;
 import org.point85.domain.db.DatabaseEventSource;
 import org.point85.domain.file.FileEventSource;
 import org.point85.domain.http.HttpSource;
+import org.point85.domain.kafka.KafkaSource;
 import org.point85.domain.modbus.ModbusMaster;
 import org.point85.domain.modbus.ModbusSource;
 import org.point85.domain.opc.da.DaOpcClient;
@@ -197,7 +200,7 @@ public class DesignerApplication {
 
 	// display the material editor as a dialog
 	public Material showMaterialEditor() throws Exception {
-		if (this.materialController == null) {
+		if (materialController == null) {
 			FXMLLoader loader = FXMLLoaderFactory.materialEditorLoader();
 			AnchorPane pane = (AnchorPane) loader.getRoot();
 
@@ -423,6 +426,32 @@ public class DesignerApplication {
 		return mqBrokerController.getSource();
 	}
 
+	KafkaSource showKafkaServerEditor() throws Exception {
+		FXMLLoader loader = FXMLLoaderFactory.kafkaServerLoader();
+		AnchorPane page = (AnchorPane) loader.getRoot();
+
+		// Create the dialog Stage.
+		Stage dialogStage = new Stage(StageStyle.DECORATED);
+
+		dialogStage.setTitle(DesignerLocalizer.instance().getLangString("kafka.editor.title"));
+
+		dialogStage.initModality(Modality.WINDOW_MODAL);
+		Scene scene = new Scene(page);
+		dialogStage.setScene(scene);
+
+		// get the controller
+		KafkaServerController kafkaServerController = loader.getController();
+		kafkaServerController.setDialogStage(dialogStage);
+		kafkaServerController.initialize(this);
+
+		// Show the dialog and wait until the user closes it
+		if (!kafkaServerController.getDialogStage().isShowing()) {
+			kafkaServerController.getDialogStage().showAndWait();
+		}
+
+		return kafkaServerController.getSource();
+	}
+
 	ModbusSource showModbusEditor() throws Exception {
 		if (modbusController == null) {
 			FXMLLoader loader = FXMLLoaderFactory.modbusLoader();
@@ -545,22 +574,20 @@ public class DesignerApplication {
 	}
 
 	DataCollector showCollectorEditor() throws Exception {
-		if (dataCollectorController == null) {
-			FXMLLoader loader = FXMLLoaderFactory.dataCollectorLoader();
-			AnchorPane page = (AnchorPane) loader.getRoot();
+		FXMLLoader loader = FXMLLoaderFactory.dataCollectorLoader();
+		AnchorPane page = (AnchorPane) loader.getRoot();
 
-			// Create the dialog Stage.
-			Stage dialogStage = new Stage(StageStyle.DECORATED);
-			dialogStage.setTitle(DesignerLocalizer.instance().getLangString("collector.editor.title"));
-			dialogStage.initModality(Modality.WINDOW_MODAL);
-			Scene scene = new Scene(page);
-			dialogStage.setScene(scene);
+		// Create the dialog Stage.
+		Stage dialogStage = new Stage(StageStyle.DECORATED);
+		dialogStage.setTitle(DesignerLocalizer.instance().getLangString("collector.editor.title"));
+		dialogStage.initModality(Modality.WINDOW_MODAL);
+		Scene scene = new Scene(page);
+		dialogStage.setScene(scene);
 
-			// get the controller
-			dataCollectorController = loader.getController();
-			dataCollectorController.setDialogStage(dialogStage);
-			dataCollectorController.initialize(this);
-		}
+		// get the controller
+		dataCollectorController = loader.getController();
+		dataCollectorController.setDialogStage(dialogStage);
+		dataCollectorController.initialize(this);
 
 		// Show the dialog and wait until the user closes it
 		if (!dataCollectorController.getDialogStage().isShowing()) {
@@ -594,7 +621,7 @@ public class DesignerApplication {
 		}
 	}
 
-	void showAboutDialog()  {
+	void showAboutDialog() {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle(DesignerLocalizer.instance().getLangString("about"));
 		alert.setHeaderText(DesignerLocalizer.instance().getLangString("about.header"));
@@ -783,6 +810,43 @@ public class DesignerApplication {
 
 		// show the window
 		jmsTrendController.getDialogStage().show();
+	}
+
+	void showKafkaTrendDialog(EventResolver eventResolver) throws Exception {
+		// Load the fxml file
+		FXMLLoader loader = FXMLLoaderFactory.kafkaTrendLoader();
+		AnchorPane page = (AnchorPane) loader.getRoot();
+
+		// Create the dialog Stage.
+		Stage dialogStage = new Stage(StageStyle.DECORATED);
+		dialogStage.setTitle(DesignerLocalizer.instance().getLangString("kafka.event.trend"));
+		dialogStage.initModality(Modality.NONE);
+		Scene scene = new Scene(page);
+		dialogStage.setScene(scene);
+
+		// get the controller
+		KafkaTrendController kafkaTrendController = loader.getController();
+		kafkaTrendController.setDialogStage(dialogStage);
+		kafkaTrendController.setApp(this);
+
+		// add the trend chart
+		SplitPane chartPane = kafkaTrendController.initializeTrend();
+
+		AnchorPane.setBottomAnchor(chartPane, 50.0);
+		AnchorPane.setLeftAnchor(chartPane, 5.0);
+		AnchorPane.setRightAnchor(chartPane, 5.0);
+		AnchorPane.setTopAnchor(chartPane, 50.0);
+
+		page.getChildren().add(0, chartPane);
+
+		// set the script resolver
+		kafkaTrendController.setEventResolver(eventResolver);
+
+		// subscribe to broker
+		kafkaTrendController.subscribeToDataSource();
+
+		// show the window
+		kafkaTrendController.getDialogStage().show();
 	}
 
 	void showMQTTTrendDialog(EventResolver eventResolver) throws Exception {

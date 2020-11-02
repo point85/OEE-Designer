@@ -19,6 +19,7 @@ import org.point85.domain.cron.CronEventSource;
 import org.point85.domain.db.DatabaseEventSource;
 import org.point85.domain.file.FileEventSource;
 import org.point85.domain.http.HttpSource;
+import org.point85.domain.kafka.KafkaSource;
 import org.point85.domain.modbus.ModbusEndpoint;
 import org.point85.domain.modbus.ModbusSource;
 import org.point85.domain.opc.da.OpcDaBrowserLeaf;
@@ -406,6 +407,9 @@ public class EquipmentResolverController extends DesignerController {
 		case JMS:
 			buttonImage = ImageManager.instance().getImageView(Images.JMS);
 			break;
+		case KAFKA:
+			buttonImage = ImageManager.instance().getImageView(Images.KAFKA);
+			break;
 		case MQTT:
 			buttonImage = ImageManager.instance().getImageView(Images.MQTT);
 			break;
@@ -570,6 +574,17 @@ public class EquipmentResolverController extends DesignerController {
 			} else if (sourceType.equals(DataSourceType.CRON)) {
 				// show Cron editor
 				CronEventSource dataSource = getApp().showCronEditor();
+				tfServerId.setText(dataSource.getId());
+
+				getSelectedResolver().setDataSource(dataSource);
+
+				lbDataType.setText(String.class.getSimpleName());
+
+				setDefaultSourceId();
+
+			} else if (sourceType.equals(DataSourceType.KAFKA)) {
+				// show Kafka server editor
+				KafkaSource dataSource = getApp().showKafkaServerEditor();
 				tfServerId.setText(dataSource.getId());
 
 				getSelectedResolver().setDataSource(dataSource);
@@ -808,6 +823,8 @@ public class EquipmentResolverController extends DesignerController {
 				getApp().showModbusTrendDialog(selectedEventResolver);
 			} else if (type.equals(DataSourceType.CRON)) {
 				getApp().showCronTrendDialog(selectedEventResolver);
+			} else if (type.equals(DataSourceType.KAFKA)) {
+				getApp().showKafkaTrendDialog(selectedEventResolver);
 			}
 
 		} catch (Exception e) {

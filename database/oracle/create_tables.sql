@@ -1,4 +1,4 @@
--- Oracle script file, schema version 3, release 2.5.0
+-- Oracle script file, schema version 4
 -- set to your schema and tablespace names
 
 --------------------------------------------------------
@@ -366,6 +366,7 @@ CREATE TABLE "SYSTEM"."COLLECTOR"
 	"BROKER_USER" NVARCHAR2(64) NULL,
 	"BROKER_PWD" NVARCHAR2(64) NULL,
 	"BROKER_TYPE" NVARCHAR2(32) NULL,
+	"SOURCE_KEY" NUMBER(19,0) NULL,
 	PRIMARY KEY (COLLECT_KEY)
    ) TABLESPACE "SYSTEM" ;
 /   

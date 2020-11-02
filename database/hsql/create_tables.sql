@@ -1,4 +1,4 @@
--- HSQLDB schema creation script file, schema version 3, release 2.5.0
+-- HSQLDB schema creation script file, schema version 4
 -- set to your schema
 SET AUTOCOMMIT TRUE;
 
@@ -208,6 +208,7 @@ CREATE CACHED TABLE COLLECTOR (
 	BROKER_USER nvarchar(64) NULL,
 	BROKER_PWD nvarchar(64) NULL,
 	BROKER_TYPE nvarchar(16) NULL,
+	SOURCE_KEY bigint NULL,
 	PRIMARY KEY (COLLECT_KEY)
 );
 

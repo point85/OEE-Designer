@@ -20,7 +20,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.tester.TesterController">
+<AnchorPane prefHeight="800.0" prefWidth="1025.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.tester.TesterController">
    <children>
       <SplitPane dividerPositions="0.5" layoutX="200.0" layoutY="155.0" orientation="VERTICAL" prefHeight="445.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="250.0">
         <items>
@@ -33,7 +33,7 @@
                         <TreeTableColumn fx:id="ttcEntityLevel" prefWidth="150.0" text="%level" />
                     </columns>
                   </TreeTableView>
-                  <Button fx:id="btHttpGetEntities" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#onHttpGetPlantEntities" text="%entities" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
+                  <Button fx:id="btGetEntities" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#onGetPlantEntities" text="%entities" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0">
@@ -51,7 +51,7 @@
                                           <TreeTableColumn fx:id="ttcLossCategory" prefWidth="200.0" text="%loss" />
                                       </columns>
                                     </TreeTableView>
-                                    <Button fx:id="btHttpGetReasons" layoutX="25.0" layoutY="8.0" mnemonicParsing="false" onAction="#onHttpGetReasons" text="%reasons" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
+                                    <Button fx:id="btGetReasons" layoutX="25.0" layoutY="8.0" mnemonicParsing="false" onAction="#onGetReasons" text="%reasons" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
                                  </children>
                               </AnchorPane>
                         </content>
@@ -67,7 +67,7 @@
                                           <TableColumn fx:id="tcMaterialCategory" prefWidth="150.0" text="%category" />
                                       </columns>
                                     </TableView>
-                                    <Button fx:id="btHttpGetMaterials" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#onHttpGetMaterials" text="%materials" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
+                                    <Button fx:id="btGetMaterials" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#onGetMaterials" text="%materials" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
                                  </children>
                               </AnchorPane>
                           </content>
@@ -120,6 +120,7 @@
                   <RadioButton fx:id="rbFile" mnemonicParsing="false" onAction="#onSelectSourceType" text="%file" toggleGroup="$source" />
                   <RadioButton fx:id="rbModbus" mnemonicParsing="false" onAction="#onSelectSourceType" text="%modbus" toggleGroup="$source" />
                   <RadioButton fx:id="rbCron" mnemonicParsing="false" onAction="#onSelectSourceType" text="%cron" toggleGroup="$source" />
+                  <RadioButton fx:id="rbKafka" mnemonicParsing="false" onAction="#onSelectSourceType" text="%kafka" toggleGroup="$source" />
                </children>
             </HBox>
             <Label text="%reason" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />

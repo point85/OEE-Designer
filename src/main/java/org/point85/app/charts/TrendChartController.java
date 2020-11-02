@@ -318,18 +318,7 @@ public class TrendChartController extends DesignerController {
 		case PROD_GOOD:
 		case PROD_REJECT:
 		case PROD_STARTUP: {
-			Object plottedValue = resolvedEvent.getInputValue();
-
-			// convert from String
-			if (plottedValue instanceof String) {
-				try {
-					plottedValue = Double.valueOf((String) plottedValue);
-				} catch (NumberFormatException e) {
-					AppUtils.showErrorDialog(e);
-				}
-			}
-
-			plotData(plottedValue, resolvedEvent.getAmount());
+			plotData(resolvedEvent.getInputValue(), resolvedEvent.getAmount());
 			break;
 		}
 

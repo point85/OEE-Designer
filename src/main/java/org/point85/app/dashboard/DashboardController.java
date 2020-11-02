@@ -1280,6 +1280,9 @@ public class DashboardController extends DialogController implements CategoryCli
 
 			// loss category
 			TimeLoss loss = message.getLoss();
+			if (loss == null) {
+				loss = TimeLoss.NO_LOSS;
+			}
 			tiAvailability.setDescription(loss.toString());
 			tiAvailability.setTextColor(loss.getColor());
 			break;
@@ -1615,13 +1618,11 @@ public class DashboardController extends DialogController implements CategoryCli
 			clearLossData();
 			refreshCharts(tpParetoCharts.getSelectionModel().getSelectedItem());
 
-			String timestamp = DomainUtils.offsetDateTimeToString(OffsetDateTime.now(),
-					"yyyy-MM-dd HH:mm:ss ZZZZZ");
+			String timestamp = DomainUtils.offsetDateTimeToString(OffsetDateTime.now(), "yyyy-MM-dd HH:mm:ss ZZZZZ");
 			postNotification(DesignerLocalizer.instance().getLangString("data.refreshed", timestamp));
 
 		} catch (Exception e) {
-			String timestamp = DomainUtils.offsetDateTimeToString(OffsetDateTime.now(),
-					"yyyy-MM-dd HH:mm:ss ZZZZZ");
+			String timestamp = DomainUtils.offsetDateTimeToString(OffsetDateTime.now(), "yyyy-MM-dd HH:mm:ss ZZZZZ");
 			postNotification(timestamp + ": " + e.getMessage());
 		}
 	}

@@ -258,7 +258,7 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 			if (status != null) {
 				// state
 				ServerState serverState = status.getState();
-				lbState.setText(serverState.toString());
+				lbState.setText(serverState != null ? serverState.toString() : "");
 				lbState.setTextFill(ConnectionState.CONNECTED_COLOR);
 				trendChartController.enableTrending(true);
 			} else {

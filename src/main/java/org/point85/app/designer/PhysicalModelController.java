@@ -98,6 +98,9 @@ public class PhysicalModelController extends DesignerController {
 
 	@FXML
 	private Button btJMSBrokerEditor;
+	
+	@FXML
+	private Button btKafkaServerEditor;
 
 	@FXML
 	private Button btMQTTBrokerEditor;
@@ -326,7 +329,6 @@ public class PhysicalModelController extends DesignerController {
 		newItem.setExpanded(true);
 
 		tbWorkSchedules.setDisable(false);
-		lbCurrentSchedule.setText(null);
 
 		if (selectedEntity instanceof Equipment) {
 			tbAvailability.setDisable(false);
@@ -374,6 +376,9 @@ public class PhysicalModelController extends DesignerController {
 
 		btJMSBrokerEditor.setGraphic(ImageManager.instance().getImageView(Images.JMS));
 		btJMSBrokerEditor.setTooltip(new Tooltip(i18n.getString("jms.tt")));
+		
+		btKafkaServerEditor.setGraphic(ImageManager.instance().getImageView(Images.KAFKA));
+		btKafkaServerEditor.setTooltip(new Tooltip(i18n.getString("kafka.tt")));
 
 		btMQTTBrokerEditor.setGraphic(ImageManager.instance().getImageView(Images.MQTT));
 		btMQTTBrokerEditor.setTooltip(new Tooltip(i18n.getString("mqtt.tt")));
@@ -1090,6 +1095,15 @@ public class PhysicalModelController extends DesignerController {
 	private void onShowDashboard() {
 		try {
 			getApp().showDashboard();
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+
+	@FXML
+	private void onShowKafkaServerEditor() {
+		try {
+			this.getApp().showKafkaServerEditor();
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}

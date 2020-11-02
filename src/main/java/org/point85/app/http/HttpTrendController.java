@@ -131,7 +131,8 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 
 	public void onStartServer() {
 		HttpSource dataSource = (HttpSource) trendChartController.getEventResolver().getDataSource();
-		int port = dataSource.getPort();
+		Integer port = dataSource.getPort();
+		Integer httpsPort = dataSource.getHttpsPort();
 
 		// check to see if already started
 		Collection<OeeHttpServer> servers = getApp().getAppContext().getHttpServers();
@@ -151,6 +152,11 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 				piConnection.setVisible(true);
 
 				httpServer = new OeeHttpServer(port);
+
+				if (httpsPort != null) {
+					httpServer.setHttpsPort(httpsPort);
+				}
+
 				OeeHttpServer.setDataChangeListener(this);
 				httpServer.startup();
 				lbState.setText(httpServer.getState().toString());
@@ -233,38 +239,45 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 		service.start();
 	}
 
+	private String createPayload(EventResolver eventResolver) throws Exception {
+		// the value to send (must match the configured resolver)
+		String input = tfLoopbackValue.getText();
+		String[] values = AppUtils.parseCsvInput(input);
+
+		// create the data transfer event object
+		EquipmentEventRequestDto dto = new EquipmentEventRequestDto(eventResolver.getSourceId(), values[0]);
+		String timestamp = DomainUtils.offsetDateTimeToString(OffsetDateTime.now(), DomainUtils.OFFSET_DATE_TIME_8601);
+		dto.setTimestamp(timestamp);
+		dto.setReason(values[1]);
+
+		// serialize the body
+		Gson gson = new Gson();
+		String payload = gson.toJson(dto);
+
+		return payload;
+	}
+
 	@FXML
 	private void onLoopbackTest() {
 		HttpURLConnection conn = null;
+
 		try {
 			// get the HTTP data source
 			EventResolver eventResolver = trendChartController.getEventResolver();
 			HttpSource dataSource = (HttpSource) eventResolver.getDataSource();
 
-			// build the URL for an equipment event
+			// build the URL for an equipment event, only HTTP supported
 			URL url = new URL(
 					"http://" + dataSource.getHost() + ":" + dataSource.getPort() + '/' + OeeHttpServer.EVENT_EP);
 
 			// create a connection for a JSON POST request
 			conn = (HttpURLConnection) url.openConnection();
+
 			conn.setDoOutput(true);
 			conn.setRequestMethod("POST");
 			conn.setRequestProperty("Content-Type", "application/json");
 
-			// the value to send (must match the configured resolver)
-			String input = tfLoopbackValue.getText();
-			String[] values = AppUtils.parseCsvInput(input);
-
-			// create the data transfer event object
-			EquipmentEventRequestDto dto = new EquipmentEventRequestDto(eventResolver.getSourceId(), values[0]);
-			String timestamp = DomainUtils.offsetDateTimeToString(OffsetDateTime.now(),
-					DomainUtils.OFFSET_DATE_TIME_8601);
-			dto.setTimestamp(timestamp);
-			dto.setReason(values[1]);
-
-			// serialize the body
-			Gson gson = new Gson();
-			String payload = gson.toJson(dto);
+			String payload = createPayload(eventResolver);
 
 			// make the request
 			OutputStream os = conn.getOutputStream();
@@ -272,8 +285,7 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 			os.flush();
 
 			if (logger.isInfoEnabled()) {
-				logger.info("Posted equipment event request to URL " + url + " with value " + values[0] + " and reason "
-						+ values[1]);
+				logger.info("Posted equipment event request to URL " + url + " with payload " + payload);
 			}
 
 			// check the response code

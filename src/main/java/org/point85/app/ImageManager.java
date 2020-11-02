@@ -150,6 +150,9 @@ public final class ImageManager {
 			break;
 		case JMS:
 			image = new Image(IMAGE_PATH + "JMSSource.png", DIM, DIM, true, true);
+			break;	
+		case KAFKA:
+			image = new Image(IMAGE_PATH + "KafkaSource.png", DIM, DIM, true, true);
 			break;
 		case MQTT:
 			image = new Image(IMAGE_PATH + "MQTTSource.png", DIM, DIM, true, true);

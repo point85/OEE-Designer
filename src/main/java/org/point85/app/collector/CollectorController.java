@@ -95,7 +95,7 @@ public class CollectorController {
 		collectorService = new CollectorService(collectorName);
 
 		try {
-			// start collector with all HTTP servers
+			// start collector with all data sources
 			collectorService.startup();
 
 			// enable buttons

@@ -13,11 +13,16 @@ import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
 import org.point85.domain.DomainUtils;
+import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.CollectorState;
 import org.point85.domain.collector.DataCollector;
 import org.point85.domain.collector.DataSourceType;
 import org.point85.domain.jms.JmsClient;
 import org.point85.domain.jms.JmsMessageListener;
+import org.point85.domain.jms.JmsSource;
+import org.point85.domain.kafka.KafkaMessageListener;
+import org.point85.domain.kafka.KafkaOeeClient;
+import org.point85.domain.kafka.KafkaSource;
 import org.point85.domain.messaging.ApplicationMessage;
 import org.point85.domain.messaging.BaseMessagingClient;
 import org.point85.domain.messaging.CollectorCommandMessage;
@@ -28,10 +33,12 @@ import org.point85.domain.messaging.MessageType;
 import org.point85.domain.messaging.NotificationSeverity;
 import org.point85.domain.mqtt.MqttMessageListener;
 import org.point85.domain.mqtt.MqttOeeClient;
+import org.point85.domain.mqtt.MqttSource;
 import org.point85.domain.mqtt.QualityOfService;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.rmq.RmqClient;
 import org.point85.domain.rmq.RmqMessageListener;
+import org.point85.domain.rmq.RmqSource;
 import org.point85.domain.rmq.RoutingKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +49,8 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-public class MonitorApplication implements RmqMessageListener, JmsMessageListener, MqttMessageListener {
+public class MonitorApplication
+		implements RmqMessageListener, JmsMessageListener, MqttMessageListener, KafkaMessageListener {
 	// logger
 	private static final Logger logger = LoggerFactory.getLogger(MonitorApplication.class);
 
@@ -63,6 +71,12 @@ public class MonitorApplication implements RmqMessageListener, JmsMessageListene
 
 	// MQTT brokers for outgoing commands
 	private final Map<String, MqttOeeClient> mqttPublishingClients = new HashMap<>();
+
+	// Kafka message publisher/subscribers for incoming notifications
+	private final List<KafkaOeeClient> kafkaSubscriptionClients = new ArrayList<>();
+
+	// Kafka brokers for outgoing commands
+	private final Map<String, KafkaOeeClient> kafkaPublishingClients = new HashMap<>();
 
 	// status monitor
 	private MonitorController monitorController;
@@ -160,37 +174,40 @@ public class MonitorApplication implements RmqMessageListener, JmsMessageListene
 		Map<String, BaseMessagingClient> pubSubs = new HashMap<>();
 
 		for (DataCollector collector : collectors) {
-			DataSourceType sourceType = collector.getBrokerType();
-			String brokerHostName = collector.getBrokerHost();
-			Integer brokerPort = collector.getBrokerPort();
-			String brokerUser = collector.getBrokerUserName();
-			String brokerPassword = collector.getBrokerUserPassword();
+			CollectorDataSource server = collector.getNotificationServer();
 
-			if (brokerHostName == null || brokerHostName.trim().length() == 0 || brokerPort == null) {
+			if (server == null) {
 				continue;
 			}
 
+			DataSourceType sourceType = server.getDataSourceType();
+
 			switch (sourceType) {
-			case JMS:
-				startJMSBroker(pubSubs, brokerHostName, brokerPort, brokerUser, brokerPassword);
+			case JMS: {
+				startJMSBroker(pubSubs, (JmsSource) server);
 				break;
-			case RMQ:
-				startRMQBroker(pubSubs, brokerHostName, brokerPort, brokerUser, brokerPassword);
+			}
+			case RMQ: {
+				startRMQBroker(pubSubs, (RmqSource) server);
 				break;
-			case MQTT:
-				startMqttBroker(pubSubs, brokerHostName, brokerPort, brokerUser, brokerPassword);
+			}
+			case MQTT: {
+				startMqttBroker(pubSubs, (MqttSource) server);
 				break;
+			}
+			case KAFKA: {
+				startKafkaBroker(pubSubs, (KafkaSource) server);
+				break;
+			}
 			default:
 				return;
-
 			}
 		}
 	}
 
-	private void startRMQBroker(Map<String, BaseMessagingClient> pubSubs, String brokerHostName, Integer brokerPort,
-			String brokerUser, String brokerPassword) throws Exception {
+	private void startRMQBroker(Map<String, BaseMessagingClient> pubSubs, RmqSource server) throws Exception {
 
-		String key = "RMQ." + brokerHostName + ":" + brokerPort;
+		String key = "RMQ." + server.getHost() + ":" + server.getPort();
 
 		if (pubSubs.get(key) != null) {
 			// already started
@@ -208,16 +225,15 @@ public class MonitorApplication implements RmqMessageListener, JmsMessageListene
 		routingKeys.add(RoutingKey.NOTIFICATION_STATUS);
 		routingKeys.add(RoutingKey.RESOLVED_EVENT);
 
-		rmqClient.startUp(brokerHostName, brokerPort, brokerUser, brokerPassword, queueName, routingKeys, this);
+		rmqClient.startUp(server.getHost(), server.getPort(), server.getUserName(), server.getUserPassword(), queueName,
+				routingKeys, this);
 
 		pubSubs.put(key, rmqClient);
 		rmqSubscriptionClients.add(rmqClient);
 	}
 
-	private void startJMSBroker(Map<String, BaseMessagingClient> pubSubs, String brokerHostName, Integer brokerPort,
-			String brokerUser, String brokerPassword) throws Exception {
-
-		String key = "JMS." + brokerHostName + ":" + brokerPort;
+	private void startJMSBroker(Map<String, BaseMessagingClient> pubSubs, JmsSource server) throws Exception {
+		String key = "JMS." + server.getHost() + ":" + server.getPort();
 
 		if (pubSubs.get(key) != null) {
 			// already started
@@ -226,17 +242,34 @@ public class MonitorApplication implements RmqMessageListener, JmsMessageListene
 
 		// new JMS client
 		JmsClient jmsClient = new JmsClient();
-		jmsClient.startUp(brokerHostName, brokerPort, brokerUser, brokerPassword, this);
+		jmsClient.startUp(server.getHost(), server.getPort(), server.getUserName(), server.getUserPassword(), this);
 		jmsClient.consumeNotifications(true);
 
 		pubSubs.put(key, jmsClient);
 		jmsSubscriptionClients.add(jmsClient);
 	}
 
-	private void startMqttBroker(Map<String, BaseMessagingClient> pubSubs, String brokerHostName, Integer brokerPort,
-			String brokerUser, String brokerPassword) throws Exception {
+	private void startKafkaBroker(Map<String, BaseMessagingClient> pubSubs, KafkaSource server) throws Exception {
+		String key = "KAFKA." + server.getHost() + ":" + server.getPort();
 
-		String key = "MQTT." + brokerHostName + ":" + brokerPort;
+		if (pubSubs.get(key) != null) {
+			// already started
+			return;
+		}
+
+		// new Kafka client
+		KafkaOeeClient kafkaClient = new KafkaOeeClient();
+		kafkaClient.createConsumer(server, KafkaOeeClient.NOTIFICATION_TOPIC);
+		kafkaClient.registerListener(this);
+
+		pubSubs.put(key, kafkaClient);
+		kafkaSubscriptionClients.add(kafkaClient);
+
+		kafkaClient.consumeNotifications();
+	}
+
+	private void startMqttBroker(Map<String, BaseMessagingClient> pubSubs, MqttSource server) throws Exception {
+		String key = "MQTT." + server.getHost() + ":" + server.getPort();
 
 		if (pubSubs.get(key) != null) {
 			// already started
@@ -245,7 +278,7 @@ public class MonitorApplication implements RmqMessageListener, JmsMessageListene
 
 		// new MQTT client
 		MqttOeeClient mqttClient = new MqttOeeClient();
-		mqttClient.startUp(brokerHostName, brokerPort, brokerUser, brokerPassword, this);
+		mqttClient.startUp(server.getHost(), server.getPort(), server.getUserName(), server.getUserPassword(), this);
 		mqttClient.subscribeToNotifications(QualityOfService.EXACTLY_ONCE);
 
 		pubSubs.put(key, mqttClient);
@@ -329,9 +362,15 @@ public class MonitorApplication implements RmqMessageListener, JmsMessageListene
 	}
 
 	void sendRestartCommand(DataCollector collector) throws Exception {
-		String key = collector.getBrokerHost() + ":" + collector.getBrokerPort();
+		CollectorDataSource server = collector.getNotificationServer();
 
-		DataSourceType type = collector.getBrokerType();
+		if (server == null) {
+			return;
+		}
+
+		String key = server.getHost() + ":" + server.getPort();
+
+		DataSourceType type = server.getDataSourceType();
 
 		if (type == null) {
 			return;
@@ -341,47 +380,63 @@ public class MonitorApplication implements RmqMessageListener, JmsMessageListene
 		CollectorCommandMessage message = new CollectorCommandMessage(getHostname(), getIpAddress());
 		message.setCommand(CollectorCommandMessage.CMD_RESTART);
 
-		if (type.equals(DataSourceType.RMQ)) {
+		switch (type) {
+		case RMQ: {
 			RmqClient pubSub = rmqPublishingClients.get(key);
 
 			if (pubSub == null) {
 				// new publisher
 				pubSub = new RmqClient();
-
-				pubSub.connect(collector.getBrokerHost(), collector.getBrokerPort(), collector.getBrokerUserName(),
-						collector.getBrokerUserPassword());
+				pubSub.connect(server.getHost(), server.getPort(), server.getUserName(), server.getUserPassword());
 
 				rmqPublishingClients.put(key, pubSub);
 			}
 			pubSub.sendCommandMessage(message);
+			break;
 
-		} else if (type.equals(DataSourceType.JMS)) {
+		}
+		case JMS: {
 			JmsClient pubSub = jmsPublishingClients.get(key);
 
 			if (pubSub == null) {
 				// new publisher
 				pubSub = new JmsClient();
-
-				pubSub.connect(collector.getBrokerHost(), collector.getBrokerPort(), collector.getBrokerUserName(),
-						collector.getBrokerUserPassword());
+				pubSub.connect(server.getHost(), server.getPort(), server.getUserName(), server.getUserPassword());
 
 				jmsPublishingClients.put(key, pubSub);
 			}
 			pubSub.sendEventMessage(message);
+			break;
 
-		} else if (type.equals(DataSourceType.MQTT)) {
+		}
+		case MQTT: {
 			MqttOeeClient pubSub = mqttPublishingClients.get(key);
 
 			if (pubSub == null) {
 				// new publisher
 				pubSub = new MqttOeeClient();
-
-				pubSub.connect(collector.getBrokerHost(), collector.getBrokerPort(), collector.getBrokerUserName(),
-						collector.getBrokerUserPassword());
+				pubSub.connect(server.getHost(), server.getPort(), server.getUserName(), server.getUserPassword());
 
 				mqttPublishingClients.put(key, pubSub);
 			}
 			pubSub.sendEventMessage(message);
+			break;
+		}
+		case KAFKA: {
+			KafkaOeeClient pubSub = kafkaPublishingClients.get(key);
+
+			if (pubSub == null) {
+				// new publisher
+				pubSub = new KafkaOeeClient();
+				pubSub.createProducer((KafkaSource) server, KafkaOeeClient.EVENT_TOPIC);
+
+				kafkaPublishingClients.put(key, pubSub);
+			}
+			pubSub.sendEventMessage(message);
+			break;
+		}
+		default:
+			break;
 		}
 	}
 
@@ -392,6 +447,11 @@ public class MonitorApplication implements RmqMessageListener, JmsMessageListene
 
 	@Override
 	public void onMqttMessage(ApplicationMessage message) {
+		handleMessage(message);
+	}
+
+	@Override
+	public void onKafkaMessage(ApplicationMessage message) {
 		handleMessage(message);
 	}
 }

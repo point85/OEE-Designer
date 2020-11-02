@@ -1,4 +1,4 @@
--- PostgresQL schema creation script file, schema version 3, release 2.5.0
+-- PostgresQL schema creation script file, schema version 4
 
 /****** Plant Entity table ******/
 DROP TABLE IF EXISTS PLANT_ENTITY;
@@ -215,6 +215,7 @@ CREATE TABLE COLLECTOR (
 	BROKER_PORT int NULL,
 	BROKER_USER varchar(64) NULL,
 	BROKER_PWD varchar(64) NULL,
+	SOURCE_KEY bigint NULL,
 	CONSTRAINT PK_COLLECT_KEY PRIMARY KEY(COLLECT_KEY)
 );
 CREATE UNIQUE INDEX IDX_COLLECT_NAME ON COLLECTOR (NAME);

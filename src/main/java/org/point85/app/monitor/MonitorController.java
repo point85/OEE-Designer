@@ -263,17 +263,29 @@ public class MonitorController {
 		tcCollectorState.setCellValueFactory(cellDataFeatures -> new SimpleObjectProperty<CollectorState>(
 				cellDataFeatures.getValue().getCollectorState()));
 
-		// RMQ broker host
-		tcBrokerHost.setCellValueFactory(
-				cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getBrokerHost()));
+		// messaging broker host
+		tcBrokerHost.setCellValueFactory(cellDataFeatures -> {
+			String host = cellDataFeatures.getValue() != null
+					? cellDataFeatures.getValue().getNotificationServer().getHost()
+					: "";
+			return new SimpleStringProperty(host);
+		});
 
-		// RMQ broker host
-		tcBrokerPort.setCellValueFactory(
-				cellDataFeatures -> new SimpleObjectProperty<Integer>(cellDataFeatures.getValue().getBrokerPort()));
+		// messaging broker host
+		tcBrokerPort.setCellValueFactory(cellDataFeatures -> {
+			Integer port = cellDataFeatures.getValue() != null
+					? cellDataFeatures.getValue().getNotificationServer().getPort()
+					: null;
+			return new SimpleObjectProperty<Integer>(port);
+		});
 
-		// RMQ broker type
-		tcBrokerType.setCellValueFactory(cellDataFeatures -> new SimpleObjectProperty<DataSourceType>(
-				cellDataFeatures.getValue().getBrokerType()));
+		// messaging broker type
+		tcBrokerType.setCellValueFactory(cellDataFeatures -> {
+			DataSourceType type = cellDataFeatures.getValue() != null
+					? cellDataFeatures.getValue().getNotificationServer().getDataSourceType()
+					: null;
+			return new SimpleObjectProperty<DataSourceType>(type);
+		});
 	}
 
 	// notifications
@@ -632,7 +644,7 @@ public class MonitorController {
 				return;
 			}
 
-			if (collector.getBrokerHost() == null) {
+			if (collector.getNotificationServer() == null) {
 				throw new Exception(MonitorLocalizer.instance().getErrorString("no.collector.broker",
 						collector.getDisplayString()));
 			}
