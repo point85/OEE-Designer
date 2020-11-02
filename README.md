@@ -15,6 +15,7 @@ Sources of equipment availability, performance and quality event data include:
 * RMQ Messaging:  an equipment event message received via a RabbitMQ message broker
 * JMS Messaging:  an equipment event message received via an ActiveMQ message broker
 * MQTT Messaging:  an equipment event message received via an MQTT message server
+* Kafka Messaging:  an equipment event message received via a Kafka server
 * Database Interface Table:  a pre-defined table for inserting OEE events
 * File Share:  a server hosting OEE event files
 * Modbus: a Modbus master communicating with its slaves.
