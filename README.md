@@ -124,7 +124,7 @@ The Java Persistence 2.2 API (JPA) as implemented by the Hibernate ORM framework
 Hibernate and JPA abstract-away database specific aspects of inserting, updating, reading and deleting records in the tables.  The API is designed to work with any relational database supported by Hibernate.  
 
 ## What's New
- In version 3.2.0, a Kafka server was added as a data source for events and a destination for notification messages.
+In version 3.2.0, a Kafka server was added as a data source for events and a destination for notification messages.  Please see the Release Notes.txt file for release history and database schema changes.
 
 ## Getting Started
 The desktop applications are packaged in the oee-<version>.zip file in the latest Git release link at https://github.com/point85/OEE-Designer/releases.  Download the oee-<version>.zip file and expand the archive into a folder of your choice.  Next, download the Point85 OEE Getting Started Guide and follow instructions in that document.  Additional information may be found in the Point85 OEE User Guide.
