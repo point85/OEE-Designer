@@ -114,6 +114,8 @@ The Operator iOS and Android mobile applications allow a user to enter availabil
 For example, the screen for entering summarized availability is:
 ![Operator Mobile Availability](https://github.com/point85/OEE-Designer/blob/master/docs/operator-mobile-availability.png)
 
+A demonstration HTTP server is running in a Collector at IP address 52.37.56.187 on port 8182.
+
 ## Localization
 All applications with user-visible text use resource bundles for localization.  The locale is the default locale of the desktop or web server machine.  Each application has two default resource bundles, one for text named (app name)Lang.properties and one for errors/exceptions named (app name)Error.properties with US English text.
 
