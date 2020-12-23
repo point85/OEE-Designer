@@ -157,5 +157,10 @@ Note that version 3.2.0 has the following schema changes:
      Use ALTER TABLE to add this column to an existing COLLECTOR table.  For example for HSQL:
 	 ALTER TABLE PUBLIC.PUBLIC.COLLECTOR ADD SOURCE_KEY BIGINT;
 	 The Collector editor will need to be used to re-establish existing notification settings.
+	 
+(30) 3.3.0, December 23, 2020:
+	- Added an email data source
+	- Upgraded Jetty to version 9.4.35.v20201120
+	- Miscellaneous stability improvements	
 
 Please send comments and suggestions to point85.llc@gmail.com.

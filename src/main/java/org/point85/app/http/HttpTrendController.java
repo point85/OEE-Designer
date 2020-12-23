@@ -252,9 +252,7 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 
 		// serialize the body
 		Gson gson = new Gson();
-		String payload = gson.toJson(dto);
-
-		return payload;
+		return gson.toJson(dto);
 	}
 
 	@FXML

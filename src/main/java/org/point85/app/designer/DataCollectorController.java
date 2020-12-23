@@ -11,6 +11,8 @@ import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.CollectorState;
 import org.point85.domain.collector.DataCollector;
 import org.point85.domain.collector.DataSourceType;
+import org.point85.domain.email.EmailClient;
+import org.point85.domain.email.EmailSource;
 import org.point85.domain.jms.JmsClient;
 import org.point85.domain.kafka.KafkaOeeClient;
 import org.point85.domain.kafka.KafkaSource;
@@ -85,6 +87,7 @@ public class DataCollectorController extends DialogController {
 		messagingTypes.add(DataSourceType.JMS);
 		messagingTypes.add(DataSourceType.MQTT);
 		messagingTypes.add(DataSourceType.KAFKA);
+		messagingTypes.add(DataSourceType.EMAIL);
 
 		List<CollectorDataSource> messagingServers = PersistenceService.instance().fetchDataSources(messagingTypes);
 
@@ -305,7 +308,14 @@ public class DataCollectorController extends DialogController {
 				kafkaClient.createProducer(server, KafkaOeeClient.NOTIFICATION_TOPIC);
 				kafkaClient.sendNotification(content, NotificationSeverity.INFO);
 				
+			}else if (notificationServer.getDataSourceType().equals(DataSourceType.EMAIL)) {
+				EmailSource server = (EmailSource) notificationServer;
+				EmailClient emailClient = new EmailClient(server);
+				
+				// send to oneself
+				emailClient.sendNotification(server.getUserName(), "Test Email from Point85", content, NotificationSeverity.INFO);	
 			}
+			
 			AppUtils.showConfirmationDialog(DesignerLocalizer.instance().getLangString("connection.successful"));
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);

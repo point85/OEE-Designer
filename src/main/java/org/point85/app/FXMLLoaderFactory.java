@@ -22,6 +22,8 @@ import org.point85.app.designer.DesignerLocalizer;
 import org.point85.app.designer.EntityWorkScheduleController;
 import org.point85.app.designer.EquipmentMaterialController;
 import org.point85.app.designer.EquipmentResolverController;
+import org.point85.app.email.EmailServerController;
+import org.point85.app.email.EmailTrendController;
 import org.point85.app.file.FileShareController;
 import org.point85.app.file.FileTrendController;
 import org.point85.app.http.HttpServerController;
@@ -214,6 +216,13 @@ public class FXMLLoaderFactory {
 		return fxmlLoader;
 	}
 
+	public static FXMLLoader emailServerLoader() throws Exception {
+		FXMLLoader fxmlLoader = new FXMLLoader(EmailServerController.class.getResource("EmailServer.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
+		fxmlLoader.load();
+		return fxmlLoader;
+	}
+
 	public static FXMLLoader modbusLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(ModbusMasterController.class.getResource("ModbusMaster.fxml"));
 		fxmlLoader.setResources(getDesignerLangBundle());
@@ -297,9 +306,16 @@ public class FXMLLoaderFactory {
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
-	
+
 	public static FXMLLoader kafkaTrendLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(KafkaTrendController.class.getResource("KafkaTrend.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
+		fxmlLoader.load();
+		return fxmlLoader;
+	}
+	
+	public static FXMLLoader emailTrendLoader() throws Exception {
+		FXMLLoader fxmlLoader = new FXMLLoader(EmailTrendController.class.getResource("EmailTrend.fxml"));
 		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;

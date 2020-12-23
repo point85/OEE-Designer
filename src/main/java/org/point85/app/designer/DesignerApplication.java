@@ -11,6 +11,8 @@ import org.point85.app.dashboard.DashboardController;
 import org.point85.app.dashboard.DashboardDialogController;
 import org.point85.app.db.DatabaseServerController;
 import org.point85.app.db.DatabaseTrendController;
+import org.point85.app.email.EmailServerController;
+import org.point85.app.email.EmailTrendController;
 import org.point85.app.file.FileShareController;
 import org.point85.app.file.FileTrendController;
 import org.point85.app.http.HttpServerController;
@@ -40,6 +42,7 @@ import org.point85.domain.collector.DataCollector;
 import org.point85.domain.collector.DataSourceType;
 import org.point85.domain.cron.CronEventSource;
 import org.point85.domain.db.DatabaseEventSource;
+import org.point85.domain.email.EmailSource;
 import org.point85.domain.file.FileEventSource;
 import org.point85.domain.http.HttpSource;
 import org.point85.domain.kafka.KafkaSource;
@@ -95,9 +98,6 @@ public class DesignerApplication {
 
 	// OPC UA data source browser
 	private OpcUaBrowserController opcUaBrowserController;
-
-	// data collection definition
-	private DataCollectorController dataCollectorController;
 
 	// script resolver controller
 	private EventResolverController scriptController;
@@ -430,9 +430,7 @@ public class DesignerApplication {
 		FXMLLoader loader = FXMLLoaderFactory.kafkaServerLoader();
 		AnchorPane page = (AnchorPane) loader.getRoot();
 
-		// Create the dialog Stage.
 		Stage dialogStage = new Stage(StageStyle.DECORATED);
-
 		dialogStage.setTitle(DesignerLocalizer.instance().getLangString("kafka.editor.title"));
 
 		dialogStage.initModality(Modality.WINDOW_MODAL);
@@ -450,6 +448,31 @@ public class DesignerApplication {
 		}
 
 		return kafkaServerController.getSource();
+	}
+
+	EmailSource showEmailServerEditor() throws Exception {
+		FXMLLoader loader = FXMLLoaderFactory.emailServerLoader();
+		AnchorPane page = (AnchorPane) loader.getRoot();
+
+		// Create the dialog Stage.
+		Stage dialogStage = new Stage(StageStyle.DECORATED);
+
+		dialogStage.setTitle(DesignerLocalizer.instance().getLangString("email.editor.title"));
+
+		dialogStage.initModality(Modality.WINDOW_MODAL);
+		Scene scene = new Scene(page);
+		dialogStage.setScene(scene);
+
+		// get the controller
+		EmailServerController emailServerController = loader.getController();
+		emailServerController.setDialogStage(dialogStage);
+		emailServerController.initialize(this);
+
+		if (!emailServerController.getDialogStage().isShowing()) {
+			emailServerController.getDialogStage().showAndWait();
+		}
+
+		return emailServerController.getSource();
 	}
 
 	ModbusSource showModbusEditor() throws Exception {
@@ -585,7 +608,7 @@ public class DesignerApplication {
 		dialogStage.setScene(scene);
 
 		// get the controller
-		dataCollectorController = loader.getController();
+		DataCollectorController dataCollectorController = loader.getController();
 		dataCollectorController.setDialogStage(dialogStage);
 		dataCollectorController.initialize(this);
 
@@ -847,6 +870,40 @@ public class DesignerApplication {
 
 		// show the window
 		kafkaTrendController.getDialogStage().show();
+	}
+
+	void showEmailTrendDialog(EventResolver eventResolver) throws Exception {
+		FXMLLoader loader = FXMLLoaderFactory.emailTrendLoader();
+		AnchorPane page = (AnchorPane) loader.getRoot();
+
+		Stage dialogStage = new Stage(StageStyle.DECORATED);
+		dialogStage.setTitle(DesignerLocalizer.instance().getLangString("email.event.trend"));
+		dialogStage.initModality(Modality.NONE);
+		Scene scene = new Scene(page);
+		dialogStage.setScene(scene);
+
+		// get the controller
+		EmailTrendController emailTrendController = loader.getController();
+		emailTrendController.setDialogStage(dialogStage);
+		emailTrendController.setApp(this);
+
+		SplitPane chartPane = emailTrendController.initializeTrend();
+
+		AnchorPane.setBottomAnchor(chartPane, 50.0);
+		AnchorPane.setLeftAnchor(chartPane, 5.0);
+		AnchorPane.setRightAnchor(chartPane, 5.0);
+		AnchorPane.setTopAnchor(chartPane, 50.0);
+
+		page.getChildren().add(0, chartPane);
+
+		// set the script resolver
+		emailTrendController.setEventResolver(eventResolver);
+
+		// subscribe to server
+		emailTrendController.subscribeToDataSource();
+
+		// show the window
+		emailTrendController.getDialogStage().show();
 	}
 
 	void showMQTTTrendDialog(EventResolver eventResolver) throws Exception {

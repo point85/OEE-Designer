@@ -154,6 +154,9 @@ public final class ImageManager {
 		case KAFKA:
 			image = new Image(IMAGE_PATH + "KafkaSource.png", DIM, DIM, true, true);
 			break;
+		case EMAIL:
+			image = new Image(IMAGE_PATH + "EmailSource.png", DIM, DIM, true, true);
+			break;
 		case MQTT:
 			image = new Image(IMAGE_PATH + "MQTTSource.png", DIM, DIM, true, true);
 			break;

@@ -147,7 +147,7 @@ public abstract class BaseMessagingTrendController extends DesignerDialogControl
 		private final String timestamp;
 		private final String reason;
 
-		protected ResolutionService(String dataValue, String timestamp, String reason) {
+		public ResolutionService(String dataValue, String timestamp, String reason) {
 			this.dataValue = dataValue;
 			this.timestamp = timestamp;
 			this.reason = reason;

@@ -101,6 +101,9 @@ public class PhysicalModelController extends DesignerController {
 	
 	@FXML
 	private Button btKafkaServerEditor;
+	
+	@FXML
+	private Button btEmailServerEditor;
 
 	@FXML
 	private Button btMQTTBrokerEditor;
@@ -379,6 +382,9 @@ public class PhysicalModelController extends DesignerController {
 		
 		btKafkaServerEditor.setGraphic(ImageManager.instance().getImageView(Images.KAFKA));
 		btKafkaServerEditor.setTooltip(new Tooltip(i18n.getString("kafka.tt")));
+		
+		btEmailServerEditor.setGraphic(ImageManager.instance().getImageView(Images.EMAIL));
+		btEmailServerEditor.setTooltip(new Tooltip(i18n.getString("email.tt")));
 
 		btMQTTBrokerEditor.setGraphic(ImageManager.instance().getImageView(Images.MQTT));
 		btMQTTBrokerEditor.setTooltip(new Tooltip(i18n.getString("mqtt.tt")));
@@ -1104,6 +1110,15 @@ public class PhysicalModelController extends DesignerController {
 	private void onShowKafkaServerEditor() {
 		try {
 			this.getApp().showKafkaServerEditor();
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+	
+	@FXML
+	private void onShowEmailServerEditor() {
+		try {
+			this.getApp().showEmailServerEditor();
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}

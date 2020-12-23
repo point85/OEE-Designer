@@ -17,6 +17,7 @@ import org.point85.domain.collector.DataCollector;
 import org.point85.domain.collector.DataSourceType;
 import org.point85.domain.cron.CronEventSource;
 import org.point85.domain.db.DatabaseEventSource;
+import org.point85.domain.email.EmailSource;
 import org.point85.domain.file.FileEventSource;
 import org.point85.domain.http.HttpSource;
 import org.point85.domain.kafka.KafkaSource;
@@ -410,6 +411,9 @@ public class EquipmentResolverController extends DesignerController {
 		case KAFKA:
 			buttonImage = ImageManager.instance().getImageView(Images.KAFKA);
 			break;
+		case EMAIL:
+			buttonImage = ImageManager.instance().getImageView(Images.EMAIL);
+			break;
 		case MQTT:
 			buttonImage = ImageManager.instance().getImageView(Images.MQTT);
 			break;
@@ -585,6 +589,17 @@ public class EquipmentResolverController extends DesignerController {
 			} else if (sourceType.equals(DataSourceType.KAFKA)) {
 				// show Kafka server editor
 				KafkaSource dataSource = getApp().showKafkaServerEditor();
+				tfServerId.setText(dataSource.getId());
+
+				getSelectedResolver().setDataSource(dataSource);
+
+				lbDataType.setText(String.class.getSimpleName());
+
+				setDefaultSourceId();
+
+			} else if (sourceType.equals(DataSourceType.EMAIL)) {
+				// show email server editor
+				EmailSource dataSource = getApp().showEmailServerEditor();
 				tfServerId.setText(dataSource.getId());
 
 				getSelectedResolver().setDataSource(dataSource);
@@ -771,11 +786,16 @@ public class EquipmentResolverController extends DesignerController {
 
 			if (!eventResolvers.contains(selectedEventResolver)) {
 				eventResolvers.add(selectedEventResolver);
+			} else {
+				if (selectedEventResolver.getKey() == null) {
+					throw new Exception(DesignerLocalizer.instance().getErrorString("source.id.not.unique",
+							selectedEventResolver.getSourceId()));
+				}
 			}
 
 			Set<EventResolver> resolvers = new HashSet<>();
 			resolvers.addAll(eventResolvers);
-			equipment.setScriptResolvers(resolvers);
+			equipment.setScriptResolvers(resolvers); 
 
 			// mark dirty
 			getApp().getPhysicalModelController().markSelectedPlantEntity();
@@ -825,6 +845,8 @@ public class EquipmentResolverController extends DesignerController {
 				getApp().showCronTrendDialog(selectedEventResolver);
 			} else if (type.equals(DataSourceType.KAFKA)) {
 				getApp().showKafkaTrendDialog(selectedEventResolver);
+			} else if (type.equals(DataSourceType.EMAIL)) {
+				getApp().showEmailTrendDialog(selectedEventResolver);
 			}
 
 		} catch (Exception e) {

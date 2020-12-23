@@ -17,6 +17,9 @@ import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.CollectorState;
 import org.point85.domain.collector.DataCollector;
 import org.point85.domain.collector.DataSourceType;
+import org.point85.domain.email.EmailClient;
+import org.point85.domain.email.EmailMessageListener;
+import org.point85.domain.email.EmailSource;
 import org.point85.domain.jms.JmsClient;
 import org.point85.domain.jms.JmsMessageListener;
 import org.point85.domain.jms.JmsSource;
@@ -49,8 +52,8 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-public class MonitorApplication
-		implements RmqMessageListener, JmsMessageListener, MqttMessageListener, KafkaMessageListener {
+public class MonitorApplication implements RmqMessageListener, JmsMessageListener, MqttMessageListener,
+		KafkaMessageListener, EmailMessageListener {
 	// logger
 	private static final Logger logger = LoggerFactory.getLogger(MonitorApplication.class);
 
@@ -77,6 +80,9 @@ public class MonitorApplication
 
 	// Kafka brokers for outgoing commands
 	private final Map<String, KafkaOeeClient> kafkaPublishingClients = new HashMap<>();
+
+	// Email clients for incoming notifications and outgoing commands
+	private final List<EmailClient> emailClients = new ArrayList<>();
 
 	// status monitor
 	private MonitorController monitorController;
@@ -199,6 +205,10 @@ public class MonitorApplication
 				startKafkaBroker(pubSubs, (KafkaSource) server);
 				break;
 			}
+			case EMAIL: {
+				startEmailServer(pubSubs, (EmailSource) server);
+				break;
+			}
 			default:
 				return;
 			}
@@ -268,6 +278,24 @@ public class MonitorApplication
 		kafkaClient.consumeNotifications();
 	}
 
+	private void startEmailServer(Map<String, BaseMessagingClient> clients, EmailSource server) {
+		String key = "EMAIL." + server.getReceiveHost() + ":" + server.getReceivePort();
+
+		if (clients.get(key) != null) {
+			// already started polling
+			return;
+		}
+
+		// new Email client
+		EmailClient emailClient = new EmailClient(server);
+		emailClient.registerListener(this);
+
+		clients.put(key, emailClient);
+		emailClients.add(emailClient);
+
+		emailClient.startPolling();
+	}
+
 	private void startMqttBroker(Map<String, BaseMessagingClient> pubSubs, MqttSource server) throws Exception {
 		String key = "MQTT." + server.getHost() + ":" + server.getPort();
 
@@ -330,32 +358,46 @@ public class MonitorApplication
 		handleMessage(message);
 	}
 
-	void sendStartupNotification() throws Exception {
+	private void sendStartupNotification() throws Exception {
 		// publish to self
-		CollectorNotificationMessage msg = new CollectorNotificationMessage(hostname, ip);
+		CollectorNotificationMessage message = new CollectorNotificationMessage(hostname, ip);
 
-		msg.setSeverity(NotificationSeverity.INFO);
-		msg.setText(MonitorLocalizer.instance().getLangString("monitor.startup"));
-		msg.setTimestamp(DomainUtils.offsetDateTimeToString(OffsetDateTime.now(), DomainUtils.OFFSET_DATE_TIME_8601));
+		message.setSeverity(NotificationSeverity.INFO);
+		message.setText(MonitorLocalizer.instance().getLangString("monitor.startup"));
+		message.setTimestamp(DomainUtils.offsetDateTimeToString(OffsetDateTime.now(), DomainUtils.OFFSET_DATE_TIME_8601));
 
 		try {
 			if (!rmqSubscriptionClients.isEmpty()) {
-				RmqClient pubSub = rmqSubscriptionClients.get(0);
-
-				pubSub.sendNotificationMessage(msg);
+				for (RmqClient pubSub : rmqSubscriptionClients) {
+					pubSub.sendNotificationMessage(message);
+				}
 			}
 
 			if (!jmsSubscriptionClients.isEmpty()) {
-				JmsClient pubSub = jmsSubscriptionClients.get(0);
-
-				pubSub.sendNotificationMessage(msg);
+				for (JmsClient pubSub : jmsSubscriptionClients) {
+					pubSub.sendNotificationMessage(message);
+				}
 			}
 
 			if (!mqttSubscriptionClients.isEmpty()) {
-				MqttOeeClient pubSub = mqttSubscriptionClients.get(0);
-
-				pubSub.sendNotificationMessage(msg);
+				for (MqttOeeClient pubSub : mqttSubscriptionClients) {
+					pubSub.sendNotificationMessage(message);
+				}
 			}
+
+			if (!kafkaSubscriptionClients.isEmpty()) {
+				for (KafkaOeeClient pubSub : kafkaSubscriptionClients) {
+					pubSub.sendNotificationMessage(message);
+				}
+			}
+
+			if (!emailClients.isEmpty()) {
+				for (EmailClient emailClient : emailClients) {
+					emailClient.sendEvent(emailClient.getSource().getUserName(),
+							MonitorLocalizer.instance().getLangString("email.notification.subject"), message);
+				}
+			}
+
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}
@@ -452,6 +494,11 @@ public class MonitorApplication
 
 	@Override
 	public void onKafkaMessage(ApplicationMessage message) {
+		handleMessage(message);
+	}
+
+	@Override
+	public void onEmailMessage(ApplicationMessage message) {
 		handleMessage(message);
 	}
 }

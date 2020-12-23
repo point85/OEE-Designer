@@ -265,25 +265,35 @@ public class MonitorController {
 
 		// messaging broker host
 		tcBrokerHost.setCellValueFactory(cellDataFeatures -> {
-			String host = cellDataFeatures.getValue() != null
-					? cellDataFeatures.getValue().getNotificationServer().getHost()
-					: "";
+			DataCollector collector = cellDataFeatures.getValue();
+
+			String host = null;
+			if (collector != null) {
+				host = collector.getNotificationServer() != null ? collector.getNotificationServer().getHost() : null;
+			}
 			return new SimpleStringProperty(host);
 		});
 
 		// messaging broker host
 		tcBrokerPort.setCellValueFactory(cellDataFeatures -> {
-			Integer port = cellDataFeatures.getValue() != null
-					? cellDataFeatures.getValue().getNotificationServer().getPort()
-					: null;
+			DataCollector collector = cellDataFeatures.getValue();
+
+			Integer port = null;
+			if (collector != null) {
+				port = collector.getNotificationServer() != null ? collector.getNotificationServer().getPort() : null;
+			}
 			return new SimpleObjectProperty<Integer>(port);
 		});
 
 		// messaging broker type
 		tcBrokerType.setCellValueFactory(cellDataFeatures -> {
-			DataSourceType type = cellDataFeatures.getValue() != null
-					? cellDataFeatures.getValue().getNotificationServer().getDataSourceType()
-					: null;
+			DataCollector collector = cellDataFeatures.getValue();
+
+			DataSourceType type = null;
+			if (collector != null) {
+				type = collector.getNotificationServer() != null ? collector.getNotificationServer().getDataSourceType()
+						: null;
+			}
 			return new SimpleObjectProperty<DataSourceType>(type);
 		});
 	}

@@ -32,6 +32,8 @@ import org.point85.domain.cron.CronEventSource;
 import org.point85.domain.db.DatabaseEvent;
 import org.point85.domain.db.DatabaseEventClient;
 import org.point85.domain.db.DatabaseEventSource;
+import org.point85.domain.email.EmailClient;
+import org.point85.domain.email.EmailSource;
 import org.point85.domain.file.FileEventClient;
 import org.point85.domain.file.FileEventSource;
 import org.point85.domain.http.EquipmentEventRequestDto;
@@ -107,6 +109,9 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 
 	// Kafka message publisher/subscriber
 	private final Map<String, KafkaOeeClient> kafkaClients = new HashMap<>();
+
+	// Email server
+	private final Map<String, EmailClient> emailClients = new HashMap<>();
 
 	// MQTT message publisher/subscriber
 	private final Map<String, MqttOeeClient> mqttClients = new HashMap<>();
@@ -223,6 +228,9 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 	private RadioButton rbKafka;
 
 	@FXML
+	private RadioButton rbEmail;
+
+	@FXML
 	private RadioButton rbMQTT;
 
 	@FXML
@@ -315,6 +323,8 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 				populateDataSources(DataSourceType.OPC_UA);
 			} else if (rbOpcDa.isSelected()) {
 				populateDataSources(DataSourceType.OPC_DA);
+			} else if (rbEmail.isSelected()) {
+				populateDataSources(DataSourceType.EMAIL);
 			}
 
 			tfValue.clear();
@@ -361,6 +371,8 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 				populateSourceIds(DataSourceType.OPC_UA);
 			} else if (rbOpcDa.isSelected()) {
 				populateSourceIds(DataSourceType.OPC_DA);
+			} else if (rbEmail.isSelected()) {
+				populateSourceIds(DataSourceType.EMAIL);
 			}
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
@@ -392,6 +404,12 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 				entry.getValue().disconnect();
 			}
 			mqttClients.clear();
+
+			// stop email checking
+			for (Entry<String, EmailClient> entry : emailClients.entrySet()) {
+				entry.getValue().stopPolling();
+			}
+			emailClients.clear();
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
@@ -625,7 +643,8 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 		try {
 			if (rbHTTP.isSelected()) {
 				onHttpPostEvent();
-			} else if (rbJMS.isSelected() || rbRMQ.isSelected() || rbMQTT.isSelected() || rbKafka.isSelected()) {
+			} else if (rbJMS.isSelected() || rbRMQ.isSelected() || rbMQTT.isSelected() || rbKafka.isSelected()
+					|| rbEmail.isSelected()) {
 				onSendEquipmentEventMsg();
 			} else if (rbDatabase.isSelected()) {
 				onWriteDatabaseEvent();
@@ -1311,6 +1330,18 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 					kafkaClient.startPolling();
 				}
 				kafkaClient.sendEventMessage(msg);
+				notification = TesterLocalizer.instance().getLangString("sent.message", source.getHost(),
+						source.getPort());
+			} else if (rbEmail.isSelected()) {
+				EmailClient emailClient = emailClients.get(hostPort);
+				EmailSource emailSource = (EmailSource) source;
+
+				if (emailClient == null) {
+					emailClient = new EmailClient((EmailSource) source);
+					emailClients.put(hostPort, emailClient);
+				}
+				emailClient.sendEvent(emailSource.getUserName(),
+						TesterLocalizer.instance().getLangString("email.test.message.subject"), msg);
 				notification = TesterLocalizer.instance().getLangString("sent.message", source.getHost(),
 						source.getPort());
 			} else if (rbMQTT.isSelected()) {
