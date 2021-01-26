@@ -60,6 +60,7 @@ import org.point85.domain.modbus.ModbusUtils;
 import org.point85.domain.modbus.ModbusVariant;
 import org.point85.domain.mqtt.MqttMessageListener;
 import org.point85.domain.mqtt.MqttOeeClient;
+import org.point85.domain.mqtt.MqttSource;
 import org.point85.domain.oee.TimeLoss;
 import org.point85.domain.opc.da.DaOpcClient;
 import org.point85.domain.opc.da.OpcDaSource;
@@ -932,13 +933,13 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 			String input = tfValue.getText();
 
 			// for production, a reason can be attached
-			String[] values = AppUtils.parseCsvInput(input);
-
-			EquipmentEventRequestDto dto = new EquipmentEventRequestDto(sourceId, values[0]);
+			EquipmentEventRequestDto dto = new EquipmentEventRequestDto(sourceId, input);
 			String timestamp = DomainUtils.offsetDateTimeToString(OffsetDateTime.now(),
 					DomainUtils.OFFSET_DATE_TIME_8601);
 			dto.setTimestamp(timestamp);
-			dto.setReason(values[1]);
+			if (tfReason.getText() != null && !tfReason.getText().isEmpty()) {
+				dto.setReason(tfReason.getText());
+			}
 
 			String payload = gson.toJson(dto);
 
@@ -1271,14 +1272,14 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 
 			String sourceId = cbSourceId.getSelectionModel().getSelectedItem();
 
-			String input = tfValue.getText();
 			// for production, a reason can be attached
-			String[] values = AppUtils.parseCsvInput(input);
-
 			EquipmentEventMessage msg = new EquipmentEventMessage();
 			msg.setSourceId(sourceId);
-			msg.setValue(values[0]);
-			msg.setReason(values[1]);
+			msg.setValue(tfValue.getText());
+
+			if (tfReason.getText() != null && !tfReason.getText().isEmpty()) {
+				msg.setReason(tfReason.getText());
+			}
 
 			String hostPort = source.getHost() + ":" + source.getPort();
 
@@ -1352,8 +1353,12 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 					mqttClients.put(hostPort, mqttClient);
 					mqttClient.registerListener(this);
 
-					mqttClient.connect(source.getHost(), source.getPort(), source.getUserName(),
-							source.getUserPassword());
+					MqttSource server = (MqttSource) source;
+					mqttClient.setAuthenticationConfiguration(server.getUserName(), server.getUserPassword());
+					mqttClient.setSSLConfiguration(server.getKeystore(), server.getKeystorePassword(),
+							server.getKeyPassword());
+
+					mqttClient.connect(source.getHost(), source.getPort());
 				}
 				mqttClient.sendEventMessage(msg);
 				notification = TesterLocalizer.instance().getLangString("sent.message", source.getHost(),

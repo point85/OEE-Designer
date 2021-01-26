@@ -34,9 +34,12 @@ public class MqttTrendController extends BaseMessagingTrendController implements
 
 		// MQTT source
 		MqttSource source = (MqttSource) trendChartController.getEventResolver().getDataSource();
+		
+		mqttClient.setAuthenticationConfiguration(source.getUserName(), source.getUserPassword());
+		mqttClient.setSSLConfiguration(source.getKeystore(), source.getKeystorePassword(), source.getKeyPassword());
 
 		// connect and subscribe to events
-		mqttClient.startUp(source.getHost(), source.getPort(), source.getUserName(), source.getUserPassword(), this);
+		mqttClient.startUp(source.getHost(), source.getPort(), this);
 		mqttClient.subscribeToEvents(QualityOfService.EXACTLY_ONCE);
 
 		// add to context

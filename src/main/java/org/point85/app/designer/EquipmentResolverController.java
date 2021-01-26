@@ -527,10 +527,20 @@ public class EquipmentResolverController extends DesignerController {
 
 				setDefaultSourceId();
 
-			} else if (sourceType.equals(DataSourceType.RMQ) || sourceType.equals(DataSourceType.JMS)
-					|| sourceType.equals(DataSourceType.MQTT)) {
+			} else if (sourceType.equals(DataSourceType.RMQ) || sourceType.equals(DataSourceType.JMS)) {
 				// show MQ broker editor
 				CollectorDataSource dataSource = getApp().showMQBrokerEditor(sourceType);
+				tfServerId.setText(dataSource.getId());
+
+				getSelectedResolver().setDataSource(dataSource);
+
+				lbDataType.setText(String.class.getSimpleName());
+
+				setDefaultSourceId();
+
+			} else if (sourceType.equals(DataSourceType.MQTT)) {
+				// show MQTT server editor
+				CollectorDataSource dataSource = getApp().showMqttServerEditor();
 				tfServerId.setText(dataSource.getId());
 
 				getSelectedResolver().setDataSource(dataSource);
@@ -795,7 +805,7 @@ public class EquipmentResolverController extends DesignerController {
 
 			Set<EventResolver> resolvers = new HashSet<>();
 			resolvers.addAll(eventResolvers);
-			equipment.setScriptResolvers(resolvers); 
+			equipment.setScriptResolvers(resolvers);
 
 			// mark dirty
 			getApp().getPhysicalModelController().markSelectedPlantEntity();

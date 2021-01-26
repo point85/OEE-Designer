@@ -481,7 +481,7 @@ public class PhysicalModelController extends DesignerController {
 	@FXML
 	private void onShowMQTTBrokerEditor() {
 		try {
-			this.getApp().showMQBrokerEditor(DataSourceType.MQTT);
+			this.getApp().showMqttServerEditor();
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}

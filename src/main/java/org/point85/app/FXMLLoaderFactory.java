@@ -33,6 +33,7 @@ import org.point85.app.messaging.JmsTrendController;
 import org.point85.app.messaging.KafkaServerController;
 import org.point85.app.messaging.KafkaTrendController;
 import org.point85.app.messaging.MqBrokerController;
+import org.point85.app.messaging.MqttServerController;
 import org.point85.app.messaging.MqttTrendController;
 import org.point85.app.messaging.RmqTrendController;
 import org.point85.app.modbus.ModbusMasterController;
@@ -208,6 +209,13 @@ public class FXMLLoaderFactory {
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
+	
+	public static FXMLLoader mqttServerLoader() throws Exception {
+		FXMLLoader fxmlLoader = new FXMLLoader(MqttServerController.class.getResource("MqttServer.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
+		fxmlLoader.load();
+		return fxmlLoader;
+	}
 
 	public static FXMLLoader kafkaServerLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(KafkaServerController.class.getResource("KafkaServer.fxml"));
@@ -322,7 +330,7 @@ public class FXMLLoaderFactory {
 	}
 
 	public static FXMLLoader mqttTrendLoader() throws Exception {
-		FXMLLoader fxmlLoader = new FXMLLoader(MqttTrendController.class.getResource("MQTTTrend.fxml"));
+		FXMLLoader fxmlLoader = new FXMLLoader(MqttTrendController.class.getResource("MqttTrend.fxml"));
 		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;

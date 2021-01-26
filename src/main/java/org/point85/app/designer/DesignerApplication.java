@@ -22,6 +22,7 @@ import org.point85.app.messaging.JmsTrendController;
 import org.point85.app.messaging.KafkaServerController;
 import org.point85.app.messaging.KafkaTrendController;
 import org.point85.app.messaging.MqBrokerController;
+import org.point85.app.messaging.MqttServerController;
 import org.point85.app.messaging.MqttTrendController;
 import org.point85.app.messaging.RmqTrendController;
 import org.point85.app.modbus.ModbusMasterController;
@@ -48,6 +49,7 @@ import org.point85.domain.http.HttpSource;
 import org.point85.domain.kafka.KafkaSource;
 import org.point85.domain.modbus.ModbusMaster;
 import org.point85.domain.modbus.ModbusSource;
+import org.point85.domain.mqtt.MqttSource;
 import org.point85.domain.opc.da.DaOpcClient;
 import org.point85.domain.opc.da.OpcDaBrowserLeaf;
 import org.point85.domain.opc.ua.UaOpcClient;
@@ -401,9 +403,7 @@ public class DesignerApplication {
 		// Create the dialog Stage.
 		Stage dialogStage = new Stage(StageStyle.DECORATED);
 
-		if (type.equals(DataSourceType.MQTT)) {
-			dialogStage.setTitle(DesignerLocalizer.instance().getLangString("mqtt.editor.title"));
-		} else if (type.equals(DataSourceType.RMQ)) {
+		if (type.equals(DataSourceType.RMQ)) {
 			dialogStage.setTitle(DesignerLocalizer.instance().getLangString("rmq.editor.title"));
 		} else if (type.equals(DataSourceType.JMS)) {
 			dialogStage.setTitle(DesignerLocalizer.instance().getLangString("jms.editor.title"));
@@ -424,6 +424,29 @@ public class DesignerApplication {
 		}
 
 		return mqBrokerController.getSource();
+	}
+
+	MqttSource showMqttServerEditor() throws Exception {
+		FXMLLoader loader = FXMLLoaderFactory.mqttServerLoader();
+		AnchorPane page = (AnchorPane) loader.getRoot();
+
+		Stage dialogStage = new Stage(StageStyle.DECORATED);
+		dialogStage.setTitle(DesignerLocalizer.instance().getLangString("mqtt.editor.title"));
+
+		dialogStage.initModality(Modality.WINDOW_MODAL);
+		Scene scene = new Scene(page);
+		dialogStage.setScene(scene);
+
+		// get the controller
+		MqttServerController mqttServerController = loader.getController();
+		mqttServerController.setDialogStage(dialogStage);
+		mqttServerController.initialize(this);
+
+		if (!mqttServerController.getDialogStage().isShowing()) {
+			mqttServerController.getDialogStage().showAndWait();
+		}
+
+		return mqttServerController.getSource();
 	}
 
 	KafkaSource showKafkaServerEditor() throws Exception {

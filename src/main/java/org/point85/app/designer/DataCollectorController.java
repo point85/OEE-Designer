@@ -18,6 +18,7 @@ import org.point85.domain.kafka.KafkaOeeClient;
 import org.point85.domain.kafka.KafkaSource;
 import org.point85.domain.messaging.NotificationSeverity;
 import org.point85.domain.mqtt.MqttOeeClient;
+import org.point85.domain.mqtt.MqttSource;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.rmq.RmqClient;
 
@@ -297,9 +298,14 @@ public class DataCollectorController extends DialogController {
 				jmsClient.sendNotification(content, NotificationSeverity.INFO);
 				
 			} else if (notificationServer.getDataSourceType().equals(DataSourceType.MQTT)) {
+				MqttSource server = (MqttSource)notificationServer;
+				
 				MqttOeeClient mqttClient = new MqttOeeClient();
-				mqttClient.connect(notificationServer.getHost(), notificationServer.getPort(),
-						notificationServer.getUserName(), notificationServer.getUserPassword());
+				
+				mqttClient.setAuthenticationConfiguration(server.getUserName(), server.getUserPassword());
+				mqttClient.setSSLConfiguration(server.getKeystore(), server.getKeystorePassword(), server.getKeyPassword());
+				
+				mqttClient.connect(notificationServer.getHost(), notificationServer.getPort());
 				mqttClient.sendNotification(content, NotificationSeverity.INFO);
 				
 			} else if (notificationServer.getDataSourceType().equals(DataSourceType.KAFKA)) {

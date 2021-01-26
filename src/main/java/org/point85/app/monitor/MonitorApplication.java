@@ -306,7 +306,11 @@ public class MonitorApplication implements RmqMessageListener, JmsMessageListene
 
 		// new MQTT client
 		MqttOeeClient mqttClient = new MqttOeeClient();
-		mqttClient.startUp(server.getHost(), server.getPort(), server.getUserName(), server.getUserPassword(), this);
+
+		mqttClient.setAuthenticationConfiguration(server.getUserName(), server.getUserPassword());
+		mqttClient.setSSLConfiguration(server.getKeystore(), server.getKeystorePassword(), server.getKeyPassword());
+		
+		mqttClient.startUp(server.getHost(), server.getPort(), this);
 		mqttClient.subscribeToNotifications(QualityOfService.EXACTLY_ONCE);
 
 		pubSubs.put(key, mqttClient);
@@ -457,7 +461,10 @@ public class MonitorApplication implements RmqMessageListener, JmsMessageListene
 			if (pubSub == null) {
 				// new publisher
 				pubSub = new MqttOeeClient();
-				pubSub.connect(server.getHost(), server.getPort(), server.getUserName(), server.getUserPassword());
+				MqttSource source = (MqttSource)server;
+				pubSub.setAuthenticationConfiguration(source.getUserName(), source.getUserPassword());
+				pubSub.setSSLConfiguration(source.getKeystore(), source.getKeystorePassword(), source.getKeyPassword());
+				pubSub.connect(server.getHost(), server.getPort());
 
 				mqttPublishingClients.put(key, pubSub);
 			}

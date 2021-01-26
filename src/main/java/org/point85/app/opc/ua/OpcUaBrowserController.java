@@ -183,7 +183,7 @@ public class OpcUaBrowserController extends OpcUaController {
 		cbDataSources.setItems(servers);
 	}
 
-	private void initializeTreeView()  {
+	private void initializeTreeView() {
 		tvBrowser.setShowRoot(false);
 
 		// tree node listener
@@ -592,13 +592,13 @@ public class OpcUaBrowserController extends OpcUaController {
 
 			this.tfKeystoreFileName.clear();
 			this.pfKeystorePassword.clear();
-			
+
 			this.lbState.setText(null);
 			this.lbStartTime.setText(null);
 			this.lbEndpoint.setText(null);
 			this.lbProduct.setText(null);
 			this.lbManufacturer.setText(null);
-			
+
 			this.lbNodeId.setText(null);
 			this.lbNodeDescription.setText(null);
 			this.lbNodeType.setText(null);
@@ -650,7 +650,7 @@ public class OpcUaBrowserController extends OpcUaController {
 	private void initializeSecuritySettings() {
 		ObservableList<SecurityPolicy> policies = cbSecurityPolicies.getItems();
 		policies.clear();
-		
+
 		Collections.addAll(policies, SecurityPolicy.values());
 
 		ObservableList<MessageSecurityMode> modes = cbMessageModes.getItems();
@@ -756,14 +756,14 @@ public class OpcUaBrowserController extends OpcUaController {
 			// fill in the child nodes
 			ReferenceDescription parentRef = treeNode.getReferenceDescription();
 			NamespaceTable nst = getApp().getOpcUaClient().getNamespaceTable();
-			NodeId nodeId = parentRef.getNodeId().local(nst).orElse(null);
+			NodeId nodeId = parentRef.getNodeId().toNodeId(nst).orElse(null);
 
 			// keep browsing down the tree
 			List<ReferenceDescription> childRefs = getApp().getOpcUaClient().browseSynch(nodeId);
 			treeNode.setBrowsed(true);
 
 			for (ReferenceDescription childRef : childRefs) {
-				NodeId childId = childRef.getNodeId().local(nst).orElse(null);
+				NodeId childId = childRef.getNodeId().toNodeId(nst).orElse(null);
 
 				String id = childId.toString();
 				if (!monitoredItemIds.contains(id)) {

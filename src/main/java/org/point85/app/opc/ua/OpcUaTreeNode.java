@@ -29,7 +29,7 @@ public class OpcUaTreeNode {
 	}
 
 	public NodeId getNodeId(NamespaceTable nst) {
-		return referenceDescription.getNodeId().local(nst).orElse(null);
+		return referenceDescription.getNodeId().toNodeId(nst).orElse(null);
 	}
 
 	public String getBrowseName() {
