@@ -169,5 +169,13 @@ Note that version 3.2.0 has the following schema changes:
 	- Updated RabbitMQ client to version 5.10.0
 	- Updated ActiveMQ client to version 5.16.1
 	- Miscellaneous stability improvements	
+	
+(32) 3.3.2, February 14, 2021:
+	- Updated Hikari CP to version 5.3.20
+	- Updated HSQLDB to version 2.5.1
+	- Updated Modbus client to version 2.7.0
+	- Updated Kafka client to version 2.6.1
+	- Fixed HTTP servlet memory leak
+	- Miscellaneous stability improvements		
 
 Please send comments and suggestions to point85.llc@gmail.com.

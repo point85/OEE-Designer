@@ -1,7 +1,9 @@
 package org.point85.app.tester;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -14,6 +16,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.eclipse.milo.opcua.stack.core.BuiltinDataType;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
@@ -205,7 +209,13 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 	private TextField tfReason;
 
 	@FXML
+	private TextField tfLoadRate;
+
+	@FXML
 	private Button btTest;
+
+	@FXML
+	private Button btLoadTest;
 
 	@FXML
 	private Button btReset;
@@ -258,6 +268,14 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 	@FXML
 	private Label lbNotification;
 
+	// timer to broadcast status
+	private Timer loadTimer;
+
+	private boolean isRunning = false;
+
+	// associated task
+	private LoadTask loadTask;
+
 	void initialize() {
 		setImages();
 
@@ -288,6 +306,10 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 		// reset
 		btReset.setGraphic(ImageManager.instance().getImageView(Images.REFRESH_ALL));
 		btReset.setContentDisplay(ContentDisplay.LEFT);
+
+		// load test
+		btLoadTest.setGraphic(ImageManager.instance().getImageView(Images.STARTUP));
+		btLoadTest.setContentDisplay(ContentDisplay.LEFT);
 	}
 
 	@FXML
@@ -665,6 +687,48 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 		}
 	}
 
+	private void startStopLoadTimer() {
+		if (loadTimer == null) {
+			// create timer and task
+			int period = Integer.parseInt(tfLoadRate.getText());
+
+			loadTimer = new Timer();
+			loadTask = new LoadTask();
+			loadTimer.schedule(loadTask, period * 1000, period * 1000);
+
+			isRunning = true;
+
+			if (logger.isInfoEnabled()) {
+				logger.info("Scheduled load test task for interval (sec): " + period);
+			}
+		} else {
+			// stop the text
+			loadTask.cancel();
+			loadTimer = null;
+
+			isRunning = false;
+
+			if (logger.isInfoEnabled()) {
+				logger.info("Load test task cancelled.");
+			}
+		}
+	}
+
+	@FXML
+	private void onLoadTest() {
+		try {
+			startStopLoadTimer();
+
+			if (isRunning) {
+				btLoadTest.setText(TesterLocalizer.instance().getLangString("load.test.stop"));
+			} else {
+				btLoadTest.setText(TesterLocalizer.instance().getLangString("load.test.start"));
+			}
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+
 	private void onWriteDatabaseEvent() throws Exception {
 		DatabaseEventSource source = (DatabaseEventSource) cbHost.getSelectionModel().getSelectedItem();
 		String jdbcConn = source.getHost();
@@ -691,7 +755,7 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 			logger.info("Wrote database event record for source id " + sourceId);
 		}
 
-		lbNotification.setText(TesterLocalizer.instance().getLangString("inserted.event", sourceId));
+		postNotification(TesterLocalizer.instance().getLangString("inserted.event", sourceId));
 	}
 
 	private void onTriggerCronEvent() throws Exception {
@@ -725,13 +789,20 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 		}
 
 		// value is the file name
-		String fileName = tfValue.getText();
-
-		if (fileName == null || fileName.trim().length() == 0) {
-			throw new Exception(TesterLocalizer.instance().getErrorString("no.file.name"));
-		}
+		String fileName = "File" + System.currentTimeMillis();
 
 		File file = new File(fileName);
+
+		BufferedWriter writer = null;
+
+		try {
+			writer = new BufferedWriter(new FileWriter(file));
+			writer.write(tfValue.getText());
+		} finally {
+			if (writer != null) {
+				writer.close();
+			}
+		}
 
 		String sourceId = cbSourceId.getSelectionModel().getSelectedItem();
 
@@ -742,7 +813,7 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 			logger.info("Moved file " + fileName + " to ready folder.");
 		}
 
-		lbNotification.setText(TesterLocalizer.instance().getLangString("moved.file", fileName));
+		postNotification(TesterLocalizer.instance().getLangString("moved.file", fileName));
 	}
 
 	private void onWriteModbusEvent() throws Exception {
@@ -773,7 +844,7 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 			logger.info("Wrote " + value + " to endpoint " + endpoint);
 		}
 
-		lbNotification.setText(TesterLocalizer.instance().getLangString("wrote.register", value, endpoint.toString()));
+		postNotification(TesterLocalizer.instance().getLangString("wrote.register", value, endpoint.toString()));
 	}
 
 	private void onWriteOpcDaEvent() throws Exception {
@@ -841,7 +912,7 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 			logger.info("Wrote " + value + " to " + sourceId);
 		}
 
-		lbNotification.setText(TesterLocalizer.instance().getLangString("wrote.opc.da", value, sourceId));
+		postNotification(TesterLocalizer.instance().getLangString("wrote.opc.da", value, sourceId));
 	}
 
 	private void onWriteOpcUaEvent() throws Exception {
@@ -908,8 +979,7 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 			logger.info("Wrote " + value + " to " + nodeId);
 		}
 
-		lbNotification
-				.setText(TesterLocalizer.instance().getLangString("wrote.opc.ua", value, nodeId.toParseableString()));
+		postNotification(TesterLocalizer.instance().getLangString("wrote.opc.ua", value, nodeId.toParseableString()));
 	}
 
 	private void onHttpPostEvent() {
@@ -949,7 +1019,7 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 
 			checkResponseCode(conn);
 
-			lbNotification.setText(TesterLocalizer.instance().getLangString("posted.message", urlString));
+			postNotification(TesterLocalizer.instance().getLangString("posted.message", urlString));
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		} finally {
@@ -1366,7 +1436,7 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 			} else {
 				return;
 			}
-			lbNotification.setText(notification);
+			postNotification(notification);
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}
@@ -1448,8 +1518,12 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 				.setText(TesterLocalizer.instance().getLangString("received.message") + ", " + message.toString()));
 
 		if (logger.isInfoEnabled()) {
-			logger.info("Received Kafka message: " + message.toString());
+			logger.info("Received message: " + message.toString());
 		}
+	}
+
+	private void postNotification(String message) {
+		Platform.runLater(() -> lbNotification.setText(message));
 	}
 
 	@Override
@@ -1457,4 +1531,26 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 		postNotification(message);
 	}
 
+	/********************* Load Testing Task ***********************************/
+	private class LoadTask extends TimerTask {
+		@Override
+		public void run() {
+			try {
+				if (rbHTTP.isSelected()) {
+					onHttpPostEvent();
+				} else if (rbJMS.isSelected() || rbRMQ.isSelected() || rbMQTT.isSelected() || rbKafka.isSelected()
+						|| rbEmail.isSelected()) {
+					onSendEquipmentEventMsg();
+				} else if (rbDatabase.isSelected()) {
+					onWriteDatabaseEvent();
+				} else if (rbFile.isSelected()) {
+					onWriteFileEvent();
+				} else if (rbModbus.isSelected()) {
+					onWriteModbusEvent();
+				} 
+			} catch (Exception e) {
+				postNotification(e.getMessage());
+			}
+		}
+	}
 }

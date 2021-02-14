@@ -2,10 +2,10 @@
 	<project name="oee-apps" default="build-all" basedir="."  xmlns:fx="javafx:com.sun.javafx.tools.ant">
 	
 	<!-- distribution archive -->
-	<property name="app_version" value="3.3.1"/>
-	<property name="dist.zip" value="oee-apps-3.3.1.jar"/>
-	<property name="domain.jar" value="oee-domain-3.3.1.jar"/>
-	<property name="collector.jar" value="oee-collector-3.3.1.jar"/>
+	<property name="app_version" value="3.3.2"/>
+	<property name="dist.zip" value="oee-apps-3.3.2.jar"/>
+	<property name="domain.jar" value="oee-domain-3.3.2.jar"/>
+	<property name="collector.jar" value="oee-collector-3.3.2.jar"/>
 		
 	<!-- folders -->
 	<property name="repo.dir" value="C:\maven_repo"/>
