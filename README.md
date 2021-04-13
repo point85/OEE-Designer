@@ -21,6 +21,7 @@ Sources of equipment availability, performance and quality event data include:
 * File Share:  a server hosting OEE event files
 * Modbus: a Modbus master communicating with its slaves.
 * Cron Job: a cron job scheduled to execute at specified points in time
+* GE Proficy Historian: a historian server for equipment events
 
 The Point85 applications supporting OEE are:
 * Designer:  a GUI application for defining the plant equipment, data sources, event resolution scripts, manufacturing work schedule, availability reasons, produced materials and units of measure for data collectors.  The designer also includes a dashboard and trending capabilities.
