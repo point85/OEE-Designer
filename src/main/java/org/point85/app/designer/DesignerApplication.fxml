@@ -138,6 +138,7 @@
             <Button fx:id="btCronEditor" mnemonicParsing="false" onAction="#onShowCronEditor" prefHeight="16.0" prefWidth="16.0" />
             <Button fx:id="btKafkaServerEditor" mnemonicParsing="false" onAction="#onShowKafkaServerEditor" prefHeight="16.0" prefWidth="16.0" />
             <Button fx:id="btEmailServerEditor" mnemonicParsing="false" onAction="#onShowEmailServerEditor" />
+            <Button fx:id="btProficyBrowserEditor" mnemonicParsing="false" onAction="#onShowProficyBrowserEditor" />
             <Separator orientation="VERTICAL" />
             <Button fx:id="btUomEditor" mnemonicParsing="false" onAction="#onShowUomEditor" prefHeight="16.0" prefWidth="16.0" />
           <Button fx:id="btScheduleEditor" mnemonicParsing="false" onAction="#onShowScheduleEditor" prefHeight="16.0" prefWidth="16.0" />

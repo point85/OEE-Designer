@@ -1,6 +1,7 @@
 package org.point85.app.designer;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -30,6 +31,8 @@ import org.point85.domain.opc.ua.OpcUaSource;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Equipment;
 import org.point85.domain.plant.PlantEntity;
+import org.point85.domain.proficy.ProficySource;
+import org.point85.domain.proficy.TagDetail;
 import org.point85.domain.script.EventResolver;
 import org.point85.domain.script.OeeEventType;
 import org.point85.domain.script.ResolverFunction;
@@ -153,6 +156,7 @@ public class EquipmentResolverController extends DesignerController {
 
 		// data sources
 		cbDataSources.getItems().addAll(DataSourceType.values());
+		Collections.sort(cbDataSources.getItems());
 
 		// resolver types
 		cbResolverTypes.getItems().addAll(OeeEventType.values());
@@ -441,6 +445,10 @@ public class EquipmentResolverController extends DesignerController {
 			buttonImage = ImageManager.instance().getImageView(Images.MODBUS);
 			setUpdatePeriod = true;
 			break;
+		case PROFICY:
+			buttonImage = ImageManager.instance().getImageView(Images.PROFICY);
+			setUpdatePeriod = true;
+			break;
 		default:
 			break;
 		}
@@ -618,6 +626,16 @@ public class EquipmentResolverController extends DesignerController {
 
 				setDefaultSourceId();
 
+			} else if (sourceType.equals(DataSourceType.PROFICY)) {
+				// Proficy data source
+				ProficySource dataSource = getApp().showProficyEditor();
+				getSelectedResolver().setDataSource(dataSource);
+				tfServerId.setText(dataSource.getId());
+
+				// selected tag
+				TagDetail tagDetail = getApp().getProficyBrowserController().getSelectedTag();
+				tfSourceId.setText(tagDetail.getTagName());
+				lbDataType.setText(tagDetail.getEnumeratedType().getJavaType().getSimpleName());
 			} else {
 				throw new Exception(DesignerLocalizer.instance().getErrorString("unknown.type", sourceType));
 			}
@@ -857,8 +875,9 @@ public class EquipmentResolverController extends DesignerController {
 				getApp().showKafkaTrendDialog(selectedEventResolver);
 			} else if (type.equals(DataSourceType.EMAIL)) {
 				getApp().showEmailTrendDialog(selectedEventResolver);
+			} else if (type.equals(DataSourceType.PROFICY)) {
+				getApp().showProficyTrendDialog(selectedEventResolver);
 			}
-
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}

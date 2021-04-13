@@ -58,7 +58,7 @@ public class DataCollectorController extends DialogController {
 
 	@FXML
 	private Button btTest;
-	
+
 	@FXML
 	private Button btClearMessagingServer;
 
@@ -125,7 +125,7 @@ public class DataCollectorController extends DialogController {
 		// test
 		btTest.setGraphic(ImageManager.instance().getImageView(Images.EXECUTE));
 		btTest.setContentDisplay(ContentDisplay.LEFT);
-		
+
 		// clear
 		btClearMessagingServer.setGraphic(ImageManager.instance().getImageView(Images.CLEAR));
 	}
@@ -275,7 +275,7 @@ public class DataCollectorController extends DialogController {
 	}
 
 	@FXML
-	private void onTest() {		
+	private void onTest() {
 		String content = "This is a test.";
 
 		CollectorDataSource notificationServer = cbNotificationServers.getSelectionModel().getSelectedItem();
@@ -290,44 +290,46 @@ public class DataCollectorController extends DialogController {
 				rmqClient.connect(notificationServer.getHost(), notificationServer.getPort(),
 						notificationServer.getUserName(), notificationServer.getUserPassword());
 				rmqClient.sendNotification(content, NotificationSeverity.INFO);
-				
+
 			} else if (notificationServer.getDataSourceType().equals(DataSourceType.JMS)) {
 				JmsClient jmsClient = new JmsClient();
 				jmsClient.connect(notificationServer.getHost(), notificationServer.getPort(),
 						notificationServer.getUserName(), notificationServer.getUserPassword());
 				jmsClient.sendNotification(content, NotificationSeverity.INFO);
-				
+
 			} else if (notificationServer.getDataSourceType().equals(DataSourceType.MQTT)) {
-				MqttSource server = (MqttSource)notificationServer;
-				
+				MqttSource server = (MqttSource) notificationServer;
+
 				MqttOeeClient mqttClient = new MqttOeeClient();
-				
+
 				mqttClient.setAuthenticationConfiguration(server.getUserName(), server.getUserPassword());
-				mqttClient.setSSLConfiguration(server.getKeystore(), server.getKeystorePassword(), server.getKeyPassword());
-				
+				mqttClient.setSSLConfiguration(server.getKeystore(), server.getKeystorePassword(),
+						server.getKeyPassword());
+
 				mqttClient.connect(notificationServer.getHost(), notificationServer.getPort());
 				mqttClient.sendNotification(content, NotificationSeverity.INFO);
-				
+
 			} else if (notificationServer.getDataSourceType().equals(DataSourceType.KAFKA)) {
 				KafkaSource server = (KafkaSource) notificationServer;
 				KafkaOeeClient kafkaClient = new KafkaOeeClient();
 				kafkaClient.createProducer(server, KafkaOeeClient.NOTIFICATION_TOPIC);
 				kafkaClient.sendNotification(content, NotificationSeverity.INFO);
-				
-			}else if (notificationServer.getDataSourceType().equals(DataSourceType.EMAIL)) {
+
+			} else if (notificationServer.getDataSourceType().equals(DataSourceType.EMAIL)) {
 				EmailSource server = (EmailSource) notificationServer;
 				EmailClient emailClient = new EmailClient(server);
-				
+
 				// send to oneself
-				emailClient.sendNotification(server.getUserName(), "Test Email from Point85", content, NotificationSeverity.INFO);	
+				emailClient.sendNotification(server.getUserName(), "Test Email from Point85", content,
+						NotificationSeverity.INFO);
 			}
-			
+
 			AppUtils.showConfirmationDialog(DesignerLocalizer.instance().getLangString("connection.successful"));
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}
 	}
-	
+
 	@FXML
 	private void onClearMessagingServer() {
 		cbNotificationServers.getSelectionModel().select(null);

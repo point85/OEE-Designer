@@ -76,6 +76,8 @@ import org.point85.domain.plant.EntityLevel;
 import org.point85.domain.plant.Material;
 import org.point85.domain.plant.PlantEntity;
 import org.point85.domain.plant.Reason;
+import org.point85.domain.proficy.ProficyClient;
+import org.point85.domain.proficy.ProficySource;
 import org.point85.domain.rmq.RmqClient;
 import org.point85.domain.rmq.RmqMessageListener;
 import org.quartz.JobExecutionContext;
@@ -138,6 +140,9 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 
 	// OPC DA clients
 	private final Map<String, DaOpcClient> daClients = new HashMap<>();
+
+	// Proficy clients
+	private final Map<String, ProficyClient> proficyClients = new HashMap<>();
 
 	// materials
 	private final ObservableList<Material> materials = FXCollections.observableList(new ArrayList<>());
@@ -266,6 +271,9 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 	private RadioButton rbOpcDa;
 
 	@FXML
+	private RadioButton rbProficy;
+
+	@FXML
 	private Label lbNotification;
 
 	// timer to broadcast status
@@ -348,6 +356,8 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 				populateDataSources(DataSourceType.OPC_DA);
 			} else if (rbEmail.isSelected()) {
 				populateDataSources(DataSourceType.EMAIL);
+			} else if (rbProficy.isSelected()) {
+				populateDataSources(DataSourceType.PROFICY);
 			}
 
 			tfValue.clear();
@@ -396,6 +406,8 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 				populateSourceIds(DataSourceType.OPC_DA);
 			} else if (rbEmail.isSelected()) {
 				populateSourceIds(DataSourceType.EMAIL);
+			} else if (rbProficy.isSelected()) {
+				populateSourceIds(DataSourceType.PROFICY);
 			}
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
@@ -681,6 +693,8 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 				onWriteOpcUaEvent();
 			} else if (rbOpcDa.isSelected()) {
 				onWriteOpcDaEvent();
+			} else if (rbProficy.isSelected()) {
+				onWriteProficyEvent();
 			}
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
@@ -694,7 +708,7 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 
 			loadTimer = new Timer();
 			loadTask = new LoadTask();
-			loadTimer.schedule(loadTask, period * 1000, period * 1000);
+			loadTimer.schedule(loadTask, (long) period * 1000, (long) period * 1000);
 
 			isRunning = true;
 
@@ -845,6 +859,30 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 		}
 
 		postNotification(TesterLocalizer.instance().getLangString("wrote.register", value, endpoint.toString()));
+	}
+
+	private void onWriteProficyEvent() throws Exception {
+		int idx = cbHost.getSelectionModel().getSelectedIndex();
+		ProficySource source = (ProficySource) cbHost.getItems().get(idx);
+		String name = source.getName();
+
+		ProficyClient proficyClient = proficyClients.get(name);
+
+		if (proficyClient == null) {
+			proficyClient = new ProficyClient(source);
+			proficyClients.put(name, proficyClient);
+		}
+
+		String sourceId = cbSourceId.getSelectionModel().getSelectedItem();
+		String value = tfValue.getText();
+
+		proficyClient.writeTag(sourceId, value);
+
+		if (logger.isInfoEnabled()) {
+			logger.info("Wrote " + value + " to tag " + sourceId);
+		}
+
+		postNotification(TesterLocalizer.instance().getLangString("wrote.proficy", value, sourceId));
 	}
 
 	private void onWriteOpcDaEvent() throws Exception {
@@ -1547,7 +1585,9 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 					onWriteFileEvent();
 				} else if (rbModbus.isSelected()) {
 					onWriteModbusEvent();
-				} 
+				} else if (rbProficy.isSelected()) {
+					onWriteProficyEvent();
+				}
 			} catch (Exception e) {
 				postNotification(e.getMessage());
 			}

@@ -32,6 +32,8 @@ import org.point85.app.opc.da.OpcDaTrendController;
 import org.point85.app.opc.ua.OpcUaBrowserController;
 import org.point85.app.opc.ua.OpcUaTreeNode;
 import org.point85.app.opc.ua.OpcUaTrendController;
+import org.point85.app.proficy.ProficyBrowserController;
+import org.point85.app.proficy.ProficyTrendController;
 import org.point85.app.reason.ReasonEditorController;
 import org.point85.app.schedule.WorkScheduleEditorController;
 import org.point85.app.script.EventResolverController;
@@ -58,6 +60,7 @@ import org.point85.domain.plant.Equipment;
 import org.point85.domain.plant.Material;
 import org.point85.domain.plant.PlantEntity;
 import org.point85.domain.plant.Reason;
+import org.point85.domain.proficy.ProficySource;
 import org.point85.domain.schedule.WorkSchedule;
 import org.point85.domain.script.EventResolver;
 import org.point85.domain.script.OeeContext;
@@ -109,6 +112,9 @@ public class DesignerApplication {
 
 	// Modbus editor
 	private ModbusMasterController modbusController;
+	
+	// Proficy Historian browser
+	private ProficyBrowserController proficyBrowserController;
 
 	// script execution context
 	private OeeContext appContext;
@@ -496,6 +502,30 @@ public class DesignerApplication {
 		}
 
 		return emailServerController.getSource();
+	}
+	
+	ProficySource showProficyEditor() throws Exception {
+		FXMLLoader loader = FXMLLoaderFactory.proficyLoader();
+		AnchorPane page = (AnchorPane) loader.getRoot();
+
+		Stage dialogStage = new Stage(StageStyle.DECORATED);
+
+		dialogStage.setTitle(DesignerLocalizer.instance().getLangString("proficy.browser.title"));
+
+		dialogStage.initModality(Modality.WINDOW_MODAL);
+		Scene scene = new Scene(page);
+		dialogStage.setScene(scene);
+
+		// get the controller
+		proficyBrowserController = loader.getController();
+		proficyBrowserController.setDialogStage(dialogStage);
+		proficyBrowserController.initialize(this);
+
+		if (!proficyBrowserController.getDialogStage().isShowing()) {
+			proficyBrowserController.getDialogStage().showAndWait();
+		}
+
+		return proficyBrowserController.getSource();
 	}
 
 	ModbusSource showModbusEditor() throws Exception {
@@ -928,6 +958,43 @@ public class DesignerApplication {
 		// show the window
 		emailTrendController.getDialogStage().show();
 	}
+	
+	void showProficyTrendDialog(EventResolver eventResolver) throws Exception {
+		// Load the fxml file and create a new stage for the pop-up dialog.
+		FXMLLoader loader = FXMLLoaderFactory.proficyTrendLoader();
+		AnchorPane page = (AnchorPane) loader.getRoot();
+
+		// Create the dialog Stage.
+		Stage dialogStage = new Stage(StageStyle.DECORATED);
+		dialogStage.setTitle(DesignerLocalizer.instance().getLangString("proficy.event.trend"));
+		dialogStage.initModality(Modality.NONE);
+		Scene scene = new Scene(page);
+		dialogStage.setScene(scene);
+
+		// get the controller
+		ProficyTrendController proficyTrendController = loader.getController();
+		proficyTrendController.setDialogStage(dialogStage);
+		proficyTrendController.setApp(this);
+
+		// add the trend chart
+		SplitPane chartPane = proficyTrendController.initializeTrend();
+
+		AnchorPane.setBottomAnchor(chartPane, 50.0);
+		AnchorPane.setLeftAnchor(chartPane, 5.0);
+		AnchorPane.setRightAnchor(chartPane, 5.0);
+		AnchorPane.setTopAnchor(chartPane, 50.0);
+
+		page.getChildren().add(0, chartPane);
+
+		// set the script resolver
+		proficyTrendController.setEventResolver(eventResolver);
+
+		// start the job
+		proficyTrendController.subscribeToDataSource();
+
+		// show the window
+		proficyTrendController.getDialogStage().show();
+	}
 
 	void showMQTTTrendDialog(EventResolver eventResolver) throws Exception {
 		// Load the fxml file
@@ -1216,5 +1283,13 @@ public class DesignerApplication {
 		// add to context
 		appContext.getModbusMasters().add(master);
 		return master;
+	}
+
+	public ProficyBrowserController getProficyBrowserController() {
+		return proficyBrowserController;
+	}
+
+	public void setProficyBrowserController(ProficyBrowserController proficyBrowserController) {
+		this.proficyBrowserController = proficyBrowserController;
 	}
 }

@@ -188,7 +188,7 @@ public class TrendChartController extends DesignerController {
 
 		onResetTrending();
 
-		// set point table
+		// time loss table
 		Map<String, Integer> chartStrings = new HashMap<>();
 
 		for (TimeLoss loss : TimeLoss.values()) {
@@ -442,7 +442,6 @@ public class TrendChartController extends DesignerController {
 			tvResolvedItems.refresh();
 
 			inputValueController.reset(10, dataCount, 10, dataCount);
-			outputValueController.reset(10, dataCount, 1, TimeLoss.values().length + 1);
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}
@@ -515,8 +514,7 @@ public class TrendChartController extends DesignerController {
 				throw new Exception(DesignerLocalizer.instance().getErrorString("start.before.end", odtStart, odtEnd));
 			}
 
-			List<OeeEvent> events = PersistenceService.instance().fetchEvents(eventResolver.getEquipment(),
-					eventResolver.getType(), odtStart, odtEnd);
+			List<OeeEvent> events = PersistenceService.instance().fetchEvents(eventResolver, odtStart, odtEnd);
 
 			for (OeeEvent event : events) {
 				// plot values

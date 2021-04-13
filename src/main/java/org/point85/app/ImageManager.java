@@ -245,6 +245,12 @@ public final class ImageManager {
 		case CRON:
 			image = new Image(IMAGE_PATH + "Clock.png", DIM, DIM, true, true);
 			break;
+		case PROFICY:
+			image = new Image(IMAGE_PATH + "Proficy.png", DIM, DIM, true, true);
+			break;
+		case FILTER:
+			image = new Image(IMAGE_PATH + "Filter.png", DIM, DIM, true, true);
+			break;
 		default:
 			image = new Image(IMAGE_PATH + "Folder.png", DIM, DIM, true, true);
 			break;

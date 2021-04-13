@@ -49,6 +49,8 @@ import org.point85.app.operator.MaterialSelectorController;
 import org.point85.app.operator.OperatorApplication;
 import org.point85.app.operator.OperatorLocalizer;
 import org.point85.app.operator.ReasonSelectorController;
+import org.point85.app.proficy.ProficyBrowserController;
+import org.point85.app.proficy.ProficyTrendController;
 import org.point85.app.reason.ReasonEditorController;
 import org.point85.app.schedule.TemplateScheduleDialogController;
 import org.point85.app.schedule.WorkScheduleEditorController;
@@ -209,7 +211,7 @@ public class FXMLLoaderFactory {
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
-	
+
 	public static FXMLLoader mqttServerLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(MqttServerController.class.getResource("MqttServer.fxml"));
 		fxmlLoader.setResources(getDesignerLangBundle());
@@ -321,7 +323,7 @@ public class FXMLLoaderFactory {
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
-	
+
 	public static FXMLLoader emailTrendLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(EmailTrendController.class.getResource("EmailTrend.fxml"));
 		fxmlLoader.setResources(getDesignerLangBundle());
@@ -352,6 +354,13 @@ public class FXMLLoaderFactory {
 
 	public static FXMLLoader cronTrendLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(CronTrendController.class.getResource("CronTrend.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
+		fxmlLoader.load();
+		return fxmlLoader;
+	}
+	
+	public static FXMLLoader proficyTrendLoader() throws Exception {
+		FXMLLoader fxmlLoader = new FXMLLoader(ProficyTrendController.class.getResource("ProficyTrend.fxml"));
 		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
@@ -488,6 +497,13 @@ public class FXMLLoaderFactory {
 
 	public static FXMLLoader oeeEventTrendLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(OeeEventTrendController.class.getResource("OeeEventTrend.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
+		fxmlLoader.load();
+		return fxmlLoader;
+	}
+
+	public static FXMLLoader proficyLoader() throws Exception {
+		FXMLLoader fxmlLoader = new FXMLLoader(ProficyBrowserController.class.getResource("ProficyBrowser.fxml"));
 		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;

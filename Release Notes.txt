@@ -177,5 +177,11 @@ Note that version 3.2.0 has the following schema changes:
 	- Updated Kafka client to version 2.6.1
 	- Fixed HTTP servlet memory leak
 	- Miscellaneous stability improvements		
+	
+(33) 3.4.0, April 14, 2021:
+	- Added a GE Proficy Historian data source
+	- Updated Milo to version 0.6.0
+	- Updated Jetty to version 9.4.39.v20210325
+	- Miscellaneous stability improvements	
 
 Please send comments and suggestions to point85.llc@gmail.com.
