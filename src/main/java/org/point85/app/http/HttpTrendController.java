@@ -19,7 +19,7 @@ import org.point85.app.charts.TrendChartController;
 import org.point85.app.designer.DesignerDialogController;
 import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.DomainUtils;
-import org.point85.domain.http.EquipmentEventRequestDto;
+import org.point85.domain.dto.EquipmentEventRequestDto;
 import org.point85.domain.http.HttpEventListener;
 import org.point85.domain.http.HttpSource;
 import org.point85.domain.http.OeeHttpServer;

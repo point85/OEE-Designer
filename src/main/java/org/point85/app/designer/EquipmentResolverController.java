@@ -634,8 +634,11 @@ public class EquipmentResolverController extends DesignerController {
 
 				// selected tag
 				TagDetail tagDetail = getApp().getProficyBrowserController().getSelectedTag();
-				tfSourceId.setText(tagDetail.getTagName());
-				lbDataType.setText(tagDetail.getEnumeratedType().getJavaType().getSimpleName());
+
+				if (tagDetail != null) {
+					tfSourceId.setText(tagDetail.getTagName());
+					lbDataType.setText(tagDetail.getEnumeratedType().getJavaType().getSimpleName());
+				}
 			} else {
 				throw new Exception(DesignerLocalizer.instance().getErrorString("unknown.type", sourceType));
 			}

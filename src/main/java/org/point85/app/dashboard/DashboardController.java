@@ -8,10 +8,8 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
@@ -135,9 +133,6 @@ public class DashboardController extends DialogController implements CategoryCli
 
 	// map of loss by equipment
 	private final ConcurrentMap<String, EquipmentLoss> lossMap = new ConcurrentHashMap<>();
-
-	// possible materials
-	private final Map<String, Material> materialMap = new HashMap<>();
 
 	// selection criteria
 	@FXML
@@ -441,7 +436,7 @@ public class DashboardController extends DialogController implements CategoryCli
 	}
 
 	private Float convertDuration(Duration duration, float divisor) {
-		return ((float) duration.getSeconds()) / divisor;
+		return (duration.getSeconds()) / divisor;
 	}
 
 	private void onSelectTimeLosses() {
@@ -650,10 +645,10 @@ public class DashboardController extends DialogController implements CategoryCli
 		// value adding
 		String category = TimeCategory.VALUE_ADDING.toString();
 		Number netTime = convertDuration(equipmentLoss.getValueAddingTime(), divisor);
-		Number yield = convertDuration(equipmentLoss.getLoss(TimeLoss.STARTUP_YIELD), divisor);
+		Number startupYield = convertDuration(equipmentLoss.getLoss(TimeLoss.STARTUP_YIELD), divisor);
 
 		netTimePoints.add(new XYChart.Data<>(netTime, category));
-		yieldPoints.add(new XYChart.Data<>(yield, category));
+		yieldPoints.add(new XYChart.Data<>(startupYield, category));
 
 		// effective net production time
 		category = TimeCategory.EFFECTIVE_NET_PRODUCTION.toString();
@@ -798,7 +793,7 @@ public class DashboardController extends DialogController implements CategoryCli
 			for (XYChart.Data<Number, String> item : series.getData()) {
 				item.getNode().setOnMouseClicked((MouseEvent event) -> onClickLossCategory(series, item));
 
-				Tooltip tooltip = new Tooltip(item.getXValue().toString());
+				Tooltip tooltip = new Tooltip(String.format("%.2f", item.getXValue()));
 				Tooltip.install(item.getNode(), tooltip);
 			}
 		}
@@ -858,7 +853,7 @@ public class DashboardController extends DialogController implements CategoryCli
 				spLevel1Pareto, paretoItems, divisor, DesignerLocalizer.instance().getLangString("loss.category"));
 	}
 
-	private void onClickLossCategory(Series<Number, String> series, XYChart.Data<Number, String> lossCategory) {
+	private void onClickLossCategory(Series<Number, String> series, XYChart.Data<Number, String> dataItem) {
 		showParetoTab(series.getName());
 	}
 
@@ -1345,7 +1340,6 @@ public class DashboardController extends DialogController implements CategoryCli
 	@FXML
 	private void clearMaterials() {
 		// material filtering
-		materialMap.clear();
 		cbMaterials.getItems().clear();
 		cbMaterials.getItems().add(DesignerLocalizer.instance().getLangString("all.materials"));
 	}
@@ -1429,65 +1423,23 @@ public class DashboardController extends DialogController implements CategoryCli
 			}
 
 			String materialId = cbMaterials.getSelectionModel().getSelectedItem();
-			List<OeeEvent> setups = null;
 
-			if (materialId != null && !materialId.equals(DesignerLocalizer.instance().getLangString("all.materials"))) {
-				// filter for a specific material
-				setups = PersistenceService.instance().fetchSetupsForPeriodAndMaterial(equipment, odtStart, odtEnd,
-						materialMap.get(materialId));
-			} else {
-				// material and job during this period from setups
-				setups = PersistenceService.instance().fetchSetupsForPeriod(equipment, odtStart, odtEnd);
+			// generate all of the loss data for this equipment
+			EquipmentLossManager.buildLoss(equipmentLoss, materialId, odtStart, odtEnd);
+
+			// find the setups
+			OeeEvent lastSetup = null;
+			for (OeeEvent event : equipmentLoss.getEventRecords()) {
+
+				if (event.getEventType().equals(OeeEventType.MATL_CHANGE)) {
+					lastSetup = event;
+					cbMaterials.getItems().add(event.getMaterial().getName());
+				}
 			}
-
-			if (setups.isEmpty()) {
-				throw new Exception(DesignerLocalizer.instance().getErrorString("no.setup",
-						DomainUtils.offsetDateTimeToString(odtStart, DomainUtils.OFFSET_DATE_TIME_PATTERN),
-						DomainUtils.offsetDateTimeToString(odtEnd, DomainUtils.OFFSET_DATE_TIME_PATTERN)));
-			}
-
-			// add setup events
-			equipmentLoss.getEventRecords().addAll(setups);
-
-			// step through each setup period since materials could have changed
-			for (OeeEvent setup : setups) {
-				if (setup.getMaterial() == null) {
-					continue;
-				}
-
-				String id = setup.getMaterial().getDisplayString();
-
-				if (materialMap.get(id) == null) {
-					materialMap.put(id, setup.getMaterial());
-					cbMaterials.getItems().add(id);
-				}
-
-				equipmentLoss.setMaterial(setup.getMaterial());
-
-				// calculate the time losses over the setup period
-				OffsetDateTime periodStart = setup.getStartTime();
-
-				if (periodStart.compareTo(odtStart) < 0) {
-					periodStart = odtStart;
-				}
-
-				OffsetDateTime periodEnd = setup.getEndTime();
-
-				if (periodEnd == null || (periodEnd.compareTo(odtEnd) > 0)) {
-					periodEnd = odtEnd;
-				}
-
-				EquipmentLossManager.calculateEquipmentLoss(equipmentLoss, periodStart, periodEnd);
-			}
-
 			Collections.sort(cbMaterials.getItems());
 
-			// last setup
-			if (!setups.isEmpty()) {
-				OeeEvent lastSetup = setups.get(setups.size() - 1);
-				if (lastSetup.getMaterial() != null) {
-					tiJobMaterial.setDescription(lastSetup.getMaterial().getDisplayString());
-				}
+			if (lastSetup != null && lastSetup.getMaterial() != null) {
+				tiJobMaterial.setDescription(lastSetup.getMaterial().getDisplayString());
 				tiJobMaterial.setText(lastSetup.getJob());
 			}
 

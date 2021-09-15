@@ -183,5 +183,20 @@ Note that version 3.2.0 has the following schema changes:
 	- Updated Milo to version 0.6.0
 	- Updated Jetty to version 9.4.39.v20210325
 	- Miscellaneous stability improvements	
+	
+(34) 3.5.0, September 16, 2021:
+	- Added an HTTP API to return the OEE event records
+	- Added an HTTP API to return the OEE calculations
+	- Updated Milo to version 0.6.3
+	- Updated Jetty to version 9.4.43.v20210629
+	- Updated junit to version 4.13.2
+	- Updated bcprov-jdk15on to 1.69
+	- Updated AMQP client to 5.13.1
+	- Updated Apache ActiveMQ client to 5.16.3
+	- Updated Kafka client to 2.8.0
+	- Updated Jackson to 2.12.5
+	- Updated j2mod to version 3.0.0
+	- Update Vaadin to version 8.13.3
+	- Miscellaneous stability improvements		
 
 Please send comments and suggestions to point85.llc@gmail.com.
