@@ -61,7 +61,7 @@ The OEE applications can be grouped into design-time and run-time.  The design-t
 An automated run-time data collector receives an input value from a data source source and executes a JavaScript resolver on this input to calculate an output value.  The output value is a reason (mapped to an OEE loss category) for an availability event, a new production count (good, reject/rework or startup) for performance and quality events or a material/job change event.  For the case of a custom event, the output value is ignored.  The event data is stored in a relational database where it is available for OEE calculations.  Microsoft SQL Server, Oracle, MySQL, PostgresQL and HSQLDB are currently supported.
 
 A web-based manual data collector running in a web server records the OEE events based on information entered by an operator.  Similar to the automated collector, this data is also stored in the relational database.
-If the system is configured for messaging, the event data is also sent to a RabbitMQ message broker to which a run-time monitor application can subscribe.  A monitor displays a dashboard for viewing equipment OEE events.  It also displays collector notifications and status information.
+If the system is configured for messaging, the event data is also sent to a RabbitMQ, JMS, MQTT or Kafka message broker to which a run-time monitor application can subscribe.  A monitor displays a dashboard for viewing equipment OEE events.  It also displays collector notifications and status information.
 
 ## Designer Application
 The Designer is focused on configuring all aspects of equipment in order to enable OEE calculations.  It has editors for defining the plant model.  For example, the plant entity editor is:
