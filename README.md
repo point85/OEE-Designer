@@ -11,12 +11,12 @@ Sources of equipment availability, performance and quality event data include:
 * Manual:  operator data entry
 * OPC DA:  classic OLE for Process Control (OPC) Data Acquisition (DA)
 * OPC UA:  OLE for Process Control Unified Architecture (UA)
-* HTTP: invocation of a web service via an HTTP request 
+* HTTP/HTTPS: invocation of a web service via an HTTP request 
 * RMQ Messaging:  an equipment event message received via a RabbitMQ message broker
 * JMS Messaging:  an equipment event message received via an ActiveMQ message broker
 * MQTT Messaging:  an equipment event message received via an MQTT message server
 * Kafka Messaging:  an equipment event message received via a Kafka server
-* Email Messaging:  an equipment event message received via an email server
+* Email/Text Messaging:  an equipment event message received via an email server
 * Database Interface Table:  a pre-defined table for inserting OEE events
 * File Share:  a server hosting OEE event files
 * Modbus: a Modbus master communicating with its slaves.
@@ -32,8 +32,8 @@ The Point85 applications supporting OEE are:
 * Operator Mobile:  iOS and Android applications for manual entry of equipment events
 
 In addition, two GUI test applications assist in the development of an OEE solution:
-* HTTP requester and message publisher
-* Front end GUI for a data collector
+* Tester:  a GUI application for testing data sources
+* Collector UI: a front-end GUI for a data collector
 
 For more information about the Designer and other OEE applications, please refer to the *Point85 OEE User Guide* in the docs folder.  A getting started tutorial, *Point85 OEE Getting Started Guide*, is also available in the docs folder.  In addition, a document in this folder titled *PackML and Point85 OEE* describes a possible implementation the Point85 Overall Equipment Effectiveness (OEE) solution for equipment with a PackML interface. 
 
@@ -53,6 +53,9 @@ For availability and performance, the output value is a reason that is assigned 
 For quality or  yield, the data source provides a production count in the good, reject/rework or startup & yield categories in the defined units of measure for the material being produced.  This count has an equivalent time loss calculation by using the defined ideal or nominal speed.
 
 ## Architecture
+The diagram below is an overview of the system achitecture:
+![System Architecture](https://github.com/point85/OEE-Designer/blob/master/docs/system-architecture.png)
+
 The OEE applications can be grouped into design-time and run-time.  The design-time Designer application is used to define the plant equipment, data sources, event resolution scripts, manufacturing work schedule, availability reasons, produced materials and units of measure for data collectors.  The designer also includes a dashboard and trending capabilities.
 
 An automated run-time data collector receives an input value from a data source source and executes a JavaScript resolver on this input to calculate an output value.  The output value is a reason (mapped to an OEE loss category) for an availability event, a new production count (good, reject/rework or startup) for performance and quality events or a material/job change event.  For the case of a custom event, the output value is ignored.  The event data is stored in a relational database where it is available for OEE calculations.  Microsoft SQL Server, Oracle, MySQL, PostgresQL and HSQLDB are currently supported.
