@@ -60,12 +60,12 @@ public class OpcDaTagValueChart {
 
 	public void plotValue(Number value) {
 		sampleNo++;
-		XYChart.Data<Number, Number> nextPoint = new XYChart.Data<>((Number) sampleNo, value);
+		XYChart.Data<Number, Number> nextPoint = new XYChart.Data<>(sampleNo, value);
 
 		if ((interpolation == OpcDaTagValueChart.STAIR_STEP || value instanceof Byte) && sampleNo > 0) {
 			Number nextY = nextPoint.getYValue();
 
-			XYChart.Data<Number, Number> stepPoint = new XYChart.Data<>((Number) (sampleNo - 1), nextY);
+			XYChart.Data<Number, Number> stepPoint = new XYChart.Data<>((sampleNo - 1), nextY);
 			valueDataSeries.getData().add(stepPoint);
 		}
 

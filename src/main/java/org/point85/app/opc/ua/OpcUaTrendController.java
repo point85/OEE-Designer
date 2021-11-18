@@ -122,7 +122,7 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 	public void subscribeToDataSource() throws Exception {
 		getApp().getOpcUaClient().registerAsynchListener(this);
 
-		double publishingInterval = (double) trendChartController.getEventResolver().getUpdatePeriod();
+		double publishingInterval = trendChartController.getEventResolver().getUpdatePeriod();
 		getApp().getOpcUaClient().subscribe(getMonitoredNode(), publishingInterval, filter);
 	}
 

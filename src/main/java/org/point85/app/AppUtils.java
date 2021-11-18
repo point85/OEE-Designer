@@ -158,7 +158,7 @@ public abstract class AppUtils {
 			seconds = Integer.parseInt(fields[2]);
 		}
 
-		long totalSeconds = (long) hours * 3600 + (long) minutes * 60 + (long) seconds;
+		long totalSeconds = (long)hours * 3600 + minutes * 60 + seconds;
 
 		return Duration.ofSeconds(totalSeconds);
 	}
