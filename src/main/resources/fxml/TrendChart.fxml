@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+
+<SplitPane dividerPositions="0.5" minHeight="600.0" minWidth="1100.0" orientation="VERTICAL" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.charts.TrendChartController">
+   <items>
+      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+         <children>
+            <TableView fx:id="tvResolvedItems" layoutX="71.0" layoutY="-11.0" prefHeight="70.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="100.0">
+               <columns>
+                  <TableColumn fx:id="tcItem" prefWidth="200.0" text="%item" />
+                  <TableColumn fx:id="tcInputValue" prefWidth="150.0" text="%input.value" />
+                  <TableColumn fx:id="tcTimestamp" prefWidth="225.0" text="%timestamp" />
+                  <TableColumn fx:id="tcOutputValue" prefWidth="150.0" text="%output.value" />
+                  <TableColumn fx:id="tcLossCategory" prefWidth="200.0" text="%oee.loss" />
+               </columns>
+            </TableView>
+            <HBox alignment="CENTER_LEFT" layoutX="73.0" layoutY="14.0" prefHeight="50.0" spacing="20.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
+               <children>
+                  <Button fx:id="btToggleTrend" defaultButton="true" disable="true" mnemonicParsing="false" onAction="#onToggleTrending" prefWidth="100.0" text="%start.trend">
+                     <HBox.margin>
+                        <Insets left="5.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Label text="%update">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </Label>
+                  <Spinner fx:id="spUpdatePeriod" editable="true" prefWidth="80.0">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </Spinner>
+                  <Label text="%max.points" />
+                  <TextField fx:id="tfPointCount" prefWidth="75.0" />
+                  <Button fx:id="btResetTrend" mnemonicParsing="false" onAction="#onResetTrending" prefWidth="100.0" text="%reset" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" layoutX="14.0" layoutY="-25.0" prefHeight="50.0" spacing="20.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <Label text="%from">
+                     <HBox.margin>
+                        <Insets left="5.0" />
+                     </HBox.margin>
+                  </Label>
+                  <DatePicker fx:id="dpStartDate" maxWidth="1.7976931348623157E308" promptText="%choose.start" />
+                  <TextField fx:id="tfStartTime" prefWidth="75.0" />
+                  <Label text="%hh.mm" />
+                  <Label text="%to" />
+                  <DatePicker fx:id="dpEndDate" maxWidth="1.7976931348623157E308" promptText="%choose.end" />
+                  <TextField fx:id="tfEndTime" prefWidth="75.0" />
+                  <Label text="%hh.mm" />
+                  <Button fx:id="btRefresh" mnemonicParsing="false" onAction="#onRefresh" prefWidth="100.0" text="%refresh" />
+               </children>
+            </HBox>
+         </children>
+      </AnchorPane>
+      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+         <children>
+            <HBox alignment="CENTER_LEFT" prefHeight="50.0" spacing="20.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <RadioButton fx:id="rbInputValue" mnemonicParsing="false" onAction="#onSelectInputValueChart" selected="true" text="%input">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="tgWhichChart" />
+                     </toggleGroup>
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                  </RadioButton>
+                  <RadioButton fx:id="rbOutputValue" mnemonicParsing="false" onAction="#onSelectOutputValueChart" text="%output" toggleGroup="$tgWhichChart" />
+                  <Label text="%interpolation" />
+                  <ComboBox fx:id="cbInterpolationTypes" onAction="#onSelectInterpolationType" prefWidth="150.0" />
+               </children>
+            </HBox>
+            <StackPane fx:id="spCharts" layoutX="382.0" layoutY="187.0" prefHeight="150.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0" />
+         </children>
+      </AnchorPane>
+   </items>
+</SplitPane>

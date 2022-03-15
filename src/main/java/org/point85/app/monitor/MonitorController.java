@@ -46,6 +46,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 public class MonitorController {
@@ -339,7 +340,7 @@ public class MonitorController {
 		tcSeverity.setCellValueFactory(cellDataFeatures -> {
 			NotificationSeverity severity = cellDataFeatures.getValue().getSeverity();
 			Text text = new Text(severity.toString());
-			text.setFill(severity.getColor());
+			text.setFill(Color.web(severity.getColor()));
 			return new SimpleObjectProperty<Text>(text);
 		});
 

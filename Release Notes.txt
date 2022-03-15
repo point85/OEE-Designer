@@ -205,5 +205,22 @@ Note that version 3.2.0 has the following schema changes:
 	- Updated Kafka client to 2.8.1
 	- Updated Vaadin to version 8.14.2
 	- Miscellaneous stability improvements	
+	
+(35) 3.6.0, March 15, 2022:
+	- Updated to Java 11+ as required by the Nashorn script engine
+	- Changed to OpenJDK Nashorn script engine, version 15.3
+	- Updated slf4j to 1.7.32 version
+	- Changed to javax.mail version 1.4.7
+	- Upgraded to Java Service Wrapper 3.5.43 for Windows and 3.5.48 for Linux and Mac OSX
+	- Updated Vaadin to version 8.14.3
+	- Updated PostgreSQL to version 42.3.3
+	- Upgraded Milo to version 0.6.4
+	- Upgraded Jetty to version 9.4.45.v20220203
+	- Upgraded Jackson to version 2.13.1
+	- Upgraded RabbitMQ to version 5.14.2
+	- Upgraded ActiveMQ to version 5.16.4
+	- Upgraded Modbus client to version 3.1.1
+	- Upgraded Kafka client to version 3.1.0
+	- Upgraded JavaFX to version 17.0.2
 
 Please send comments and suggestions to point85.llc@gmail.com.

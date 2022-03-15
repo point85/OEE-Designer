@@ -7,10 +7,10 @@ import org.point85.domain.i18n.Localizer;
  */
 public class CollectorLocalizer extends Localizer {
 	// name of resource bundle with translatable strings for text
-	private static final String LANG_BUNDLE_NAME = "org.point85.i18n.CollectorLang";
+	private static final String LANG_BUNDLE_NAME = "i18n.CollectorLang";
 
 	// name of resource bundle with translatable strings for exception messages
-	private static final String ERROR_BUNDLE_NAME = "org.point85.i18n.CollectorError";
+	private static final String ERROR_BUNDLE_NAME = "i18n.CollectorError";
 
 	// Singleton
 	private static CollectorLocalizer localizer;

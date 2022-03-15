@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 
+import org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import org.point85.app.AppUtils;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
@@ -19,7 +19,6 @@ import org.point85.domain.modbus.ModbusUtils;
 import org.point85.domain.modbus.ModbusVariant;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Equipment;
-import org.point85.domain.plant.EquipmentEventResolver;
 import org.point85.domain.plant.Material;
 import org.point85.domain.plant.PlantEntity;
 import org.point85.domain.plant.Reason;
@@ -40,7 +39,7 @@ import javafx.scene.input.KeyEvent;
 
 public class EventResolverController extends DesignerDialogController {
 
-	// the Nashorn script engine
+	// the JavaScript engine
 	private ScriptEngine scriptEngine;
 
 	// resolver for the event
@@ -99,7 +98,7 @@ public class EventResolverController extends DesignerDialogController {
 
 	public void initialize(DesignerApplication app, EventResolver resolver) {
 		// script engine
-		scriptEngine = new ScriptEngineManager().getEngineByName(EquipmentEventResolver.SCRIPT_ENGINE_NAME);
+		scriptEngine = new NashornScriptEngineFactory().getScriptEngine();
 
 		// main app
 		setApp(app);
@@ -185,7 +184,7 @@ public class EventResolverController extends DesignerDialogController {
 		taResult.clear();
 	}
 
-	private ResolverFunction evaluateFunction(String functionScript)  {
+	private ResolverFunction evaluateFunction(String functionScript) {
 		// evaluate function for subsequent execution
 		return new ResolverFunction(functionScript);
 	}
@@ -213,7 +212,7 @@ public class EventResolverController extends DesignerDialogController {
 		this.value = value;
 	}
 
-	public void showFunctionScript(EventResolver scriptResolver)  {
+	public void showFunctionScript(EventResolver scriptResolver) {
 		if (scriptResolver == null) {
 			return;
 		}

@@ -1,7 +1,6 @@
 package org.point85.app.designer;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -156,7 +155,6 @@ public class EquipmentResolverController extends DesignerController {
 
 		// data sources
 		cbDataSources.getItems().addAll(DataSourceType.values());
-		Collections.sort(cbDataSources.getItems());
 
 		// resolver types
 		cbResolverTypes.getItems().addAll(OeeEventType.values());

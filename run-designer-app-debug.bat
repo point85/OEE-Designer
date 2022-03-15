@@ -1,2 +1,2 @@
 rem Launch the Designer application (args: JDBC connection string, user name, password and optional collector name)
-java -Xdebug -Xrunjdwp:transport=dt_socket,address=8998,server=y -jar oee-apps-3.5.1.jar DESIGNER jdbc:hsqldb:hsql://localhost/OEE SA
+%JAVA_HOME%/bin/java.exe -Xdebug -Xrunjdwp:transport=dt_socket,address=8998,server=y -p %JAVAFX_HOME%\lib --add-modules javafx.controls,javafx.fxml,javafx.web -jar oee-apps-3.6.0.jar DESIGNER jdbc:hsqldb:hsql://localhost/OEE SA

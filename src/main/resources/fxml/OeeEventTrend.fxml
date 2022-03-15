@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.monitor.OeeEventTrendController">
+   <children>
+      <LineChart fx:id="chProduction" animated="false" axisSortingPolicy="NONE" title="%production.trend" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
+        <xAxis>
+          <NumberAxis animated="false" label="%delta.time" side="BOTTOM" />
+        </xAxis>
+        <yAxis>
+          <NumberAxis animated="false" label="%production" side="LEFT" />
+        </yAxis>
+      </LineChart>
+      <HBox alignment="CENTER" layoutX="571.0" layoutY="700.0" prefHeight="50.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+         <children>
+            <Button fx:id="btOK" alignment="CENTER" mnemonicParsing="false" onAction="#onOK" text="%done" />
+         </children>
+      </HBox>
+      <LineChart fx:id="chLosses" animated="false" layoutX="169.0" layoutY="124.0" legendSide="LEFT" title="%loss.categories.title" visible="false" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
+        <xAxis>
+          <NumberAxis animated="false" label="%delta.time" />
+        </xAxis>
+        <yAxis>
+          <CategoryAxis animated="false" label="%loss.category" side="LEFT" />
+        </yAxis>
+      </LineChart>
+      <HBox alignment="CENTER" layoutX="229.0" layoutY="-36.0" prefHeight="50.0" spacing="20.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <RadioButton fx:id="rbProduction" mnemonicParsing="false" onAction="#onSelectProductionChart" text="%production">
+               <toggleGroup>
+                  <ToggleGroup fx:id="ChartType" />
+               </toggleGroup>
+            </RadioButton>
+            <RadioButton fx:id="rbLosses" mnemonicParsing="false" onAction="#onSelectLossChart" text="%availability" toggleGroup="$ChartType" />
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

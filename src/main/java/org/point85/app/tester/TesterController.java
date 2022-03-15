@@ -87,6 +87,7 @@ import org.slf4j.LoggerFactory;
 import com.google.gson.Gson;
 
 import javafx.application.Platform;
+import javafx.beans.Observable;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -150,6 +151,9 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 	// data sources
 	private final ObservableList<CollectorDataSource> collectorDataSources = FXCollections
 			.observableList(new ArrayList<>());
+
+	// selected data source
+	private CollectorDataSource selectedDataSource;
 
 	// selected equipment
 	private PlantEntity selectedEntity;
@@ -291,7 +295,13 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 		initializeMaterialTable();
 		initializeReasonTable();
 
-		onSelectSourceType();
+		cbHost.getSelectionModel().selectedIndexProperty().addListener((Observable o) -> {
+			int idx = cbHost.getSelectionModel().getSelectedIndex();
+
+			if (idx != -1) {
+				selectedDataSource = cbHost.getSelectionModel().getSelectedItem();
+			}
+		});
 	}
 
 	private void setImages() {
@@ -744,7 +754,12 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 	}
 
 	private void onWriteDatabaseEvent() throws Exception {
-		DatabaseEventSource source = (DatabaseEventSource) cbHost.getSelectionModel().getSelectedItem();
+		DatabaseEventSource source = (DatabaseEventSource) selectedDataSource;
+
+		if (source == null) {
+			return;
+		}
+
 		String jdbcConn = source.getHost();
 
 		DatabaseEventClient databaseClient = databaseClients.get(jdbcConn);
@@ -773,8 +788,11 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 	}
 
 	private void onTriggerCronEvent() throws Exception {
-		int idx = cbHost.getSelectionModel().getSelectedIndex();
-		CronEventSource source = (CronEventSource) cbHost.getItems().get(idx);
+		CronEventSource source = (CronEventSource) selectedDataSource;
+
+		if (source == null) {
+			return;
+		}
 
 		String expression = source.getCronExpression();
 		String jobName = source.getName();
@@ -792,7 +810,12 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 	}
 
 	private void onWriteFileEvent() throws Exception {
-		FileEventSource source = (FileEventSource) cbHost.getSelectionModel().getSelectedItem();
+		FileEventSource source = (FileEventSource) selectedDataSource;
+
+		if (source == null) {
+			return;
+		}
+
 		String filePath = source.getHost();
 
 		FileEventClient fileClient = fileClients.get(filePath);
@@ -831,8 +854,12 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 	}
 
 	private void onWriteModbusEvent() throws Exception {
-		int idx = cbHost.getSelectionModel().getSelectedIndex();
-		ModbusSource source = (ModbusSource) cbHost.getItems().get(idx);
+		ModbusSource source = (ModbusSource) selectedDataSource;
+
+		if (source == null) {
+			return;
+		}
+
 		String name = source.getName();
 
 		ModbusMaster master = modbusMasters.get(name);
@@ -862,8 +889,12 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 	}
 
 	private void onWriteProficyEvent() throws Exception {
-		int idx = cbHost.getSelectionModel().getSelectedIndex();
-		ProficySource source = (ProficySource) cbHost.getItems().get(idx);
+		ProficySource source = (ProficySource) selectedDataSource;
+
+		if (source == null) {
+			return;
+		}
+
 		String name = source.getName();
 
 		ProficyClient proficyClient = proficyClients.get(name);
@@ -886,8 +917,12 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 	}
 
 	private void onWriteOpcDaEvent() throws Exception {
-		int idx = cbHost.getSelectionModel().getSelectedIndex();
-		OpcDaSource source = (OpcDaSource) cbHost.getItems().get(idx);
+		OpcDaSource source = (OpcDaSource) selectedDataSource;
+
+		if (source == null) {
+			return;
+		}
+
 		String name = source.getName();
 
 		DaOpcClient client = daClients.get(name);
@@ -954,8 +989,12 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 	}
 
 	private void onWriteOpcUaEvent() throws Exception {
-		int idx = cbHost.getSelectionModel().getSelectedIndex();
-		OpcUaSource source = (OpcUaSource) cbHost.getItems().get(idx);
+		OpcUaSource source = (OpcUaSource) selectedDataSource;
+
+		if (source == null) {
+			return;
+		}
+
 		String name = source.getName();
 
 		UaOpcClient client = uaClients.get(name);
@@ -1367,15 +1406,8 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 	@FXML
 	private void onSendEquipmentEventMsg() {
 		try {
-			int selectedIndex = cbHost.getSelectionModel().getSelectedIndex();
-
-			if (selectedIndex == -1) {
-				throw new Exception(TesterLocalizer.instance().getErrorString("no.host"));
-			}
-			CollectorDataSource source = cbHost.getItems().get(selectedIndex);
-
-			if (source == null) {
-				throw new Exception(TesterLocalizer.instance().getErrorString("no.source"));
+			if (selectedDataSource == null) {
+				return;
 			}
 
 			String sourceId = cbSourceId.getSelectionModel().getSelectedItem();
@@ -1389,7 +1421,7 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 				msg.setReason(tfReason.getText());
 			}
 
-			String hostPort = source.getHost() + ":" + source.getPort();
+			String hostPort = selectedDataSource.getHost() + ":" + selectedDataSource.getPort();
 
 			String notification = null;
 
@@ -1402,12 +1434,12 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 					rmqClients.put(hostPort, rmqClient);
 					rmqClient.registerListener(this);
 
-					rmqClient.connect(source.getHost(), source.getPort(), source.getUserName(),
-							source.getUserPassword());
+					rmqClient.connect(selectedDataSource.getHost(), selectedDataSource.getPort(),
+							selectedDataSource.getUserName(), selectedDataSource.getUserPassword());
 				}
 				rmqClient.sendEquipmentEventMessage(msg);
-				notification = TesterLocalizer.instance().getLangString("sent.message", source.getHost(),
-						source.getPort());
+				notification = TesterLocalizer.instance().getLangString("sent.message", selectedDataSource.getHost(),
+						selectedDataSource.getPort());
 			} else if (rbJMS.isSelected()) {
 				JmsClient jmsClient = jmsClients.get(hostPort);
 
@@ -1416,12 +1448,12 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 					jmsClients.put(hostPort, jmsClient);
 					jmsClient.registerListener(this);
 
-					jmsClient.connect(source.getHost(), source.getPort(), source.getUserName(),
-							source.getUserPassword());
+					jmsClient.connect(selectedDataSource.getHost(), selectedDataSource.getPort(),
+							selectedDataSource.getUserName(), selectedDataSource.getUserPassword());
 				}
 				jmsClient.sendEventMessage(msg);
-				notification = TesterLocalizer.instance().getLangString("sent.message", source.getHost(),
-						source.getPort());
+				notification = TesterLocalizer.instance().getLangString("sent.message", selectedDataSource.getHost(),
+						selectedDataSource.getPort());
 			} else if (rbKafka.isSelected()) {
 				KafkaOeeClient kafkaClient = kafkaClients.get(hostPort);
 
@@ -1430,29 +1462,29 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 					kafkaClients.put(hostPort, kafkaClient);
 
 					// to send equipment event messages
-					kafkaClient.createProducer((KafkaSource) source, KafkaOeeClient.EVENT_TOPIC);
+					kafkaClient.createProducer((KafkaSource) selectedDataSource, KafkaOeeClient.EVENT_TOPIC);
 
 					// to consume notifications
 					// subscribe to event messages
 					kafkaClient.registerListener(this);
-					kafkaClient.createConsumer((KafkaSource) source, KafkaOeeClient.NOTIFICATION_TOPIC);
+					kafkaClient.createConsumer((KafkaSource) selectedDataSource, KafkaOeeClient.NOTIFICATION_TOPIC);
 					kafkaClient.startPolling();
 				}
 				kafkaClient.sendEventMessage(msg);
-				notification = TesterLocalizer.instance().getLangString("sent.message", source.getHost(),
-						source.getPort());
+				notification = TesterLocalizer.instance().getLangString("sent.message", selectedDataSource.getHost(),
+						selectedDataSource.getPort());
 			} else if (rbEmail.isSelected()) {
 				EmailClient emailClient = emailClients.get(hostPort);
-				EmailSource emailSource = (EmailSource) source;
+				EmailSource emailSource = (EmailSource) selectedDataSource;
 
 				if (emailClient == null) {
-					emailClient = new EmailClient((EmailSource) source);
+					emailClient = new EmailClient(emailSource);
 					emailClients.put(hostPort, emailClient);
 				}
 				emailClient.sendEvent(emailSource.getUserName(),
 						TesterLocalizer.instance().getLangString("email.test.message.subject"), msg);
-				notification = TesterLocalizer.instance().getLangString("sent.message", source.getHost(),
-						source.getPort());
+				notification = TesterLocalizer.instance().getLangString("sent.message", selectedDataSource.getHost(),
+						selectedDataSource.getPort());
 			} else if (rbMQTT.isSelected()) {
 				MqttOeeClient mqttClient = mqttClients.get(hostPort);
 
@@ -1461,16 +1493,16 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 					mqttClients.put(hostPort, mqttClient);
 					mqttClient.registerListener(this);
 
-					MqttSource server = (MqttSource) source;
+					MqttSource server = (MqttSource) selectedDataSource;
 					mqttClient.setAuthenticationConfiguration(server.getUserName(), server.getUserPassword());
 					mqttClient.setSSLConfiguration(server.getKeystore(), server.getKeystorePassword(),
 							server.getKeyPassword());
 
-					mqttClient.connect(source.getHost(), source.getPort());
+					mqttClient.connect(selectedDataSource.getHost(), selectedDataSource.getPort());
 				}
 				mqttClient.sendEventMessage(msg);
-				notification = TesterLocalizer.instance().getLangString("sent.message", source.getHost(),
-						source.getPort());
+				notification = TesterLocalizer.instance().getLangString("sent.message", selectedDataSource.getHost(),
+						selectedDataSource.getPort());
 			} else {
 				return;
 			}

@@ -7,10 +7,10 @@ import org.point85.domain.i18n.Localizer;
  */
 public class TesterLocalizer extends Localizer {
 	// name of resource bundle with translatable strings for text
-	private static final String LANG_BUNDLE_NAME = "org.point85.i18n.TesterLang";
+	private static final String LANG_BUNDLE_NAME = "i18n.TesterLang";
 
 	// name of resource bundle with translatable strings for exception messages
-	private static final String ERROR_BUNDLE_NAME = "org.point85.i18n.TesterError";
+	private static final String ERROR_BUNDLE_NAME = "i18n.TesterError";
 
 	// Singleton
 	private static TesterLocalizer localizer;

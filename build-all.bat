@@ -1,6 +1,6 @@
 echo on
-rem set JAVA_HOME = C:\jdk\jdk1.8.0_202-64
 rem Windows shell script to build all of the Point85 projects
+rem JAVA_HOME and JAVAFX_HOME environment variables must be set
 call mvn --version
 rem (1) Domain
 cd ../OEE-Domain

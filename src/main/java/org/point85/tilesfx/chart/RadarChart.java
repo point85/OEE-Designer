@@ -645,7 +645,7 @@ public class RadarChart extends Region {
 
     // ******************** Style related *************************************
     @Override public String getUserAgentStylesheet() {
-        return RadarChart.class.getResource("radarchart.css").toExternalForm();
+        return RadarChart.class.getResource("/tilesfx/radarchart.css").toExternalForm();
     }
 
 

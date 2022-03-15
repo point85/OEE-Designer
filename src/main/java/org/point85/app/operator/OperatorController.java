@@ -695,8 +695,11 @@ public class OperatorController {
 			}
 
 			event.setReason(selectedReason);
-			event.setMaterial(lastSetup.getMaterial());
-			event.setJob(lastSetup.getJob());
+
+			if (lastSetup != null) {
+				event.setMaterial(lastSetup.getMaterial());
+				event.setJob(lastSetup.getJob());
+			}
 
 			msg = OperatorLocalizer.instance().getLangString("availability.recorded", equipment.getName(),
 					selectedReason.getName());

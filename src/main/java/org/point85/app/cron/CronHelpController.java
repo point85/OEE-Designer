@@ -1,9 +1,8 @@
 package org.point85.app.cron;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
 
 import org.point85.app.AppUtils;
 import org.point85.app.designer.DesignerDialogController;
@@ -12,18 +11,23 @@ import javafx.fxml.FXML;
 import javafx.scene.web.WebView;
 
 public class CronHelpController extends DesignerDialogController {
-	private static final String FILE_NAME = "config/help/CronExpression.html";
 
 	@FXML
 	private WebView helpView;
 
 	public void readHelpFile() {
-		try {
-			// read help text
-			File help = new File(FILE_NAME);
-			Path path = Paths.get(help.getCanonicalPath());
-			byte[] bytes = Files.readAllBytes(path);
-			String helpText = new String(bytes);
+		// read help text
+		URL url = getClass().getResource("/help/CronExpression.html");
+
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()))) {
+
+			String helpText = "";
+			String line;
+			while ((line = reader.readLine()) != null) {
+				helpText += line;
+			}
+
+			reader.close();
 
 			helpView.getEngine().loadContent(helpText);
 		} catch (Exception e) {

@@ -786,7 +786,7 @@ public class DashboardController extends DialogController implements CategoryCli
 		bcLosses.getData().add(yieldSeries);
 
 		// style the chart
-		bcLosses.getStylesheets().addAll(getClass().getResource("/org/point85/css/dashboard.css").toExternalForm());
+		bcLosses.getStylesheets().addAll(getClass().getResource("/css/dashboard.css").toExternalForm());
 
 		// add listener for mouse click on bar and tooltip
 		for (Series<Number, String> series : bcLosses.getData()) {
@@ -994,7 +994,7 @@ public class DashboardController extends DialogController implements CategoryCli
 				super.updateItem(reason, empty);
 
 				if (reason != null && reason.getLossCategory() != null) {
-					Color color = reason.getLossCategory().getColor();
+					Color color = Color.web(reason.getLossCategory().getColor());
 
 					// remove 0x
 					setStyle("-fx-background-color: #" + color.toString().substring(2));
@@ -1082,7 +1082,7 @@ public class DashboardController extends DialogController implements CategoryCli
 			Reason reason = event.getReason();
 
 			if (reason != null) {
-				Color color = reason.getLossCategory().getColor();
+				Color color = Color.web(reason.getLossCategory().getColor());
 				Text text = new Text(reason.getLossCategory().toString());
 				text.setFill(color);
 				lossProperty = new SimpleObjectProperty<>(text);
@@ -1279,7 +1279,7 @@ public class DashboardController extends DialogController implements CategoryCli
 				loss = TimeLoss.NO_LOSS;
 			}
 			tiAvailability.setDescription(loss.toString());
-			tiAvailability.setTextColor(loss.getColor());
+			tiAvailability.setTextColor(Color.web(loss.getColor()));
 			break;
 		}
 
@@ -1517,7 +1517,7 @@ public class DashboardController extends DialogController implements CategoryCli
 					TimeLoss loss = reason.getLossCategory();
 					if (loss != null) {
 						tiAvailability.setDescription(loss.toString());
-						tiAvailability.setDescriptionColor(loss.getColor());
+						tiAvailability.setDescriptionColor(Color.web(loss.getColor()));
 					}
 				}
 			}

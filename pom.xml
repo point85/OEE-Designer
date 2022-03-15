@@ -4,25 +4,69 @@
 
   <groupId>org.point85</groupId>
   <artifactId>oee-apps</artifactId>
-  <version>3.5.1</version>
+  <version>3.6.0</version>
   <packaging>jar</packaging>
   
   <name>Point85 OEE JavaFX Applications</name>
   <url>https://github.com/point85</url>
 
   <properties>
-  	<domain.version>3.5.1</domain.version>
-    <maven.compiler.source>1.8</maven.compiler.source>
-	<maven.compiler.target>1.8</maven.compiler.target>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  	<domain.version>3.6.0</domain.version>    
+    <maven.compiler.release>11</maven.compiler.release>
+    <javafx.version>17.0.2</javafx.version>
+    <javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>
+    <jetty.version>9.4.45.v20220203</jetty.version>
+    <slf4j.version>1.7.32</slf4j.version>
   </properties>
 
+
   <dependencies>
-<!-- OEE Domain jar -->
+<!-- OEE Domain jar  -->
 <dependency>
     <groupId>org.point85</groupId>
     <artifactId>oee-domain</artifactId>
     <version>${domain.version}</version>
+</dependency>
+
+<!--  Jetty HTTP server -->
+<dependency>
+    <groupId>org.eclipse.jetty</groupId>
+    <artifactId>jetty-server</artifactId>
+    <version>${jetty.version}</version>
+</dependency>
+    
+<!--  Jetty servlet -->
+<dependency>
+    <groupId>org.eclipse.jetty</groupId>
+    <artifactId>jetty-servlet</artifactId>
+    <version>${jetty.version}</version>
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+<dependency>
+    <groupId>org.slf4j</groupId>
+    <artifactId>slf4j-api</artifactId>
+    <version>${slf4j.version}</version>
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-log4j12 -->
+<dependency>
+    <groupId>org.slf4j</groupId>
+    <artifactId>slf4j-log4j12</artifactId>
+    <version>${slf4j.version}</version>
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/org.slf4j/jul-to-slf4j -->
+<dependency>
+    <groupId>org.slf4j</groupId>
+    <artifactId>jul-to-slf4j</artifactId>
+    <version>${slf4j.version}</version>
+</dependency>
+
+<dependency>
+    <groupId>org.hibernate</groupId>
+    <artifactId>hibernate-hikaricp</artifactId>
+    <version>5.3.20.Final</version>
 </dependency>
 
 <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
@@ -32,57 +76,49 @@
     <version>2.8.6</version>
 </dependency>
 
+
 <!--  OPC DA -->
 <!--  https://github.com/IOT-DSA/dslink-java-opc -->
 <!--  https://mvnrepository.com/artifact/org.openscada.jinterop/org.openscada.jinterop.deps -->
 <dependency>
     <groupId>org.openscada.jinterop</groupId>
     <artifactId>org.openscada.jinterop.deps</artifactId>
-    <version>1.5.0</version>
-    <exclusions>
-        <exclusion>  
-            <!-- old slf4j-api -->
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </exclusion>
-     </exclusions>     
+    <version>1.5.0</version>     
 </dependency>
+
 
 <!-- https://mvnrepository.com/artifact/org.openscada.jinterop/org.openscada.jinterop.core -->
 <dependency>
     <groupId>org.openscada.jinterop</groupId>
     <artifactId>org.openscada.jinterop.core</artifactId>
-    <version>2.1.8</version>
-    <exclusions>
-        <exclusion>  
-            <!-- old slf4j-api -->
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </exclusion>
-     </exclusions>     
+    <version>2.1.8</version>         
 </dependency>
 
-<!-- https://mvnrepository.com/artifact/org.openscada.utgard/org.openscada.opc.dcom -->
+
+<!-- https://mvnrepository.com/artifact/org.openscada.utgard/org.openscada.opc.dcom  -->
 <dependency>
     <groupId>org.openscada.utgard</groupId>
     <artifactId>org.openscada.opc.dcom</artifactId>
-    <version>1.5.0</version>
+    <version>1.5.0</version>   
 </dependency>
+
 
 <!-- https://mvnrepository.com/artifact/org.openscada.utgard/org.openscada.opc.lib -->
 <dependency>
     <groupId>org.openscada.utgard</groupId>
     <artifactId>org.openscada.opc.lib</artifactId>
-    <version>1.5.0</version>
+    <version>1.5.0</version>          
 </dependency>
 
+
 <!--  OPC UA -->
-<!-- https://mvnrepository.com/artifact/org.eclipse.milo/sdk-client -->
+<!-- https://mvnrepository.com/artifact/org.eclipse.milo/sdk-client  -->
 <dependency>
     <groupId>org.eclipse.milo</groupId>
     <artifactId>sdk-client</artifactId>
-    <version>0.6.3</version>
+    <version>0.6.4</version>
 </dependency>
+
 
 <!-- LOGGING -->
 <!-- https://mvnrepository.com/artifact/log4j/log4j -->
@@ -90,20 +126,6 @@
     <groupId>log4j</groupId>
     <artifactId>log4j</artifactId>
     <version>1.2.17</version>
-</dependency>
-
-<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-log4j12 -->
-<dependency>
-    <groupId>org.slf4j</groupId>
-    <artifactId>slf4j-log4j12</artifactId>
-    <version>1.7.25</version>
-</dependency>
- 
-<!-- https://mvnrepository.com/artifact/org.slf4j/jul-to-slf4j -->
-<dependency>
-    <groupId>org.slf4j</groupId>
-    <artifactId>jul-to-slf4j</artifactId>
-    <version>1.7.25</version>
 </dependency>
 
 <!-- SQL Server DATABASE -->
@@ -134,7 +156,7 @@
 <dependency>
     <groupId>org.postgresql</groupId>
     <artifactId>postgresql</artifactId>
-    <version>42.2.8</version>
+    <version>42.3.3</version>
 </dependency>
 
 <!-- HSQLDB DATABASE -->
@@ -143,22 +165,114 @@
     <groupId>org.hsqldb</groupId>
     <artifactId>hsqldb</artifactId>
     <version>2.5.1</version>
-    <scope>runtime</scope>
+</dependency>       
+
+<!-- https://mvnrepository.com/artifact/org.openjfx/javafx-controls  -->
+<dependency>
+	<groupId>org.openjfx</groupId>
+    <artifactId>javafx-controls</artifactId>
+    <version>${javafx.version}</version>
+    <scope>provided</scope>
 </dependency>
+
+<!-- https://mvnrepository.com/artifact/org.openjfx/javafx-fxml  -->   
+<dependency>
+    <groupId>org.openjfx</groupId>
+    <artifactId>javafx-fxml</artifactId>
+    <version>${javafx.version}</version>
+    <scope>provided</scope>
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/org.openjfx/javafx-web -->
+<dependency>
+    <groupId>org.openjfx</groupId>
+    <artifactId>javafx-web</artifactId>
+    <version>${javafx.version}</version>
+    <scope>provided</scope>
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk15on -->
+<dependency>
+    <groupId>org.bouncycastle</groupId>
+    <artifactId>bcprov-jdk15on</artifactId>
+    <version>1.69</version>
+</dependency> 
+
+
+<!-- https://mvnrepository.com/artifact/org.quartz-scheduler/quartz -->
+<dependency>
+  <groupId>org.quartz-scheduler</groupId>
+  <artifactId>quartz</artifactId>
+  <version>2.3.2</version>
+    <exclusions>
+      <exclusion>  
+        <groupId>c3p0</groupId>
+        <artifactId>c3p0</artifactId>
+      </exclusion>  
+      <exclusion>  
+        <groupId>com.zaxxer</groupId>
+        <artifactId>HikariCP-java7</artifactId> 
+      </exclusion>          
+    </exclusions>   
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/org.openjdk.nashorn/nashorn-core -->
+<dependency>
+    <groupId>org.openjdk.nashorn</groupId>
+    <artifactId>nashorn-core</artifactId>
+    <version>15.3</version>
+</dependency>
+
 </dependencies>
 
   <build>
-    <plugins>
+    <plugins> 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.0</version>
+        <version>3.8.1</version>
         <configuration>
           <executable>${JAVA_HOME}/bin/javac</executable>
-          <source>1.8</source>
-          <target>1.8</target>
+          <source>11</source>
+          <target>11</target>
         </configuration>
       </plugin>
+      
+	  <plugin>
+	    <groupId>org.apache.maven.plugins</groupId>
+	    <artifactId>maven-jar-plugin</artifactId>
+	    <version>3.2.1</version>
+	    <configuration>
+	      <archive>
+	        <manifest>
+		    <mainClass>org.point85.app.OeeApplication</mainClass>
+		    <addClasspath>true</addClasspath>
+		    <classpathPrefix>lib/</classpathPrefix>
+	        </manifest>
+	      </archive>
+	    </configuration>
+      </plugin>
+       
+      <plugin>
+	    <groupId>org.apache.maven.plugins</groupId>
+	    <artifactId>maven-dependency-plugin</artifactId>
+		<version>3.2.0</version>
+		<executions>
+	      <execution>
+		    <id>copy-dependencies</id>
+		    <phase>package</phase>
+		    <goals>
+		      <goal>copy-dependencies</goal>
+		    </goals>
+		    <configuration>
+		      <outputDirectory>
+                ${project.build.directory}/lib/
+              </outputDirectory>
+		    </configuration>
+	      </execution>
+	    </executions>
+      </plugin>
+      
     </plugins>
   </build>
 </project>

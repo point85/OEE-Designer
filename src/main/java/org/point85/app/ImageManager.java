@@ -7,7 +7,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public final class ImageManager {
-	private static final String IMAGE_PATH = "/org/point85/images/";
+	private static final String IMAGE_PATH = "/images/";
 
 	// standard image size LxW
 	private static final int DIM = 16;

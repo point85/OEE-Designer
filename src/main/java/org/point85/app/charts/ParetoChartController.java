@@ -106,7 +106,7 @@ public class ParetoChartController {
 		chBarChart.getData().add(barChartSeries);
 
 		// add the points
-		double total = totalCount.doubleValue();
+		float total = totalCount.floatValue();
 
 		if (total > 0.0d) {
 			int count = 0;
@@ -116,7 +116,7 @@ public class ParetoChartController {
 				}
 				count++;
 
-				Float percentage = new Float(paretoItem.getValue().floatValue() / total * 100.0f);
+				Float percentage = paretoItem.getValue().floatValue() / total * 100.0f;
 				XYChart.Data<String, Number> point = new XYChart.Data<>(paretoItem.getCategory(), percentage);
 				barChartSeries.getData().add(point);
 			}
@@ -162,11 +162,11 @@ public class ParetoChartController {
 		chLineChart.getData().add(lineChartSeries);
 
 		// plot the points
-		double total = totalCount.doubleValue();
+		float total = totalCount.floatValue();
 		Float cumulative = 0.0f;
 
 		for (ParetoItem paretoItem : this.paretoItems) {
-			cumulative += new Float(paretoItem.getValue().floatValue() / total * 100.0f);
+			cumulative += paretoItem.getValue().floatValue() / total * 100.0f;
 			XYChart.Data<String, Number> point = new XYChart.Data<>(paretoItem.getCategory(), cumulative);
 			lineChartSeries.getData().add(point);
 		}
@@ -176,7 +176,7 @@ public class ParetoChartController {
 
 	private void hideChart(XYChart<String, Number> chart) {
 		// set background transparent and colors
-		chart.getStylesheets().addAll(getClass().getResource("/org/point85/css/pareto_chart.css").toExternalForm());
+		chart.getStylesheets().addAll(getClass().getResource("/css/pareto_chart.css").toExternalForm());
 
 		chart.setAlternativeRowFillVisible(false);
 		chart.setAlternativeColumnFillVisible(false);

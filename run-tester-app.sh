@@ -1,2 +1,2 @@
 # Launch the Tester application (args: JDBC connection string, user name, password and optional collector name)
-java -jar oee-apps-3.5.1.jar TESTER jdbc:hsqldb:hsql://localhost/OEE SA  
+java -p $JAVAFX_HOME/lib --add-modules javafx.controls,javafx.fxml,javafx.web -jar oee-apps-3.6.0.jar TESTER jdbc:hsqldb:hsql://localhost/OEE SA  

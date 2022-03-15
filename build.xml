@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<project name="oee-apps" default="build-distro" basedir="." > 
+			
+	<!-- distribution archive -->
+	<property name="app_version" value="3.6.0"/>
+	<property name="domain.jar" value="oee-domain-3.6.0.jar"/>
+	<property name="collector.jar" value="oee-collector-3.6.0.jar"/>
+		
+	<!-- folders -->
+	<property name="fxbuild.dir" value="fxbuild"/>
+	<property name="collector.dir" value="..\OEE-Collector"/>
+	<property name="archive.dir" value="dist"/>		
+	<property name="domain.dir" value="..\OEE-Domain"/>	
+		
+		<!-- clean up -->
+		<target name="clean">
+			<delete dir="${fxbuild.dir}" />
+			<delete dir="${archive.dir}" />
+			
+			<mkdir dir="${fxbuild.dir}" />
+			<mkdir dir="${archive.dir}" />
+		</target>			
+		
+		
+	<!-- Copy files for zip -->
+	<target name="copy-files">	
+		<!-- domain dependent jars -->
+		<copy todir="${fxbuild.dir}/lib">
+			<fileset dir="${domain.dir}/target/lib">
+				<include name="*.jar"/>
+				<exclude name="hamcrest-core-1.3.jar"/>
+				<exclude name="junit-4.13.2.jar"/>
+			</fileset>
+		</copy>
+		
+		<!-- copy Designer jar -->
+		<copy todir="${fxbuild.dir}">
+			<fileset dir="./target">
+				<include name="*.jar" />
+			</fileset>
+		</copy>
+		
+		<!-- copy Designer dependent jars  -->
+		<copy todir="${fxbuild.dir}/lib">
+			<fileset dir="./target/lib">
+				<include name="*.jar"/>
+				<exclude name="javafx*.jar"/>
+				<exclude name="**/junit*.jar"/>
+			</fileset>
+		</copy>
+		
+		
+		<!-- copy database files -->
+		<copy todir="${fxbuild.dir}/database">
+			<fileset dir="./database">
+				<include name="**/*" />
+			</fileset>
+		</copy>
+		
+		<!-- copy config files -->
+		<copy todir="${fxbuild.dir}/config">
+			<fileset dir="./config">
+				<include name="**/*" />
+			</fileset>
+		</copy>		
+		
+		<copy file="./run-designer-app.bat" todir="${fxbuild.dir}"/>
+		<copy file="./run-monitor-app.bat" todir="${fxbuild.dir}"/>
+		<copy file="./run-collector-app.bat" todir="${fxbuild.dir}"/>
+		<copy file="./run-tester-app.bat" todir="${fxbuild.dir}"/>
+		<copy file="./run-operator-app.bat" todir="${fxbuild.dir}"/>
+		<copy file="./run-designer-app.sh" todir="${fxbuild.dir}"/>
+		<copy file="./run-monitor-app.sh" todir="${fxbuild.dir}"/>
+		<copy file="./run-collector-app.sh" todir="${fxbuild.dir}"/>
+		<copy file="./run-tester-app.sh" todir="${fxbuild.dir}"/>
+		<copy file="./run-operator-app.sh" todir="${fxbuild.dir}"/>
+		
+		<!-- create a logging folder -->
+		<mkdir dir="${fxbuild.dir}/logs" />
+	</target>
+		
+	<!-- Zip files -->
+	<target name="zip">
+		<delete dir="${archive.dir}" />	
+		<mkdir dir="${archive.dir}" />	
+		
+		<zip destfile="${archive.dir}/oee-${app_version}.zip" >
+			<!-- Designer files -->
+			<fileset dir="${fxbuild.dir}" />
+			
+			<!-- Collector files -->
+			<fileset dir="${collector.dir}\target">
+				<filename name="${collector.jar}"/>
+			</fileset>
+			
+			<fileset dir="${collector.dir}">
+				<include name="\wrapper\**\*" />
+			</fileset>
+		</zip>
+	</target>	
+		
+	<!-- build everything -->
+	<target name="build-distro" depends="clean, copy-files, zip">
+	</target>
+
+</project>

@@ -1,2 +1,2 @@
 # Launch the Collector application (args: JDBC connection string, user name, password and optional collector name)
-java -jar oee-apps-3.5.1.jar COLLECTOR jdbc:hsqldb:hsql://localhost/OEE SA  
+java -p $JAVAFX_HOME/lib --add-modules javafx.controls,javafx.fxml,javafx.web -jar oee-apps-3.6.0.jar COLLECTOR jdbc:hsqldb:hsql://localhost/OEE SA  

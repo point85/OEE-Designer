@@ -1,2 +1,2 @@
-rem Launch the Operator application (args: JDBC connection string, user name, password and optional collector name)
-start javaw.exe -jar oee-apps-3.5.1.jar OPERATOR jdbc:hsqldb:hsql://localhost/OEE SA  
+rem Launch the Operator application (args: JDBC connection string, user name, password and optional collector name) 
+start %JAVA_HOME%/bin/javaw.exe -p %JAVAFX_HOME%\lib --add-modules javafx.controls,javafx.fxml,javafx.web -jar oee-apps-3.6.0.jar OPERATOR jdbc:hsqldb:hsql://localhost/OEE SA 

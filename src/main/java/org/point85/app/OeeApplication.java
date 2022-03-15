@@ -201,6 +201,7 @@ public class OeeApplication extends Application {
 
 		if (logger.isInfoEnabled()) {
 			logger.info("JVM: " + DomainUtils.getJVMInfo());
+			logger.info("JavaFX version: " + System.getProperty("javafx.version"));
 		}
 
 		if (args.length < IDX_USER) {

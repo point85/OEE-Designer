@@ -1,0 +1,20 @@
+// net time after loss (palegreen, lightgreen, oldlace)
+.series0.chart-bar { -fx-bar-fill: gainsboro;}
+// not scheduled
+.series1.chart-bar { -fx-bar-fill: violet; }
+// unscheduled
+.series2.chart-bar { -fx-bar-fill: darkblue; }
+// planned downtime
+.series3.chart-bar { -fx-bar-fill: deepskyblue; }
+// waiting
+.series4.chart-bar { -fx-bar-fill: aquamarine; }
+// unplanned downtime
+.series5.chart-bar { -fx-bar-fill: greenyellow ; }
+// minor stoppages
+.series6.chart-bar { -fx-bar-fill: yellow; }
+// reduced speed
+.series7.chart-bar { -fx-bar-fill: gold; }
+// rejects and rework
+.series8.chart-bar { -fx-bar-fill: darkorange; }
+// startup and yield
+.series9.chart-bar { -fx-bar-fill: red; }

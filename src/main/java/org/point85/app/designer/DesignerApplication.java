@@ -4,6 +4,7 @@ import org.point85.app.AppUtils;
 import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
+import org.point85.app.charts.DataSubscriber;
 import org.point85.app.cron.CronEditorController;
 import org.point85.app.cron.CronHelpController;
 import org.point85.app.cron.CronTrendController;
@@ -112,7 +113,7 @@ public class DesignerApplication {
 
 	// Modbus editor
 	private ModbusMasterController modbusController;
-	
+
 	// Proficy Historian browser
 	private ProficyBrowserController proficyBrowserController;
 
@@ -503,7 +504,7 @@ public class DesignerApplication {
 
 		return emailServerController.getSource();
 	}
-	
+
 	ProficySource showProficyEditor() throws Exception {
 		FXMLLoader loader = FXMLLoaderFactory.proficyLoader();
 		AnchorPane page = (AnchorPane) loader.getRoot();
@@ -736,6 +737,9 @@ public class DesignerApplication {
 
 		// set the script resolver
 		opcDaTrendController.setScriptResolver(eventResolver);
+		
+		// set close box action
+		setCloseBoxAction(scene, opcDaTrendController);
 
 		// show the window
 		opcDaTrendController.getDialogStage().show();
@@ -772,6 +776,9 @@ public class DesignerApplication {
 
 		// set the script resolver
 		opcUaTrendController.setScriptResolver(eventResolver);
+		
+		// set close box action
+		setCloseBoxAction(scene, opcUaTrendController);
 
 		// show the window
 		opcUaTrendController.getDialogStage().show();
@@ -809,6 +816,9 @@ public class DesignerApplication {
 
 		// start HTTP server
 		httpTrendController.onStartServer();
+		
+		// set close box action
+		setCloseBoxAction(scene, httpTrendController);
 
 		// show the trend
 		httpTrendController.getDialogStage().show();
@@ -846,6 +856,9 @@ public class DesignerApplication {
 
 		// subscribe to broker
 		messagingTrendController.subscribeToDataSource();
+		
+		// set close box action
+		setCloseBoxAction(scene, messagingTrendController);
 
 		// show the window
 		messagingTrendController.getDialogStage().show();
@@ -883,6 +896,9 @@ public class DesignerApplication {
 
 		// subscribe to broker
 		jmsTrendController.subscribeToDataSource();
+		
+		// set close box action
+		setCloseBoxAction(scene, jmsTrendController);
 
 		// show the window
 		jmsTrendController.getDialogStage().show();
@@ -920,6 +936,9 @@ public class DesignerApplication {
 
 		// subscribe to broker
 		kafkaTrendController.subscribeToDataSource();
+		
+		// set close box action
+		setCloseBoxAction(scene, kafkaTrendController);
 
 		// show the window
 		kafkaTrendController.getDialogStage().show();
@@ -954,11 +973,14 @@ public class DesignerApplication {
 
 		// subscribe to server
 		emailTrendController.subscribeToDataSource();
+		
+		// set close box action
+		setCloseBoxAction(scene, emailTrendController);
 
 		// show the window
 		emailTrendController.getDialogStage().show();
 	}
-	
+
 	void showProficyTrendDialog(EventResolver eventResolver) throws Exception {
 		// Load the fxml file and create a new stage for the pop-up dialog.
 		FXMLLoader loader = FXMLLoaderFactory.proficyTrendLoader();
@@ -991,6 +1013,9 @@ public class DesignerApplication {
 
 		// start the job
 		proficyTrendController.subscribeToDataSource();
+		
+		// set close box action
+		setCloseBoxAction(scene, proficyTrendController);
 
 		// show the window
 		proficyTrendController.getDialogStage().show();
@@ -1028,6 +1053,9 @@ public class DesignerApplication {
 
 		// subscribe to broker
 		mqttTrendController.subscribeToDataSource();
+		
+		// set close box action
+		setCloseBoxAction(scene, mqttTrendController);
 
 		// show the window
 		mqttTrendController.getDialogStage().show();
@@ -1066,8 +1094,21 @@ public class DesignerApplication {
 		// connect to the database server
 		databaseTrendController.subscribeToDataSource();
 
+		// set close box action
+		setCloseBoxAction(scene, databaseTrendController);
+
 		// show the window
 		databaseTrendController.getDialogStage().show();
+	}
+
+	private void setCloseBoxAction(Scene scene, DataSubscriber subscriber) {
+		scene.getWindow().setOnCloseRequest(evt -> {
+			try {
+				subscriber.unsubscribeFromDataSource();
+			} catch (Exception e) {
+				AppUtils.showErrorDialog(DesignerLocalizer.instance().getErrorString("unsubscribe.failed", e.getMessage()));
+			}
+		});
 	}
 
 	void showFileTrendDialog(EventResolver eventResolver) throws Exception {
@@ -1102,6 +1143,9 @@ public class DesignerApplication {
 
 		// connect to the file server
 		fileTrendController.subscribeToDataSource();
+		
+		// set close box action
+		setCloseBoxAction(scene, fileTrendController);
 
 		// show the window
 		fileTrendController.getDialogStage().show();
@@ -1139,6 +1183,9 @@ public class DesignerApplication {
 
 		// start the job
 		cronTrendController.subscribeToDataSource();
+		
+		// set close box action
+		setCloseBoxAction(scene, cronTrendController);
 
 		// show the window
 		cronTrendController.getDialogStage().show();
@@ -1175,6 +1222,9 @@ public class DesignerApplication {
 
 		// connect to the database server
 		modbusTrendController.createModbusMaster();
+		
+		// set close box action
+		setCloseBoxAction(scene, modbusTrendController);
 
 		// show the window
 		modbusTrendController.getDialogStage().show();

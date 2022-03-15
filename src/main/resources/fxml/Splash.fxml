@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.SplashController">
+   <children>
+      <HBox spacing="50.0">
+         <children>
+            <ImageView fx:id="ivPoint85" fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" smooth="false" />
+            <Label text="%splash.oee">
+               <font>
+                  <Font name="Arial Black" size="24.0" />
+               </font>
+            </Label>
+         </children>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </HBox>
+      <ImageView fx:id="ivSplash" fitHeight="340.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true" />
+      <Label fx:id="lbSplash" text="%splash.status">
+         <font>
+            <Font size="16.0" />
+         </font>
+         <VBox.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </VBox.margin></Label>
+      <HBox alignment="TOP_RIGHT">
+         <children>
+            <Label fx:id="lbVersion" text="v1.2.3">
+               <HBox.margin>
+                  <Insets right="10.0" />
+               </HBox.margin>
+            </Label>
+         </children>
+      </HBox>
+   </children>
+</VBox>

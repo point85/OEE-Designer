@@ -1,7 +1,6 @@
 package org.point85.app.file;
 
 import java.io.File;
-import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -293,7 +292,7 @@ public class FileTrendController extends DesignerDialogController implements Fil
 							// failed
 							fileClient.moveFile(file, FileEventClient.PROCESSING_FOLDER, FileEventClient.FAIL_FOLDER,
 									e);
-						} catch (IOException ex) {
+						} catch (Exception ex) {
 							Platform.runLater(() -> AppUtils.showErrorDialog(ex));
 						}
 

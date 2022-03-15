@@ -139,6 +139,10 @@ public class EmailServerController extends DesignerDialogController {
 	private void onTest() {
 		EmailClient emailClient = null;
 
+		if (dataSource == null) {
+			return;
+		}
+
 		try {
 			emailClient = new EmailClient(dataSource);
 
@@ -181,7 +185,7 @@ public class EmailServerController extends DesignerDialogController {
 			this.tfReceivePort.setText(String.valueOf(dataSource.getReceivePort()));
 			this.rbIMAP.setSelected(dataSource.getProtocol().equals(EmailProtocol.IMAP));
 			this.rbPOP3.setSelected(dataSource.getProtocol().equals(EmailProtocol.POP3));
-			this.ckReceiveSSL.setSelected(dataSource.getReceiveSecurityPolicy().equals(EmailSecurityPolicy.SSL)); 
+			this.ckReceiveSSL.setSelected(dataSource.getReceiveSecurityPolicy().equals(EmailSecurityPolicy.SSL));
 
 			// send
 			this.tfSendHost.setText(dataSource.getSendHost());

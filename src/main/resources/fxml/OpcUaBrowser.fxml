@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="900.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.opc.ua.OpcUaBrowserController">
+   <children>
+      <HBox alignment="CENTER" prefHeight="50.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+         <children>
+            <Button fx:id="btOK" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onOK" text="%done" textAlignment="CENTER">
+               <HBox.margin>
+                  <Insets right="25.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
+      <SplitPane dividerPositions="0.5" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+        <items>
+          <AnchorPane minHeight="0.0" minWidth="0.0">
+               <children>
+                  <TreeView fx:id="tvBrowser" layoutY="120.0" AnchorPane.bottomAnchor="250.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="120.0" />
+                  <GridPane hgap="10.0" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="100.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Label text="%ua.identifier" GridPane.halignment="LEFT">
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding></Label>
+                        <Label text="%description" GridPane.halignment="LEFT" GridPane.rowIndex="1">
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding></Label>
+                        <Label text="%data.type" GridPane.halignment="LEFT" GridPane.rowIndex="2">
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding></Label>
+                        <Label text="%value" GridPane.halignment="LEFT" GridPane.rowIndex="4">
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding></Label>
+                        <Label fx:id="lbNodeId" GridPane.columnIndex="1" GridPane.halignment="LEFT" />
+                        <Label fx:id="lbNodeDescription" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" />
+                        <Label fx:id="lbNodeType" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" />
+                        <TextArea fx:id="taNodeValue" editable="false" prefHeight="200.0" prefWidth="200.0" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="4" GridPane.rowSpan="3" />
+                        <Label text="%timestamp" GridPane.halignment="LEFT" GridPane.rowIndex="3">
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding>
+                        </Label>
+                        <Label fx:id="lbNodeTimestamp" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="3" />
+                     </children>
+                  </GridPane>
+                  <GridPane hgap="10.0" layoutY="41.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="33.0" prefWidth="125.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="12.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="32.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="32.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="32.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Label text="%state.start" GridPane.halignment="LEFT">
+                           <padding>
+                              <Insets left="5.0" />
+                           </padding></Label>
+                        <Label fx:id="lbStartTime" maxWidth="1.7976931348623157E308" text="%start.time" GridPane.columnIndex="2" GridPane.columnSpan="2" />
+                        <Label fx:id="lbState" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font></Label>
+                        <ProgressIndicator fx:id="piConnection" prefHeight="32.0" prefWidth="32.0" visible="false" GridPane.columnIndex="3" GridPane.halignment="CENTER" />
+                        <Label fx:id="lbProduct" maxWidth="1.7976931348623157E308" text="%product.name" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="2">
+                           <padding>
+                              <Insets left="5.0" />
+                           </padding>
+                        </Label>
+                        <Label fx:id="lbManufacturer" maxWidth="1.7976931348623157E308" text="%manufacturer" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+                        <Label text="%endpoint.url" GridPane.halignment="LEFT" GridPane.rowIndex="1">
+                           <padding>
+                              <Insets left="5.0" />
+                           </padding>
+                        </Label>
+                        <Label fx:id="lbEndpoint" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="LEFT" GridPane.rowIndex="1" />
+                     </children>
+                  </GridPane>
+               </children>
+            </AnchorPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0">
+               <children>
+                  <GridPane hgap="10.0" vgap="10.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="10.0">
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                     <children>
+                        <Label text="%host" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+                           <GridPane.margin>
+                              <Insets />
+                           </GridPane.margin>
+                        </Label>
+                        <Label text="%choose.saved" GridPane.halignment="RIGHT">
+                           <GridPane.margin>
+                              <Insets />
+                           </GridPane.margin>
+                        </Label>
+                        <TextField fx:id="tfHost" promptText="%enter.host" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Button fx:id="btSave" mnemonicParsing="false" onAction="#onSaveDataSource" prefWidth="100.0" text="%save" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+                        <Label text="%description" GridPane.halignment="RIGHT" GridPane.rowIndex="6">
+                           <GridPane.margin>
+                              <Insets />
+                           </GridPane.margin>
+                        </Label>
+                        <TextField fx:id="tfDescription" maxWidth="1.7976931348623157E308" promptText="%enter.description" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                        <Button fx:id="btNew" mnemonicParsing="false" onAction="#onNewDataSource" prefWidth="100.0" text="%new" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+                        <Button fx:id="btDelete" mnemonicParsing="false" onAction="#onDeleteDataSource" prefWidth="100.0" text="%delete" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+                        <Label text="%port" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
+                        <TextField fx:id="tfPort" promptText="%enter.port" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <ComboBox fx:id="cbDataSources" maxWidth="1.7976931348623157E308" onAction="#onSelectDataSource" GridPane.columnIndex="1" GridPane.columnSpan="2" />
+                        <Label text="%name" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+                        <Label text="%ua.server" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
+                        <TextField fx:id="tfPath" promptText="%enter.ua.server" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <TextField fx:id="tfConnectionName" promptText="%enter.name" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                     </children>
+                  </GridPane>
+                  <HBox alignment="CENTER" layoutY="350.0" prefHeight="50.0" spacing="25.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="550.0">
+                     <children>
+                      <Button fx:id="btConnect" mnemonicParsing="false" onAction="#onConnect" text="%connect" textAlignment="CENTER" />
+                        <Button fx:id="btDisconnect" mnemonicParsing="false" onAction="#onDisconnect" text="%disconnect" />
+                        <Button fx:id="btCancelConnect" mnemonicParsing="false" onAction="#onCancelConnect" text="%cancel" />
+                     </children>
+                  </HBox>
+                  <TabPane layoutX="67.0" layoutY="484.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="300.0">
+                    <tabs>
+                      <Tab text="%security.settings">
+                        <content>
+                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <GridPane hgap="10.0" layoutX="34.0" layoutY="14.0" vgap="10.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+                                      <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="40.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                      </rowConstraints>
+                                       <children>
+                                          <Label text="%security.policy" GridPane.halignment="RIGHT" />
+                                          <ComboBox fx:id="cbSecurityPolicies" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" />
+                                          <Label text="%security.mode" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                                          <ComboBox fx:id="cbMessageModes" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                       </children>
+                                    </GridPane>
+                                 </children>
+                              </AnchorPane>
+                        </content>
+                      </Tab>
+                      <Tab text="%authentication.settings">
+                        <content>
+                          <AnchorPane minHeight="0.0" minWidth="0.0">
+                                 <children>
+                                    <GridPane hgap="10.0" layoutX="40.0" layoutY="51.0" vgap="10.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+                                      <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="8.0" prefWidth="100.0" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                      </rowConstraints>
+                                       <children>
+                                          <Label text="%user.name" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+                                             <GridPane.margin>
+                                                <Insets />
+                                             </GridPane.margin>
+                                          </Label>
+                                          <TextField fx:id="tfUserName" promptText="%enter.user.name" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                          <Label text="%user.password" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+                                             <GridPane.margin>
+                                                <Insets />
+                                             </GridPane.margin>
+                                          </Label>
+                                          <PasswordField fx:id="pfPassword" promptText="%enter.user.password" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                          <Label text="%keystore" GridPane.halignment="RIGHT" />
+                                          <Label text="%keystore.password" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                                          <TextField fx:id="tfKeystoreFileName" promptText="%enter.keystore" GridPane.columnIndex="1" />
+                                          <PasswordField fx:id="pfKeystorePassword" promptText="%enter.keystore.password" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                          <Button fx:id="btClearAuthentication" mnemonicParsing="false" onAction="#onClearAuthentication" prefHeight="16.0" prefWidth="16.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
+                                       </children>
+                                    </GridPane>
+                                 </children>
+                              </AnchorPane>
+                        </content>
+                      </Tab>
+                    </tabs>
+                  </TabPane>
+               </children></AnchorPane>
+        </items>
+      </SplitPane>
+   </children>
+</AnchorPane>

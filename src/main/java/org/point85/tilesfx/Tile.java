@@ -4861,7 +4861,7 @@ public class Tile extends Control {
         }
     }
 
-    @Override public String getUserAgentStylesheet() { return getClass().getResource("tilesfx.css").toExternalForm(); }
+    @Override public String getUserAgentStylesheet() { return getClass().getResource("/tilesfx/tilesfx.css").toExternalForm(); }
 
     private void presetTileParameters(final SkinType SKIN_TYPE) {
         switch (SKIN_TYPE) {

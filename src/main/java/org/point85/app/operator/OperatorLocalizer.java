@@ -7,10 +7,10 @@ import org.point85.domain.i18n.Localizer;
  */
 public class OperatorLocalizer extends Localizer {
 	// text
-	private static final String LANG_BUNDLE_NAME = "org.point85.i18n.OperatorLang";
+	private static final String LANG_BUNDLE_NAME = "i18n.OperatorLang";
 	
 	// exception strings
-	private static final String ERROR_BUNDLE_NAME = "org.point85.i18n.OperatorError";
+	private static final String ERROR_BUNDLE_NAME = "i18n.OperatorError";
 	
 	// Singleton
 	private static OperatorLocalizer localizer;

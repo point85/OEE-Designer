@@ -355,6 +355,10 @@ public class ProficyBrowserController extends DesignerDialogController {
 				cbDataSources.getItems().remove(eventSource);
 			}
 			cbDataSources.getItems().add(saved);
+			
+			if (cbDataSources.getItems().size() == 1) {
+				cbDataSources.getSelectionModel().select(0);
+			}
 
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
