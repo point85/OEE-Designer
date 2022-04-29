@@ -9,10 +9,7 @@ public abstract class ModbusController extends DataSourceConnectionController {
 	// current slave source
 	private ModbusSource modbusSource;
 
-	public ModbusSource getSource() throws Exception {
-		if (modbusSource == null) {
-			throw new Exception(DesignerLocalizer.instance().getErrorString("no.modbus.source"));
-		}
+	public ModbusSource getSource() {
 		return modbusSource;
 	}
 

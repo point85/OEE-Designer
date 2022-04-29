@@ -150,7 +150,7 @@ public final class ImageManager {
 			break;
 		case JMS:
 			image = new Image(IMAGE_PATH + "JMSSource.png", DIM, DIM, true, true);
-			break;	
+			break;
 		case KAFKA:
 			image = new Image(IMAGE_PATH + "KafkaSource.png", DIM, DIM, true, true);
 			break;
@@ -250,6 +250,18 @@ public final class ImageManager {
 			break;
 		case FILTER:
 			image = new Image(IMAGE_PATH + "Filter.png", DIM, DIM, true, true);
+			break;
+		case SOURCE_MENU:
+			image = new Image(IMAGE_PATH + "Source.png", DIM, DIM, true, true);
+			break;
+		case EDITOR_MENU:
+			image = new Image(IMAGE_PATH + "Editor.png", DIM, DIM, true, true);
+			break;
+		case TOOL_MENU:
+			image = new Image(IMAGE_PATH + "Tool.png", DIM, DIM, true, true);
+			break;
+		case HELP_MENU:
+			image = new Image(IMAGE_PATH + "Help.png", DIM, DIM, true, true);
 			break;
 		default:
 			image = new Image(IMAGE_PATH + "Folder.png", DIM, DIM, true, true);

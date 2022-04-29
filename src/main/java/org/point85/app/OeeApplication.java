@@ -2,7 +2,6 @@ package org.point85.app;
 
 import javax.persistence.EntityManager;
 
-import org.apache.log4j.PropertyConfigurator;
 import org.point85.app.collector.CollectorApplication;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.monitor.MonitorApplication;
@@ -196,9 +195,6 @@ public class OeeApplication extends Application {
 	 * @param args Program arguments
 	 */
 	public static void main(String[] args) {
-		// configure log4j
-		PropertyConfigurator.configure("config/logging/log4j.properties");
-
 		if (logger.isInfoEnabled()) {
 			logger.info("JVM: " + DomainUtils.getJVMInfo());
 			logger.info("JavaFX version: " + System.getProperty("javafx.version"));

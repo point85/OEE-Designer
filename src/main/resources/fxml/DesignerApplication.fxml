@@ -6,21 +6,22 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.designer.PhysicalModelController">
+<AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.designer.PhysicalModelController">
    <children>
       <SplitPane dividerPositions="0.35" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
         <items>
@@ -124,35 +125,49 @@
             </AnchorPane>
         </items>
       </SplitPane>
-      <ToolBar layoutX="952.0" maxWidth="1.7976931348623157E308" nodeOrientation="LEFT_TO_RIGHT" prefHeight="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <items>
-            <Button fx:id="btOpcUaBrowser" mnemonicParsing="false" onAction="#onShowOpcUaBrowser" prefHeight="16.0" prefWidth="16.0" />
-            <Button fx:id="btOpcDaBrowser" mnemonicParsing="false" onAction="#onShowOpcDaBrowser" prefHeight="16.0" prefWidth="16.0" />
-            <Button fx:id="btHttpServerEditor" mnemonicParsing="false" onAction="#onShowHttpServerEditor" prefHeight="16.0" prefWidth="16.0" />
-            <Button fx:id="btRmqBrokerEditor" mnemonicParsing="false" onAction="#onShowRmqBrokerEditor" prefHeight="16.0" prefWidth="16.0" />
-            <Button fx:id="btDatabaseServerEditor" mnemonicParsing="false" onAction="#onShowDatabaseServerEditor" prefHeight="16.0" prefWidth="16.0" />
-            <Button fx:id="btFileShareEditor" mnemonicParsing="false" onAction="#onShowFileShareEditor" prefHeight="16.0" prefWidth="16.0" />
-            <Button fx:id="btJMSBrokerEditor" mnemonicParsing="false" onAction="#onShowJMSBrokerEditor" prefHeight="16.0" prefWidth="16.0" />
-            <Button fx:id="btMQTTBrokerEditor" mnemonicParsing="false" onAction="#onShowMQTTBrokerEditor" prefHeight="16.0" prefWidth="16.0" />
-            <Button fx:id="btModbusEditor" mnemonicParsing="false" onAction="#onShowModbusEditor" prefHeight="16.0" prefWidth="16.0" />
-            <Button fx:id="btCronEditor" mnemonicParsing="false" onAction="#onShowCronEditor" prefHeight="16.0" prefWidth="16.0" />
-            <Button fx:id="btKafkaServerEditor" mnemonicParsing="false" onAction="#onShowKafkaServerEditor" prefHeight="16.0" prefWidth="16.0" />
-            <Button fx:id="btEmailServerEditor" mnemonicParsing="false" onAction="#onShowEmailServerEditor" />
-            <Button fx:id="btProficyBrowserEditor" mnemonicParsing="false" onAction="#onShowProficyBrowserEditor" />
-            <Separator orientation="VERTICAL" />
-            <Button fx:id="btUomEditor" mnemonicParsing="false" onAction="#onShowUomEditor" prefHeight="16.0" prefWidth="16.0" />
-          <Button fx:id="btScheduleEditor" mnemonicParsing="false" onAction="#onShowScheduleEditor" prefHeight="16.0" prefWidth="16.0" />
-            <Button fx:id="btReasonEditor" mnemonicParsing="false" onAction="#onShowReasonEditor" prefHeight="16.0" prefWidth="16.0" />
-            <Button fx:id="btMaterialEditor" mnemonicParsing="false" onAction="#onShowMaterialEditor" prefHeight="16.0" prefWidth="16.0" />
-            <Separator orientation="VERTICAL" />
-            <Button fx:id="btCollectorEditor" mnemonicParsing="false" onAction="#onShowCollectorEditor" prefHeight="16.0" prefWidth="16.0" />
-            <Separator orientation="VERTICAL" />
-            <Button fx:id="btUomConverter" mnemonicParsing="false" onAction="#onShowUomConverter" prefHeight="16.0" prefWidth="16.0" />
-            <Separator orientation="VERTICAL" />
-            <Button fx:id="btScriptEditor" mnemonicParsing="false" onAction="#onShowScriptEditor" prefHeight="16.0" prefWidth="16.0" />
-            <Separator orientation="VERTICAL" />
-            <Button fx:id="btAboutDialog" mnemonicParsing="false" onAction="#onShowAboutDialog" prefHeight="16.0" prefWidth="16.0" />
-        </items>
-      </ToolBar>
+      <MenuBar prefHeight="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <menus>
+          <Menu fx:id="mnSource" mnemonicParsing="false" text="%menu.data.source">
+            <items>
+              <MenuItem fx:id="miCronEditor" mnemonicParsing="false" onAction="#onShowCronEditor" text="%item.cron" />
+                  <MenuItem fx:id="miDatabaseServerEditor" mnemonicParsing="false" onAction="#onShowDatabaseServerEditor" text="%item.database" />
+                  <MenuItem fx:id="miEmailServerEditor" mnemonicParsing="false" onAction="#onShowEmailServerEditor" text="%item.email" />
+                  <MenuItem fx:id="miFileShareEditor" mnemonicParsing="false" onAction="#onShowFileShareEditor" text="%item.file" />
+                  <MenuItem fx:id="miHttpServerEditor" mnemonicParsing="false" onAction="#onShowHttpServerEditor" text="%item.http" />
+                  <MenuItem fx:id="miKafkaServerEditor" mnemonicParsing="false" onAction="#onShowKafkaServerEditor" text="%item.kafka" />
+                  <MenuItem fx:id="miJMSBrokerEditor" mnemonicParsing="false" onAction="#onShowJMSBrokerEditor" text="%item.jms" />
+                  <MenuItem fx:id="miModbusEditor" mnemonicParsing="false" onAction="#onShowModbusEditor" text="%item.modbus" />
+                  <MenuItem fx:id="miMQTTBrokerEditor" mnemonicParsing="false" onAction="#onShowMQTTBrokerEditor" text="%item.mqtt" />
+                  <MenuItem fx:id="miOpcDaBrowser" mnemonicParsing="false" onAction="#onShowOpcDaBrowser" text="%item.opc.da" />
+                  <MenuItem fx:id="miOpcUaBrowser" mnemonicParsing="false" onAction="#onShowOpcUaBrowser" text="%item.opc.ua" />
+                  <MenuItem fx:id="miProficyBrowserEditor" mnemonicParsing="false" onAction="#onShowProficyBrowserEditor" text="%item.proficy" />
+                  <MenuItem fx:id="miRmqBrokerEditor" mnemonicParsing="false" onAction="#onShowRmqBrokerEditor" text="%item.rabbitmq" />
+                  <MenuItem fx:id="miWebSocketEditor" mnemonicParsing="false" onAction="#onShowWebSocketEditor" text="%item.ws" />
+            </items>
+          </Menu>
+          <Menu fx:id="mnEditor" mnemonicParsing="false" text="%menu.editor">
+            <items>
+                  <MenuItem fx:id="miCollectorEditor" mnemonicParsing="false" onAction="#onShowCollectorEditor" text="%item.collector" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+              <MenuItem fx:id="miMaterialEditor" mnemonicParsing="false" onAction="#onShowMaterialEditor" text="%item.material" />
+                  <MenuItem fx:id="miReasonEditor" mnemonicParsing="false" onAction="#onShowReasonEditor" text="%item.reason" />
+                  <MenuItem fx:id="miUomEditor" mnemonicParsing="false" onAction="#onShowUomEditor" text="%item.uom" />
+                  <MenuItem fx:id="miScheduleEditor" mnemonicParsing="false" onAction="#onShowScheduleEditor" text="%item.schedule" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem fx:id="miScriptEditor" mnemonicParsing="false" onAction="#onShowScriptEditor" text="%item.script" />
+            </items>
+          </Menu>
+            <Menu fx:id="mnTool" mnemonicParsing="false" text="%menu.tool">
+              <items>
+                <MenuItem fx:id="miUomConverter" mnemonicParsing="false" onAction="#onShowUomConverter" text="%item.uom.converter" />
+              </items>
+            </Menu>
+          <Menu fx:id="mnHelp" mnemonicParsing="false" text="%menu.help">
+            <items>
+              <MenuItem fx:id="miAboutDialog" mnemonicParsing="false" onAction="#onShowAboutDialog" text="%item.about" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
    </children>
 </AnchorPane>

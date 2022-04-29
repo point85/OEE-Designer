@@ -80,6 +80,9 @@ import org.point85.domain.proficy.ProficyClient;
 import org.point85.domain.proficy.ProficySource;
 import org.point85.domain.rmq.RmqClient;
 import org.point85.domain.rmq.RmqMessageListener;
+import org.point85.domain.socket.WebSocketMessageListener;
+import org.point85.domain.socket.WebSocketOeeClient;
+import org.point85.domain.socket.WebSocketSource;
 import org.quartz.JobExecutionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -105,7 +108,7 @@ import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 
 public class TesterController implements RmqMessageListener, JmsMessageListener, MqttMessageListener,
-		KafkaMessageListener, CronEventListener {
+		KafkaMessageListener, CronEventListener, WebSocketMessageListener {
 	// logger
 	private static final Logger logger = LoggerFactory.getLogger(TesterController.class);
 
@@ -144,6 +147,9 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 
 	// Proficy clients
 	private final Map<String, ProficyClient> proficyClients = new HashMap<>();
+
+	// web socket clients
+	private final Map<String, WebSocketOeeClient> webSocketClients = new HashMap<>();
 
 	// materials
 	private final ObservableList<Material> materials = FXCollections.observableList(new ArrayList<>());
@@ -278,6 +284,9 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 	private RadioButton rbProficy;
 
 	@FXML
+	private RadioButton rbWebSocket;
+
+	@FXML
 	private Label lbNotification;
 
 	// timer to broadcast status
@@ -368,6 +377,8 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 				populateDataSources(DataSourceType.EMAIL);
 			} else if (rbProficy.isSelected()) {
 				populateDataSources(DataSourceType.PROFICY);
+			} else if (rbWebSocket.isSelected()) {
+				populateDataSources(DataSourceType.WEB_SOCKET);
 			}
 
 			tfValue.clear();
@@ -418,6 +429,8 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 				populateSourceIds(DataSourceType.EMAIL);
 			} else if (rbProficy.isSelected()) {
 				populateSourceIds(DataSourceType.PROFICY);
+			} else if (rbWebSocket.isSelected()) {
+				populateSourceIds(DataSourceType.WEB_SOCKET);
 			}
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
@@ -455,6 +468,13 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 				entry.getValue().stopPolling();
 			}
 			emailClients.clear();
+			
+			// disconnect web socket clients
+			for (Entry<String, WebSocketOeeClient> entry : webSocketClients.entrySet()) {
+				entry.getValue().closeConnection();
+			}
+			webSocketClients.clear();
+			
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
@@ -659,6 +679,8 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 			if (!entity.getLevel().equals(EntityLevel.EQUIPMENT)) {
 				return;
 			}
+			
+			lbNotification.setText(null);
 
 			selectedEntity = entity;
 
@@ -689,7 +711,7 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 			if (rbHTTP.isSelected()) {
 				onHttpPostEvent();
 			} else if (rbJMS.isSelected() || rbRMQ.isSelected() || rbMQTT.isSelected() || rbKafka.isSelected()
-					|| rbEmail.isSelected()) {
+					|| rbEmail.isSelected() || rbWebSocket.isSelected()) {
 				onSendEquipmentEventMsg();
 			} else if (rbDatabase.isSelected()) {
 				onWriteDatabaseEvent();
@@ -1503,6 +1525,23 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 				mqttClient.sendEventMessage(msg);
 				notification = TesterLocalizer.instance().getLangString("sent.message", selectedDataSource.getHost(),
 						selectedDataSource.getPort());
+			} else if (rbWebSocket.isSelected()) {
+				WebSocketOeeClient wsClient = webSocketClients.get(hostPort);
+				WebSocketSource source = (WebSocketSource) selectedDataSource;
+
+				if (wsClient == null) {
+					wsClient = new WebSocketOeeClient(source);
+					wsClient.registerListener(this);
+					webSocketClients.put(hostPort, wsClient);
+
+					wsClient.openConnection();
+				}
+
+				wsClient.sendEventMessage(msg);
+
+				notification = TesterLocalizer.instance().getLangString("sent.message", selectedDataSource.getHost(),
+						selectedDataSource.getPort());
+
 			} else {
 				return;
 			}
@@ -1598,6 +1637,11 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 
 	@Override
 	public void onKafkaMessage(ApplicationMessage message) {
+		postNotification(message);
+	}
+
+	@Override
+	public void onWebSocketMessage(ApplicationMessage message) {
 		postNotification(message);
 	}
 

@@ -38,6 +38,8 @@ import org.point85.app.proficy.ProficyTrendController;
 import org.point85.app.reason.ReasonEditorController;
 import org.point85.app.schedule.WorkScheduleEditorController;
 import org.point85.app.script.EventResolverController;
+import org.point85.app.socket.WebSocketServerController;
+import org.point85.app.socket.WebSocketTrendController;
 import org.point85.app.uom.UomConversionController;
 import org.point85.app.uom.UomEditorController;
 import org.point85.domain.DomainUtils;
@@ -65,6 +67,7 @@ import org.point85.domain.proficy.ProficySource;
 import org.point85.domain.schedule.WorkSchedule;
 import org.point85.domain.script.EventResolver;
 import org.point85.domain.script.OeeContext;
+import org.point85.domain.socket.WebSocketSource;
 import org.point85.domain.uom.UnitOfMeasure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -454,6 +457,69 @@ public class DesignerApplication {
 		}
 
 		return mqttServerController.getSource();
+	}
+	
+	WebSocketSource showWebSocketEditor() throws Exception {
+		FXMLLoader loader = FXMLLoaderFactory.wsServerLoader();
+		AnchorPane page = (AnchorPane) loader.getRoot();
+
+		Stage dialogStage = new Stage(StageStyle.DECORATED);
+		dialogStage.setTitle(DesignerLocalizer.instance().getLangString("ws.editor.title"));
+
+		dialogStage.initModality(Modality.WINDOW_MODAL);
+		Scene scene = new Scene(page);
+		dialogStage.setScene(scene);
+
+		// get the controller
+		WebSocketServerController wsServerController = loader.getController();
+		wsServerController.setDialogStage(dialogStage);
+		wsServerController.initialize(this);
+
+		if (!wsServerController.getDialogStage().isShowing()) {
+			wsServerController.getDialogStage().showAndWait();
+		}
+
+		return wsServerController.getSource();
+	}
+	
+	void showWebSocketTrendDialog(EventResolver eventResolver) throws Exception {
+		// Load the fxml file and create a new stage for the pop-up dialog.
+		FXMLLoader loader = FXMLLoaderFactory.webSocketTrendLoader();
+		AnchorPane page = (AnchorPane) loader.getRoot();
+
+		// Create the dialog Stage.
+		Stage dialogStage = new Stage(StageStyle.DECORATED);
+		dialogStage.setTitle(DesignerLocalizer.instance().getLangString("ws.trend.title"));
+		dialogStage.initModality(Modality.NONE);
+		Scene scene = new Scene(page);
+		dialogStage.setScene(scene);
+
+		// get the controller
+		WebSocketTrendController wsTrendController = loader.getController();
+		wsTrendController.setDialogStage(dialogStage);
+		wsTrendController.setApp(this);
+
+		// add the trend chart
+		SplitPane chartPane = wsTrendController.initializeTrend();
+
+		AnchorPane.setBottomAnchor(chartPane, 50.0);
+		AnchorPane.setLeftAnchor(chartPane, 5.0);
+		AnchorPane.setRightAnchor(chartPane, 5.0);
+		AnchorPane.setTopAnchor(chartPane, 50.0);
+
+		page.getChildren().add(0, chartPane);
+
+		// set the script resolver
+		wsTrendController.setScriptResolver(eventResolver);
+
+		// start web socket server
+		wsTrendController.onStartServer();
+		
+		// set close box action
+		setCloseBoxAction(scene, wsTrendController);
+
+		// show the trend
+		wsTrendController.getDialogStage().show();
 	}
 
 	KafkaSource showKafkaServerEditor() throws Exception {

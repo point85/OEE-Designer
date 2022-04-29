@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="575.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.messaging.MqttServerController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="575.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.messaging.MqttServerController">
    <children>
       <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
@@ -68,7 +68,7 @@
       </GridPane>
       <TabPane layoutX="87.0" layoutY="504.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0">
          <tabs>
-            <Tab text="%kafka.ssl">
+            <Tab text="%mqtt.ssl">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0">
                      <children>
@@ -84,28 +84,28 @@
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                            </rowConstraints>
                            <children>
-                              <Label text="%kafka.keystore" GridPane.halignment="RIGHT">
+                              <Label text="%mqtt.keystore" GridPane.halignment="RIGHT">
                                  <GridPane.margin>
                                     <Insets />
                                  </GridPane.margin>
                               </Label>
-                              <TextField fx:id="tfKeystore" promptText="%kafka.keystore.prompt" GridPane.columnIndex="1" />
-                              <Label text="%kafka.keystore.pwd" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                              <TextField fx:id="tfKeystore" promptText="%mqtt.keystore.prompt" GridPane.columnIndex="1" />
+                              <Label text="%mqtt.keystore.pwd" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                                  <GridPane.margin>
                                     <Insets />
                                  </GridPane.margin>
                               </Label>
-                              <PasswordField fx:id="pfKeystorePassword" promptText="%kafka.keystore.pwd.prompt" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <PasswordField fx:id="pfKeystorePassword" promptText="%mqtt.keystore.pwd.prompt" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                               <Button fx:id="btClearSSL" mnemonicParsing="false" onAction="#onClearSSL" prefHeight="16.0" prefWidth="16.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
-                              <Label text="%kafka.key.pwd" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-                              <PasswordField fx:id="pfKeyPassword" promptText="%kafka.key.pwd.prompt" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <Label text="%mqtt.key.pwd" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+                              <PasswordField fx:id="pfKeyPassword" promptText="%mqtt.key.pwd.prompt" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                            </children>
                         </GridPane>
                      </children>
                   </AnchorPane>
                </content>
             </Tab>
-            <Tab text="%kafka.auth">
+            <Tab text="%mqtt.auth">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>

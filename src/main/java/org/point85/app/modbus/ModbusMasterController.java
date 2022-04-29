@@ -308,7 +308,7 @@ public class ModbusMasterController extends ModbusController {
 			tfUnitId.clear();
 			tfValueCount.setText("1");
 			ckReverseEndianess.setSelected(true);
-			
+
 			lbState.setText(null);
 			taValues.clear();
 
@@ -357,7 +357,9 @@ public class ModbusMasterController extends ModbusController {
 		endpoint.setReverseEndianess(ckReverseEndianess.isSelected());
 		endpoint.setModbusDataType(cbDataTypes.getSelectionModel().getSelectedItem());
 
-		getSource().setEndpoint(endpoint);
+		if (getSource() != null) {
+			getSource().setEndpoint(endpoint);
+		}
 		return endpoint;
 	}
 

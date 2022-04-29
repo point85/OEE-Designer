@@ -28,7 +28,7 @@ public class FXMLLoaderFactory {
 
 	// name of Tester application resource bundle with translatable strings
 	private static ResourceBundle testerLangBundle;
-	
+
 	private FXMLLoaderFactory() {
 		// hide public constructor
 	}
@@ -69,16 +69,14 @@ public class FXMLLoaderFactory {
 	}
 
 	public static FXMLLoader dashboardLoader() throws Exception {
-		FXMLLoader fxmlLoader = new FXMLLoader(
-				FXMLLoaderFactory.class.getResource(FXML_PATH + "Dashboard.fxml"));
+		FXMLLoader fxmlLoader = new FXMLLoader(FXMLLoaderFactory.class.getResource(FXML_PATH + "Dashboard.fxml"));
 		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
 
 	public static FXMLLoader dashboardDialogLoader() throws Exception {
-		FXMLLoader fxmlLoader = new FXMLLoader(
-				FXMLLoaderFactory.class.getResource(FXML_PATH + "DashboardDialog.fxml"));
+		FXMLLoader fxmlLoader = new FXMLLoader(FXMLLoaderFactory.class.getResource(FXML_PATH + "DashboardDialog.fxml"));
 		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
@@ -165,6 +163,13 @@ public class FXMLLoaderFactory {
 
 	public static FXMLLoader mqttServerLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(FXMLLoaderFactory.class.getResource(FXML_PATH + "MqttServer.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
+		fxmlLoader.load();
+		return fxmlLoader;
+	}
+
+	public static FXMLLoader wsServerLoader() throws Exception {
+		FXMLLoader fxmlLoader = new FXMLLoader(FXMLLoaderFactory.class.getResource(FXML_PATH + "WebSocketServer.fxml"));
 		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;
@@ -464,6 +469,13 @@ public class FXMLLoaderFactory {
 
 	public static FXMLLoader proficyLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(FXMLLoaderFactory.class.getResource(FXML_PATH + "ProficyBrowser.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
+		fxmlLoader.load();
+		return fxmlLoader;
+	}
+
+	public static FXMLLoader webSocketTrendLoader() throws Exception {
+		FXMLLoader fxmlLoader = new FXMLLoader(FXMLLoaderFactory.class.getResource(FXML_PATH + "WebSocketTrend.fxml"));
 		fxmlLoader.setResources(getDesignerLangBundle());
 		fxmlLoader.load();
 		return fxmlLoader;

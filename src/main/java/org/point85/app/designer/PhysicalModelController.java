@@ -13,7 +13,6 @@ import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
 import org.point85.domain.collector.DataSourceType;
-import org.point85.domain.i18n.I18n;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Area;
 import org.point85.domain.plant.Enterprise;
@@ -34,12 +33,12 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.ImageView;
@@ -68,72 +67,87 @@ public class PhysicalModelController extends DesignerController {
 	// equipment work schedules
 	private EntityWorkScheduleController entityWorkScheduleController;
 
-	// tool bar
+	// menu bar
 	@FXML
-	private Button btMaterialEditor;
+	private Menu mnSource;
 
 	@FXML
-	private Button btReasonEditor;
+	private Menu mnEditor;
 
 	@FXML
-	private Button btScheduleEditor;
+	private Menu mnTool;
+
+	@FXML
+	private Menu mnHelp;
+
+	@FXML
+	private MenuItem miMaterialEditor;
+
+	@FXML
+	private MenuItem miReasonEditor;
+
+	@FXML
+	private MenuItem miScheduleEditor;
 
 	@FXML
 	private Button btClearSchedule;
 
 	@FXML
-	private Button btUomEditor;
+	private MenuItem miUomEditor;
 
 	@FXML
-	private Button btOpcDaBrowser;
+	private MenuItem miOpcDaBrowser;
 
 	@FXML
-	private Button btOpcUaBrowser;
+	private MenuItem miOpcUaBrowser;
 
 	@FXML
-	private Button btHttpServerEditor;
+	private MenuItem miHttpServerEditor;
 
 	@FXML
-	private Button btRmqBrokerEditor;
+	private MenuItem miRmqBrokerEditor;
 
 	@FXML
-	private Button btJMSBrokerEditor;
+	private MenuItem miJMSBrokerEditor;
 
 	@FXML
-	private Button btKafkaServerEditor;
+	private MenuItem miKafkaServerEditor;
 
 	@FXML
-	private Button btEmailServerEditor;
+	private MenuItem miEmailServerEditor;
 
 	@FXML
-	private Button btProficyBrowserEditor;
+	private MenuItem miProficyBrowserEditor;
 
 	@FXML
-	private Button btMQTTBrokerEditor;
+	private MenuItem miMQTTBrokerEditor;
 
 	@FXML
-	private Button btModbusEditor;
+	private MenuItem miModbusEditor;
 
 	@FXML
-	private Button btDatabaseServerEditor;
+	private MenuItem miDatabaseServerEditor;
 
 	@FXML
-	private Button btFileShareEditor;
+	private MenuItem miFileShareEditor;
 
 	@FXML
-	private Button btCronEditor;
+	private MenuItem miCronEditor;
+	
+	@FXML
+	private MenuItem miWebSocketEditor;
 
 	@FXML
-	private Button btCollectorEditor;
+	private MenuItem miCollectorEditor;
 
 	@FXML
-	private Button btUomConverter;
+	private MenuItem miUomConverter;
 
 	@FXML
-	private Button btScriptEditor;
+	private MenuItem miScriptEditor;
 
 	@FXML
-	private Button btAboutDialog;
+	private MenuItem miAboutDialog;
 
 	// entity section
 	@FXML
@@ -238,7 +252,7 @@ public class PhysicalModelController extends DesignerController {
 		setImages();
 
 		// toolbar
-		initializeToolbar();
+		initializeMenubar();
 
 		// add the tree view listener for entity selection
 		tvEntities.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
@@ -353,71 +367,60 @@ public class PhysicalModelController extends DesignerController {
 		}
 	}
 
-	private void initializeToolbar() {
-		// toolbar
-		I18n i18n = DesignerLocalizer.instance().getLangI18n();
-		btMaterialEditor.setGraphic(ImageManager.instance().getImageView(Images.MATERIAL));
-		btMaterialEditor.setTooltip(new Tooltip(i18n.getString("material.tt")));
+	private void initializeMenubar() {
+		// menu bar
+		mnSource.setGraphic(ImageManager.instance().getImageView(Images.SOURCE_MENU));
 
-		btReasonEditor.setGraphic(ImageManager.instance().getImageView(Images.REASON));
-		btReasonEditor.setTooltip(new Tooltip(i18n.getString("reason.tt")));
+		mnEditor.setGraphic(ImageManager.instance().getImageView(Images.EDITOR_MENU));
+		
+		mnTool.setGraphic(ImageManager.instance().getImageView(Images.TOOL_MENU));
+		
+		mnHelp.setGraphic(ImageManager.instance().getImageView(Images.HELP_MENU));
 
-		btScheduleEditor.setGraphic(ImageManager.instance().getImageView(Images.SCHEDULE));
-		btScheduleEditor.setTooltip(new Tooltip(i18n.getString("schedule.tt")));
+		// menu items
+		miMaterialEditor.setGraphic(ImageManager.instance().getImageView(Images.MATERIAL));
 
-		btUomEditor.setGraphic(ImageManager.instance().getImageView(Images.UOM));
-		btUomEditor.setTooltip(new Tooltip(i18n.getString("uom.tt")));
+		miReasonEditor.setGraphic(ImageManager.instance().getImageView(Images.REASON));
 
-		btOpcDaBrowser.setGraphic(ImageManager.instance().getImageView(Images.OPC_DA));
-		btOpcDaBrowser.setTooltip(new Tooltip(i18n.getString("opc.da.tt")));
+		miScheduleEditor.setGraphic(ImageManager.instance().getImageView(Images.SCHEDULE));
 
-		btOpcUaBrowser.setGraphic(ImageManager.instance().getImageView(Images.OPC_UA));
-		btOpcUaBrowser.setTooltip(new Tooltip(i18n.getString("opc.ua.tt")));
+		miUomEditor.setGraphic(ImageManager.instance().getImageView(Images.UOM));
 
-		btHttpServerEditor.setGraphic(ImageManager.instance().getImageView(Images.HTTP));
-		btHttpServerEditor.setTooltip(new Tooltip(i18n.getString("http.tt")));
+		miOpcDaBrowser.setGraphic(ImageManager.instance().getImageView(Images.OPC_DA));
 
-		btRmqBrokerEditor.setGraphic(ImageManager.instance().getImageView(Images.RMQ));
-		btRmqBrokerEditor.setTooltip(new Tooltip(i18n.getString("rmq.tt")));
+		miOpcUaBrowser.setGraphic(ImageManager.instance().getImageView(Images.OPC_UA));
 
-		btJMSBrokerEditor.setGraphic(ImageManager.instance().getImageView(Images.JMS));
-		btJMSBrokerEditor.setTooltip(new Tooltip(i18n.getString("jms.tt")));
+		miHttpServerEditor.setGraphic(ImageManager.instance().getImageView(Images.HTTP));
 
-		btKafkaServerEditor.setGraphic(ImageManager.instance().getImageView(Images.KAFKA));
-		btKafkaServerEditor.setTooltip(new Tooltip(i18n.getString("kafka.tt")));
+		miRmqBrokerEditor.setGraphic(ImageManager.instance().getImageView(Images.RMQ));
 
-		btEmailServerEditor.setGraphic(ImageManager.instance().getImageView(Images.EMAIL));
-		btEmailServerEditor.setTooltip(new Tooltip(i18n.getString("email.tt")));
+		miJMSBrokerEditor.setGraphic(ImageManager.instance().getImageView(Images.JMS));
 
-		btProficyBrowserEditor.setGraphic(ImageManager.instance().getImageView(Images.PROFICY));
-		btProficyBrowserEditor.setTooltip(new Tooltip(i18n.getString("proficy.editor.tt")));
+		miKafkaServerEditor.setGraphic(ImageManager.instance().getImageView(Images.KAFKA));
 
-		btMQTTBrokerEditor.setGraphic(ImageManager.instance().getImageView(Images.MQTT));
-		btMQTTBrokerEditor.setTooltip(new Tooltip(i18n.getString("mqtt.tt")));
+		miEmailServerEditor.setGraphic(ImageManager.instance().getImageView(Images.EMAIL));
 
-		btModbusEditor.setGraphic(ImageManager.instance().getImageView(Images.MODBUS));
-		btModbusEditor.setTooltip(new Tooltip(i18n.getString("modbus.tt")));
+		miProficyBrowserEditor.setGraphic(ImageManager.instance().getImageView(Images.PROFICY));
 
-		btDatabaseServerEditor.setGraphic(ImageManager.instance().getImageView(Images.DB));
-		btDatabaseServerEditor.setTooltip(new Tooltip(i18n.getString("db.tt")));
+		miMQTTBrokerEditor.setGraphic(ImageManager.instance().getImageView(Images.MQTT));
 
-		btFileShareEditor.setGraphic(ImageManager.instance().getImageView(Images.FILE));
-		btFileShareEditor.setTooltip(new Tooltip(i18n.getString("file.tt")));
+		miModbusEditor.setGraphic(ImageManager.instance().getImageView(Images.MODBUS));
 
-		btCronEditor.setGraphic(ImageManager.instance().getImageView(Images.CRON));
-		btCronEditor.setTooltip(new Tooltip(i18n.getString("cron.tt")));
+		miDatabaseServerEditor.setGraphic(ImageManager.instance().getImageView(Images.DB));
 
-		btCollectorEditor.setGraphic(ImageManager.instance().getImageView(Images.COLLECTOR));
-		btCollectorEditor.setTooltip(new Tooltip(i18n.getString("collector.tt")));
+		miFileShareEditor.setGraphic(ImageManager.instance().getImageView(Images.FILE));
 
-		btUomConverter.setGraphic(ImageManager.instance().getImageView(Images.CONVERT));
-		btUomConverter.setTooltip(new Tooltip(i18n.getString("uom.converter.tt")));
+		miCronEditor.setGraphic(ImageManager.instance().getImageView(Images.CRON));
+		
+		miWebSocketEditor.setGraphic(ImageManager.instance().getImageView(Images.CONNECT));
 
-		btScriptEditor.setGraphic(ImageManager.instance().getImageView(Images.SCRIPT));
-		btScriptEditor.setTooltip(new Tooltip(i18n.getString("script.tt")));
+		miCollectorEditor.setGraphic(ImageManager.instance().getImageView(Images.COLLECTOR));
 
-		btAboutDialog.setGraphic(ImageManager.instance().getImageView(Images.ABOUT));
-		btAboutDialog.setTooltip(new Tooltip(i18n.getString("about.tt")));
+		miUomConverter.setGraphic(ImageManager.instance().getImageView(Images.CONVERT));
+
+		miScriptEditor.setGraphic(ImageManager.instance().getImageView(Images.SCRIPT));
+
+		miAboutDialog.setGraphic(ImageManager.instance().getImageView(Images.ABOUT));
 	}
 
 	// images for editor buttons
@@ -488,6 +491,15 @@ public class PhysicalModelController extends DesignerController {
 	private void onShowMQTTBrokerEditor() {
 		try {
 			this.getApp().showMqttServerEditor();
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+	
+	@FXML
+	private void onShowWebSocketEditor() {
+		try {
+			this.getApp().showWebSocketEditor();
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}

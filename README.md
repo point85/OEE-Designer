@@ -16,6 +16,7 @@ Sources of equipment availability, performance and quality event data include:
 * JMS Messaging:  an equipment event message received via an ActiveMQ message broker
 * MQTT Messaging:  an equipment event message received via an MQTT message server
 * Kafka Messaging:  an equipment event message received via a Kafka server
+* Web Socket Messaging:  an equipment event message received via a web socket server
 * Email/Text Messaging:  an equipment event message received via an email server
 * Database Interface Table:  a pre-defined table for inserting OEE events
 * File Share:  a server hosting OEE event files
@@ -129,7 +130,7 @@ The Java Persistence 2.2 API (JPA) as implemented by the Hibernate ORM framework
 Hibernate and JPA abstract-away database specific aspects of inserting, updating, reading and deleting records in the tables.  The API is designed to work with any relational database supported by Hibernate.  
 
 ## What's New
-In version 3.6.0, Java 11+ is now required along with JavaFX 17+.  Please see the Release Notes.txt file for release history.
+In version 3.7.0, a web socket data source was added.  The projects were also ported to log4j2.  Please see the Release Notes.txt file for release history.
 
 ## Getting Started
 The desktop applications are packaged in the oee-<version>.zip file in the latest Git release link at https://github.com/point85/OEE-Designer/releases.  Download the oee-<version>.zip file and expand the archive into a folder of your choice.  Next, download the Point85 OEE Getting Started Guide and follow instructions in that document.  Additional information may be found in the Point85 OEE User Guide.

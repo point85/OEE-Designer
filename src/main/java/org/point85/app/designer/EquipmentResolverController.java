@@ -35,6 +35,7 @@ import org.point85.domain.proficy.TagDetail;
 import org.point85.domain.script.EventResolver;
 import org.point85.domain.script.OeeEventType;
 import org.point85.domain.script.ResolverFunction;
+import org.point85.domain.socket.WebSocketSource;
 
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -447,6 +448,9 @@ public class EquipmentResolverController extends DesignerController {
 			buttonImage = ImageManager.instance().getImageView(Images.PROFICY);
 			setUpdatePeriod = true;
 			break;
+		case WEB_SOCKET:
+			buttonImage = ImageManager.instance().getImageView(Images.CONNECT);
+			break;
 		default:
 			break;
 		}
@@ -637,6 +641,17 @@ public class EquipmentResolverController extends DesignerController {
 					tfSourceId.setText(tagDetail.getTagName());
 					lbDataType.setText(tagDetail.getEnumeratedType().getJavaType().getSimpleName());
 				}
+			} else if (sourceType.equals(DataSourceType.WEB_SOCKET)) {
+				// show web socket server editor
+				WebSocketSource dataSource = getApp().showWebSocketEditor();
+				tfServerId.setText(dataSource.getId());
+
+				getSelectedResolver().setDataSource(dataSource);
+
+				lbDataType.setText(String.class.getSimpleName());
+
+				setDefaultSourceId();
+
 			} else {
 				throw new Exception(DesignerLocalizer.instance().getErrorString("unknown.type", sourceType));
 			}
@@ -878,6 +893,8 @@ public class EquipmentResolverController extends DesignerController {
 				getApp().showEmailTrendDialog(selectedEventResolver);
 			} else if (type.equals(DataSourceType.PROFICY)) {
 				getApp().showProficyTrendDialog(selectedEventResolver);
+			}else if (type.equals(DataSourceType.WEB_SOCKET)) {
+				getApp().showWebSocketTrendDialog(selectedEventResolver);
 			}
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);

@@ -125,6 +125,7 @@
                   <RadioButton fx:id="rbKafka" mnemonicParsing="false" onAction="#onSelectSourceType" text="%kafka" toggleGroup="$source" />
                   <RadioButton fx:id="rbEmail" mnemonicParsing="false" onAction="#onSelectSourceType" text="%email" toggleGroup="$source" />
                   <RadioButton fx:id="rbProficy" mnemonicParsing="false" onAction="#onSelectSourceType" text="%proficy" toggleGroup="$source" />
+                  <RadioButton fx:id="rbWebSocket" mnemonicParsing="false" onAction="#onSelectSourceType" text="%websock" toggleGroup="$source" />
                </children>
             </HBox>
             <Label text="%reason" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />

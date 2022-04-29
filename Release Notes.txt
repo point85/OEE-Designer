@@ -222,5 +222,11 @@ Note that version 3.2.0 has the following schema changes:
 	- Upgraded Modbus client to version 3.1.1
 	- Upgraded Kafka client to version 3.1.0
 	- Upgraded JavaFX to version 17.0.2
+	
+(36) 3.7.0, April 28, 2022:
+	- Added a web socket data source, Java-WebSocket version 1.5.3
+	- Updated to Log4j2 version 2.17.2 and sl4j version 1.7.36
+	- Changed Designer tool bar to a menu bar
+	- Verified release using Java 17.0.2
 
 Please send comments and suggestions to point85.llc@gmail.com.

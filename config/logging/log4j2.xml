@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn" name="Point85_Configuration" packages="">
+	<Appenders>
+	    <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %c{1} - %msg%n"/>
+        </Console>
+        
+		<RollingFile name="RollingFile"
+			fileName="logs/Point85.log" filePattern="logs/Point85-%d{yyyy-MM-dd-HH-mm}-%i.log">
+			<PatternLayout>
+				<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %c{1} - %msg%n</Pattern>
+			</PatternLayout>
+			<Policies>
+      		<SizeBasedTriggeringPolicy size="5 MB" />
+  			</Policies>
+			<DefaultRolloverStrategy max="5" />
+		</RollingFile>
+	</Appenders>
+	<Loggers>
+		<Root level="error">
+		 	<AppenderRef ref="Console" />
+			<AppenderRef ref="RollingFile"/>
+		</Root>
+		
+		<!-- Uncomment specific loggers to view output -->		
+		
+		<!-- Point85 OEE -->
+		<Logger name="org.point85" level="info">
+    	</Logger>
+		
+		<!-- basic log level for all Hibernate messages 		
+		<Logger name="org.hibernate" level="info">
+    	</Logger>
+		--> 
+
+		<!-- Hibernate runtime SQL statements and parameters 
+		<Logger name="org.hibernate.SQL" level="info">		
+    	</Logger>
+		-->
+
+		<!-- Hibernate JDBC bind parameter runtime arguments 
+		<Logger name="org.hibernate.type" level="info">		
+    	</Logger>
+		-->
+
+		<!-- Hikari database connection pool 		
+		<Logger name="com.zaxxer" level="info">
+    	</Logger>	
+		-->
+
+		<!-- Milo OPC UA 	
+		<Logger name="org.eclipse.milo" level="info">	
+    	</Logger>
+		-->
+
+		<!-- jinterop OPC DA 	
+		<Logger name="org.jinterop" level="info">	
+    	</Logger>
+		-->
+
+		<!-- openscada OPC DA 	
+		<Logger name="org.openscada" level="info">	
+    	</Logger>	
+		-->
+
+		<!-- j2mod Modbus		 
+		<Logger name="com.ghgande.j2mod" level="info">	
+    	</Logger>	
+		-->
+
+		<!-- quartz 		
+		<Logger name="org.quartz" level="info">
+    	</Logger>
+		-->	
+
+		<!-- jetty 		
+		<Logger name="org.eclipse.jetty" level="info">	
+    	</Logger>	
+		-->
+
+		<!-- Kafka 			
+		<Logger name="org.apache.kafka" level="info">
+    	</Logger>
+		-->	
+
+		<!--  mail 	
+		<Logger name="javax.mail" level="info">		
+    	</Logger>	
+		-->
+
+		<!--  Web Socket 	
+		<Logger name="org.java_websocket" level="debug">		
+    	</Logger>
+		--> 
+		
+	</Loggers>
+</Configuration>
