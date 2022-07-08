@@ -1,5 +1,7 @@
 package org.point85.app.designer;
 
+import java.io.File;
+
 import org.point85.app.AppUtils;
 import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.ImageManager;
@@ -122,6 +124,9 @@ public class DesignerApplication {
 
 	// script execution context
 	private OeeContext appContext;
+	
+	// last backup/restore directory
+	protected File lastDirectory;
 
 	public void start(Stage primaryStage) {
 		try {
@@ -398,7 +403,7 @@ public class DesignerApplication {
 		// get the controller
 		HttpServerController httpServerController = loader.getController();
 		httpServerController.setDialogStage(dialogStage);
-		httpServerController.initializeServer();
+		httpServerController.initializeServer(this);
 
 		// Show the dialog and wait until the user closes it
 		httpServerController.getDialogStage().showAndWait();
@@ -1407,5 +1412,13 @@ public class DesignerApplication {
 
 	public void setProficyBrowserController(ProficyBrowserController proficyBrowserController) {
 		this.proficyBrowserController = proficyBrowserController;
+	}
+	
+	public File getLastDirectory() {
+		return this.lastDirectory;
+	}
+	
+	public void setLastDirectory(File file) {
+		this.lastDirectory = file;
 	}
 }

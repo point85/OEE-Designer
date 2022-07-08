@@ -87,6 +87,9 @@ public class KafkaServerController extends DesignerDialogController {
 	@FXML
 	private Button btClearSSL;
 
+	@FXML
+	private Button btBackup;
+
 	public void initialize(DesignerApplication app) throws Exception {
 		// main app
 		setApp(app);
@@ -124,6 +127,10 @@ public class KafkaServerController extends DesignerDialogController {
 
 		// clear SSL settings
 		btClearSSL.setGraphic(ImageManager.instance().getImageView(Images.CLEAR));
+		
+		// backup
+		btBackup.setGraphic(ImageManager.instance().getImageView(Images.BACKUP));
+		btBackup.setContentDisplay(ContentDisplay.LEFT); 
 	}
 
 	public KafkaSource getSource() {
@@ -350,5 +357,10 @@ public class KafkaServerController extends DesignerDialogController {
 
 	String getKeyPassword() {
 		return this.pfKeyPassword.getText();
+	}
+
+	@FXML
+	private void onBackup() {
+		backupToFile(KafkaSource.class);
 	}
 }

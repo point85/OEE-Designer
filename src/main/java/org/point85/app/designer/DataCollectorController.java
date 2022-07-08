@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.point85.app.AppUtils;
-import org.point85.app.DialogController;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
 import org.point85.domain.collector.CollectorDataSource;
@@ -31,7 +30,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.TextField;
 
-public class DataCollectorController extends DialogController {
+public class DataCollectorController extends DesignerDialogController {
 	// the collector
 	private DataCollector dataCollector;
 
@@ -60,6 +59,9 @@ public class DataCollectorController extends DialogController {
 	private Button btTest;
 
 	@FXML
+	private Button btBackup;
+
+	@FXML
 	private Button btClearMessagingServer;
 
 	@FXML
@@ -72,6 +74,9 @@ public class DataCollectorController extends DialogController {
 	private ComboBox<CollectorDataSource> cbNotificationServers;
 
 	public void initialize(DesignerApplication app) throws Exception {
+		// main app
+		setApp(app);
+		
 		// button images
 		setImages();
 
@@ -128,6 +133,10 @@ public class DataCollectorController extends DialogController {
 
 		// clear
 		btClearMessagingServer.setGraphic(ImageManager.instance().getImageView(Images.CLEAR));
+		
+		// backup
+		btBackup.setGraphic(ImageManager.instance().getImageView(Images.BACKUP));
+		btBackup.setContentDisplay(ContentDisplay.LEFT); 
 	}
 
 	public DataCollector getCollector() {
@@ -334,5 +343,10 @@ public class DataCollectorController extends DialogController {
 	private void onClearMessagingServer() {
 		cbNotificationServers.getSelectionModel().select(null);
 		cbNotificationServers.getSelectionModel().clearSelection();
+	}
+
+	@FXML
+	private void onBackup() {
+		backupToFile(DataCollector.class);
 	}
 }

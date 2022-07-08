@@ -1,6 +1,10 @@
 package org.point85.app.designer;
 
+import java.io.File;
+
+import org.point85.app.AppUtils;
 import org.point85.app.DialogController;
+import org.point85.domain.exim.Exporter;
 
 import javafx.scene.paint.Color;
 
@@ -17,5 +21,21 @@ public abstract class DesignerDialogController extends DialogController {
 
 	public void setApp(DesignerApplication app) {
 		this.app = app;
+	}
+
+	protected void backupToFile(Class<?> clazz) {
+		try {
+			// show file chooser
+			File file = AppUtils.showFileSaveDialog(getApp().getLastDirectory());
+
+			if (file != null) {
+				getApp().setLastDirectory(file.getParentFile());
+			}
+
+			// backup
+			Exporter.instance().backup(clazz, file);
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
 	}
 }

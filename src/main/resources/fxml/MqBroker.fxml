@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.messaging.MqBrokerController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.messaging.MqBrokerController">
    <children>
       <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
@@ -75,6 +75,7 @@
             <TextField fx:id="tfPort" promptText="%enter.port" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <ComboBox fx:id="cbDataSources" maxWidth="1.7976931348623157E308" onAction="#onSelectDataSource" GridPane.columnIndex="1" />
             <Button fx:id="btTest" mnemonicParsing="false" onAction="#onTest" prefWidth="100.0" text="%test" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
+            <Button fx:id="btBackup" mnemonicParsing="false" onAction="#onBackup" prefWidth="100.0" text="%backup" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
          </children>
       </GridPane>
    </children>

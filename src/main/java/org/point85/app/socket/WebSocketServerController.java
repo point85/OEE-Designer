@@ -75,6 +75,9 @@ public class WebSocketServerController extends DesignerDialogController {
 	private Button btTest;
 
 	@FXML
+	private Button btBackup;
+
+	@FXML
 	private Button btClearSSL;
 
 	public void initialize(DesignerApplication app) throws Exception {
@@ -111,6 +114,10 @@ public class WebSocketServerController extends DesignerDialogController {
 
 		// clear SSL settings
 		btClearSSL.setGraphic(ImageManager.instance().getImageView(Images.CLEAR));
+		
+		// backup
+		btBackup.setGraphic(ImageManager.instance().getImageView(Images.BACKUP));
+		btBackup.setContentDisplay(ContentDisplay.LEFT); 
 	}
 
 	public WebSocketSource getSource() {
@@ -306,5 +313,10 @@ public class WebSocketServerController extends DesignerDialogController {
 
 	boolean getClientAuthorization() {
 		return ckClientAuth.isSelected();
+	}
+
+	@FXML
+	private void onBackup() {
+		backupToFile(WebSocketSource.class);
 	}
 }

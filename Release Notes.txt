@@ -228,5 +228,12 @@ Note that version 3.2.0 has the following schema changes:
 	- Updated to Log4j2 version 2.17.2 and sl4j version 1.7.36
 	- Changed Designer tool bar to a menu bar
 	- Verified release using Java 17.0.2
+	
+(37) 3.8.0, July 8, 2022:
+	- Added backup and restore capability
+	- Updated Gson to version 2.9.0
+	- Updated Jackson to version 2.13.3
+	- Updated MySQL connector to 8.0.29
+	- Updated Jetty server to 9.4.48
 
 Please send comments and suggestions to point85.llc@gmail.com.

@@ -91,6 +91,9 @@ public class OpcDaBrowserController extends OpcDaController {
 	private Button btDelete;
 
 	@FXML
+	private Button btBackup;
+
+	@FXML
 	private TreeView<OpcDaTagTreeBranch> tvBrowser;
 
 	@FXML
@@ -154,7 +157,7 @@ public class OpcDaBrowserController extends OpcDaController {
 		cbProgIds.setItems(progIds);
 	}
 
-	private void initializeTreeView()  {
+	private void initializeTreeView() {
 
 		tvBrowser.setShowRoot(false);
 
@@ -275,6 +278,10 @@ public class OpcDaBrowserController extends OpcDaController {
 		// delete
 		btDelete.setGraphic(ImageManager.instance().getImageView(Images.DELETE));
 		btDelete.setContentDisplay(ContentDisplay.LEFT);
+		
+		// backup
+		btBackup.setGraphic(ImageManager.instance().getImageView(Images.BACKUP));
+		btBackup.setContentDisplay(ContentDisplay.LEFT); 
 	}
 
 	private void updateConnectionStatus(ConnectionState state) throws Exception {
@@ -442,7 +449,7 @@ public class OpcDaBrowserController extends OpcDaController {
 				if (type.equals(ButtonType.CANCEL)) {
 					return;
 				}
-				
+
 				PersistenceService.instance().delete(source);
 				progIds.remove(getSource().getProgId());
 
@@ -462,9 +469,9 @@ public class OpcDaBrowserController extends OpcDaController {
 			this.tfUserName.clear();
 			this.pfPassword.clear();
 			this.tfDescription.clear();
-			
+
 			this.clearTagData();
-			
+
 			this.lbState.setText(null);
 			this.lbStartTime.setText(null);
 			this.lbVendor.setText(null);
@@ -567,5 +574,10 @@ public class OpcDaBrowserController extends OpcDaController {
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}
+	}
+
+	@FXML
+	private void onBackup() {
+		backupToFile(OpcDaSource.class);
 	}
 }

@@ -1,10 +1,13 @@
 package org.point85.app;
 
+import java.io.File;
 import java.text.NumberFormat;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
@@ -15,6 +18,7 @@ import org.point85.domain.DomainUtils;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.uom.MeasurementSystem;
 import org.point85.domain.uom.Prefix;
+import org.point85.domain.uom.Unit;
 import org.point85.domain.uom.UnitOfMeasure;
 import org.point85.domain.uom.UnitType;
 
@@ -23,6 +27,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import javafx.stage.FileChooser;
 
 public abstract class AppUtils {
 	// no text
@@ -36,13 +41,18 @@ public abstract class AppUtils {
 		throw new IllegalStateException("Utility class");
 	}
 
-	// format a BigDecimal
-	public static String formatDouble(double decimal) {
-		NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.getDefault());
-		numberFormat.setGroupingUsed(true);
-		numberFormat.setMaximumFractionDigits(MAX_DIGITS);
-		numberFormat.setMinimumFractionDigits(MIN_DIGITS);
-		return numberFormat.format(decimal);
+	// format a Double
+	public static String formatDouble(Double decimal) {
+		String value = "";
+
+		if (decimal != null) {
+			NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.getDefault());
+			numberFormat.setGroupingUsed(true);
+			numberFormat.setMaximumFractionDigits(MAX_DIGITS);
+			numberFormat.setMinimumFractionDigits(MIN_DIGITS);
+			value = numberFormat.format(decimal);
+		}
+		return value;
 	}
 
 	// display a general alert
@@ -298,5 +308,45 @@ public abstract class AppUtils {
 		outputs[1] = reason;
 
 		return outputs;
+	}
+
+	public static List<UnitType> sortUnitTypes() {
+		List<UnitType> sorted = Arrays.asList(UnitType.values());
+
+		Collections.sort(sorted, new Comparator<UnitType>() {
+			@Override
+			public int compare(UnitType o1, UnitType o2) {
+				return o1.name().compareTo(o2.name());
+			}
+		});
+
+		return sorted;
+	}
+
+	public static List<Unit> sortUnits() {
+		List<Unit> sorted = Arrays.asList(Unit.values());
+
+		Collections.sort(sorted, new Comparator<Unit>() {
+			@Override
+			public int compare(Unit o1, Unit o2) {
+				return o1.name().compareTo(o2.name());
+			}
+		});
+
+		return sorted;
+	}
+
+	public static File showFileSaveDialog(File file) {
+		// show file chooser
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle(DesignerLocalizer.instance().getLangString("filechooser.backup"));
+		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Backup files (*.p85x)", "*.p85x"));
+
+		if (file != null) {
+			fileChooser.setInitialDirectory(file);
+		}
+
+		// name a file
+		return fileChooser.showSaveDialog(null);
 	}
 }

@@ -76,6 +76,9 @@ public class MqttServerController extends DesignerDialogController {
 	private Button btTest;
 
 	@FXML
+	private Button btBackup;
+
+	@FXML
 	private Button btClearAuthentication;
 
 	@FXML
@@ -118,6 +121,10 @@ public class MqttServerController extends DesignerDialogController {
 
 		// clear SSL settings
 		btClearSSL.setGraphic(ImageManager.instance().getImageView(Images.CLEAR));
+		
+		// backup
+		btBackup.setGraphic(ImageManager.instance().getImageView(Images.BACKUP));
+		btBackup.setContentDisplay(ContentDisplay.LEFT); 
 	}
 
 	public MqttSource getSource() {
@@ -329,5 +336,10 @@ public class MqttServerController extends DesignerDialogController {
 
 	String getKeyPassword() {
 		return this.pfKeyPassword.getText();
+	}
+
+	@FXML
+	private void onBackup() {
+		backupToFile(MqttSource.class);
 	}
 }

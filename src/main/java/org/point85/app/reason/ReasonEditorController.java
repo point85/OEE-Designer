@@ -73,6 +73,9 @@ public class ReasonEditorController extends DesignerDialogController {
 	private Button btImport;
 
 	@FXML
+	private Button btBackup;
+
+	@FXML
 	private TextField tfName;
 
 	@FXML
@@ -205,6 +208,10 @@ public class ReasonEditorController extends DesignerDialogController {
 		miSaveAll.setGraphic(ImageManager.instance().getImageView(Images.SAVE_ALL));
 		miRefreshAll.setGraphic(ImageManager.instance().getImageView(Images.REFRESH_ALL));
 		miClearSelection.setGraphic(ImageManager.instance().getImageView(Images.CLEAR));
+		
+		// backup
+		btBackup.setGraphic(ImageManager.instance().getImageView(Images.BACKUP));
+		btBackup.setContentDisplay(ContentDisplay.RIGHT); 
 	}
 
 	// show the Reason attributes
@@ -620,4 +627,8 @@ public class ReasonEditorController extends DesignerDialogController {
 		}
 	}
 
+	@FXML
+	private void onBackup() {
+		backupToFile(Reason.class);
+	}
 }

@@ -59,6 +59,9 @@ public class CronEditorController extends DesignerDialogController {
 	@FXML
 	private Button btTest;
 
+	@FXML
+	private Button btBackup;
+
 	public void initialize(DesignerApplication app) throws Exception {
 		// main app
 		setApp(app);
@@ -94,6 +97,10 @@ public class CronEditorController extends DesignerDialogController {
 		// test
 		btTest.setGraphic(ImageManager.instance().getImageView(Images.EXECUTE));
 		btTest.setContentDisplay(ContentDisplay.LEFT);
+		
+		// backup
+		btBackup.setGraphic(ImageManager.instance().getImageView(Images.BACKUP));
+		btBackup.setContentDisplay(ContentDisplay.LEFT); 
 	}
 
 	public CronEventSource getSource() {
@@ -232,5 +239,10 @@ public class CronEditorController extends DesignerDialogController {
 
 	String getExpression() {
 		return this.tfExpression.getText();
+	}
+
+	@FXML
+	private void onBackup() {
+		backupToFile(CronEventSource.class);
 	}
 }

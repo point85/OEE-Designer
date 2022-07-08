@@ -6,9 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.point85.app.AppUtils;
-import org.point85.app.DialogController;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
+import org.point85.app.designer.DesignerApplication;
+import org.point85.app.designer.DesignerDialogController;
 import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.DomainUtils;
 import org.point85.domain.collector.CollectorDataSource;
@@ -26,7 +27,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.TextField;
 
-public class HttpServerController extends DialogController {
+public class HttpServerController extends DesignerDialogController {
 	// current source
 	private HttpSource dataSource;
 
@@ -60,7 +61,13 @@ public class HttpServerController extends DialogController {
 	@FXML
 	private Button btHttpTest;
 
-	public void initializeServer() throws Exception {
+	@FXML
+	private Button btBackup;
+
+	public void initializeServer(DesignerApplication app) throws Exception {
+		// main app
+		setApp(app);
+
 		// button images
 		setImages();
 
@@ -88,6 +95,10 @@ public class HttpServerController extends DialogController {
 		// test
 		btHttpTest.setGraphic(ImageManager.instance().getImageView(Images.EXECUTE));
 		btHttpTest.setContentDisplay(ContentDisplay.LEFT);
+		
+		// backup
+		btBackup.setGraphic(ImageManager.instance().getImageView(Images.BACKUP));
+		btBackup.setContentDisplay(ContentDisplay.LEFT); 
 	}
 
 	public HttpSource getSource() {
@@ -249,5 +260,10 @@ public class HttpServerController extends DialogController {
 
 	private String getDescription() {
 		return this.tfDescription.getText();
+	}
+
+	@FXML
+	private void onBackup() {
+		backupToFile(HttpSource.class);
 	}
 }

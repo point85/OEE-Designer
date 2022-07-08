@@ -73,6 +73,9 @@ public class MqBrokerController extends DesignerDialogController {
 	@FXML
 	private Button btTest;
 
+	@FXML
+	private Button btBackup;
+
 	public void initialize(DesignerApplication app, DataSourceType type) throws Exception {
 		// set source
 		this.sourceType = type;
@@ -107,6 +110,10 @@ public class MqBrokerController extends DesignerDialogController {
 		// test
 		btTest.setGraphic(ImageManager.instance().getImageView(Images.EXECUTE));
 		btTest.setContentDisplay(ContentDisplay.LEFT);
+		
+		// backup
+		btBackup.setGraphic(ImageManager.instance().getImageView(Images.BACKUP));
+		btBackup.setContentDisplay(ContentDisplay.LEFT); 
 	}
 
 	public CollectorDataSource getSource() {
@@ -310,5 +317,14 @@ public class MqBrokerController extends DesignerDialogController {
 
 	String getDescription() {
 		return this.tfDescription.getText();
+	}
+
+	@FXML
+	private void onBackup() {
+		if (sourceType.equals(DataSourceType.JMS)) {
+			backupToFile(JmsSource.class);
+		} else if (sourceType.equals(DataSourceType.RMQ)) {
+			backupToFile(RmqSource.class);
+		}
 	}
 }

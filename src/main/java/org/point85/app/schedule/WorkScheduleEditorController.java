@@ -127,6 +127,9 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 	private Button btDelete;
 
 	@FXML
+	private Button btBackup;
+
+	@FXML
 	private TreeView<ScheduleNode> tvSchedules;
 
 	@FXML
@@ -830,6 +833,10 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		// context menu
 		miSaveAll.setGraphic(ImageManager.instance().getImageView(Images.SAVE_ALL));
 		miRefreshAll.setGraphic(ImageManager.instance().getImageView(Images.REFRESH_ALL));
+		
+		// backup
+		btBackup.setGraphic(ImageManager.instance().getImageView(Images.BACKUP));
+		btBackup.setContentDisplay(ContentDisplay.RIGHT); 
 	}
 
 	private void resetEditor() {
@@ -1643,6 +1650,11 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		// close dialog with current material set to null
 		selectedScheduleItem = null;
 		super.onCancel();
+	}
+
+	@FXML
+	private void onBackup() {
+		backupToFile(WorkSchedule.class);
 	}
 
 	@FXML

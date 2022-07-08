@@ -98,6 +98,9 @@ public class OpcUaBrowserController extends OpcUaController {
 	private Button btDelete;
 
 	@FXML
+	private Button btBackup;
+
+	@FXML
 	private TreeView<OpcUaTreeNode> tvBrowser;
 
 	@FXML
@@ -361,6 +364,10 @@ public class OpcUaBrowserController extends OpcUaController {
 
 		// clear
 		btClearAuthentication.setGraphic(ImageManager.instance().getImageView(Images.CLEAR));
+		
+		// backup
+		btBackup.setGraphic(ImageManager.instance().getImageView(Images.BACKUP));
+		btBackup.setContentDisplay(ContentDisplay.LEFT); 
 	}
 
 	private void updateConnectionStatus(ConnectionState state) throws Exception {
@@ -787,6 +794,11 @@ public class OpcUaBrowserController extends OpcUaController {
 
 	public OpcUaTreeNode getSelectedNodeId() {
 		return selectedTreeNode;
+	}
+
+	@FXML
+	private void onBackup() {
+		backupToFile(OpcUaSource.class);
 	}
 
 }

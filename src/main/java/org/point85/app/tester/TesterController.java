@@ -36,16 +36,23 @@ import org.point85.domain.cron.CronEventSource;
 import org.point85.domain.db.DatabaseEvent;
 import org.point85.domain.db.DatabaseEventClient;
 import org.point85.domain.db.DatabaseEventSource;
+import org.point85.domain.dto.AreaDto;
+import org.point85.domain.dto.EnterpriseDto;
+import org.point85.domain.dto.EquipmentDto;
 import org.point85.domain.dto.EquipmentEventRequestDto;
 import org.point85.domain.dto.MaterialDto;
 import org.point85.domain.dto.MaterialResponseDto;
-import org.point85.domain.dto.PlantEntityDto;
 import org.point85.domain.dto.PlantEntityResponseDto;
+import org.point85.domain.dto.ProductionLineDto;
 import org.point85.domain.dto.ReasonDto;
 import org.point85.domain.dto.ReasonResponseDto;
+import org.point85.domain.dto.SiteDto;
 import org.point85.domain.dto.SourceIdResponseDto;
+import org.point85.domain.dto.WorkCellDto;
 import org.point85.domain.email.EmailClient;
 import org.point85.domain.email.EmailSource;
+import org.point85.domain.exim.ExportContent;
+import org.point85.domain.exim.Importer;
 import org.point85.domain.file.FileEventClient;
 import org.point85.domain.file.FileEventSource;
 import org.point85.domain.http.HttpSource;
@@ -72,10 +79,16 @@ import org.point85.domain.opc.da.OpcDaVariant;
 import org.point85.domain.opc.ua.OpcUaSource;
 import org.point85.domain.opc.ua.UaOpcClient;
 import org.point85.domain.persistence.PersistenceService;
+import org.point85.domain.plant.Area;
+import org.point85.domain.plant.Enterprise;
 import org.point85.domain.plant.EntityLevel;
+import org.point85.domain.plant.Equipment;
 import org.point85.domain.plant.Material;
 import org.point85.domain.plant.PlantEntity;
+import org.point85.domain.plant.ProductionLine;
 import org.point85.domain.plant.Reason;
+import org.point85.domain.plant.Site;
+import org.point85.domain.plant.WorkCell;
 import org.point85.domain.proficy.ProficyClient;
 import org.point85.domain.proficy.ProficySource;
 import org.point85.domain.rmq.RmqClient;
@@ -468,13 +481,13 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 				entry.getValue().stopPolling();
 			}
 			emailClients.clear();
-			
+
 			// disconnect web socket clients
 			for (Entry<String, WebSocketOeeClient> entry : webSocketClients.entrySet()) {
 				entry.getValue().closeConnection();
 			}
 			webSocketClients.clear();
-			
+
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
@@ -679,7 +692,7 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 			if (!entity.getLevel().equals(EntityLevel.EQUIPMENT)) {
 				return;
 			}
-			
+
 			lbNotification.setText(null);
 
 			selectedEntity = entity;
@@ -1145,16 +1158,13 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 		}
 	}
 
-	private void addChildEntityItems(List<PlantEntityDto> childDtos, TreeItem<PlantEntity> parentItem) {
-
-		for (PlantEntityDto childDto : childDtos) {
-			EntityLevel level = EntityLevel.valueOf(childDto.getLevel());
-			PlantEntity childEntity = new PlantEntity(childDto.getName(), childDto.getDescription(), level);
+	private void addChildEntityItems(Set<PlantEntity> entities, TreeItem<PlantEntity> parentItem) throws Exception {
+		for (PlantEntity childEntity : entities) {
 
 			TreeItem<PlantEntity> childItem = new TreeItem<>(childEntity);
 			parentItem.getChildren().add(childItem);
 
-			addChildEntityItems(childDto.getChildren(), childItem);
+			addChildEntityItems(childEntity.getChildren(), childItem);
 		}
 	}
 
@@ -1267,21 +1277,72 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 
 			String entityString = sb.toString();
 
-			PlantEntityResponseDto listDto = gson.fromJson(entityString, PlantEntityResponseDto.class);
-			List<PlantEntityDto> dtoList = listDto.getEntityList();
+			// create export content
+			PlantEntityResponseDto responseDto = gson.fromJson(entityString, PlantEntityResponseDto.class);
+
+			ExportContent content = responseDto.getContent();
 
 			ttvEntities.getRoot().getChildren().clear();
 
 			// top-level entities
-			for (PlantEntityDto dto : dtoList) {
-				EntityLevel level = EntityLevel.valueOf(dto.getLevel());
-				PlantEntity entity = new PlantEntity(dto.getName(), dto.getDescription(), level);
+			for (EnterpriseDto dto : content.getEnterprises()) {
+				Enterprise entity = new Enterprise(dto);
+				Importer.instance().addSites(entity, dto.getSites());
 
 				TreeItem<PlantEntity> entityItem = new TreeItem<>(entity);
-				addChildEntityItems(dto.getChildren(), entityItem);
+				addChildEntityItems(entity.getChildren(), entityItem);
 
 				ttvEntities.getRoot().getChildren().add(entityItem);
 			}
+
+			for (SiteDto dto : content.getSites()) {
+				Site entity = new Site(dto);
+				Importer.instance().addAreas(entity, dto.getAreas());
+
+				TreeItem<PlantEntity> entityItem = new TreeItem<>(entity);
+				addChildEntityItems(entity.getChildren(), entityItem);
+
+				ttvEntities.getRoot().getChildren().add(entityItem);
+			}
+
+			for (AreaDto dto : content.getAreas()) {
+				Area entity = new Area(dto);
+				Importer.instance().addProductionLines(entity, dto.getProductionLines());
+
+				TreeItem<PlantEntity> entityItem = new TreeItem<>(entity);
+				addChildEntityItems(entity.getChildren(), entityItem);
+
+				ttvEntities.getRoot().getChildren().add(entityItem);
+			}
+
+			for (ProductionLineDto dto : content.getProductionLines()) {
+				ProductionLine entity = new ProductionLine(dto);
+				Importer.instance().addWorkCells(entity, dto.getWorkCells());
+
+				TreeItem<PlantEntity> entityItem = new TreeItem<>(entity);
+				addChildEntityItems(entity.getChildren(), entityItem);
+
+				ttvEntities.getRoot().getChildren().add(entityItem);
+			}
+
+			for (WorkCellDto dto : content.getWorkCells()) {
+				WorkCell entity = new WorkCell(dto);
+				Importer.instance().addEquipment(entity, dto.getEquipment());
+
+				TreeItem<PlantEntity> entityItem = new TreeItem<>(entity);
+				addChildEntityItems(entity.getChildren(), entityItem);
+
+				ttvEntities.getRoot().getChildren().add(entityItem);
+			}
+
+			for (EquipmentDto dto : content.getEquipment()) {
+				Equipment entity = new Equipment(dto);
+
+				TreeItem<PlantEntity> entityItem = new TreeItem<>(entity);
+
+				ttvEntities.getRoot().getChildren().add(entityItem);
+			}
+
 			ttvEntities.refresh();
 
 		} finally {

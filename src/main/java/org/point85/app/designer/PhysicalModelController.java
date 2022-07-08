@@ -1,5 +1,6 @@
 package org.point85.app.designer;
 
+import java.io.File;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,18 +13,38 @@ import org.point85.app.EntityNode;
 import org.point85.app.FXMLLoaderFactory;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
+import org.point85.domain.collector.DataCollector;
 import org.point85.domain.collector.DataSourceType;
+import org.point85.domain.cron.CronEventSource;
+import org.point85.domain.db.DatabaseEventSource;
+import org.point85.domain.email.EmailSource;
+import org.point85.domain.exim.Exporter;
+import org.point85.domain.exim.Importer;
+import org.point85.domain.file.FileEventSource;
+import org.point85.domain.http.HttpSource;
+import org.point85.domain.jms.JmsSource;
+import org.point85.domain.kafka.KafkaSource;
+import org.point85.domain.modbus.ModbusSource;
+import org.point85.domain.mqtt.MqttSource;
+import org.point85.domain.opc.da.OpcDaSource;
+import org.point85.domain.opc.ua.OpcUaSource;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Area;
 import org.point85.domain.plant.Enterprise;
 import org.point85.domain.plant.EntityLevel;
 import org.point85.domain.plant.Equipment;
+import org.point85.domain.plant.Material;
 import org.point85.domain.plant.PlantEntity;
 import org.point85.domain.plant.ProductionLine;
+import org.point85.domain.plant.Reason;
 import org.point85.domain.plant.Site;
 import org.point85.domain.plant.WorkCell;
+import org.point85.domain.proficy.ProficySource;
+import org.point85.domain.rmq.RmqSource;
 import org.point85.domain.schedule.WorkSchedule;
 import org.point85.domain.script.EventResolver;
+import org.point85.domain.socket.WebSocketSource;
+import org.point85.domain.uom.UnitOfMeasure;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -43,6 +64,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.FileChooser;
 
 /**
  * Controller for editing and viewing the physical model and its associated
@@ -133,7 +155,7 @@ public class PhysicalModelController extends DesignerController {
 
 	@FXML
 	private MenuItem miCronEditor;
-	
+
 	@FXML
 	private MenuItem miWebSocketEditor;
 
@@ -142,6 +164,12 @@ public class PhysicalModelController extends DesignerController {
 
 	@FXML
 	private MenuItem miUomConverter;
+
+	@FXML
+	private MenuItem miRestore;
+
+	@FXML
+	private MenuItem miBackup;
 
 	@FXML
 	private MenuItem miScriptEditor;
@@ -161,6 +189,9 @@ public class PhysicalModelController extends DesignerController {
 
 	@FXML
 	private Button btDelete;
+
+	@FXML
+	private Button btBackup;
 
 	// context menu
 	@FXML
@@ -372,9 +403,9 @@ public class PhysicalModelController extends DesignerController {
 		mnSource.setGraphic(ImageManager.instance().getImageView(Images.SOURCE_MENU));
 
 		mnEditor.setGraphic(ImageManager.instance().getImageView(Images.EDITOR_MENU));
-		
+
 		mnTool.setGraphic(ImageManager.instance().getImageView(Images.TOOL_MENU));
-		
+
 		mnHelp.setGraphic(ImageManager.instance().getImageView(Images.HELP_MENU));
 
 		// menu items
@@ -411,7 +442,7 @@ public class PhysicalModelController extends DesignerController {
 		miFileShareEditor.setGraphic(ImageManager.instance().getImageView(Images.FILE));
 
 		miCronEditor.setGraphic(ImageManager.instance().getImageView(Images.CRON));
-		
+
 		miWebSocketEditor.setGraphic(ImageManager.instance().getImageView(Images.CONNECT));
 
 		miCollectorEditor.setGraphic(ImageManager.instance().getImageView(Images.COLLECTOR));
@@ -449,6 +480,13 @@ public class PhysicalModelController extends DesignerController {
 		miSaveAll.setGraphic(ImageManager.instance().getImageView(Images.SAVE_ALL));
 		miRefreshAll.setGraphic(ImageManager.instance().getImageView(Images.REFRESH_ALL));
 		miClearSelection.setGraphic(ImageManager.instance().getImageView(Images.CLEAR));
+
+		// backup & restore
+		btBackup.setGraphic(ImageManager.instance().getImageView(Images.BACKUP));
+		btBackup.setContentDisplay(ContentDisplay.RIGHT);
+
+		miBackup.setGraphic(ImageManager.instance().getImageView(Images.BACKUP));
+		miRestore.setGraphic(ImageManager.instance().getImageView(Images.RESTORE));
 	}
 
 	@FXML
@@ -495,7 +533,7 @@ public class PhysicalModelController extends DesignerController {
 			AppUtils.showErrorDialog(e);
 		}
 	}
-	
+
 	@FXML
 	private void onShowWebSocketEditor() {
 		try {
@@ -1146,6 +1184,87 @@ public class PhysicalModelController extends DesignerController {
 	private void onShowProficyBrowserEditor() {
 		try {
 			this.getApp().showProficyEditor();
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+
+	@FXML
+	private void onRestore() {
+		try {
+			// show file chooser
+			FileChooser fileChooser = new FileChooser();
+			fileChooser.setTitle(DesignerLocalizer.instance().getLangString("filechooser.backup"));
+			fileChooser.setInitialDirectory(getApp().getLastDirectory());
+			File file = fileChooser.showOpenDialog(null);
+
+			if (file == null) {
+				return;
+			}
+			getApp().setLastDirectory(file.getParentFile());
+
+			// restore content
+			Importer.instance().restore(file);
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+
+	@FXML
+	private void onBackupAll() {
+		try {
+			// show file chooser
+			File file = AppUtils.showFileSaveDialog(getApp().getLastDirectory());
+
+			if (file == null) {
+				return;
+			}
+			getApp().setLastDirectory(file.getParentFile());
+
+			// backup all design time objects
+			Exporter.instance().prepare(Material.class);
+			Exporter.instance().prepare(Reason.class);
+			Exporter.instance().prepare(UnitOfMeasure.class);
+			Exporter.instance().prepare(WorkSchedule.class);
+			Exporter.instance().prepare(PlantEntity.class);
+			Exporter.instance().prepare(DataCollector.class);
+
+			// data sources
+			Exporter.instance().prepare(CronEventSource.class);
+			Exporter.instance().prepare(HttpSource.class);
+			Exporter.instance().prepare(DatabaseEventSource.class);
+			Exporter.instance().prepare(EmailSource.class);
+			Exporter.instance().prepare(FileEventSource.class);
+			Exporter.instance().prepare(JmsSource.class);
+			Exporter.instance().prepare(KafkaSource.class);
+			Exporter.instance().prepare(ModbusSource.class);
+			Exporter.instance().prepare(MqttSource.class);
+			Exporter.instance().prepare(OpcDaSource.class);
+			Exporter.instance().prepare(OpcUaSource.class);
+			Exporter.instance().prepare(ProficySource.class);
+			Exporter.instance().prepare(RmqSource.class);
+			Exporter.instance().prepare(WebSocketSource.class);
+
+			Exporter.instance().backup(file);
+
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+
+	@FXML
+	private void onBackup() {
+		try {
+			// show file chooser
+			File file = AppUtils.showFileSaveDialog(getApp().getLastDirectory());
+
+			if (file == null) {
+				return;
+			}
+			getApp().setLastDirectory(file.getParentFile());
+
+			// backup
+			Exporter.instance().backup(PlantEntity.class, file);
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}

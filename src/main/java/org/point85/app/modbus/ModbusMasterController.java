@@ -112,6 +112,9 @@ public class ModbusMasterController extends ModbusController {
 	private Button btWrite;
 
 	@FXML
+	private Button btBackup;
+
+	@FXML
 	private Label lbState;
 
 	@FXML
@@ -215,6 +218,10 @@ public class ModbusMasterController extends ModbusController {
 		// cancel connect
 		btCancelConnect.setGraphic(ImageManager.instance().getImageView(Images.CANCEL));
 		btCancelConnect.setContentDisplay(ContentDisplay.LEFT);
+		
+		// backup
+		btBackup.setGraphic(ImageManager.instance().getImageView(Images.BACKUP));
+		btBackup.setContentDisplay(ContentDisplay.LEFT); 
 	}
 
 	Integer getUnitId() {
@@ -627,5 +634,10 @@ public class ModbusMasterController extends ModbusController {
 
 		btRead.setDisable(false);
 		btWrite.setDisable(false);
+	}
+
+	@FXML
+	private void onBackup() {
+		backupToFile(ModbusSource.class);
 	}
 }

@@ -19,7 +19,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="900.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.opc.ua.OpcUaBrowserController">
+<AnchorPane prefHeight="900.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.opc.ua.OpcUaBrowserController">
    <children>
       <HBox alignment="CENTER" prefHeight="50.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
@@ -162,6 +162,7 @@
                         <Label text="%ua.server" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
                         <TextField fx:id="tfPath" promptText="%enter.ua.server" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                         <TextField fx:id="tfConnectionName" promptText="%enter.name" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Button fx:id="btBackup" mnemonicParsing="false" onAction="#onBackup" prefWidth="100.0" text="%backup" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
                      </children>
                   </GridPane>
                   <HBox alignment="CENTER" layoutY="350.0" prefHeight="50.0" spacing="25.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="550.0">

@@ -89,6 +89,9 @@ public class EmailServerController extends DesignerDialogController {
 
 	@FXML
 	private Button btTest;
+	
+	@FXML
+	private Button btBackup;
 
 	public void initialize(DesignerApplication app) throws Exception {
 		// main app
@@ -121,6 +124,10 @@ public class EmailServerController extends DesignerDialogController {
 		// test
 		btTest.setGraphic(ImageManager.instance().getImageView(Images.EXECUTE));
 		btTest.setContentDisplay(ContentDisplay.LEFT);
+		
+		// backup
+		btBackup.setGraphic(ImageManager.instance().getImageView(Images.BACKUP));
+		btBackup.setContentDisplay(ContentDisplay.LEFT); 
 	}
 
 	public EmailSource getSource() {
@@ -355,5 +362,10 @@ public class EmailServerController extends DesignerDialogController {
 		} else {
 			tfReceivePort.setText(String.valueOf(POP3_DEFAULT_PORT));
 		}
+	}
+	
+	@FXML
+	private void onBackup() {
+		backupToFile(EmailSource.class);
 	}
 }

@@ -24,7 +24,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.schedule.WorkScheduleEditorController">
+<AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.schedule.WorkScheduleEditorController">
    <children>
       <SplitPane dividerPositions="0.4" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
         <items>
@@ -40,6 +40,7 @@
                   </ButtonBar>
                   <ButtonBar buttonMinWidth="25.0" layoutX="32.0" layoutY="91.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="45.0">
                      <buttons>
+                        <Button fx:id="btBackup" mnemonicParsing="false" onAction="#onBackup" text="%backup" />
                         <Button fx:id="btChooseSchedule" alignment="CENTER" mnemonicParsing="false" onAction="#onChooseSchedule" prefWidth="100.0" text="%import" />
                         <Button fx:id="btViewShifts" alignment="CENTER" mnemonicParsing="false" onAction="#onViewShifts" prefWidth="100.0" text="%shift.instances" />
                      </buttons></ButtonBar>

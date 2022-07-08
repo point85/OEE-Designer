@@ -1,8 +1,8 @@
 package org.point85.app.uom;
 
-import java.util.Collections;
 import java.util.List;
 
+import org.point85.app.AppUtils;
 import org.point85.app.DialogController;
 import org.point85.domain.uom.MeasurementSystem;
 import org.point85.domain.uom.UnitOfMeasure;
@@ -39,8 +39,8 @@ public class UomImporterController extends DialogController {
 	@FXML
 	public void initialize() {
 		// set unit types
-		Collections.addAll(unitTypes, UnitType.values());
-		Collections.sort(unitTypes);
+		List<UnitType> sorted = AppUtils.sortUnitTypes();
+		unitTypes.addAll(sorted);
 
 		cbUnitTypes.setItems(unitTypes);
 		cbAvailableUnits.setItems(unitItems);

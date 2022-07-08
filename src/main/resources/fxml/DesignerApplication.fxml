@@ -39,6 +39,7 @@
                      </contextMenu></TreeView>
                   <ButtonBar buttonMinWidth="25.0" layoutX="14.0" layoutY="45.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="45.0">
                     <buttons>
+                        <Button fx:id="btBackup" mnemonicParsing="false" onAction="#onBackup" text="%backup" />
                         <Button fx:id="btDashboard" disable="true" mnemonicParsing="false" onAction="#onShowDashboard" text="%dashboard" />
                     </buttons>
                   </ButtonBar>
@@ -134,8 +135,8 @@
                   <MenuItem fx:id="miEmailServerEditor" mnemonicParsing="false" onAction="#onShowEmailServerEditor" text="%item.email" />
                   <MenuItem fx:id="miFileShareEditor" mnemonicParsing="false" onAction="#onShowFileShareEditor" text="%item.file" />
                   <MenuItem fx:id="miHttpServerEditor" mnemonicParsing="false" onAction="#onShowHttpServerEditor" text="%item.http" />
-                  <MenuItem fx:id="miKafkaServerEditor" mnemonicParsing="false" onAction="#onShowKafkaServerEditor" text="%item.kafka" />
                   <MenuItem fx:id="miJMSBrokerEditor" mnemonicParsing="false" onAction="#onShowJMSBrokerEditor" text="%item.jms" />
+                  <MenuItem fx:id="miKafkaServerEditor" mnemonicParsing="false" onAction="#onShowKafkaServerEditor" text="%item.kafka" />
                   <MenuItem fx:id="miModbusEditor" mnemonicParsing="false" onAction="#onShowModbusEditor" text="%item.modbus" />
                   <MenuItem fx:id="miMQTTBrokerEditor" mnemonicParsing="false" onAction="#onShowMQTTBrokerEditor" text="%item.mqtt" />
                   <MenuItem fx:id="miOpcDaBrowser" mnemonicParsing="false" onAction="#onShowOpcDaBrowser" text="%item.opc.da" />
@@ -160,6 +161,9 @@
             <Menu fx:id="mnTool" mnemonicParsing="false" text="%menu.tool">
               <items>
                 <MenuItem fx:id="miUomConverter" mnemonicParsing="false" onAction="#onShowUomConverter" text="%item.uom.converter" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem fx:id="miBackup" mnemonicParsing="false" onAction="#onBackupAll" text="%item.backup" />
+                  <MenuItem fx:id="miRestore" mnemonicParsing="false" onAction="#onRestore" text="%item.restore" />
               </items>
             </Menu>
           <Menu fx:id="mnHelp" mnemonicParsing="false" text="%menu.help">

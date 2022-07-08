@@ -52,6 +52,9 @@ public final class ImageManager {
 		case AREA:
 			image = new Image(IMAGE_PATH + "Area.png", DIM, DIM, true, true);
 			break;
+		case BACKUP:
+			image = new Image(IMAGE_PATH + "Backup.png", DIM, DIM, true, true);
+			break;
 		case CANCEL:
 			image = new Image(IMAGE_PATH + "Cancel.png", DIM, DIM, true, true);
 			break;
@@ -144,6 +147,9 @@ public final class ImageManager {
 			break;
 		case REMOVE:
 			image = new Image(IMAGE_PATH + "Remove.png", DIM, DIM, true, true);
+			break;
+		case RESTORE:
+			image = new Image(IMAGE_PATH + "Restore.png", DIM, DIM, true, true);
 			break;
 		case RMQ:
 			image = new Image(IMAGE_PATH + "RMQSource.png", DIM, DIM, true, true);

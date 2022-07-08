@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.file.FileShareController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.file.FileShareController">
    <children>
       <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
@@ -34,6 +34,7 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
             <Label text="%file.path" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
@@ -58,6 +59,7 @@
             <Button fx:id="btDelete" mnemonicParsing="false" onAction="#onDeleteDataSource" prefWidth="100.0" text="%delete" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
             <ComboBox fx:id="cbDataSources" maxWidth="1.7976931348623157E308" onAction="#onSelectDataSource" GridPane.columnIndex="1" GridPane.columnSpan="2" />
             <Button fx:id="btFileChooser" mnemonicParsing="false" onAction="#onChooseFile" prefWidth="100.0" text="%choose" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+            <Button fx:id="btBackup" mnemonicParsing="false" onAction="#onBackup" prefWidth="100.0" text="%backup" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
          </children>
       </GridPane>
    </children>

@@ -105,6 +105,9 @@ public class UomEditorController extends DesignerDialogController {
 	private Button btImport;
 
 	@FXML
+	private Button btBackup;
+
+	@FXML
 	private TextField tfName;
 
 	@FXML
@@ -182,8 +185,8 @@ public class UomEditorController extends DesignerDialogController {
 	// get the display strings for all UOM types
 	protected ObservableList<UnitType> getUnitTypes() {
 		if (unitTypes.isEmpty()) {
-			Collections.addAll(unitTypes, UnitType.values());
-			Collections.sort(unitTypes);
+			List<UnitType> sorted = AppUtils.sortUnitTypes();
+			unitTypes.addAll(sorted);
 		}
 		return unitTypes;
 	}
@@ -301,6 +304,10 @@ public class UomEditorController extends DesignerDialogController {
 		// context menu
 		miSaveAll.setGraphic(ImageManager.instance().getImageView(Images.SAVE_ALL));
 		miRefreshAll.setGraphic(ImageManager.instance().getImageView(Images.REFRESH_ALL));
+		
+		// backup
+		btBackup.setGraphic(ImageManager.instance().getImageView(Images.BACKUP));
+		btBackup.setContentDisplay(ContentDisplay.RIGHT); 
 	}
 
 	@FXML
@@ -1052,6 +1059,11 @@ public class UomEditorController extends DesignerDialogController {
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}
+	}
+
+	@FXML
+	private void onBackup() {
+		backupToFile(UnitOfMeasure.class);
 	}
 
 	// class for holding attributes of UOM in a tree view leaf node

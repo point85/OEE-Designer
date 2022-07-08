@@ -93,6 +93,9 @@ public class ProficyBrowserController extends DesignerDialogController {
 	private Button btDelete;
 
 	@FXML
+	private Button btBackup;
+
+	@FXML
 	private Button btFilter;
 
 	@FXML
@@ -187,6 +190,10 @@ public class ProficyBrowserController extends DesignerDialogController {
 		// write
 		btWrite.setGraphic(ImageManager.instance().getImageView(Images.WRITE));
 		btWrite.setContentDisplay(ContentDisplay.LEFT);
+		
+		// backup
+		btBackup.setGraphic(ImageManager.instance().getImageView(Images.BACKUP));
+		btBackup.setContentDisplay(ContentDisplay.LEFT); 
 	}
 
 	public ProficySource getSource() {
@@ -322,7 +329,7 @@ public class ProficyBrowserController extends DesignerDialogController {
 	private void onSaveDataSource() {
 		try {
 			ProficySource eventSource = getSource();
-			
+
 			if (eventSource == null) {
 				return;
 			}
@@ -355,7 +362,7 @@ public class ProficyBrowserController extends DesignerDialogController {
 				cbDataSources.getItems().remove(eventSource);
 			}
 			cbDataSources.getItems().add(saved);
-			
+
 			if (cbDataSources.getItems().size() == 1) {
 				cbDataSources.getSelectionModel().select(0);
 			}
@@ -394,7 +401,7 @@ public class ProficyBrowserController extends DesignerDialogController {
 		if (dataSource == null) {
 			return;
 		}
-		
+
 		try {
 			String mask = tfMask.getText();
 			Integer count = Integer.parseInt(tfTagCount.getText());
@@ -513,5 +520,10 @@ public class ProficyBrowserController extends DesignerDialogController {
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}
+	}
+
+	@FXML
+	private void onBackup() {
+		backupToFile(ProficySource.class);
 	}
 }

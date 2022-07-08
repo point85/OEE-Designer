@@ -12,6 +12,7 @@ import org.point85.app.designer.DesignerDialogController;
 import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.DataSourceType;
+import org.point85.domain.email.EmailSource;
 import org.point85.domain.file.FileEventSource;
 import org.point85.domain.persistence.PersistenceService;
 
@@ -53,6 +54,9 @@ public class FileShareController extends DesignerDialogController {
 	@FXML
 	private Button btFileChooser;
 
+	@FXML
+	private Button btBackup;
+
 	public void initialize(DesignerApplication app) throws Exception {
 		// main app
 		setApp(app);
@@ -84,6 +88,10 @@ public class FileShareController extends DesignerDialogController {
 		// choose file
 		btFileChooser.setGraphic(ImageManager.instance().getImageView(Images.CHOOSE_FILE));
 		btFileChooser.setContentDisplay(ContentDisplay.LEFT);
+		
+		// backup
+		btBackup.setGraphic(ImageManager.instance().getImageView(Images.BACKUP));
+		btBackup.setContentDisplay(ContentDisplay.LEFT); 
 	}
 
 	public FileEventSource getSource() {
@@ -125,7 +133,7 @@ public class FileShareController extends DesignerDialogController {
 				if (type.equals(ButtonType.CANCEL)) {
 					return;
 				}
-				
+
 				PersistenceService.instance().delete(dataSource);
 				fileServers.remove(dataSource);
 
@@ -222,5 +230,10 @@ public class FileShareController extends DesignerDialogController {
 
 	String getDescription() {
 		return this.tfDescription.getText();
+	}
+
+	@FXML
+	private void onBackup() {
+		backupToFile(EmailSource.class);
 	}
 }

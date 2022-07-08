@@ -19,7 +19,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.proficy.ProficyBrowserController">
+<AnchorPane prefHeight="800.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.proficy.ProficyBrowserController">
    <children>
       <HBox alignment="CENTER" prefHeight="50.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
@@ -202,16 +202,17 @@
                         </Label>
                         <TextField fx:id="tfHost" promptText="%enter.host" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <ComboBox fx:id="cbDataSources" maxWidth="1.7976931348623157E308" onAction="#onSelectDataSource" GridPane.columnIndex="1" GridPane.columnSpan="2" />
-                        <Button fx:id="btSave" mnemonicParsing="false" onAction="#onSaveDataSource" prefWidth="100.0" text="%save" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+                        <Button fx:id="btSave" mnemonicParsing="false" onAction="#onSaveDataSource" prefWidth="100.0" text="%save" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                         <Label text="%description" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
                            <GridPane.margin>
                               <Insets />
                            </GridPane.margin>
                         </Label>
                         <TextField fx:id="tfDescription" maxWidth="1.7976931348623157E308" promptText="%enter.description" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <Button fx:id="btNew" mnemonicParsing="false" onAction="#onNewDataSource" prefWidth="100.0" text="%new" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-                        <Button fx:id="btDelete" mnemonicParsing="false" onAction="#onDeleteDataSource" prefWidth="100.0" text="%delete" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+                        <Button fx:id="btNew" mnemonicParsing="false" onAction="#onNewDataSource" prefWidth="100.0" text="%new" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                        <Button fx:id="btDelete" mnemonicParsing="false" onAction="#onDeleteDataSource" prefWidth="100.0" text="%delete" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
                         <Label text="%choose.saved" GridPane.halignment="RIGHT" />
+                        <Button fx:id="btBackup" mnemonicParsing="false" onAction="#onBackup" prefWidth="100.0" text="%backup" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
                      </children>
                   </GridPane>
                   <HBox alignment="CENTER" layoutX="53.0" layoutY="212.0" prefHeight="50.0" spacing="25.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="225.0" />

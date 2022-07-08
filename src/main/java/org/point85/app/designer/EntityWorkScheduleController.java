@@ -117,6 +117,10 @@ public class EntityWorkScheduleController extends DesignerController {
 	}
 
 	void showSchedules(PlantEntity entity) {
+		if (entity == null) {
+			return;
+		}
+		
 		Set<EntitySchedule> schedules = entity.getSchedules();
 
 		entitySchedules.clear();

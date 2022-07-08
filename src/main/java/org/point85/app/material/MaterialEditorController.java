@@ -64,6 +64,9 @@ public class MaterialEditorController extends DesignerDialogController {
 	private Button btImport;
 
 	@FXML
+	private Button btBackup;
+
+	@FXML
 	private TextField tfName;
 
 	@FXML
@@ -191,6 +194,10 @@ public class MaterialEditorController extends DesignerDialogController {
 		// context menu
 		miSaveAll.setGraphic(ImageManager.instance().getImageView(Images.SAVE_ALL));
 		miRefreshAll.setGraphic(ImageManager.instance().getImageView(Images.REFRESH_ALL));
+		
+		// backup
+		btBackup.setGraphic(ImageManager.instance().getImageView(Images.BACKUP));
+		btBackup.setContentDisplay(ContentDisplay.RIGHT); 
 	}
 
 	// show the Material attributes
@@ -600,5 +607,10 @@ public class MaterialEditorController extends DesignerDialogController {
 		}
 
 		populateCategories();
+	}
+
+	@FXML
+	private void onBackup() {
+		backupToFile(Material.class);
 	}
 }
