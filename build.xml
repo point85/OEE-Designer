@@ -2,9 +2,9 @@
 	<project name="oee-apps" default="build-distro" basedir="." > 
 			
 	<!-- distribution archive -->
-	<property name="app_version" value="3.8.0"/>
-	<property name="domain.jar" value="oee-domain-3.8.0.jar"/>
-	<property name="collector.jar" value="oee-collector-3.8.0.jar"/>
+	<property name="app_version" value="3.8.1"/>
+	<property name="domain.jar" value="oee-domain-3.8.1.jar"/>
+	<property name="collector.jar" value="oee-collector-3.8.1.jar"/>
 		
 	<!-- folders -->
 	<property name="fxbuild.dir" value="fxbuild"/>
@@ -77,6 +77,9 @@
 		
 		<!-- create a logging folder -->
 		<mkdir dir="${fxbuild.dir}/logs" />
+		
+		<!-- create an external jar folder -->
+		<mkdir dir="${fxbuild.dir}/lib/ext" />
 	</target>
 		
 	<!-- Zip files -->

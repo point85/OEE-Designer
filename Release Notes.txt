@@ -236,4 +236,18 @@ Note that version 3.2.0 has the following schema changes:
 	- Updated MySQL connector to 8.0.29
 	- Updated Jetty server to 9.4.48
 
+(38) 3.8.1, August 24, 2022:
+	- Added support for loading an external jar file for JavaScript calls
+	- Added OAuth 2.0 support
+	- Updated Nashorn to 15.4
+	- Updated PostgreSQL to 42.4.2
+	- Updated Jetty server to 10.0.11
+	- Updated log4j2 to 2.18.0
+	- Updated gson to 2.9.1
+	- Updated Milo to 0.6.7
+	- Updated RabbitMQ to 5.15.0
+	- Updated ActiveMQ to 5.17.1
+	- Updated Kafka to 3.2.1
+	- Miscellaneous stability improvements	
+
 Please send comments and suggestions to point85.llc@gmail.com.

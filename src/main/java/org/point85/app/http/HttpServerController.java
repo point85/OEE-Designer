@@ -25,6 +25,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
 public class HttpServerController extends DesignerDialogController {
@@ -48,6 +49,18 @@ public class HttpServerController extends DesignerDialogController {
 
 	@FXML
 	private TextField tfDescription;
+
+	@FXML
+	private TextField tfOAuthClientId;
+
+	@FXML
+	private TextField tfOAuthClientSecret;
+
+	@FXML
+	private TextField tfOAuthUserName;
+
+	@FXML
+	private PasswordField pfOAuthPassword;
 
 	@FXML
 	private Button btNew;
@@ -95,10 +108,10 @@ public class HttpServerController extends DesignerDialogController {
 		// test
 		btHttpTest.setGraphic(ImageManager.instance().getImageView(Images.EXECUTE));
 		btHttpTest.setContentDisplay(ContentDisplay.LEFT);
-		
+
 		// backup
 		btBackup.setGraphic(ImageManager.instance().getImageView(Images.BACKUP));
-		btBackup.setContentDisplay(ContentDisplay.LEFT); 
+		btBackup.setContentDisplay(ContentDisplay.LEFT);
 	}
 
 	public HttpSource getSource() {
@@ -129,6 +142,12 @@ public class HttpServerController extends DesignerDialogController {
 			String httpsPort = dataSource.getHttpsPort() != null ? String.valueOf(dataSource.getHttpsPort()) : "";
 			this.tfHttpsPort.setText(httpsPort);
 			this.tfDescription.setText(dataSource.getDescription());
+
+			this.tfOAuthClientId.setText(dataSource.getClientId());
+			this.tfOAuthClientSecret.setText(dataSource.getClientSecret());
+			this.tfOAuthUserName.setText(dataSource.getUserName());
+			this.pfOAuthPassword.setText(dataSource.getUserPassword());
+
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}
@@ -165,6 +184,10 @@ public class HttpServerController extends DesignerDialogController {
 			this.tfPort.setText(String.valueOf(OeeHttpServer.DEFAULT_PORT));
 			this.tfHttpsPort.clear();
 			this.cbDataSources.getSelectionModel().clearSelection();
+			this.tfOAuthClientId.clear();
+			this.tfOAuthClientSecret.clear();
+			this.tfOAuthUserName.clear();
+			this.pfOAuthPassword.clear();
 
 			this.setSource(null);
 		} catch (Exception e) {
@@ -208,6 +231,12 @@ public class HttpServerController extends DesignerDialogController {
 			eventSource.setPort(getPort());
 			eventSource.setHttpsPort(getHttpsPort());
 			eventSource.setDescription(getDescription());
+
+			// OAuth
+			eventSource.setClientId(getOAuthClientId());
+			eventSource.setClientSecret(getOAuthClientSecret());
+			eventSource.setUserName(getOAuthUserName());
+			eventSource.setPassword(getOAuthPassword());
 
 			// name is URL
 			String name = getHost() + ":" + getPort();
@@ -260,6 +289,22 @@ public class HttpServerController extends DesignerDialogController {
 
 	private String getDescription() {
 		return this.tfDescription.getText();
+	}
+
+	private String getOAuthClientId() {
+		return this.tfOAuthClientId.getText();
+	}
+
+	private String getOAuthClientSecret() {
+		return this.tfOAuthClientSecret.getText();
+	}
+
+	private String getOAuthUserName() {
+		return this.tfOAuthUserName.getText();
+	}
+
+	private String getOAuthPassword() {
+		return this.pfOAuthPassword.getText();
 	}
 
 	@FXML
