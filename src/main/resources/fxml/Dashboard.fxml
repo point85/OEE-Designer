@@ -23,7 +23,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<SplitPane dividerPositions="0.33" orientation="VERTICAL" prefHeight="1000.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.dashboard.DashboardController">
+<SplitPane dividerPositions="0.33" orientation="VERTICAL" prefHeight="1000.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.dashboard.DashboardController">
   <items>
       <VBox>
          <children>
@@ -51,9 +51,9 @@
                     </rowConstraints>
                      <children>
                         <Label text="%from" GridPane.halignment="RIGHT" />
-                        <DatePicker fx:id="dpStartDate" maxWidth="1.7976931348623157E308" onAction="#clearMaterials" promptText="%choose.start" GridPane.columnIndex="1" />
+                        <DatePicker fx:id="dpStartDate" editable="false" maxWidth="1.7976931348623157E308" onAction="#clearMaterials" promptText="%choose.start" GridPane.columnIndex="1" />
                         <Label text="%to" GridPane.columnIndex="4" GridPane.halignment="RIGHT" />
-                        <DatePicker fx:id="dpEndDate" maxWidth="1.7976931348623157E308" onAction="#clearMaterials" promptText="%choose.end" GridPane.columnIndex="5" />
+                        <DatePicker fx:id="dpEndDate" editable="false" maxWidth="1.7976931348623157E308" onAction="#clearMaterials" promptText="%choose.end" GridPane.columnIndex="5" />
                         <Button fx:id="btRefresh" disable="true" mnemonicParsing="false" onAction="#onRefresh" prefWidth="100.0" text="%refresh" GridPane.columnIndex="10" GridPane.halignment="CENTER" />
                         <ComboBox fx:id="cbMaterials" maxWidth="1.7976931348623157E308" promptText="%material.prompt" GridPane.columnIndex="9" />
                         <Label text="%material" GridPane.columnIndex="8" GridPane.halignment="RIGHT" />

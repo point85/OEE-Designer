@@ -1422,7 +1422,13 @@ public class DashboardController extends DialogController implements CategoryCli
 				throw new Exception(DesignerLocalizer.instance().getErrorString("no.equipment"));
 			}
 
-			String materialId = cbMaterials.getSelectionModel().getSelectedItem();
+			String selectedMaterialId = cbMaterials.getSelectionModel().getSelectedItem();
+			String materialId = null;
+
+			if (selectedMaterialId != null
+					&& !selectedMaterialId.equals(DesignerLocalizer.instance().getLangString("all.materials"))) {
+				materialId = selectedMaterialId;
+			}
 
 			// generate all of the loss data for this equipment
 			EquipmentLossManager.buildLoss(equipmentLoss, materialId, odtStart, odtEnd);

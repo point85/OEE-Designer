@@ -249,5 +249,18 @@ Note that version 3.2.0 has the following schema changes:
 	- Updated ActiveMQ to 5.17.1
 	- Updated Kafka to 3.2.1
 	- Miscellaneous stability improvements	
+	
+(38) 3.9.0, November 11, 2022:
+	- Added a backup of a demo database to the distribution	
+	- Added persistency for a work schedule break.  This requires an older schema to be migrated to version 5.
+	- Updated Jackson to version 2.13.4.2
+	- Updated HSQLDB to version 2.7.1
+	- Updated PostgreSQL to 42.5.0
+	- Update Jetty to 9.4.49.v20220914
+	- Updated Milo to 0.6.8	
+	- Updated RabbitMQ to 5.16.0	
+	- Updated ActiveMQ to 5.17.2	
+	- Updated Kafka to 3.3.1
+	- Miscellaneous stability improvements	
 
 Please send comments and suggestions to point85.llc@gmail.com.

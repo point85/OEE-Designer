@@ -668,6 +668,11 @@ public class OperatorController {
 
 		String msg = null;
 		if (eventType.equals(OeeEventType.AVAILABILITY)) {
+			// last material setup
+			if (lastSetup == null) {
+				throw new Exception(OperatorLocalizer.instance().getErrorString("no.setup", equipment.getName()));
+			}
+
 			event.setInputValue(selectedReason.getName());
 
 			setEventTimes(event, dpAvailabilityStartDate.getValue(), tfAvailabilityStartTime.getText(),
@@ -695,16 +700,17 @@ public class OperatorController {
 			}
 
 			event.setReason(selectedReason);
-
-			if (lastSetup != null) {
-				event.setMaterial(lastSetup.getMaterial());
-				event.setJob(lastSetup.getJob());
-			}
+			event.setMaterial(lastSetup.getMaterial());
+			event.setJob(lastSetup.getJob());
 
 			msg = OperatorLocalizer.instance().getLangString("availability.recorded", equipment.getName(),
 					selectedReason.getName());
 		} else if (eventType.equals(OeeEventType.PROD_GOOD) || eventType.equals(OeeEventType.PROD_REJECT)
 				|| eventType.equals(OeeEventType.PROD_STARTUP)) {
+			// last material setup
+			if (lastSetup == null) {
+				throw new Exception(OperatorLocalizer.instance().getErrorString("no.setup", equipment.getName()));
+			}
 
 			setEventTimes(event, dpProductionStartDate.getValue(), tfProductionStartTime.getText(),
 					dpProductionEndDate.getValue(), tfProductionEndTime.getText(), rbProductionByPeriod.isSelected());

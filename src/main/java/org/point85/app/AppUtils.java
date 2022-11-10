@@ -59,6 +59,7 @@ public abstract class AppUtils {
 	public static ButtonType showAlert(AlertType type, String title, String header, String message) {
 		// Show the message
 		Alert alert = new Alert(type);
+		alert.getDialogPane().setPrefSize(600, 200);
 		alert.setTitle(title);
 		alert.setHeaderText(header);
 		alert.setContentText(message);

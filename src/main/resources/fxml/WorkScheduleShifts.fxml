@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.schedule.WorkScheduleShiftsController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.point85.app.schedule.WorkScheduleShiftsController">
    <children>
       <TitledPane collapsible="false" layoutX="157.0" layoutY="521.0" prefHeight="200.0" prefWidth="200.0" text="%working" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
          <content>
@@ -38,8 +38,8 @@
                         <Label text="%time.hh.mm" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
                         <Label text="%to.date" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
                         <Label text="%time.hh.mm" GridPane.columnIndex="3" GridPane.halignment="CENTER" />
-                        <DatePicker fx:id="dpPeriodStart" maxWidth="1.7976931348623157E308" promptText="%choose.start" GridPane.rowIndex="1" />
-                        <DatePicker fx:id="dpPeriodEnd" maxWidth="1.7976931348623157E308" promptText="%choose.end" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                        <DatePicker fx:id="dpPeriodStart" editable="false" maxWidth="1.7976931348623157E308" promptText="%choose.start" GridPane.rowIndex="1" />
+                        <DatePicker fx:id="dpPeriodEnd" editable="false" maxWidth="1.7976931348623157E308" promptText="%choose.end" GridPane.columnIndex="2" GridPane.rowIndex="1">
                            <GridPane.margin>
                               <Insets />
                            </GridPane.margin></DatePicker>

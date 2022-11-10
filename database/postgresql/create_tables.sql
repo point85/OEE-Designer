@@ -1,4 +1,4 @@
--- PostgresQL schema creation script file, schema version 4
+-- PostgresQL schema creation script file, schema version 5
 
 /****** Plant Entity table ******/
 DROP TABLE IF EXISTS PLANT_ENTITY;
@@ -198,6 +198,20 @@ CREATE TABLE NON_WORKING_PERIOD (
 	WS_KEY bigint NULL,
 	LOSS varchar(32) NULL,
 	CONSTRAINT PK_PERIOD_KEY PRIMARY KEY(PERIOD_KEY)
+);
+
+/****** BREAK_PERIOD table ******/
+DROP TABLE IF EXISTS BREAK_PERIOD;
+
+CREATE TABLE BREAK_PERIOD (
+	BREAK_KEY bigint GENERATED ALWAYS AS IDENTITY,
+	NAME varchar(64) NULL,
+	DESCRIPTION varchar(128) NULL,
+	START_TIME time(3) NULL,
+	DURATION bigint NULL,
+	SHIFT_KEY bigint NULL,
+	LOSS varchar(32) NULL,
+	CONSTRAINT PK_BREAK_KEY PRIMARY KEY(BREAK_KEY)
 );
 
 /****** COLLECTOR table ******/

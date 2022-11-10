@@ -30,10 +30,13 @@ public abstract class DesignerDialogController extends DialogController {
 
 			if (file != null) {
 				getApp().setLastDirectory(file.getParentFile());
-			}
 
-			// backup
-			Exporter.instance().backup(clazz, file);
+				// backup
+				Exporter.instance().backup(clazz, file);
+
+				AppUtils.showInfoDialog(
+						DesignerLocalizer.instance().getLangString("backup.successful", file.getCanonicalPath()));
+			}
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}

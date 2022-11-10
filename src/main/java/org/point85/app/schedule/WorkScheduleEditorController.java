@@ -19,6 +19,7 @@ import org.point85.app.designer.DesignerDialogController;
 import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.oee.TimeLoss;
 import org.point85.domain.persistence.PersistenceService;
+import org.point85.domain.schedule.Break;
 import org.point85.domain.schedule.ExceptionPeriod;
 import org.point85.domain.schedule.Rotation;
 import org.point85.domain.schedule.RotationSegment;
@@ -47,6 +48,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TitledPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
@@ -67,6 +69,9 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 	// current shift being edited
 	private Shift currentShift;
 
+	// current break being edited
+	private Break currentBreak;
+
 	// current team being edited
 	private Team currentTeam;
 
@@ -84,6 +89,9 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 
 	// list of shift names for the rotation segment starting shift choice
 	private final ObservableList<String> shiftNames = FXCollections.observableArrayList(new ArrayList<>());
+
+	// list of break periods associated with the shift
+	private final ObservableList<Break> breakList = FXCollections.observableArrayList(new ArrayList<>());
 
 	// list of teams associated with the work schedule being edited
 	private final ObservableList<Team> teamList = FXCollections.observableArrayList(new ArrayList<>());
@@ -183,6 +191,52 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 
 	@FXML
 	private Button btRemoveShift;
+
+	// breaks
+	@FXML
+	private TitledPane tpBreaks;
+	
+	@FXML
+	private TextField tfBreakName;
+
+	@FXML
+	private TextField tfBreakDescription;
+
+	@FXML
+	private TextField tfBreakStart;
+
+	@FXML
+	private TextField tfBreakDuration;
+
+	@FXML
+	private TableView<Break> tvBreaks;
+
+	@FXML
+	private TableColumn<Break, String> breakNameColumn;
+
+	@FXML
+	private TableColumn<Break, String> breakDescriptionColumn;
+
+	@FXML
+	private TableColumn<Break, LocalTime> breakStartColumn;
+
+	@FXML
+	private TableColumn<Break, String> breakDurationColumn;
+
+	@FXML
+	private TableColumn<Break, String> breakLossColumn;
+
+	@FXML
+	private Button btNewBreak;
+
+	@FXML
+	private Button btAddBreak;
+
+	@FXML
+	private Button btRemoveBreak;
+
+	@FXML
+	private ComboBox<TimeLoss> cbBreakLosses;
 
 	// ******************* teams *********************************************
 	@FXML
@@ -285,8 +339,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 	@FXML
 	private Button btRemoveRotationSegment;
 
-	// ***** non-working and overtime periods
-	// *******************************************
+	// ***** non-working and overtime periods ***
 	@FXML
 	private TextField tfPeriodName;
 
@@ -390,6 +443,9 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		// shift duration
 		shiftDurationColumn.setCellValueFactory(cellDataFeatures -> new SimpleStringProperty(
 				AppUtils.stringFromDuration(cellDataFeatures.getValue().getDuration(), false)));
+
+		// breaks
+		initializeBreakEditor();
 	}
 
 	private void initializeRotationEditor() {
@@ -562,6 +618,54 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		cbLosses.getItems().add(TimeLoss.NO_LOSS);
 	}
 
+	private void initializeBreakEditor() {
+		// bind to list of breaks
+		this.tvBreaks.setItems(breakList);
+
+		// table view row selection listener
+		tvBreaks.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
+			if (newValue != null) {
+				try {
+					onSelectBreak(newValue);
+				} catch (Exception e) {
+					AppUtils.showErrorDialog(e);
+				}
+			}
+		});
+
+		// break name
+		breakNameColumn.setCellValueFactory(
+				cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getName()));
+
+		// break description
+		breakDescriptionColumn.setCellValueFactory(
+				cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getDescription()));
+
+		// break start
+		breakStartColumn.setCellValueFactory(
+				cellDataFeatures -> new SimpleObjectProperty<LocalTime>(cellDataFeatures.getValue().getStart()));
+
+		// break duration
+		breakDurationColumn.setCellValueFactory(cellDataFeatures -> new SimpleStringProperty(
+				AppUtils.stringFromDuration(cellDataFeatures.getValue().getDuration(), false)));
+
+		// break loss
+		breakLossColumn.setCellValueFactory(cellDataFeatures -> {
+			TimeLoss loss = cellDataFeatures.getValue().getLossCategory();
+			SimpleStringProperty property = new SimpleStringProperty();
+
+			if (loss != null) {
+				property = new SimpleStringProperty(loss.toString());
+			}
+			return property;
+		});
+
+		// loss categories
+		cbBreakLosses.getItems().clear();
+		cbBreakLosses.getItems().addAll(TimeLoss.getBreakLosses());
+		cbBreakLosses.getItems().add(TimeLoss.NO_LOSS);
+	}
+
 	@FXML
 	public void initialize() {
 		// images for controls
@@ -646,8 +750,28 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		LocalTime startTime = shift.getStart();
 		this.tfShiftStart.setText(AppUtils.stringFromLocalTime(startTime, false));
 
+		// duration
 		Duration duration = shift.getDuration();
 		this.tfShiftDuration.setText(AppUtils.stringFromDuration(duration, false));
+
+		// breaks
+		initBreakEditor(shift);
+	}
+	
+	private void initBreakEditor(Shift shift) {
+		tpBreaks.setDisable(false);
+		
+		List<Break> breaks = shift.getBreaks();
+		breakList.clear();
+
+		for (Break period : breaks) {
+			breakList.add(period);
+		}
+		Collections.sort(breakList);
+		tvBreaks.refresh();
+		
+		// clear editor
+		onNewBreak();
 	}
 
 	// called on team selection in table listener
@@ -727,6 +851,27 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		this.cbLosses.getSelectionModel().select(period.getLossCategory());
 	}
 
+	// called on break period selection in table listener
+	private void onSelectBreak(Break period) {
+		btAddBreak.setText(DesignerLocalizer.instance().getLangString("update"));
+		this.currentBreak = period;
+
+		// name
+		this.tfBreakName.setText(period.getName());
+
+		// description
+		this.tfBreakDescription.setText(period.getDescription());
+
+		// start
+		this.tfBreakStart.setText(AppUtils.stringFromLocalTime(period.getStart(), false));
+
+		// duration
+		this.tfBreakDuration.setText(AppUtils.stringFromDuration(period.getDuration(), false));
+
+		// loss
+		this.cbBreakLosses.getSelectionModel().select(period.getLossCategory());
+	}
+
 	private void displaySchedules() throws Exception {
 		getRootScheduleItem().getChildren().clear();
 
@@ -773,6 +918,18 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		// remove shift
 		btRemoveShift.setGraphic(ImageManager.instance().getImageView(Images.REMOVE));
 		btRemoveShift.setContentDisplay(ContentDisplay.LEFT);
+
+		// new break
+		btNewBreak.setGraphic(ImageManager.instance().getImageView(Images.NEW));
+		btNewBreak.setContentDisplay(ContentDisplay.LEFT);
+
+		// add break
+		btAddBreak.setGraphic(ImageManager.instance().getImageView(Images.ADD));
+		btAddBreak.setContentDisplay(ContentDisplay.LEFT);
+
+		// remove break
+		btRemoveBreak.setGraphic(ImageManager.instance().getImageView(Images.REMOVE));
+		btRemoveBreak.setContentDisplay(ContentDisplay.LEFT);
 
 		// new team
 		btNewTeam.setGraphic(ImageManager.instance().getImageView(Images.NEW));
@@ -833,10 +990,10 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		// context menu
 		miSaveAll.setGraphic(ImageManager.instance().getImageView(Images.SAVE_ALL));
 		miRefreshAll.setGraphic(ImageManager.instance().getImageView(Images.REFRESH_ALL));
-		
+
 		// backup
 		btBackup.setGraphic(ImageManager.instance().getImageView(Images.BACKUP));
-		btBackup.setContentDisplay(ContentDisplay.RIGHT); 
+		btBackup.setContentDisplay(ContentDisplay.RIGHT);
 	}
 
 	private void resetEditor() {
@@ -1106,6 +1263,10 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		}
 		Collections.sort(shiftList);
 		tvShifts.refresh();
+		
+		// breaks
+		breakList.clear();
+		tvBreaks.refresh();
 
 		// rotations
 		List<Rotation> rotations = schedule.getRotations();
@@ -1264,6 +1425,101 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 			addEditedSchedule(selectedScheduleItem);
 
 			tvShifts.refresh();
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+
+	// new break clicked
+	@FXML
+	private void onNewBreak() {
+		btAddBreak.setText(DesignerLocalizer.instance().getLangString("add"));
+		this.currentBreak = null;
+
+		// break editing attributes
+		this.tfBreakName.clear();
+		this.tfBreakDescription.clear();
+		this.tfBreakStart.clear();
+		this.tfBreakDuration.clear();
+		this.cbBreakLosses.getSelectionModel().clearSelection();
+		this.cbBreakLosses.getSelectionModel().select(null);
+
+		this.tvBreaks.getSelectionModel().clearSelection();
+	}
+
+	// add break button clicked
+	@FXML
+	private void onAddBreak() {
+		try {
+			// need a shift first
+			if (currentShift == null) {
+				throw new Exception(DesignerLocalizer.instance().getErrorString("shift.before.break"));
+			}
+
+			// name
+			String name = this.tfBreakName.getText().trim();
+
+			if (name == null || name.length() == 0) {
+				throw new Exception(DesignerLocalizer.instance().getErrorString("no.break.name"));
+			}
+
+			// description
+			String description = this.tfBreakDescription.getText().trim();
+
+			// start time of day
+			String start = this.tfBreakStart.getText().trim();
+			LocalTime startTime = AppUtils.localTimeFromString(start);
+
+			// duration
+			String hrmm = this.tfBreakDuration.getText().trim();
+			Duration duration = AppUtils.durationFromString(hrmm);
+
+			// loss category
+			TimeLoss loss = this.cbBreakLosses.getSelectionModel().getSelectedItem();
+
+			if (currentBreak == null) {
+				// new break
+				currentBreak = currentShift.createBreak(name, description, startTime, duration);
+				currentBreak.setLossCategory(loss);
+				breakList.add(currentBreak);
+			} else {
+				currentBreak.setName(name);
+				currentBreak.setDescription(description);
+				currentBreak.setStart(startTime);
+				currentBreak.setDuration(duration);
+				currentBreak.setLossCategory(loss);
+			}
+			Collections.sort(breakList);
+
+			// add to edited schedules
+			addEditedSchedule(selectedScheduleItem);
+
+			tvBreaks.refresh();
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+
+	// remove break button clicked
+	@FXML
+	private void onRemoveBreak() {
+		try {
+			Break period = this.tvBreaks.getSelectionModel().getSelectedItem();
+
+			if (period == null) {
+				return;
+			}
+
+			currentShift.getBreaks().remove(period);
+			breakList.remove(period);
+			Collections.sort(breakList);
+			currentBreak = null;
+			tvBreaks.getSelectionModel().clearSelection();
+
+			// add to edited schedules
+			addEditedSchedule(selectedScheduleItem);
+
+			tvBreaks.refresh();
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}

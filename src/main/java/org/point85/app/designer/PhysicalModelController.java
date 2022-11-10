@@ -1205,6 +1205,9 @@ public class PhysicalModelController extends DesignerController {
 
 			// restore content
 			Importer.instance().restore(file);
+
+			AppUtils.showInfoDialog(
+					DesignerLocalizer.instance().getLangString("restore.successful", file.getCanonicalPath()));
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}
@@ -1246,6 +1249,9 @@ public class PhysicalModelController extends DesignerController {
 			Exporter.instance().prepare(WebSocketSource.class);
 
 			Exporter.instance().backup(file);
+			
+			AppUtils.showInfoDialog(
+					DesignerLocalizer.instance().getLangString("backup.successful", file.getCanonicalPath()));
 
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
@@ -1265,6 +1271,9 @@ public class PhysicalModelController extends DesignerController {
 
 			// backup
 			Exporter.instance().backup(PlantEntity.class, file);
+
+			AppUtils.showInfoDialog(
+					DesignerLocalizer.instance().getLangString("backup.successful", file.getCanonicalPath()));
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}

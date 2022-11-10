@@ -1,4 +1,4 @@
--- Oracle script file, schema version 4
+-- Oracle script file, schema version 5
 -- set to your schema and tablespace names
 
 --------------------------------------------------------
@@ -339,6 +339,30 @@ CREATE TABLE "SYSTEM"."NON_WORKING_PERIOD"
 	"WS_KEY" NUMBER(19,0) NULL, 
 	"LOSS" NVARCHAR2(32) NULL,
 	PRIMARY KEY (PERIOD_KEY)
+   ) TABLESPACE "SYSTEM" ;
+/
+--------------------------------------------------------
+--  DDL for Table BREAK_PERIOD
+--------------------------------------------------------
+BEGIN
+   EXECUTE IMMEDIATE 'DROP TABLE "SYSTEM"."BREAK_PERIOD"';
+EXCEPTION
+   WHEN OTHERS THEN
+      IF SQLCODE != -942 THEN
+         RAISE;
+      END IF;
+END;
+/
+CREATE TABLE "SYSTEM"."BREAK_PERIOD" 
+   (	
+    "BREAK_KEY" NUMBER(19,0) GENERATED ALWAYS AS IDENTITY,   
+	"NAME" NVARCHAR2(64) NULL, 
+	"DESCRIPTION" NVARCHAR2(128) NULL, 
+	"START_TIME" TIMESTAMP(3) NULL, 
+	"DURATION" NUMBER(19,0) NULL, 
+	"SHIFT_KEY" NUMBER(19,0) NULL, 
+	"LOSS" NVARCHAR2(32) NULL,
+	PRIMARY KEY (BREAK_KEY)
    ) TABLESPACE "SYSTEM" ;
 /
 --------------------------------------------------------

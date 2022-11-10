@@ -25,6 +25,7 @@ SOFTWARE.
 package org.point85.app.uom;
 
 import java.util.Collections;
+import java.util.List;
 
 import org.point85.app.AppUtils;
 import org.point85.app.ImageManager;
@@ -99,8 +100,8 @@ public class UomConversionController extends DesignerDialogController {
 	// get the display strings for all UOM types
 	protected ObservableList<UnitType> getUnitTypes() {
 		if (unitTypes.isEmpty()) {
-			Collections.addAll(unitTypes, UnitType.values());
-			Collections.sort(unitTypes);
+			List<UnitType> types = AppUtils.sortUnitTypes();
+			unitTypes.addAll(types);
 		}
 		return unitTypes;
 	}
