@@ -134,6 +134,8 @@ public class TemplateScheduleDialogController extends DesignerDialogController {
 		scheduleList.add(create21TeamFixed());
 		scheduleList.add(createTwoTeam());
 		scheduleList.add(createPanama());
+		scheduleList.add(createPitman());
+		scheduleList.add(createMountainView());
 	}
 
 	private WorkSchedule createPanama() throws Exception {
@@ -702,6 +704,57 @@ public class TemplateScheduleDialogController extends DesignerDialogController {
 		schedule.createTeam("B", "Platoon2", rotation, LocalDate.of(2014, 2, 4));
 		schedule.createTeam("C", "Platoon3", rotation, LocalDate.of(2014, 1, 31));
 		schedule.createTeam("D", "Platoon4", rotation, LocalDate.of(2014, 1, 29));
+
+		return schedule;
+	}
+
+	private WorkSchedule createPitman() throws Exception {
+		// Pitman police schedule
+		WorkSchedule schedule = new WorkSchedule("Pitman", "Police schedule.  Two 12 hour shifts with four teams.");
+
+		// day shift, start at 07:00 for 12 hours
+		Shift dayShift = schedule.createShift("Day", "Day shift", LocalTime.of(7, 0, 0), Duration.ofHours(12));
+
+		// night shift, start at 19:00 for 12 hours
+		Shift nightShift = schedule.createShift("Night", "Night shift", LocalTime.of(19, 0, 0), Duration.ofHours(12));
+
+		// rotation [2 on 3 off][2 on 2 off][3 on 2 off]
+		Rotation dayRotation = schedule.createRotation("Day", "Day rotation");
+		dayRotation.addSegment(dayShift, 2, 3);
+		dayRotation.addSegment(dayShift, 2, 2);
+		dayRotation.addSegment(dayShift, 3, 2);
+
+		// night rotation [2 on 3 off][2 on 2 off][3 on 2 off]
+		Rotation nightRotation = schedule.createRotation("Night", "Night rotation");
+		nightRotation.addSegment(nightShift, 2, 3);
+		nightRotation.addSegment(nightShift, 2, 2);
+		nightRotation.addSegment(nightShift, 3, 2);
+
+		// 4 teams, 2 day, 2 night
+		schedule.createTeam("Team 1", "Squad 1", dayRotation, LocalDate.of(2022, 12, 7));
+		schedule.createTeam("Team 2", "Squad 1", dayRotation, LocalDate.of(2022, 11, 30));
+		schedule.createTeam("Team 3", "Squad 2", nightRotation, LocalDate.of(2022, 12, 7));
+		schedule.createTeam("Team 4", "Squad 2", nightRotation, LocalDate.of(2022, 11, 30));
+
+		return schedule;
+	}
+
+	private WorkSchedule createMountainView() throws Exception {
+		// Mountain View, CA fire schedule
+		WorkSchedule schedule = new WorkSchedule("Mountain View Fire",
+				"Fire department schedule.  One 24 hour shift with three teams.");
+
+		// start at 08:00 for 24 hours
+		Shift shift = schedule.createShift("24 Hour", "24 hour shift", LocalTime.of(8, 0, 0), Duration.ofHours(24));
+
+		// rotation [2 on 4 off]
+		Rotation rotation = schedule.createRotation("ABC", "Shift rotation");
+		rotation.addSegment(shift, 2, 4);
+
+		// 4 teams, 2 day, 2 night
+		schedule.createTeam("A", "Green team", rotation, LocalDate.of(2022, 11, 1));
+		schedule.createTeam("B", "Blue team", rotation, LocalDate.of(2022, 11, 3));
+		schedule.createTeam("C", "Red team", rotation, LocalDate.of(2022, 11, 5));
 
 		return schedule;
 	}

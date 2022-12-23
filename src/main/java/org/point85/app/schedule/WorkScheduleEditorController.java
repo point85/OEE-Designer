@@ -1001,6 +1001,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		this.tfScheduleName.clear();
 		this.tfScheduleName.requestFocus();
 		this.taScheduleDescription.clear();
+		this.editedScheduleItems.clear();
 
 		// reset each sub-editor
 		onNewShift();
@@ -1012,6 +1013,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		// clear the tables
 		this.shiftList.clear();
 		this.shiftNames.clear();
+		this.breakList.clear();
 		this.tvShifts.refresh();
 
 		this.teamList.clear();
@@ -1086,6 +1088,8 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 			if (getSelectedSchedule() == null) {
 				return;
 			}
+			
+			removeEditedSchedule(selectedScheduleItem);
 
 			if (getSelectedSchedule().getKey() != null) {
 				// read from database

@@ -1381,6 +1381,40 @@ public class DashboardController extends DialogController implements CategoryCli
 		return DomainUtils.fromLocalDateTime(ldtEnd);
 	}
 
+	private String buildMeanDisplayString(TimeLoss loss) {
+		String displayString = loss.toString();
+
+		// MTBF in hours
+		Duration mtbf = equipmentLoss.calculateMTBF();
+		String mtbfFormatted = null;
+
+		if (mtbf.compareTo(Duration.ZERO) > 0) {
+			double totalSeconds = mtbf.getSeconds();
+			mtbfFormatted = String.format("%.1f", (totalSeconds / 3600.0d));
+		}
+
+		if (mtbfFormatted != null) {
+			displayString += "\n" + DesignerLocalizer.instance().getLangString("mtbf.mean") + mtbfFormatted + " "
+					+ DesignerLocalizer.instance().getLangString("hr.mean");
+		}
+
+		// MTTR in minutes
+		Duration mttr = equipmentLoss.calculateMTTR();
+		String mttrFormatted = null;
+
+		if (mttr.compareTo(Duration.ZERO) > 0) {
+			double totalSeconds = mttr.getSeconds();
+			mttrFormatted = String.format("%.1f", (totalSeconds / 60.0d));
+		}
+
+		if (mttrFormatted != null) {
+			displayString += "\n" + DesignerLocalizer.instance().getLangString("mttr.mean") + mttrFormatted + " "
+					+ DesignerLocalizer.instance().getLangString("min.mean");
+		}
+
+		return displayString;
+	}
+
 	@FXML
 	public void onRefresh() {
 		try {
@@ -1522,7 +1556,8 @@ public class DashboardController extends DialogController implements CategoryCli
 					// loss category
 					TimeLoss loss = reason.getLossCategory();
 					if (loss != null) {
-						tiAvailability.setDescription(loss.toString());
+						String display = this.buildMeanDisplayString(loss);
+						tiAvailability.setDescription(display);
 						tiAvailability.setDescriptionColor(Color.web(loss.getColor()));
 					}
 				}

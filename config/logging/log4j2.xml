@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
 <Configuration status="warn" name="Point85_Configuration" packages="">
 	<Appenders>
 	    <Console name="Console" target="SYSTEM_OUT">
@@ -29,22 +30,22 @@
     	</Logger>
 		
 		<!-- basic log level for all Hibernate messages 		
-		<Logger name="org.hibernate" level="info">
+		<Logger name="org.hibernate" level="warn">
     	</Logger>
 		--> 
 
 		<!-- Hibernate runtime SQL statements and parameters 
-		<Logger name="org.hibernate.SQL" level="info">		
+		<Logger name="org.hibernate.SQL" level="warn">		
     	</Logger>
 		-->
 
 		<!-- Hibernate JDBC bind parameter runtime arguments 
-		<Logger name="org.hibernate.type" level="info">		
+		<Logger name="org.hibernate.type" level="warn">		
     	</Logger>
 		-->
 
 		<!-- Hikari database connection pool 		
-		<Logger name="com.zaxxer" level="info">
+		<Logger name="com.zaxxer" level="warn">
     	</Logger>	
 		-->
 

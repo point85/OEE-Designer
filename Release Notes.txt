@@ -262,5 +262,12 @@ Note that version 3.2.0 has the following schema changes:
 	- Updated ActiveMQ to 5.17.2	
 	- Updated Kafka to 3.3.1
 	- Miscellaneous stability improvements	
+	
+(39) 3.9.1, December 24, 2022:	
+	- Implemented MTBF and MTTR calculations 
+	- Changed data purge to an hourly schedule
+	- Added two example work schedules
+	- Updated Hibernate to version 5.6.14.Final
+	- Updated PostgreSQL to 42.5.1
 
 Please send comments and suggestions to point85.llc@gmail.com.
