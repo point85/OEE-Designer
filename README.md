@@ -18,7 +18,7 @@ Sources of equipment availability, performance and quality event data include:
 * Kafka Messaging:  an equipment event message received via a Kafka server
 * Web Socket Messaging:  an equipment event message received via a web socket server
 * Email/Text Messaging:  an equipment event message received via an email server
-* Database Interface Table:  a pre-defined table for inserting OEE events
+* Database Interface Table:  a predefined table for inserting OEE events
 * File Share:  a server hosting OEE event files
 * Modbus: a Modbus master communicating with its slaves.
 * Cron Job: a cron job scheduled to execute at specified points in time
@@ -59,7 +59,7 @@ The diagram below is an overview of the system achitecture:
 
 The OEE applications can be grouped into design-time and run-time.  The design-time Designer application is used to define the plant equipment, data sources, event resolution scripts, manufacturing work schedule, availability reasons, produced materials and units of measure for data collectors.  The designer also includes a dashboard and trending capabilities.
 
-An automated run-time data collector receives an input value from a data source source and executes a JavaScript resolver on this input to calculate an output value.  The output value is a reason (mapped to an OEE loss category) for an availability event, a new production count (good, reject/rework or startup) for performance and quality events or a material/job change event.  For the case of a custom event, the output value is ignored.  The event data is stored in a relational database where it is available for OEE calculations.  Microsoft SQL Server, Oracle, MySQL, PostgresQL and HSQLDB are currently supported.
+An automated run-time data collector receives an input value from a data source source and executes a JavaScript resolver on this input to calculate an output value.  The output value is a reason (mapped to an OEE loss category) for availability or performance events, a new production count (good, reject/rework or startup) for quality events or a material/job change event.  For the case of a custom event, the output value is ignored.  The event data is stored in a relational database where it is available for OEE calculations.  Microsoft SQL Server, Oracle, MySQL, PostgresQL and HSQLDB are currently supported.
 
 A web-based manual data collector running in a web server records the OEE events based on information entered by an operator.  Similar to the automated collector, this data is also stored in the relational database.
 If the system is configured for messaging, the event data is also sent to a RabbitMQ, JMS, MQTT or Kafka message broker to which a run-time monitor application can subscribe.  A monitor displays a dashboard for viewing equipment OEE events.  It also displays collector notifications and status information.
@@ -107,20 +107,20 @@ For example, the screen for entering a reject production event is:
 ## Operator Web Application
 The Operator web application is browser-based and allows a user to enter availability, performance, production, material change and job events.  The events can be recorded in chronological order as they happened or in summary form over a period of time by duration of event.
 
-On Google Play Store, search for "Point85 Overall Equipment Effectiveness" or "OEE" application.  The direct URL is https://play.google.com/store/apps/details?id=point85.oee.mobile.app.  An iOS mobile operator application was also released.  On the Apple App Store, search for the "Point85 OEE Operator App" or "OEE" application.  
-
-For a video demonstration of the mobile app functionality, please browse to https://www.dropbox.com/s/il8pkx2kmmwvgb7/OEE_Mobile_App.mp4?dl=0.
-
 For example, the screen for entering summarized availability is:
 ![Operator Web Availability](https://github.com/point85/OEE-Designer/blob/master/docs/operator-web-availability.png)
 
 ## Operator Mobile Application
 The Operator iOS and Android mobile applications allow a user to enter availability, performance, production, material change and job events.  The events can be recorded in chronological order as they happened or in summary form over a period of time by duration of event.
 
+On Google Play Store, search for "Point85 Overall Equipment Effectiveness" or "OEE" application.  The direct URL is https://play.google.com/store/apps/details?id=point85.oee.mobile.app.  An iOS mobile operator application was also released.  On the Apple App Store, search for the "Point85 OEE Operator App" or "OEE" application.  
+
+For a video demonstration of the mobile app functionality, please browse to https://www.dropbox.com/s/il8pkx2kmmwvgb7/OEE_Mobile_App.mp4?dl=0.
+
 For example, the screen for entering summarized availability is:
 ![Operator Mobile Availability](https://github.com/point85/OEE-Designer/blob/master/docs/operator-mobile-availability.png)
 
-A demonstration HTTP server is running in a Collector at IP address 52.37.56.187 on port 8182.
+A demonstration HTTP server is running a Collector at IP address 52.37.56.187 on port 8182.
 
 ## Localization
 All applications with user-visible text use resource bundles for localization.  The locale is the default locale of the desktop or web server machine.  Each application has two default resource bundles, one for text named (app name)Lang.properties and one for errors/exceptions named (app name)Error.properties with US English text.
@@ -139,7 +139,7 @@ The file "docs/MobileApp.mp4" is s short video of using the iOS and Android mobi
 
 ## Related Github Projects
 * Java FX applications:  https://github.com/point85/OEE-Designer 
-* Business domain library: https://github.com/point85/OEE-Domain 
+* OEE domain library: https://github.com/point85/OEE-Domain 
 * Collector service:  https://github.com/point85/OEE-Collector 
-* Web application: * Java FX applications:  https://github.com/point85/OEE-Operations
+* Web application: https://github.com/point85/OEE-Operations
 * Mobile applications:  https://github.com/point85/OEE-Mobile 
