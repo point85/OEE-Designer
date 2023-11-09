@@ -269,5 +269,25 @@ Note that version 3.2.0 has the following schema changes:
 	- Added two example work schedules
 	- Updated Hibernate to version 5.6.14.Final
 	- Updated PostgreSQL to 42.5.1
+	
+(40) 3.9.2, November 10, 2023:	
+	- Implemented SpotBugs code suggestions 
+	- Updated Bouncy Castle to version 1.76
+	- Updated Milo to version 0.6.11
+	- Updated RabbitMQ to version 5.19.0
+	- Updated ActiveMQ to version 5.18.2
+	- Updated j2mod to version 3.2.0
+	- Updated Jetty to version 9.4.53.v20231009
+	- Updated Jackson to version 2.15.3
+	- Updated Kafka to version 3.6.0
+	- Updated WebSocket to version 1.5.4
+	- Updated log4j2 to version 2.21.1
+	- Updated MSSQL driver to version 7.4.1.jre11
+	- Updated Oracle driver to version ojdbc11
+	- Updated MySQL driver to version 8.1.0
+	- Updated PostgreSQL driver to version 42.6.0
+	- Updated HSQLDB driver to version 2.7.2
+	- Updated JavaFX to version 17.0.9
+	- Several NPE fixes
 
 Please send comments and suggestions to point85.llc@gmail.com.

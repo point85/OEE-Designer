@@ -6,7 +6,6 @@ import java.util.List;
 import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaMonitoredItem;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DateTime;
-import org.eclipse.milo.opcua.stack.core.types.builtin.ExtensionObject;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.StatusCode;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.ServerState;
@@ -45,9 +44,6 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 
 	// monitored node
 	private NodeId monitoredNodeId;
-
-	// filter is not being used
-	private ExtensionObject filter;
 
 	@FXML
 	private Button btConnect;
@@ -123,7 +119,9 @@ public class OpcUaTrendController extends OpcUaController implements OpcUaAsynch
 		getApp().getOpcUaClient().registerAsynchListener(this);
 
 		double publishingInterval = trendChartController.getEventResolver().getUpdatePeriod();
-		getApp().getOpcUaClient().subscribe(getMonitoredNode(), publishingInterval, filter);
+
+		// filter is not being used
+		getApp().getOpcUaClient().subscribe(getMonitoredNode(), publishingInterval, null);
 	}
 
 	public void unsubscribeFromDataSource() throws Exception {

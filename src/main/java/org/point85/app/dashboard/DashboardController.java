@@ -416,21 +416,24 @@ public class DashboardController extends DialogController implements CategoryCli
 
 	private float determineTimeUnits(Duration duration) {
 		float divisor = 1.0f;
-		float seconds = duration.getSeconds();
-		timeUnit = Unit.SECOND;
 
-		// if more than 30 days, use days
-		if (seconds > DAYS_AMOUNT) {
-			divisor = SEC_PER_DAY;
-			timeUnit = Unit.DAY;
-		} else if (seconds > HOURS_AMOUNT) {
-			// if more than 24 hours, use hours
-			divisor = SEC_PER_HOUR;
-			timeUnit = Unit.HOUR;
-		} else if (seconds > MINS_AMOUNT) {
-			// if more than 1 hour, use minutes
-			divisor = SEC_PER_MIN;
-			timeUnit = Unit.MINUTE;
+		if (duration != null) {
+			float seconds = duration.getSeconds();
+			timeUnit = Unit.SECOND;
+
+			// if more than 30 days, use days
+			if (seconds > DAYS_AMOUNT) {
+				divisor = SEC_PER_DAY;
+				timeUnit = Unit.DAY;
+			} else if (seconds > HOURS_AMOUNT) {
+				// if more than 24 hours, use hours
+				divisor = SEC_PER_HOUR;
+				timeUnit = Unit.HOUR;
+			} else if (seconds > MINS_AMOUNT) {
+				// if more than 1 hour, use minutes
+				divisor = SEC_PER_MIN;
+				timeUnit = Unit.MINUTE;
+			}
 		}
 		return divisor;
 	}

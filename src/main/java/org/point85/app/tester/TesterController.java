@@ -1064,6 +1064,10 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 		}
 		Class<?> javaType = BuiltinDataType.getBackingClass(nodeDataType);
 
+		if (javaType == null) {
+			return;
+		}
+
 		// java value
 		Variant variant = null;
 		if (javaType.equals(Boolean.class)) {
@@ -1132,6 +1136,10 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 			checkResponseCode(conn);
 
 			postNotification(TesterLocalizer.instance().getLangString("posted.message", urlString));
+			
+			if (logger.isInfoEnabled()) {
+				logger.info("Posted: " + payload);
+			}
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		} finally {

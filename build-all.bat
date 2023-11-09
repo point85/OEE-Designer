@@ -1,7 +1,6 @@
 echo on
 rem Windows shell script to build all of the Point85 projects
 rem JAVA_HOME and JAVAFX_HOME environment variables must be set
-call mvn --version
 rem (1) Domain
 cd ../OEE-Domain
 call install-oee-domain-jar.bat
