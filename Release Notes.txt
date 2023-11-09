@@ -271,7 +271,6 @@ Note that version 3.2.0 has the following schema changes:
 	- Updated PostgreSQL to 42.5.1
 	
 (40) 3.9.2, November 10, 2023:	
-	- Implemented SpotBugs code suggestions 
 	- Updated Bouncy Castle to version 1.76
 	- Updated Milo to version 0.6.11
 	- Updated RabbitMQ to version 5.19.0
