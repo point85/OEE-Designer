@@ -311,15 +311,15 @@ public class EquipmentResolverController extends DesignerController {
 		btAddResolver.setText(DesignerLocalizer.instance().getLangString("update"));
 	}
 
-	void showResolvers(Equipment equipment) {
-		if (equipment == null) {
+	void showResolvers(PlantEntity entity) {
+		if (entity == null) {
 			return;
 		}
 
 		clearEditor();
 
 		eventResolvers.clear();
-		for (EventResolver resolver : equipment.getScriptResolvers()) {
+		for (EventResolver resolver : entity.getScriptResolvers()) {
 			eventResolvers.add(resolver);
 		}
 		tvResolvers.refresh();
@@ -336,7 +336,7 @@ public class EquipmentResolverController extends DesignerController {
 
 			// remove from entity
 			PlantEntity selectedEntity = getApp().getPhysicalModelController().getSelectedEntity();
-			((Equipment) selectedEntity).removeScriptResolver(selectedEventResolver);
+			selectedEntity.removeScriptResolver(selectedEventResolver);
 
 			// remove from list
 			eventResolvers.remove(selectedEventResolver);
@@ -467,8 +467,8 @@ public class EquipmentResolverController extends DesignerController {
 	@FXML
 	private void onBrowseSource() {
 		try {
-			Equipment equipment = (Equipment) getApp().getPhysicalModelController().getSelectedEntity();
-			if (equipment == null) {
+			PlantEntity entity = getApp().getPhysicalModelController().getSelectedEntity();
+			if (entity == null) {
 				throw new Exception(DesignerLocalizer.instance().getErrorString("no.equipment"));
 			}
 
@@ -696,12 +696,6 @@ public class EquipmentResolverController extends DesignerController {
 	@FXML
 	private void onEditScript() {
 		try {
-			PlantEntity entity = getApp().getPhysicalModelController().getSelectedEntity();
-
-			if (!(entity instanceof Equipment)) {
-				throw new Exception(DesignerLocalizer.instance().getErrorString("no.equipment"));
-			}
-
 			// resolver type
 			OeeEventType resolverType = cbResolverTypes.getSelectionModel().getSelectedItem();
 
@@ -794,17 +788,15 @@ public class EquipmentResolverController extends DesignerController {
 	@FXML
 	private void onAddOrUpdateResolver() {
 		try {
-			PlantEntity plantEntity = getApp().getPhysicalModelController().getSelectedEntity();
-
-			if (!(plantEntity instanceof Equipment)) {
-				throw new Exception(DesignerLocalizer.instance().getErrorString("no.equipment"));
-			}
-
-			// equipment
-			Equipment equipment = (Equipment) plantEntity;
+			PlantEntity entity = getApp().getPhysicalModelController().getSelectedEntity();
 
 			// ensure that we have a resolver
 			getSelectedResolver();
+
+			// only custom resolver supported for non-equipment
+			if (!(entity instanceof Equipment) && !selectedEventResolver.getType().equals(OeeEventType.CUSTOM)) {
+				throw new Exception(DesignerLocalizer.instance().getErrorString("must.be.custom"));
+			}
 
 			// collector
 			selectedEventResolver.setCollector(cbCollectors.getSelectionModel().getSelectedItem());
@@ -826,7 +818,7 @@ public class EquipmentResolverController extends DesignerController {
 			}
 
 			// add this resolver
-			selectedEventResolver.setEquipment(equipment);
+			selectedEventResolver.setPlantEntity(entity);
 
 			if (!eventResolvers.contains(selectedEventResolver)) {
 				eventResolvers.add(selectedEventResolver);
@@ -839,7 +831,7 @@ public class EquipmentResolverController extends DesignerController {
 
 			Set<EventResolver> resolvers = new HashSet<>();
 			resolvers.addAll(eventResolvers);
-			equipment.setScriptResolvers(resolvers);
+			entity.setScriptResolvers(resolvers);
 
 			// mark dirty
 			getApp().getPhysicalModelController().markSelectedPlantEntity();
@@ -893,7 +885,7 @@ public class EquipmentResolverController extends DesignerController {
 				getApp().showEmailTrendDialog(selectedEventResolver);
 			} else if (type.equals(DataSourceType.PROFICY)) {
 				getApp().showProficyTrendDialog(selectedEventResolver);
-			}else if (type.equals(DataSourceType.WEB_SOCKET)) {
+			} else if (type.equals(DataSourceType.WEB_SOCKET)) {
 				getApp().showWebSocketTrendDialog(selectedEventResolver);
 			}
 		} catch (Exception e) {

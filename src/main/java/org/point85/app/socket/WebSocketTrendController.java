@@ -106,7 +106,7 @@ public class WebSocketTrendController extends DesignerDialogController
 		trendChartController.setEventResolver(eventResolver);
 
 		lbSourceId.setText(DesignerLocalizer.instance().getLangString("event.source",
-				eventResolver.getEquipment().getName(), eventResolver.getSourceId()));
+				eventResolver.getPlantEntity().getName(), eventResolver.getSourceId()));
 	}
 
 	@Override

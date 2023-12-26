@@ -78,7 +78,7 @@ public abstract class BaseMessagingTrendController extends DesignerDialogControl
 		trendChartController.setEventResolver(eventResolver);
 
 		lbSourceId.setText(DesignerLocalizer.instance().getLangString("event.source",
-				eventResolver.getEquipment().getName(), eventResolver.getSourceId()));
+				eventResolver.getPlantEntity().getName(), eventResolver.getSourceId()));
 		lbBroker.setText(eventResolver.getDataSource().getId());
 	}
 

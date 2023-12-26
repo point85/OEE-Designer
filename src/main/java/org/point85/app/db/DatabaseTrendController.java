@@ -90,7 +90,7 @@ public class DatabaseTrendController extends DesignerDialogController implements
 		trendChartController.setEventResolver(eventResolver);
 
 		lbSourceId.setText(DesignerLocalizer.instance().getLangString("event.source",
-				eventResolver.getEquipment().getName(), eventResolver.getSourceId()));
+				eventResolver.getPlantEntity().getName(), eventResolver.getSourceId()));
 		lbUser.setText(DesignerLocalizer.instance().getLangString("user", eventResolver.getDataSource().getUserName()));
 	}
 

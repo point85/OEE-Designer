@@ -380,20 +380,19 @@ public class PhysicalModelController extends DesignerController {
 		newItem.setExpanded(true);
 
 		tbWorkSchedules.setDisable(false);
+		tbAvailability.setDisable(false);
 
 		if (selectedEntity instanceof Equipment) {
-			tbAvailability.setDisable(false);
 			tbEquipMaterials.setDisable(false);
 			btDashboard.setDisable(false);
 
 			tpEntity.getSelectionModel().select(tbEquipMaterials);
 			onSelectEquipmentMaterial();
 		} else {
-			tbAvailability.setDisable(true);
 			tbEquipMaterials.setDisable(true);
 			btDashboard.setDisable(true);
 
-			tpEntity.getSelectionModel().select(tbWorkSchedules);
+			tpEntity.getSelectionModel().select(tbAvailability);
 			onSelectWorkSchedules();
 		}
 	}
@@ -1031,14 +1030,16 @@ public class PhysicalModelController extends DesignerController {
 		} else {
 			this.lbCurrentSchedule.setText(null);
 		}
+		
+		// resolvers
+		if (resolverController != null) {
+			resolverController.showResolvers(entity);
+		}		
 
+		// material being produced
 		if (entity instanceof Equipment) {
 			if (equipmentMaterialController != null) {
 				equipmentMaterialController.showMaterial((Equipment) entity);
-			}
-
-			if (resolverController != null) {
-				resolverController.showResolvers((Equipment) entity);
 			}
 		}
 	}
@@ -1144,13 +1145,7 @@ public class PhysicalModelController extends DesignerController {
 	}
 
 	private void onSelectEquipmentResolver() throws Exception {
-
-		// show entity resolvers
-		if (getSelectedEntity() instanceof Equipment) {
-			getResolverController().showResolvers((Equipment) getSelectedEntity());
-		} else {
-			getResolverController().clearEditor();
-		}
+		getResolverController().showResolvers(getSelectedEntity());
 	}
 
 	@FXML

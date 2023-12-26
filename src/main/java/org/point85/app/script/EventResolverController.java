@@ -288,6 +288,7 @@ public class EventResolverController extends DesignerDialogController {
 				break;
 
 			default:
+				taResult.appendText(result.toString() + '\n');
 				return;
 			}
 		} catch (Exception e) {

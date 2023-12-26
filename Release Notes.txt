@@ -288,5 +288,16 @@ Note that version 3.2.0 has the following schema changes:
 	- Updated HSQLDB driver to version 2.7.2
 	- Updated JavaFX to version 17.0.9
 	- Several NPE fixes
+	
+(41) 3.10.0, December 27, 2023:	
+	- Allowed a custom resolver script to be attached to any physical model entity
+	- Created an HTTP client for GET and POST requests
+	- Provided an example of an Arduino UNO WiFi using the HTTP client
+	- Updated Bouncy Castle to version 1.77	
+	- Updated RabbitMQ to version 5.20.0
+	- Updated ActiveMQ to version 5.18.3
+	- Updated Kafka to version 3.6.1
+	- Updated Jackson to version 2.16.0		
+	- Updated WebSocket to version 1.5.5	
 
 Please send comments and suggestions to point85.llc@gmail.com.

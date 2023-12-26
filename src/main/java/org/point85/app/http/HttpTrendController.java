@@ -1,10 +1,5 @@
 package org.point85.app.http;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.Collection;
@@ -21,6 +16,7 @@ import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.DomainUtils;
 import org.point85.domain.dto.EquipmentEventRequestDto;
 import org.point85.domain.http.HttpEventListener;
+import org.point85.domain.http.HttpOeeClient;
 import org.point85.domain.http.HttpSource;
 import org.point85.domain.http.OeeHttpServer;
 import org.point85.domain.script.EventResolver;
@@ -73,6 +69,9 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 	@FXML
 	private ProgressIndicator piConnection;
 
+	// HTTP client
+	private HttpOeeClient httpClient;
+
 	public SplitPane initializeTrend() throws Exception {
 		if (trendChartController == null) {
 			// Load the fxml file and create the anchor pane
@@ -104,7 +103,7 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 		trendChartController.setEventResolver(eventResolver);
 
 		lbSourceId.setText(DesignerLocalizer.instance().getLangString("event.source",
-				eventResolver.getEquipment().getName(), eventResolver.getSourceId()));
+				eventResolver.getPlantEntity().getName(), eventResolver.getSourceId()));
 	}
 
 	@Override
@@ -257,53 +256,18 @@ public class HttpTrendController extends DesignerDialogController implements Htt
 
 	@FXML
 	private void onLoopbackTest() {
-		HttpURLConnection conn = null;
-
 		try {
 			// get the HTTP data source
 			EventResolver eventResolver = trendChartController.getEventResolver();
 			HttpSource dataSource = (HttpSource) eventResolver.getDataSource();
 
-			// build the URL for an equipment event, only HTTP supported
-			URL url = new URL(
-					"http://" + dataSource.getHost() + ":" + dataSource.getPort() + '/' + OeeHttpServer.EVENT_EP);
-
-			// create a connection for a JSON POST request
-			conn = (HttpURLConnection) url.openConnection();
-
-			conn.setDoOutput(true);
-			conn.setRequestMethod("POST");
-			conn.setRequestProperty("Content-Type", "application/json");
-
 			String payload = createPayload(eventResolver);
 
 			// make the request
-			OutputStream os = conn.getOutputStream();
-			os.write(payload.getBytes());
-			os.flush();
-
-			if (logger.isInfoEnabled()) {
-				logger.info("Posted equipment event request to URL " + url + " with payload " + payload);
-			}
-
-			// check the response code
-			int codeGroup = conn.getResponseCode() / 100;
-
-			if (codeGroup != 2) {
-				String msg = DesignerLocalizer.instance().getErrorString("post.failed", conn.getResponseCode()) + "\n";
-
-				BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
-				String output;
-
-				while ((output = br.readLine()) != null) {
-					msg += "\n" + output;
-				}
-				throw new Exception(msg);
-			}
+			httpClient = new HttpOeeClient(dataSource);
+			httpClient.postEquipmentEvent(payload);
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
-		} finally {
-			conn.disconnect();
 		}
 	}
 

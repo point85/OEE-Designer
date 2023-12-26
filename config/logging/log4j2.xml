@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE xml>
-<Configuration status="warn" name="Point85_Configuration" packages="">
+<Configuration status="warn" name="Point85_Configuration">
 	<Appenders>
 	    <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %c{1} - %msg%n"/>

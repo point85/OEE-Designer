@@ -65,8 +65,8 @@ public class CronTrendController extends DesignerDialogController implements Cro
 		eventResolver.setWatchMode(true);
 		trendChartController.setEventResolver(eventResolver);
 
-		lbSourceId.setText(DesignerLocalizer.instance().getLangString("event.source",
-				eventResolver.getEquipment().getName(), eventResolver.getSourceId()));
+		lbSourceId.setText(DesignerLocalizer.instance().getLangString("event.source", 
+				eventResolver.getPlantEntity().getName(), eventResolver.getSourceId()));
 
 		lbJob.setText(DesignerLocalizer.instance().getLangString("cron.job", eventResolver.getDataSource().getName()));
 	}

@@ -98,7 +98,7 @@ public class FileTrendController extends DesignerDialogController implements Fil
 		trendChartController.setEventResolver(eventResolver);
 
 		lbSourceId.setText(DesignerLocalizer.instance().getLangString("event.source",
-				eventResolver.getEquipment().getName(), eventResolver.getSourceId()));
+				eventResolver.getPlantEntity().getName(), eventResolver.getSourceId()));
 
 		lbHost.setText(DesignerLocalizer.instance().getLangString("share", eventResolver.getDataSource().getHost()));
 	}

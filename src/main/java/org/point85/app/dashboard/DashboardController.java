@@ -1421,6 +1421,8 @@ public class DashboardController extends DialogController implements CategoryCli
 	@FXML
 	public void onRefresh() {
 		try {
+			lblNotification.setText(null);
+			
 			// clear previous calculation
 			if (equipmentLoss == null) {
 				return;
