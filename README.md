@@ -130,7 +130,7 @@ The Java Persistence 2.2 API (JPA) as implemented by the Hibernate ORM framework
 Hibernate and JPA abstract-away database specific aspects of inserting, updating, reading and deleting records in the tables.  The API is designed to work with any relational database supported by Hibernate.  
 
 ## What's New
-Version 3.10.0 allows a resolver script to be attached to any physical model entity, not just to equipment.  This release also implements an HTTP client for GET and POST requests.  An example for an Arduino UNO WiFi is included in the User Guide.  Please see the Release Notes.txt file for release history.
+Version 3.10.1 is a maintenance release. Please see the Release Notes.txt file for release history and additional details.
 
 ## Getting Started
 The desktop applications are packaged in the oee-<version>.zip file in the latest Git release link at https://github.com/point85/OEE-Designer/releases.  Download the oee-<version>.zip file and expand the archive into a folder of your choice.  Next, download the Point85 OEE Getting Started Guide and follow instructions in that document.  Additional information may be found in the Point85 OEE User Guide.

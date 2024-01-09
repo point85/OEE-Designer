@@ -32,7 +32,7 @@
 		<!-- basic log level for all Hibernate messages 		
 		<Logger name="org.hibernate" level="warn">
     	</Logger>
-		--> 
+    	-->  
 
 		<!-- Hibernate runtime SQL statements and parameters 
 		<Logger name="org.hibernate.SQL" level="warn">		
@@ -44,10 +44,9 @@
     	</Logger>
 		-->
 
-		<!-- Hikari database connection pool 		
-		<Logger name="com.zaxxer" level="warn">
+		<!-- Hikari database connection pool --> 		
+		<Logger name="com.zaxxer.hikari" level="warn">
     	</Logger>	
-		-->
 
 		<!-- Milo OPC UA 	
 		<Logger name="org.eclipse.milo" level="info">	
