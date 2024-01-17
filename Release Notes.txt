@@ -303,5 +303,8 @@ Note that version 3.2.0 has the following schema changes:
 (42) 3.10.1, January 10, 2024:	
     - Fixed work schedule editor issue when saving a schedule.	
 	- Documented an MQTT example for the Arduino R4
+	
+(42) 3.10.2, January 16, 2024:	
+    - Fixed an event resolver issue when the reason input and output values are different.	
 
 Please send comments and suggestions to point85.llc@gmail.com.

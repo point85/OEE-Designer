@@ -297,14 +297,8 @@ public class TrendChartController extends DesignerController {
 
 		switch (type) {
 		case AVAILABILITY: {
-			// plot loss category
-			String lossCategory = null;
-			if (resolvedEvent.getReason() != null) {
-				TimeLoss loss = resolvedEvent.getReason().getLossCategory();
-				lossCategory = loss.toString();
-			}
-
-			plotData(resolvedEvent.getInputValue(), lossCategory);
+			// plot resolved reason
+			plotData(resolvedEvent.getInputValue(), resolvedEvent.getOutputValue());
 			break;
 		}
 
