@@ -466,11 +466,8 @@ public class ReasonEditorController extends DesignerDialogController {
 			TreeItem<ReasonNode> parentNode = reasonItem.getParent();
 			parentNode.getChildren().remove(reasonItem);
 
-			// clear fields
-			onNewReason();
-			tvReasons.getSelectionModel().clearSelection();
-
-			tvReasons.refresh();
+			// refresh all
+			onRefreshAllReasons();
 			parentNode.setExpanded(true);
 
 		} catch (Exception e) {

@@ -23,6 +23,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.PasswordField;
@@ -43,6 +44,9 @@ public class HttpServerController extends DesignerDialogController {
 
 	@FXML
 	private TextField tfHttpsPort;
+
+	@FXML
+	private CheckBox ckStandalone;
 
 	@FXML
 	private ComboBox<HttpSource> cbDataSources;
@@ -142,6 +146,7 @@ public class HttpServerController extends DesignerDialogController {
 			String httpsPort = dataSource.getHttpsPort() != null ? String.valueOf(dataSource.getHttpsPort()) : "";
 			this.tfHttpsPort.setText(httpsPort);
 			this.tfDescription.setText(dataSource.getDescription());
+			this.ckStandalone.setSelected(dataSource.isStandalone());
 
 			this.tfOAuthClientId.setText(dataSource.getClientId());
 			this.tfOAuthClientSecret.setText(dataSource.getClientSecret());
@@ -188,6 +193,7 @@ public class HttpServerController extends DesignerDialogController {
 			this.tfOAuthClientSecret.clear();
 			this.tfOAuthUserName.clear();
 			this.pfOAuthPassword.clear();
+			this.ckStandalone.setSelected(false);
 
 			this.setSource(null);
 		} catch (Exception e) {
@@ -231,6 +237,7 @@ public class HttpServerController extends DesignerDialogController {
 			eventSource.setPort(getPort());
 			eventSource.setHttpsPort(getHttpsPort());
 			eventSource.setDescription(getDescription());
+			eventSource.setStandalone(isStandalone());
 
 			// OAuth
 			eventSource.setClientId(getOAuthClientId());
@@ -285,6 +292,10 @@ public class HttpServerController extends DesignerDialogController {
 	private Integer getHttpsPort() {
 		String text = tfHttpsPort.getText();
 		return (text != null && text.length() > 0) ? Integer.parseInt(text) : null;
+	}
+
+	private boolean isStandalone() {
+		return ckStandalone.isSelected();
 	}
 
 	private String getDescription() {
