@@ -30,7 +30,9 @@ public class MaterialNode {
 		this.material = material;
 
 		// category could have changed
-		this.category = material.getCategory();
+		if (material != null) {
+			this.category = material.getCategory();
+		}
 	}
 
 	public boolean isMaterial() {

@@ -19,6 +19,10 @@ public class ReasonNode {
 
 	@Override
 	public String toString() {
-		return reason.getName() + " (" + reason.getDescription() + ")";
+		String value = "";
+		if (reason != null) {
+			value = reason.getName() + " (" + reason.getDescription() + ")";
+		} 
+		return value;
 	}
 }

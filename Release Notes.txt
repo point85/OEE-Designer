@@ -320,4 +320,17 @@ Note that version 3.2.0 has the following schema changes:
 	- Updated MySQL driver to version 8.3.0
 	- Updated PostgreSQL driver to 42.7.2
 
+(45) 3.11.0, September 20, 2024:	
+	- Added a REST API for materials, reasons, plant entities and equipment.
+	- Updated Jetty to 9.4.56.v20240826
+	- Updated Bouncy Castle to 1.78.1
+	- Updated Milo to 0.6.14
+	- Updated RabbitMQ to 5.21.0
+	- Updated ActiveMQ to 5.18.5
+	- Updated Modbus to 3.2.1
+	- Updated Kafka to 3.8.0
+	- Updated Jackson to 2.17.2
+	- Updated WebSocket to 1.5.7
+	- Updated JavaFX to 17.0.12	
+
 Please send comments and suggestions to point85.llc@gmail.com.

@@ -50,7 +50,7 @@ import org.point85.domain.dto.SourceIdResponseDto;
 import org.point85.domain.dto.WorkCellDto;
 import org.point85.domain.email.EmailClient;
 import org.point85.domain.email.EmailSource;
-import org.point85.domain.exim.ExportContent;
+import org.point85.domain.exim.ExportImportContent;
 import org.point85.domain.exim.Importer;
 import org.point85.domain.file.FileEventClient;
 import org.point85.domain.file.FileEventSource;
@@ -372,6 +372,10 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 		try {
 			// populate source ids for this source type
 			DataSourceType sourceType = cbDataSourceType.getSelectionModel().getSelectedItem();
+			
+			if (sourceType == null) {
+				return;
+			}
 			populateSourceIds(sourceType);
 
 			if (sourceType.equals(DataSourceType.HTTP)) {
@@ -1158,7 +1162,7 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 	protected void getPlantEntities() throws Exception {
 		PlantEntityResponseDto responseDto = getHttpClient().getPlantEntities();
 
-		ExportContent content = responseDto.getContent();
+		ExportImportContent content = responseDto.getContent();
 
 		ttvEntities.getRoot().getChildren().clear();
 

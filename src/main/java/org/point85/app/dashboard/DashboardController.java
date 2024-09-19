@@ -1084,7 +1084,7 @@ public class DashboardController extends DialogController implements CategoryCli
 			SimpleObjectProperty<Text> lossProperty = null;
 			Reason reason = event.getReason();
 
-			if (reason != null) {
+			if (reason != null && reason.getLossCategory() != null) {
 				Color color = Color.web(reason.getLossCategory().getColor());
 				Text text = new Text(reason.getLossCategory().toString());
 				text.setFill(color);

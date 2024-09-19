@@ -89,7 +89,7 @@ public class SetupEditorController extends EventEditorController {
 
 			if (newStart.isBefore(lastStart)) {
 				throw new Exception(
-						DesignerLocalizer.instance().getErrorString("start.before.end", newStart, lastStart));
+						DesignerLocalizer.instance().getErrorString("new.start.before.last.start", newStart, lastStart));
 			}
 
 			lastRecord.setEndTime(newStart);
