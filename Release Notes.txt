@@ -333,4 +333,7 @@ Note that version 3.2.0 has the following schema changes:
 	- Updated WebSocket to 1.5.7
 	- Updated JavaFX to 17.0.12	
 
+(46) 3.11.1, October 21, 2024:	
+	- Implemented a CrossOriginFilter for the Jetty embedded server
+
 Please send comments and suggestions to point85.llc@gmail.com.
