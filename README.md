@@ -30,7 +30,10 @@ The Point85 applications supporting OEE are:
 * Monitor:  a GUI application with a dashboard to view the current equipment OEE and status
 * Operator Desktop:  a desktop GUI application for manual entry of equipment events
 * Operator Web:  a web-application for manual entry of equipment events
-* Operator Mobile:  iOS and Android applications for manual entry of equipment events
+* Operator Mobile:  Android application for manual entry of equipment events
+* Operator Windows: Windows application for manual entry of equipment events
+* Operator Linux: Linux application for manual entry of equipment events
+* Operator Chrome: Chrome/Edge browser application for manual entry of equipment events
 
 In addition, two GUI test applications assist in the development of an OEE solution:
 * Tester:  a GUI application for testing data sources
