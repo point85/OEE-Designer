@@ -109,19 +109,19 @@ The Operator application is a desktop application that allows a user to enter av
 For example, the screen for entering a reject production event is:
 ![Operator Production](https://github.com/point85/OEE-Designer/blob/master/docs/operator-availability.png)
 
-Desktop applications are also available for Linux, Windows and macOS.  For macOS search the Apple App Store for "Point85".  The Linux, Windows and Chrome/Edge apps are available for download at the OEE Mobile project release page: https://github.com/point85/OEE-Mobile/releases.
-
 ## Operator Web Application
 The Operator web application is browser-based and allows a user to enter availability, performance, production, material change and job events.  The events can be recorded in chronological order as they happened or in summary form over a period of time by duration of event.
 
 For example, the screen for entering summarized availability is:
 ![Operator Web Availability](https://github.com/point85/OEE-Designer/blob/master/docs/operator-web-availability.png)
 
-## Operator Mobile Application
+## Operator Applications
 The Operator iOS and Android mobile applications allow a user to enter availability, performance, production, material change and job events.  The events can be recorded in chronological order as they happened or in summary form over a period of time by duration of event.  On Google Play Store and Apple App Store, search for "Point85". 
 
 For example, the screen for entering summarized availability is:
 ![Operator Mobile Availability](https://github.com/point85/OEE-Designer/blob/master/docs/AvailabilityPage.png)
+
+Desktop applications are also available for Linux, Windows and macOS.  For macOS search the Apple App Store for "Point85".  The Linux, Windows and Chrome/Edge apps are available for download at the OEE Mobile project release page: https://github.com/point85/OEE-Mobile/releases.
 
 A demonstration HTTP server is running a Collector at IP address 52.37.56.187 on port 8182 and can be used for the operator apps.
 
