@@ -30,9 +30,11 @@ The Point85 applications supporting OEE are:
 * Monitor:  a GUI application with a dashboard to view the current equipment OEE and status
 * Operator Desktop:  a desktop GUI application for manual entry of equipment events
 * Operator Web:  a web-application for manual entry of equipment events
-* Operator Mobile:  Android application for manual entry of equipment events
+* Operator Android:  Android application for manual entry of equipment events
+* Operator iOS:  iOS application for manual entry of equipment events
 * Operator Windows: Windows application for manual entry of equipment events
 * Operator Linux: Linux application for manual entry of equipment events
+* Operator macOS: macOS application for manual entry of equipment events
 * Operator Chrome: Chrome/Edge browser application for manual entry of equipment events
 
 In addition, two GUI test applications assist in the development of an OEE solution:
@@ -107,6 +109,8 @@ The Operator application is a desktop application that allows a user to enter av
 For example, the screen for entering a reject production event is:
 ![Operator Production](https://github.com/point85/OEE-Designer/blob/master/docs/operator-availability.png)
 
+Desktop applicatiopns are also available for Linux, Windows and macOS.
+
 ## Operator Web Application
 The Operator web application is browser-based and allows a user to enter availability, performance, production, material change and job events.  The events can be recorded in chronological order as they happened or in summary form over a period of time by duration of event.
 
@@ -116,9 +120,7 @@ For example, the screen for entering summarized availability is:
 ## Operator Mobile Application
 The Operator iOS and Android mobile applications allow a user to enter availability, performance, production, material change and job events.  The events can be recorded in chronological order as they happened or in summary form over a period of time by duration of event.
 
-On Google Play Store, search for "Point85 Overall Equipment Effectiveness" or "OEE" application.  The direct URL is https://play.google.com/store/apps/details?id=point85.oee.mobile.app.  An iOS mobile operator application was also released.  On the Apple App Store, search for the "Point85 OEE Operator App" or "OEE" application.  
-
-For a video demonstration of the mobile app functionality, please browse to https://www.dropbox.com/s/il8pkx2kmmwvgb7/OEE_Mobile_App.mp4?dl=0.
+On Google Play Store, search for "Point85 Overall Equipment Effectiveness", "OEE Mobile" or "OEE" application. An iOS mobile operator application was also released.  On the Apple App Store, search for the "Point85 OEE Operator App", "Point85 OEE" or "OEE" application.  
 
 For example, the screen for entering summarized availability is:
 ![Operator Mobile Availability](https://github.com/point85/OEE-Designer/blob/master/docs/operator-mobile-availability.png)
@@ -145,4 +147,4 @@ The file "docs/MobileApp.mp4" is s short video of using the iOS and Android mobi
 * OEE domain library: https://github.com/point85/OEE-Domain 
 * Collector service:  https://github.com/point85/OEE-Collector 
 * Web application: https://github.com/point85/OEE-Operations
-* Mobile applications:  https://github.com/point85/OEE-Mobile 
+* Flutter applications:  https://github.com/point85/OEE-Mobile
