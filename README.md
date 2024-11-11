@@ -123,7 +123,7 @@ The Operator iOS and Android mobile applications allow a user to enter availabil
 On Google Play Store, search for "Point85 Overall Equipment Effectiveness", "OEE Mobile" or "OEE" application. An iOS mobile operator application was also released.  On the Apple App Store, search for the "Point85 OEE Operator App", "Point85 OEE" or "OEE" application.  
 
 For example, the screen for entering summarized availability is:
-![Operator Mobile Availability](https://github.com/point85/OEE-Designer/blob/master/docs/operator-mobile-availability.png)
+![Operator Mobile Availability](https://github.com/point85/OEE-Designer/blob/master/docs/AvailabilityPage.png)
 
 A demonstration HTTP server is running a Collector at IP address 52.37.56.187 on port 8182.
 
