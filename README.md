@@ -103,13 +103,13 @@ A first-level Pareto chart show the time losses in percentage terms, for example
 A second-level Pareto displays the reasons for an availability category, for example:
 ![Second Level Pareto](https://github.com/point85/OEE-Designer/blob/master/docs/dashboard-second-level-pareto.png)
 
-## Operator Desktop Application
+## Operator Desktop Applications
 The Operator application is a desktop application that allows a user to enter availability, performance, production, material change and job events.  The events can be recorded in chronological order as they happened or in summary form over a period of time by duration of the event.
 
 For example, the screen for entering a reject production event is:
 ![Operator Production](https://github.com/point85/OEE-Designer/blob/master/docs/operator-availability.png)
 
-Desktop applicatiopns are also available for Linux, Windows and macOS.
+Desktop applications are also available for Linux, Windows and macOS.  For macOS search the Apple App Store for "Point85".  The Linux, Windows and Chrome/Edge apps are available for download at the OEE Mobile project release page: https://github.com/point85/OEE-Mobile/releases.
 
 ## Operator Web Application
 The Operator web application is browser-based and allows a user to enter availability, performance, production, material change and job events.  The events can be recorded in chronological order as they happened or in summary form over a period of time by duration of event.
@@ -118,14 +118,12 @@ For example, the screen for entering summarized availability is:
 ![Operator Web Availability](https://github.com/point85/OEE-Designer/blob/master/docs/operator-web-availability.png)
 
 ## Operator Mobile Application
-The Operator iOS and Android mobile applications allow a user to enter availability, performance, production, material change and job events.  The events can be recorded in chronological order as they happened or in summary form over a period of time by duration of event.
-
-On Google Play Store, search for "Point85 Overall Equipment Effectiveness", "OEE Mobile" or "OEE" application. An iOS mobile operator application was also released.  On the Apple App Store, search for the "Point85 OEE Operator App", "Point85 OEE" or "OEE" application.  
+The Operator iOS and Android mobile applications allow a user to enter availability, performance, production, material change and job events.  The events can be recorded in chronological order as they happened or in summary form over a period of time by duration of event.  On Google Play Store and Apple App Store, search for "Point85". 
 
 For example, the screen for entering summarized availability is:
 ![Operator Mobile Availability](https://github.com/point85/OEE-Designer/blob/master/docs/AvailabilityPage.png)
 
-A demonstration HTTP server is running a Collector at IP address 52.37.56.187 on port 8182.
+A demonstration HTTP server is running a Collector at IP address 52.37.56.187 on port 8182 and can be used for the operator apps.
 
 ## Localization
 All applications with user-visible text use resource bundles for localization.  The locale is the default locale of the desktop or web server machine.  Each application has two default resource bundles, one for text named (app name)Lang.properties and one for errors/exceptions named (app name)Error.properties with US English text.
@@ -139,8 +137,6 @@ Version 3.11.0 adds a REST API for materials, reasons, plant entities and equipm
 
 ## Getting Started
 The desktop applications are packaged in the oee-<version>.zip file in the latest Git release link at https://github.com/point85/OEE-Designer/releases.  Download the oee-<version>.zip file and expand the archive into a folder of your choice.  Next, download the Point85 OEE Getting Started Guide and follow instructions in that document.  Additional information may be found in the Point85 OEE User Guide.
-
-The file "docs/MobileApp.mp4" is s short video of using the iOS and Android mobile app.
 
 ## Related Github Projects
 * Java FX applications:  https://github.com/point85/OEE-Designer 
