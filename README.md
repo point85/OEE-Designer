@@ -136,7 +136,9 @@ Hibernate and JPA abstract-away database specific aspects of inserting, updating
 Version 3.11.0 adds a REST API for materials, reasons, plant entities and equipment.  Please see the Release Notes.txt file for release history and additional details.
 
 ## Getting Started
-The desktop applications are packaged in the oee-<version>.zip file in the latest Git release link at https://github.com/point85/OEE-Designer/releases.  Download the oee-<version>.zip file and expand the archive into a folder of your choice.  Next, download the Point85 OEE Getting Started Guide and follow instructions in that document.  Additional information may be found in the Point85 OEE User Guide.
+The desktop applications are packaged in the oee-<version>.zip file in the latest Git release link at https://github.com/point85/OEE-Designer/releases.  Download the oee-<version>.zip file and expand the archive into a folder of your choice.  Next, download the Point85 OEE Getting Started Guide and follow instructions in that document.  
+
+Note that a demonstration HSQLDB server is running at IP address 52.37.56.187 and can be used for the JavaFX desktop apps. The connect string is "jdbc:hsqldb:hsql://52.37.56.187/OEE SA".  Additional information may be found in the Point85 OEE User Guide.
 
 ## Related Github Projects
 * Java FX applications:  https://github.com/point85/OEE-Designer 
