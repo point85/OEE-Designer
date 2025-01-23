@@ -41,7 +41,9 @@ In addition, two GUI test applications assist in the development of an OEE solut
 * Tester:  a GUI application for testing data sources
 * Collector UI: a front-end GUI for a data collector
 
-For more information about the Designer and other OEE applications, please refer to the *Point85 OEE User Guide* in the docs folder.  A getting started tutorial, *Point85 OEE Getting Started Guide*, is also available in the docs folder.  In addition, a document in this folder titled *PackML and Point85 OEE* describes a possible implementation the Point85 Overall Equipment Effectiveness (OEE) solution for equipment with a PackML interface. 
+For a detailed description of the Designer and other OEE applications, please refer to the *Point85 OEE User Guide* in the docs folder.  A getting started tutorial, *Point85 OEE Getting Started Guide*, is also available in the docs folder.  In addition, a document in this folder titled *PackML and Point85 OEE* describes a possible implementation the Point85 Overall Equipment Effectiveness (OEE) solution for equipment with a PackML interface. 
+
+For more information about OEE, please visit the Point85 website at https://point85.github.io/oee/.
 
 ## OEE Calculations
 OEE is the product of equipment availability, performance and quality each expressed as a percentage.  The time-loss model is used to accumulate time in loss categories (or “no loss” if the equipment is running normally).  A data source provides an input value to a data collector’s resolver JavaScript function that maps that input value to an output value (reason or production count).
