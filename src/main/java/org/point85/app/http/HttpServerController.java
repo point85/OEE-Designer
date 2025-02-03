@@ -1,5 +1,6 @@
 package org.point85.app.http;
 
+import java.io.File;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.DomainUtils;
 import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.DataSourceType;
+import org.point85.domain.exim.Exporter;
 import org.point85.domain.http.HttpSource;
 import org.point85.domain.http.OeeHttpServer;
 import org.point85.domain.persistence.PersistenceService;
@@ -81,6 +83,9 @@ public class HttpServerController extends DesignerDialogController {
 	@FXML
 	private Button btBackup;
 
+	@FXML
+	private Button btRefresh;
+
 	public void initializeServer(DesignerApplication app) throws Exception {
 		// main app
 		setApp(app);
@@ -116,6 +121,9 @@ public class HttpServerController extends DesignerDialogController {
 		// backup
 		btBackup.setGraphic(ImageManager.instance().getImageView(Images.BACKUP));
 		btBackup.setContentDisplay(ContentDisplay.LEFT);
+
+		// refresh
+		btRefresh.setGraphic(ImageManager.instance().getImageView(Images.REFRESH));
 	}
 
 	public HttpSource getSource() {
@@ -135,6 +143,7 @@ public class HttpServerController extends DesignerDialogController {
 			dataSource = cbDataSources.getSelectionModel().getSelectedItem();
 
 			if (dataSource == null) {
+				onNewDataSource();
 				return;
 			}
 
@@ -272,10 +281,12 @@ public class HttpServerController extends DesignerDialogController {
 		for (CollectorDataSource source : sources) {
 			servers.add((HttpSource) source);
 		}
+		HttpSource one = servers.size() == 1 ? servers.get(0) : null;
+		servers.add(null);
 		cbDataSources.setItems(servers);
 
-		if (servers.size() == 1) {
-			this.cbDataSources.getSelectionModel().select(0);
+		if (one != null) {
+			cbDataSources.getSelectionModel().select(one);
 			onSelectDataSource();
 		}
 	}
@@ -319,7 +330,55 @@ public class HttpServerController extends DesignerDialogController {
 	}
 
 	@FXML
+	private void onRefresh() throws Exception {
+		populateDataSources();
+	}
+
+	private void backupSources(List<CollectorDataSource> sources) {
+		try {
+			// show file chooser
+			File file = getBackupFile();
+
+			if (file != null) {
+				// backup
+				Exporter.instance().backupHttpSources(sources, file);
+
+				AppUtils.showInfoDialog(
+						DesignerLocalizer.instance().getLangString("backup.successful", file.getCanonicalPath()));
+			}
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+
+	@FXML
 	private void onBackup() {
-		backupToFile(HttpSource.class);
+		if (dataSource == null) {
+			// confirm all
+			ButtonType type = AppUtils.showConfirmationDialog(
+					DesignerLocalizer.instance().getLangString("all.export", HttpSource.class.getSimpleName()));
+
+			if (type.equals(ButtonType.CANCEL)) {
+				return;
+			}
+
+			backupToFile(HttpSource.class);
+		} else {
+			// one source
+			HttpSource source = getSource();
+
+			List<CollectorDataSource> sources = new ArrayList<>();
+			sources.add(source);
+
+			// confirm
+			ButtonType type = AppUtils.showConfirmationDialog(
+					DesignerLocalizer.instance().getLangString("object.export", source.getName()));
+
+			if (type.equals(ButtonType.CANCEL)) {
+				return;
+			}
+
+			backupSources(sources);
+		}
 	}
 }

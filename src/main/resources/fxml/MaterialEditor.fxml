@@ -44,8 +44,9 @@
                      <contextMenu>
                         <ContextMenu fx:id="cmMaterial">
                           <items>
-                              <MenuItem fx:id="miSaveAll" mnemonicParsing="false" onAction="#onSaveAllMaterial" text="%save.all.material" />
+                            <MenuItem fx:id="miSaveAll" mnemonicParsing="false" onAction="#onSaveAllMaterial" text="%save.all.material" />
                             <MenuItem fx:id="miRefreshAll" mnemonicParsing="false" onAction="#onRefreshAllMaterial" text="%refresh.all.material" />
+                            <MenuItem fx:id="miClearSelection" mnemonicParsing="false" onAction="#onClearSelection" text="%clear.selected.material" />
                           </items>
                         </ContextMenu>
                      </contextMenu></TreeView>

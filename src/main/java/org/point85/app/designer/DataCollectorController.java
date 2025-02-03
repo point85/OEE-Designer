@@ -1,5 +1,6 @@
 package org.point85.app.designer;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import org.point85.domain.collector.DataCollector;
 import org.point85.domain.collector.DataSourceType;
 import org.point85.domain.email.EmailClient;
 import org.point85.domain.email.EmailSource;
+import org.point85.domain.exim.Exporter;
 import org.point85.domain.jms.JmsClient;
 import org.point85.domain.kafka.KafkaOeeClient;
 import org.point85.domain.kafka.KafkaSource;
@@ -65,6 +67,9 @@ public class DataCollectorController extends DesignerDialogController {
 	private Button btClearMessagingServer;
 
 	@FXML
+	private Button btClearCollector;
+
+	@FXML
 	private ComboBox<String> cbCollectors;
 
 	@FXML
@@ -76,7 +81,7 @@ public class DataCollectorController extends DesignerDialogController {
 	public void initialize(DesignerApplication app) throws Exception {
 		// main app
 		setApp(app);
-		
+
 		// button images
 		setImages();
 
@@ -133,10 +138,11 @@ public class DataCollectorController extends DesignerDialogController {
 
 		// clear
 		btClearMessagingServer.setGraphic(ImageManager.instance().getImageView(Images.CLEAR));
-		
+		btClearCollector.setGraphic(ImageManager.instance().getImageView(Images.CLEAR));
+
 		// backup
 		btBackup.setGraphic(ImageManager.instance().getImageView(Images.BACKUP));
-		btBackup.setContentDisplay(ContentDisplay.LEFT); 
+		btBackup.setContentDisplay(ContentDisplay.LEFT);
 	}
 
 	public DataCollector getCollector() {
@@ -346,7 +352,56 @@ public class DataCollectorController extends DesignerDialogController {
 	}
 
 	@FXML
+	private void onClearCollector() {
+		cbCollectors.getSelectionModel().select(null);
+		cbCollectors.getSelectionModel().clearSelection();
+		dataCollector = null;
+	}
+
+	private void backupCollectors(List<DataCollector> collectors) {
+		try {
+			// show file chooser
+			File file = getBackupFile();
+
+			if (file != null) {
+				// backup
+				Exporter.instance().backupCollectors(collectors, file);
+
+				AppUtils.showInfoDialog(
+						DesignerLocalizer.instance().getLangString("backup.successful", file.getCanonicalPath()));
+			}
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+
+	@FXML
 	private void onBackup() {
-		backupToFile(DataCollector.class);
+		if (dataCollector == null) {
+			// confirm
+			ButtonType type = AppUtils.showConfirmationDialog(
+					DesignerLocalizer.instance().getLangString("all.export", DataCollector.class.getSimpleName()));
+
+			if (type.equals(ButtonType.CANCEL)) {
+				return;
+			}
+
+			backupToFile(DataCollector.class);
+		} else {
+			DataCollector collector = getCollector();
+
+			List<DataCollector> collectors = new ArrayList<>();
+			collectors.add(collector);
+
+			// confirm
+			ButtonType type = AppUtils.showConfirmationDialog(
+					DesignerLocalizer.instance().getLangString("object.export", collector.getName()));
+
+			if (type.equals(ButtonType.CANCEL)) {
+				return;
+			}
+
+			backupCollectors(collectors);
+		}
 	}
 }

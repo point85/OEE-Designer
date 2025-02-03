@@ -124,7 +124,7 @@ public class DesignerApplication {
 
 	// script execution context
 	private OeeContext appContext;
-	
+
 	// last backup/restore directory
 	protected File lastDirectory;
 
@@ -463,7 +463,7 @@ public class DesignerApplication {
 
 		return mqttServerController.getSource();
 	}
-	
+
 	WebSocketSource showWebSocketEditor() throws Exception {
 		FXMLLoader loader = FXMLLoaderFactory.wsServerLoader();
 		AnchorPane page = (AnchorPane) loader.getRoot();
@@ -486,7 +486,7 @@ public class DesignerApplication {
 
 		return wsServerController.getSource();
 	}
-	
+
 	void showWebSocketTrendDialog(EventResolver eventResolver) throws Exception {
 		// Load the fxml file and create a new stage for the pop-up dialog.
 		FXMLLoader loader = FXMLLoaderFactory.webSocketTrendLoader();
@@ -519,7 +519,7 @@ public class DesignerApplication {
 
 		// start web socket server
 		wsTrendController.onStartServer();
-		
+
 		// set close box action
 		setCloseBoxAction(scene, wsTrendController);
 
@@ -808,7 +808,7 @@ public class DesignerApplication {
 
 		// set the script resolver
 		opcDaTrendController.setScriptResolver(eventResolver);
-		
+
 		// set close box action
 		setCloseBoxAction(scene, opcDaTrendController);
 
@@ -847,7 +847,7 @@ public class DesignerApplication {
 
 		// set the script resolver
 		opcUaTrendController.setScriptResolver(eventResolver);
-		
+
 		// set close box action
 		setCloseBoxAction(scene, opcUaTrendController);
 
@@ -887,7 +887,7 @@ public class DesignerApplication {
 
 		// start HTTP server
 		httpTrendController.onStartServer();
-		
+
 		// set close box action
 		setCloseBoxAction(scene, httpTrendController);
 
@@ -927,7 +927,7 @@ public class DesignerApplication {
 
 		// subscribe to broker
 		messagingTrendController.subscribeToDataSource();
-		
+
 		// set close box action
 		setCloseBoxAction(scene, messagingTrendController);
 
@@ -967,7 +967,7 @@ public class DesignerApplication {
 
 		// subscribe to broker
 		jmsTrendController.subscribeToDataSource();
-		
+
 		// set close box action
 		setCloseBoxAction(scene, jmsTrendController);
 
@@ -1007,7 +1007,7 @@ public class DesignerApplication {
 
 		// subscribe to broker
 		kafkaTrendController.subscribeToDataSource();
-		
+
 		// set close box action
 		setCloseBoxAction(scene, kafkaTrendController);
 
@@ -1044,7 +1044,7 @@ public class DesignerApplication {
 
 		// subscribe to server
 		emailTrendController.subscribeToDataSource();
-		
+
 		// set close box action
 		setCloseBoxAction(scene, emailTrendController);
 
@@ -1084,7 +1084,7 @@ public class DesignerApplication {
 
 		// start the job
 		proficyTrendController.subscribeToDataSource();
-		
+
 		// set close box action
 		setCloseBoxAction(scene, proficyTrendController);
 
@@ -1124,7 +1124,7 @@ public class DesignerApplication {
 
 		// subscribe to broker
 		mqttTrendController.subscribeToDataSource();
-		
+
 		// set close box action
 		setCloseBoxAction(scene, mqttTrendController);
 
@@ -1177,7 +1177,8 @@ public class DesignerApplication {
 			try {
 				subscriber.unsubscribeFromDataSource();
 			} catch (Exception e) {
-				AppUtils.showErrorDialog(DesignerLocalizer.instance().getErrorString("unsubscribe.failed", e.getMessage()));
+				AppUtils.showErrorDialog(
+						DesignerLocalizer.instance().getErrorString("unsubscribe.failed", e.getMessage()));
 			}
 		});
 	}
@@ -1214,7 +1215,7 @@ public class DesignerApplication {
 
 		// connect to the file server
 		fileTrendController.subscribeToDataSource();
-		
+
 		// set close box action
 		setCloseBoxAction(scene, fileTrendController);
 
@@ -1254,7 +1255,7 @@ public class DesignerApplication {
 
 		// start the job
 		cronTrendController.subscribeToDataSource();
-		
+
 		// set close box action
 		setCloseBoxAction(scene, cronTrendController);
 
@@ -1293,7 +1294,7 @@ public class DesignerApplication {
 
 		// connect to the database server
 		modbusTrendController.createModbusMaster();
-		
+
 		// set close box action
 		setCloseBoxAction(scene, modbusTrendController);
 
@@ -1413,11 +1414,11 @@ public class DesignerApplication {
 	public void setProficyBrowserController(ProficyBrowserController proficyBrowserController) {
 		this.proficyBrowserController = proficyBrowserController;
 	}
-	
+
 	public File getLastDirectory() {
 		return this.lastDirectory;
 	}
-	
+
 	public void setLastDirectory(File file) {
 		this.lastDirectory = file;
 	}

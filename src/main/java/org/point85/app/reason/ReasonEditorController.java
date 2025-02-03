@@ -20,6 +20,7 @@ import org.point85.app.ReasonNode;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
 import org.point85.app.designer.DesignerLocalizer;
+import org.point85.domain.exim.Exporter;
 import org.point85.domain.oee.TimeLoss;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Reason;
@@ -30,6 +31,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -76,6 +78,9 @@ public class ReasonEditorController extends DesignerDialogController {
 	private Button btBackup;
 
 	@FXML
+	private Button btClearLoss;
+
+	@FXML
 	private TextField tfName;
 
 	@FXML
@@ -92,6 +97,9 @@ public class ReasonEditorController extends DesignerDialogController {
 
 	@FXML
 	private MenuItem miSaveAll;
+
+	@FXML
+	private Label lbComponent;
 
 	// extract the Reason name from the tree item
 	public Reason getSelectedReason() {
@@ -120,6 +128,21 @@ public class ReasonEditorController extends DesignerDialogController {
 			}
 		});
 		tvReasons.setShowRoot(false);
+		
+		// add loss combo listener for OEE component
+		cbLosses.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
+			try {
+				TimeLoss loss = cbLosses.getSelectionModel().getSelectedItem();
+				
+				if (loss != null) {
+					lbComponent.setText(loss.getComponent().toString());
+				} else {
+					lbComponent.setText(null);
+				}
+			} catch (Exception e) {
+				AppUtils.showErrorDialog(e);
+			}
+		});
 
 		// fill in the top-level reason nodes
 		populateTopReasonNodes();
@@ -170,7 +193,7 @@ public class ReasonEditorController extends DesignerDialogController {
 		// check to see if the node's children have been previously shown
 		if (!hasTreeChildren) {
 			newItem.getChildren().clear();
-			for (Reason child : children) {
+			for (Reason child : sortedChildren) {
 				TreeItem<ReasonNode> entityItem = new TreeItem<>(new ReasonNode(child));
 				newItem.getChildren().add(entityItem);
 				entityItem.setGraphic(ImageManager.instance().getImageView(Images.REASON));
@@ -208,10 +231,13 @@ public class ReasonEditorController extends DesignerDialogController {
 		miSaveAll.setGraphic(ImageManager.instance().getImageView(Images.SAVE_ALL));
 		miRefreshAll.setGraphic(ImageManager.instance().getImageView(Images.REFRESH_ALL));
 		miClearSelection.setGraphic(ImageManager.instance().getImageView(Images.CLEAR));
-		
+
 		// backup
 		btBackup.setGraphic(ImageManager.instance().getImageView(Images.BACKUP));
-		btBackup.setContentDisplay(ContentDisplay.RIGHT); 
+		btBackup.setContentDisplay(ContentDisplay.RIGHT);
+
+		// clear losses
+		btClearLoss.setGraphic(ImageManager.instance().getImageView(Images.CLEAR));
 	}
 
 	// show the Reason attributes
@@ -228,6 +254,13 @@ public class ReasonEditorController extends DesignerDialogController {
 
 		// loss category
 		cbLosses.getSelectionModel().select(reason.getLossCategory());
+
+		// OEE component
+		if (reason.getLossCategory() != null) {
+			lbComponent.setText(reason.getLossCategory().getComponent().toString());
+		} else {
+			lbComponent.setText(null);
+		}		
 	}
 
 	// populate the top-level tree view reasons
@@ -271,6 +304,7 @@ public class ReasonEditorController extends DesignerDialogController {
 			this.tfName.requestFocus();
 			this.taDescription.clear();
 			this.cbLosses.getSelectionModel().clearSelection();
+			this.lbComponent.setText(null);
 
 			this.selectedReasonItem = null;
 		} catch (Exception e) {
@@ -478,6 +512,7 @@ public class ReasonEditorController extends DesignerDialogController {
 	@FXML
 	private void onClearSelection() {
 		this.tvReasons.getSelectionModel().clearSelection();
+		this.selectedReasonItem = null;
 	}
 
 	@FXML
@@ -624,8 +659,66 @@ public class ReasonEditorController extends DesignerDialogController {
 		}
 	}
 
+	private void buildChildrenList(Reason reason, List<Reason> reasons) {
+		for (Reason child : reason.getChildren()) {
+			reasons.add(child);
+			buildChildrenList(child, reasons);
+		}
+	}
+
+	// reason is a parent
+	private void backupReason(Reason reason) {
+		try {
+			// show file chooser
+			File file = getBackupFile();
+
+			if (file != null) {
+				// get children too
+				List<Reason> reasons = new ArrayList<>();
+				reasons.add(reason);
+				buildChildrenList(reason, reasons);
+
+				// backup
+				Exporter.instance().backupReasons(reasons, file);
+
+				AppUtils.showInfoDialog(
+						DesignerLocalizer.instance().getLangString("backup.successful", file.getCanonicalPath()));
+			}
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+
 	@FXML
 	private void onBackup() {
-		backupToFile(Reason.class);
+		if (getSelectedReason() == null) {
+			// confirm
+			ButtonType type = AppUtils.showConfirmationDialog(
+					DesignerLocalizer.instance().getLangString("all.export", Reason.class.getSimpleName()));
+
+			if (type.equals(ButtonType.CANCEL)) {
+				return;
+			}
+
+			backupToFile(Reason.class);
+		} else {
+			// confirm
+			ButtonType type = AppUtils.showConfirmationDialog(
+					DesignerLocalizer.instance().getLangString("object.export", getSelectedReason().getName()));
+
+			if (type.equals(ButtonType.CANCEL)) {
+				return;
+			}
+
+			// prune from tree
+			getSelectedReason().setParent(null);
+
+			backupReason(getSelectedReason());
+		}
+	}
+
+	@FXML
+	private void onClearLoss() {
+		cbLosses.getSelectionModel().clearSelection();
 	}
 }

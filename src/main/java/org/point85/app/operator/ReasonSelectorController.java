@@ -97,7 +97,7 @@ public class ReasonSelectorController extends DialogController {
 		// check to see if the node's children have been previously shown
 		if (!hasTreeChildren) {
 			newItem.getChildren().clear();
-			for (Reason child : children) {
+			for (Reason child : sortedChildren) {
 				TreeItem<ReasonNode> entityItem = new TreeItem<>(new ReasonNode(child));
 				newItem.getChildren().add(entityItem);
 				entityItem.setGraphic(ImageManager.instance().getImageView(Images.REASON));

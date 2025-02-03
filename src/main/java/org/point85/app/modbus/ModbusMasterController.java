@@ -1,5 +1,6 @@
 package org.point85.app.modbus;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.DataSourceType;
+import org.point85.domain.exim.Exporter;
 import org.point85.domain.modbus.ModbusDataType;
 import org.point85.domain.modbus.ModbusEndpoint;
 import org.point85.domain.modbus.ModbusRegisterType;
@@ -113,6 +115,9 @@ public class ModbusMasterController extends ModbusController {
 
 	@FXML
 	private Button btBackup;
+
+	@FXML
+	private Button btRefresh;
 
 	@FXML
 	private Label lbState;
@@ -218,10 +223,13 @@ public class ModbusMasterController extends ModbusController {
 		// cancel connect
 		btCancelConnect.setGraphic(ImageManager.instance().getImageView(Images.CANCEL));
 		btCancelConnect.setContentDisplay(ContentDisplay.LEFT);
-		
+
 		// backup
 		btBackup.setGraphic(ImageManager.instance().getImageView(Images.BACKUP));
-		btBackup.setContentDisplay(ContentDisplay.LEFT); 
+		btBackup.setContentDisplay(ContentDisplay.LEFT);
+
+		// refresh
+		btRefresh.setGraphic(ImageManager.instance().getImageView(Images.REFRESH));
 	}
 
 	Integer getUnitId() {
@@ -259,6 +267,7 @@ public class ModbusMasterController extends ModbusController {
 			ModbusSource source = cbDataSources.getSelectionModel().getSelectedItem();
 
 			if (source == null) {
+				onNewDataSource();
 				return;
 			}
 			setSource(source);
@@ -529,10 +538,12 @@ public class ModbusMasterController extends ModbusController {
 		for (CollectorDataSource source : sources) {
 			dataSources.add((ModbusSource) source);
 		}
+		ModbusSource one = dataSources.size() == 1 ? dataSources.get(0) : null;
+		dataSources.add(null);
 		cbDataSources.setItems(dataSources);
 
-		if (dataSources.size() == 1) {
-			cbDataSources.getSelectionModel().select(0);
+		if (one != null) {
+			cbDataSources.getSelectionModel().select(one);
 			onSelectDataSource();
 		}
 	}
@@ -637,7 +648,55 @@ public class ModbusMasterController extends ModbusController {
 	}
 
 	@FXML
+	private void onRefresh() throws Exception {
+		populateDataSources();
+	}
+
+	private void backupSources(List<CollectorDataSource> sources) {
+		try {
+			// show file chooser
+			File file = getBackupFile();
+
+			if (file != null) {
+				// backup
+				Exporter.instance().backupModbusSources(sources, file);
+
+				AppUtils.showInfoDialog(
+						DesignerLocalizer.instance().getLangString("backup.successful", file.getCanonicalPath()));
+			}
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+
+	@FXML
 	private void onBackup() {
-		backupToFile(ModbusSource.class);
+		if (getSource() == null || getSource().getName() == null) {
+			// confirm all
+			ButtonType type = AppUtils.showConfirmationDialog(
+					DesignerLocalizer.instance().getLangString("all.export", ModbusSource.class.getSimpleName()));
+
+			if (type.equals(ButtonType.CANCEL)) {
+				return;
+			}
+
+			backupToFile(ModbusSource.class);
+		} else {
+			// one source
+			ModbusSource source = getSource();
+
+			List<CollectorDataSource> sources = new ArrayList<>();
+			sources.add(source);
+
+			// confirm
+			ButtonType type = AppUtils.showConfirmationDialog(
+					DesignerLocalizer.instance().getLangString("object.export", source.getName()));
+
+			if (type.equals(ButtonType.CANCEL)) {
+				return;
+			}
+
+			backupSources(sources);
+		}
 	}
 }

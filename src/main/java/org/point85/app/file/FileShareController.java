@@ -12,7 +12,7 @@ import org.point85.app.designer.DesignerDialogController;
 import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.DataSourceType;
-import org.point85.domain.email.EmailSource;
+import org.point85.domain.exim.Exporter;
 import org.point85.domain.file.FileEventSource;
 import org.point85.domain.persistence.PersistenceService;
 
@@ -57,6 +57,9 @@ public class FileShareController extends DesignerDialogController {
 	@FXML
 	private Button btBackup;
 
+	@FXML
+	private Button btRefresh;
+
 	public void initialize(DesignerApplication app) throws Exception {
 		// main app
 		setApp(app);
@@ -88,10 +91,13 @@ public class FileShareController extends DesignerDialogController {
 		// choose file
 		btFileChooser.setGraphic(ImageManager.instance().getImageView(Images.CHOOSE_FILE));
 		btFileChooser.setContentDisplay(ContentDisplay.LEFT);
-		
+
 		// backup
 		btBackup.setGraphic(ImageManager.instance().getImageView(Images.BACKUP));
-		btBackup.setContentDisplay(ContentDisplay.LEFT); 
+		btBackup.setContentDisplay(ContentDisplay.LEFT);
+
+		// refresh
+		btRefresh.setGraphic(ImageManager.instance().getImageView(Images.REFRESH));
 	}
 
 	public FileEventSource getSource() {
@@ -111,6 +117,7 @@ public class FileShareController extends DesignerDialogController {
 			dataSource = cbDataSources.getSelectionModel().getSelectedItem();
 
 			if (dataSource == null) {
+				onNewDataSource();
 				return;
 			}
 
@@ -216,10 +223,12 @@ public class FileShareController extends DesignerDialogController {
 		for (CollectorDataSource source : sources) {
 			fileServers.add((FileEventSource) source);
 		}
+		FileEventSource one = fileServers.size() == 1 ? fileServers.get(0) : null;
+		fileServers.add(null);
 		cbDataSources.setItems(fileServers);
 
-		if (fileServers.size() == 1) {
-			this.cbDataSources.getSelectionModel().select(0);
+		if (one != null) {
+			cbDataSources.getSelectionModel().select(one);
 			onSelectDataSource();
 		}
 	}
@@ -233,7 +242,55 @@ public class FileShareController extends DesignerDialogController {
 	}
 
 	@FXML
+	private void onRefresh() throws Exception {
+		populateDataSources();
+	}
+
+	private void backupSources(List<CollectorDataSource> sources) {
+		try {
+			// show file chooser
+			File file = getBackupFile();
+
+			if (file != null) {
+				// backup
+				Exporter.instance().backupFileSources(sources, file);
+
+				AppUtils.showInfoDialog(
+						DesignerLocalizer.instance().getLangString("backup.successful", file.getCanonicalPath()));
+			}
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+
+	@FXML
 	private void onBackup() {
-		backupToFile(EmailSource.class);
+		if (dataSource == null) {
+			// confirm all
+			ButtonType type = AppUtils.showConfirmationDialog(
+					DesignerLocalizer.instance().getLangString("all.export", FileEventSource.class.getSimpleName()));
+
+			if (type.equals(ButtonType.CANCEL)) {
+				return;
+			}
+
+			backupToFile(FileEventSource.class);
+		} else {
+			// one source
+			FileEventSource source = getSource();
+
+			List<CollectorDataSource> sources = new ArrayList<>();
+			sources.add(source);
+
+			// confirm
+			ButtonType type = AppUtils.showConfirmationDialog(
+					DesignerLocalizer.instance().getLangString("object.export", source.getName()));
+
+			if (type.equals(ButtonType.CANCEL)) {
+				return;
+			}
+
+			backupSources(sources);
+		}
 	}
 }

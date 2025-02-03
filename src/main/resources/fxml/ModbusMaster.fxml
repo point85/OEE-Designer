@@ -133,12 +133,13 @@
                         <Button fx:id="btDelete" mnemonicParsing="false" onAction="#onDeleteDataSource" prefWidth="100.0" text="%delete" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
                         <Label text="%port" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
                         <TextField fx:id="tfPort" promptText="%enter.port" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                        <ComboBox fx:id="cbDataSources" maxWidth="1.7976931348623157E308" onAction="#onSelectDataSource" GridPane.columnIndex="1" GridPane.columnSpan="2" />
+                        <ComboBox fx:id="cbDataSources" maxWidth="1.7976931348623157E308" onAction="#onSelectDataSource" GridPane.columnIndex="1" />
                         <Label text="%name" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
                         <TextField fx:id="tfConnectionName" promptText="%enter.name" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <Label text="%transport" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
                         <ComboBox fx:id="cbTransports" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                         <Button fx:id="btBackup" mnemonicParsing="false" onAction="#onBackup" prefWidth="100.0" text="%backup" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
+                        <Button fx:id="btRefresh" mnemonicParsing="false" onAction="#onRefresh" prefHeight="16.0" prefWidth="16.0" GridPane.columnIndex="2" />
                      </children>
                   </GridPane>
                </children>

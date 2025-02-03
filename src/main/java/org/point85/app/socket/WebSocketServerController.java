@@ -1,5 +1,6 @@
 package org.point85.app.socket;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.DomainUtils;
 import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.DataSourceType;
+import org.point85.domain.exim.Exporter;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.socket.WebSocketOeeClient;
 import org.point85.domain.socket.WebSocketSource;
@@ -78,6 +80,9 @@ public class WebSocketServerController extends DesignerDialogController {
 	private Button btBackup;
 
 	@FXML
+	private Button btRefresh;
+
+	@FXML
 	private Button btClearSSL;
 
 	public void initialize(DesignerApplication app) throws Exception {
@@ -114,10 +119,13 @@ public class WebSocketServerController extends DesignerDialogController {
 
 		// clear SSL settings
 		btClearSSL.setGraphic(ImageManager.instance().getImageView(Images.CLEAR));
-		
+
 		// backup
 		btBackup.setGraphic(ImageManager.instance().getImageView(Images.BACKUP));
-		btBackup.setContentDisplay(ContentDisplay.LEFT); 
+		btBackup.setContentDisplay(ContentDisplay.LEFT);
+
+		// refresh
+		btRefresh.setGraphic(ImageManager.instance().getImageView(Images.REFRESH));
 	}
 
 	public WebSocketSource getSource() {
@@ -169,6 +177,7 @@ public class WebSocketServerController extends DesignerDialogController {
 			dataSource = cbDataSources.getSelectionModel().getSelectedItem();
 
 			if (dataSource == null) {
+				onNewDataSource();
 				return;
 			}
 
@@ -279,10 +288,12 @@ public class WebSocketServerController extends DesignerDialogController {
 		for (CollectorDataSource source : sources) {
 			servers.add((WebSocketSource) source);
 		}
+		WebSocketSource one = servers.size() == 1 ? servers.get(0) : null;
+		servers.add(null);
 		cbDataSources.setItems(servers);
 
-		if (servers.size() == 1) {
-			this.cbDataSources.getSelectionModel().select(0);
+		if (one != null) {
+			cbDataSources.getSelectionModel().select(one);
 			onSelectDataSource();
 		}
 	}
@@ -316,7 +327,55 @@ public class WebSocketServerController extends DesignerDialogController {
 	}
 
 	@FXML
+	private void onRefresh() throws Exception {
+		populateDataSources();
+	}
+
+	private void backupSources(List<CollectorDataSource> sources) {
+		try {
+			// show file chooser
+			File file = getBackupFile();
+
+			if (file != null) {
+				// backup
+				Exporter.instance().backupWebSocketSources(sources, file);
+
+				AppUtils.showInfoDialog(
+						DesignerLocalizer.instance().getLangString("backup.successful", file.getCanonicalPath()));
+			}
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+
+	@FXML
 	private void onBackup() {
-		backupToFile(WebSocketSource.class);
+		if (getSource() == null || getSource().getName() == null) {
+			// confirm all
+			ButtonType type = AppUtils.showConfirmationDialog(
+					DesignerLocalizer.instance().getLangString("all.export", WebSocketSource.class.getSimpleName()));
+
+			if (type.equals(ButtonType.CANCEL)) {
+				return;
+			}
+
+			backupToFile(WebSocketSource.class);
+		} else {
+			// one source
+			WebSocketSource source = getSource();
+
+			List<CollectorDataSource> sources = new ArrayList<>();
+			sources.add(source);
+
+			// confirm
+			ButtonType type = AppUtils.showConfirmationDialog(
+					DesignerLocalizer.instance().getLangString("object.export", source.getName()));
+
+			if (type.equals(ButtonType.CANCEL)) {
+				return;
+			}
+
+			backupSources(sources);
+		}
 	}
 }

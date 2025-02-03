@@ -2,9 +2,9 @@
 	<project name="oee-apps" default="build-distro" basedir="." > 
 			
 	<!-- distribution archive -->
-	<property name="app_version" value="3.11.1"/>
-	<property name="domain.jar" value="oee-domain-3.11.1.jar"/>
-	<property name="collector.jar" value="oee-collector-3.11.1.jar"/>
+	<property name="app_version" value="3.12.0"/>
+	<property name="domain.jar" value="oee-domain-3.12.0.jar"/>
+	<property name="collector.jar" value="oee-collector-3.12.0.jar"/>
 		
 	<!-- folders -->
 	<property name="fxbuild.dir" value="fxbuild"/>

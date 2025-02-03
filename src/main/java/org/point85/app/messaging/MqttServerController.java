@@ -1,5 +1,6 @@
 package org.point85.app.messaging;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.DomainUtils;
 import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.DataSourceType;
+import org.point85.domain.exim.Exporter;
 import org.point85.domain.mqtt.MqttOeeClient;
 import org.point85.domain.mqtt.MqttSource;
 import org.point85.domain.persistence.PersistenceService;
@@ -79,6 +81,9 @@ public class MqttServerController extends DesignerDialogController {
 	private Button btBackup;
 
 	@FXML
+	private Button btRefresh;
+
+	@FXML
 	private Button btClearAuthentication;
 
 	@FXML
@@ -121,10 +126,13 @@ public class MqttServerController extends DesignerDialogController {
 
 		// clear SSL settings
 		btClearSSL.setGraphic(ImageManager.instance().getImageView(Images.CLEAR));
-		
+
 		// backup
 		btBackup.setGraphic(ImageManager.instance().getImageView(Images.BACKUP));
-		btBackup.setContentDisplay(ContentDisplay.LEFT); 
+		btBackup.setContentDisplay(ContentDisplay.LEFT);
+
+		// refresh
+		btRefresh.setGraphic(ImageManager.instance().getImageView(Images.REFRESH));
 	}
 
 	public MqttSource getSource() {
@@ -181,6 +189,7 @@ public class MqttServerController extends DesignerDialogController {
 			dataSource = cbDataSources.getSelectionModel().getSelectedItem();
 
 			if (dataSource == null) {
+				onNewDataSource();
 				return;
 			}
 
@@ -298,10 +307,12 @@ public class MqttServerController extends DesignerDialogController {
 		for (CollectorDataSource source : sources) {
 			brokers.add((MqttSource) source);
 		}
+		MqttSource one = brokers.size() == 1 ? brokers.get(0) : null;
+		brokers.add(null);
 		cbDataSources.setItems(brokers);
 
-		if (brokers.size() == 1) {
-			this.cbDataSources.getSelectionModel().select(0);
+		if (one != null) {
+			cbDataSources.getSelectionModel().select(one);
 			onSelectDataSource();
 		}
 	}
@@ -339,7 +350,55 @@ public class MqttServerController extends DesignerDialogController {
 	}
 
 	@FXML
+	private void onRefresh() throws Exception {
+		populateDataSources();
+	}
+
+	private void backupSources(List<CollectorDataSource> sources) {
+		try {
+			// show file chooser
+			File file = getBackupFile();
+
+			if (file != null) {
+				// backup
+				Exporter.instance().backupMqttSources(sources, file);
+
+				AppUtils.showInfoDialog(
+						DesignerLocalizer.instance().getLangString("backup.successful", file.getCanonicalPath()));
+			}
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+
+	@FXML
 	private void onBackup() {
-		backupToFile(MqttSource.class);
+		if (dataSource == null) {
+			// confirm all
+			ButtonType type = AppUtils.showConfirmationDialog(
+					DesignerLocalizer.instance().getLangString("all.export", MqttSource.class.getSimpleName()));
+
+			if (type.equals(ButtonType.CANCEL)) {
+				return;
+			}
+
+			backupToFile(MqttSource.class);
+		} else {
+			// one source
+			MqttSource source = getSource();
+
+			List<CollectorDataSource> sources = new ArrayList<>();
+			sources.add(source);
+
+			// confirm
+			ButtonType type = AppUtils.showConfirmationDialog(
+					DesignerLocalizer.instance().getLangString("object.export", source.getName()));
+
+			if (type.equals(ButtonType.CANCEL)) {
+				return;
+			}
+
+			backupSources(sources);
+		}
 	}
 }

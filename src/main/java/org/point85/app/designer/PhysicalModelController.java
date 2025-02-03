@@ -1030,11 +1030,11 @@ public class PhysicalModelController extends DesignerController {
 		} else {
 			this.lbCurrentSchedule.setText(null);
 		}
-		
+
 		// resolvers
 		if (resolverController != null) {
 			resolverController.showResolvers(entity);
-		}		
+		}
 
 		// material being produced
 		if (entity instanceof Equipment) {
@@ -1244,7 +1244,7 @@ public class PhysicalModelController extends DesignerController {
 			Exporter.instance().prepare(WebSocketSource.class);
 
 			Exporter.instance().backup(file);
-			
+
 			AppUtils.showInfoDialog(
 					DesignerLocalizer.instance().getLangString("backup.successful", file.getCanonicalPath()));
 
@@ -1253,24 +1253,83 @@ public class PhysicalModelController extends DesignerController {
 		}
 	}
 
-	@FXML
-	private void onBackup() {
+	private void backupToFile(Class<?> clazz) {
 		try {
 			// show file chooser
 			File file = AppUtils.showFileSaveDialog(getApp().getLastDirectory());
 
-			if (file == null) {
-				return;
+			if (file != null) {
+				getApp().setLastDirectory(file.getParentFile());
+
+				// backup
+				Exporter.instance().backup(clazz, file);
+
+				AppUtils.showInfoDialog(
+						DesignerLocalizer.instance().getLangString("backup.successful", file.getCanonicalPath()));
 			}
-			getApp().setLastDirectory(file.getParentFile());
-
-			// backup
-			Exporter.instance().backup(PlantEntity.class, file);
-
-			AppUtils.showInfoDialog(
-					DesignerLocalizer.instance().getLangString("backup.successful", file.getCanonicalPath()));
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
+		}
+	}
+
+	private File getBackupFile() throws Exception {
+		// show file chooser
+		File file = AppUtils.showFileSaveDialog(getApp().getLastDirectory());
+
+		if (file != null) {
+			getApp().setLastDirectory(file.getParentFile());
+		}
+		return file;
+	}
+
+	private void backupEntities(List<PlantEntity> entities) {
+		try {
+			// show file chooser
+			File file = getBackupFile();
+
+			if (file != null) {
+				// backup
+				Exporter.instance().backupEntities(entities, file);
+
+				AppUtils.showInfoDialog(
+						DesignerLocalizer.instance().getLangString("backup.successful", file.getCanonicalPath()));
+			}
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+
+	@FXML
+	private void onBackup() throws Exception {
+		if (selectedEntityItem == null) {
+			// all entities
+			ButtonType type = AppUtils.showConfirmationDialog(
+					DesignerLocalizer.instance().getLangString("all.export", PlantEntity.class.getSimpleName()));
+
+			if (type.equals(ButtonType.CANCEL)) {
+				return;
+			}
+
+			backupToFile(PlantEntity.class);
+		} else {
+			// selected entity and children
+			PlantEntity entity = selectedEntityItem.getValue().getPlantEntity();
+			
+			// prune from tree
+			entity.setParent(null);
+
+			List<PlantEntity> entities = new ArrayList<>();
+			entities.add(entity);
+
+			// confirm
+			ButtonType type = AppUtils.showConfirmationDialog(
+					DesignerLocalizer.instance().getLangString("object.export", entity.getName()));
+
+			if (type.equals(ButtonType.CANCEL)) {
+				return;
+			}
+
+			backupEntities(entities);
 		}
 	}
 }

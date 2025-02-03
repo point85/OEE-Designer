@@ -64,6 +64,7 @@
             <TextField fx:id="tfJobName" promptText="%cron.name.prompt" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <Button fx:id="btTest" mnemonicParsing="false" onAction="#onTest" prefWidth="100.0" text="%test" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
             <Button fx:id="btBackup" mnemonicParsing="false" onAction="#onBackup" prefWidth="100.0" text="%backup" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
+            <Button fx:id="btRefresh" mnemonicParsing="false" onAction="#onRefresh" prefHeight="16.0" prefWidth="16.0" GridPane.columnIndex="3" />
          </children>
       </GridPane>
    </children>

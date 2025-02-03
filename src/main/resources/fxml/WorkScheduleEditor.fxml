@@ -48,8 +48,9 @@
                      <contextMenu>
                         <ContextMenu>
                           <items>
-                              <MenuItem fx:id="miSaveAll" mnemonicParsing="false" onAction="#onSaveAllSchedules" text="%save.all.schedules" />
+                            <MenuItem fx:id="miSaveAll" mnemonicParsing="false" onAction="#onSaveAllSchedules" text="%save.all.schedules" />
                             <MenuItem fx:id="miRefreshAll" mnemonicParsing="false" onAction="#onRefreshAllSchedules" text="%refresh.all.schedules" />
+                            <MenuItem fx:id="miClearSelection" mnemonicParsing="false" onAction="#onClearSelection" text="%clear.selected.schedule" />
                           </items>
                         </ContextMenu>
                      </contextMenu></TreeView>

@@ -68,6 +68,7 @@
             <Button fx:id="btTest" mnemonicParsing="false" onAction="#onTest" prefWidth="100.0" text="%test" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
             <PasswordField fx:id="pfUserPassword" promptText="%email.enter.password" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <Button fx:id="btBackup" mnemonicParsing="false" onAction="#onBackup" prefWidth="100.0" text="%backup" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
+            <Button fx:id="btRefresh" mnemonicParsing="false" onAction="#onRefresh" prefHeight="16.0" prefWidth="16.0" GridPane.columnIndex="2" />
          </children>
       </GridPane>
       <TabPane layoutX="87.0" layoutY="504.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0">

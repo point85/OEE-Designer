@@ -32,6 +32,7 @@ import org.point85.domain.oee.EquipmentLossManager;
 import org.point85.domain.oee.ParetoItem;
 import org.point85.domain.oee.TimeCategory;
 import org.point85.domain.oee.TimeLoss;
+import org.point85.domain.opc.ua.packml.PackMLState;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Equipment;
 import org.point85.domain.plant.EquipmentMaterial;
@@ -348,6 +349,9 @@ public class DashboardController extends DialogController implements CategoryCli
 	@FXML
 	private TableColumn<OeeEvent, String> tcCollector;
 
+	@FXML
+	private TableColumn<OeeEvent, String> tcPackML;
+
 	// loss chart
 	@FXML
 	private StackedBarChart<Number, String> bcLosses;
@@ -387,6 +391,12 @@ public class DashboardController extends DialogController implements CategoryCli
 	private Tab tbPlannedDowntimePareto;
 
 	@FXML
+	private Tab tbPackMLStatePareto;
+
+	@FXML
+	private Tab tbPackMLReasonPareto;
+
+	@FXML
 	private AnchorPane apLevel1Pareto;
 
 	@FXML
@@ -409,6 +419,12 @@ public class DashboardController extends DialogController implements CategoryCli
 
 	@FXML
 	private AnchorPane apPlannedDowntimePareto;
+
+	@FXML
+	private AnchorPane apPackMLStatePareto;
+	
+	@FXML
+	private AnchorPane apPackMLReasonPareto;
 
 	private void postNotification(String message) {
 		lblNotification.setText(message);
@@ -856,6 +872,54 @@ public class DashboardController extends DialogController implements CategoryCli
 				spLevel1Pareto, paretoItems, divisor, DesignerLocalizer.instance().getLangString("loss.category"));
 	}
 
+	private void onSelectPackMLStatePareto() throws Exception {
+		Object[] values = equipmentLoss.getPackMLStateItems(timeUnit);
+
+		@SuppressWarnings("unchecked")
+		List<ParetoItem> paretoItems = (List<ParetoItem>) values[0];
+		Duration availableTime = (Duration) values[1];
+
+		Number divisor = equipmentLoss.convertSeconds(availableTime.getSeconds(), timeUnit);
+
+		StackPane spPackMLPareto = new StackPane();
+
+		AnchorPane.setBottomAnchor(spPackMLPareto, 0.0);
+		AnchorPane.setLeftAnchor(spPackMLPareto, 0.0);
+		AnchorPane.setRightAnchor(spPackMLPareto, 0.0);
+		AnchorPane.setTopAnchor(spPackMLPareto, 0.0);
+
+		apPackMLStatePareto.getChildren().clear();
+		apPackMLStatePareto.getChildren().add(0, spPackMLPareto);
+
+		ParetoChartController packMLController = new ParetoChartController();
+		packMLController.createParetoChart(DesignerLocalizer.instance().getLangString("packml.state.pareto"), spPackMLPareto,
+				paretoItems, divisor, DesignerLocalizer.instance().getLangString("packml.state"));
+	}
+
+	private void onSelectPackMLReasonPareto() throws Exception {
+		Object[] values = equipmentLoss.getPackMLReasonItems(timeUnit);
+
+		@SuppressWarnings("unchecked")
+		List<ParetoItem> paretoItems = (List<ParetoItem>) values[0];
+		Duration availableTime = (Duration) values[1];
+
+		Number divisor = equipmentLoss.convertSeconds(availableTime.getSeconds(), timeUnit);
+
+		StackPane spPackMLPareto = new StackPane();
+
+		AnchorPane.setBottomAnchor(spPackMLPareto, 0.0);
+		AnchorPane.setLeftAnchor(spPackMLPareto, 0.0);
+		AnchorPane.setRightAnchor(spPackMLPareto, 0.0);
+		AnchorPane.setTopAnchor(spPackMLPareto, 0.0);
+
+		apPackMLReasonPareto.getChildren().clear();
+		apPackMLReasonPareto.getChildren().add(0, spPackMLPareto);
+
+		ParetoChartController packMLController = new ParetoChartController();
+		packMLController.createParetoChart(DesignerLocalizer.instance().getLangString("packml.reason.pareto"), spPackMLPareto,
+				paretoItems, divisor, DesignerLocalizer.instance().getLangString("packml.reason"));
+	}
+
 	private void onClickLossCategory(Series<Number, String> series, XYChart.Data<Number, String> dataItem) {
 		showParetoTab(series.getName());
 	}
@@ -1169,6 +1233,22 @@ public class DashboardController extends DialogController implements CategoryCli
 			String collector = event.getCollector();
 			return new SimpleStringProperty(collector);
 		});
+
+		// PackML state
+		tcPackML.setCellValueFactory(cellDataFeatures -> {
+			OeeEvent event = cellDataFeatures.getValue();
+			Reason reason = event.getReason();
+			String value = null;
+			if (reason != null) {
+				PackMLState state = reason.getPackMLState();
+				if (state != null) {
+					value = state.name();
+				}
+			}
+
+			return new SimpleStringProperty(value);
+		});
+
 	}
 
 	private void refreshCharts(Tab newValue) throws Exception {
@@ -1194,6 +1274,10 @@ public class DashboardController extends DialogController implements CategoryCli
 			onSelectPlannedDowntimePareto();
 		} else if (id.equals(tbEvents.getId())) {
 			onSelectHistory();
+		} else if (id.equals(tbPackMLStatePareto.getId())) {
+			onSelectPackMLStatePareto();
+		} else if (id.equals(tbPackMLReasonPareto.getId())) {
+			onSelectPackMLReasonPareto();
 		}
 	}
 
@@ -1422,7 +1506,7 @@ public class DashboardController extends DialogController implements CategoryCli
 	public void onRefresh() {
 		try {
 			lblNotification.setText(null);
-			
+
 			// clear previous calculation
 			if (equipmentLoss == null) {
 				return;

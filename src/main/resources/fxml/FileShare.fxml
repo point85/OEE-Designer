@@ -60,6 +60,7 @@
             <ComboBox fx:id="cbDataSources" maxWidth="1.7976931348623157E308" onAction="#onSelectDataSource" GridPane.columnIndex="1" GridPane.columnSpan="2" />
             <Button fx:id="btFileChooser" mnemonicParsing="false" onAction="#onChooseFile" prefWidth="100.0" text="%choose" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
             <Button fx:id="btBackup" mnemonicParsing="false" onAction="#onBackup" prefWidth="100.0" text="%backup" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+            <Button fx:id="btRefresh" mnemonicParsing="false" onAction="#onRefresh" prefHeight="16.0" prefWidth="16.0" GridPane.columnIndex="3" />
          </children>
       </GridPane>
    </children>

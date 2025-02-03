@@ -3,6 +3,7 @@ package org.point85.app.material;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -15,6 +16,7 @@ import org.point85.app.MaterialNode;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
 import org.point85.app.designer.DesignerLocalizer;
+import org.point85.domain.exim.Exporter;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.plant.Material;
 
@@ -81,6 +83,9 @@ public class MaterialEditorController extends DesignerDialogController {
 
 	@FXML
 	private MenuItem miSaveAll;
+	
+	@FXML
+	private MenuItem miClearSelection;	
 
 	// extract the Material from the tree item
 	public Material getSelectedMaterial() {
@@ -133,16 +138,17 @@ public class MaterialEditorController extends DesignerDialogController {
 				tvMaterials.refresh();
 			}
 		}
+		
+		selectedMaterialItem = newItem;
 
 		// leaf node is material
 		if (newItem.getValue().isMaterial()) {
 			// display Material properties
-			displayAttributes(newItem.getValue().getMaterial());
-			selectedMaterialItem = newItem;
+			displayAttributes(newItem.getValue().getMaterial());	
 			return;
 		} else {
 			// category selected
-			selectedMaterialItem = null;
+			cbCategories.getSelectionModel().select(newItem.getValue().getCategory());
 		}
 
 		// show the material children too
@@ -194,10 +200,11 @@ public class MaterialEditorController extends DesignerDialogController {
 		// context menu
 		miSaveAll.setGraphic(ImageManager.instance().getImageView(Images.SAVE_ALL));
 		miRefreshAll.setGraphic(ImageManager.instance().getImageView(Images.REFRESH_ALL));
-		
+		miClearSelection.setGraphic(ImageManager.instance().getImageView(Images.CLEAR));
+
 		// backup
 		btBackup.setGraphic(ImageManager.instance().getImageView(Images.BACKUP));
-		btBackup.setContentDisplay(ContentDisplay.RIGHT); 
+		btBackup.setContentDisplay(ContentDisplay.RIGHT);
 	}
 
 	// show the Material attributes
@@ -434,6 +441,12 @@ public class MaterialEditorController extends DesignerDialogController {
 			parentItem.getChildren().add(newItem);
 		}
 	}
+	
+	@FXML
+	private void onClearSelection() {
+		this.tvMaterials.getSelectionModel().clearSelection();
+		this.selectedMaterialItem = null;
+	}
 
 	@FXML
 	private void onSaveAllMaterial() {
@@ -609,8 +622,59 @@ public class MaterialEditorController extends DesignerDialogController {
 		populateCategories();
 	}
 
+	private void backupMaterials(List<Material> materials) {
+		try {
+			// show file chooser
+			File file = getBackupFile();
+
+			if (file != null) {
+				// backup
+				Exporter.instance().backupMaterials(materials, file);
+
+				AppUtils.showInfoDialog(
+						DesignerLocalizer.instance().getLangString("backup.successful", file.getCanonicalPath()));
+			}
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+
 	@FXML
-	private void onBackup() {
-		backupToFile(Material.class);
+	private void onBackup() throws Exception {
+		if (selectedMaterialItem == null) {
+			// confirm
+			ButtonType type = AppUtils.showConfirmationDialog(
+					DesignerLocalizer.instance().getLangString("all.export", Material.class.getSimpleName()));
+
+			if (type.equals(ButtonType.CANCEL)) {
+				return;
+			}
+
+			backupToFile(Material.class);
+		} else {
+			String category = selectedMaterialItem.getValue().getCategory();
+			Material material = selectedMaterialItem.getValue().getMaterial();
+
+			List<Material> materials = new ArrayList<>();
+
+			if (material != null) {
+				// export this material
+				materials.add(material);
+			} else {
+				// fetch materials from database with this category
+				materials = PersistenceService.instance().fetchMaterialsByCategory(category);
+			}
+
+			// confirm
+			String name = getSelectedMaterial() != null ? material.getName() : category;
+			ButtonType type = AppUtils
+					.showConfirmationDialog(DesignerLocalizer.instance().getLangString("object.export", name));
+
+			if (type.equals(ButtonType.CANCEL)) {
+				return;
+			}
+
+			backupMaterials(materials);
+		}
 	}
 }

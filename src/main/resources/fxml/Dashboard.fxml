@@ -100,7 +100,8 @@
                                     <TableColumn fx:id="tcMaterial" editable="false" prefWidth="150.0" text="%material" />
                                     <TableColumn fx:id="tcJob" editable="false" prefWidth="100.0" text="%job" />
                                     <TableColumn fx:id="tcSourceId" editable="false" prefWidth="300.0" text="%source" />
-                                    <TableColumn fx:id="tcCollector" prefWidth="100.0" text="%data.collector" />
+                                    <TableColumn fx:id="tcCollector" editable="false" prefWidth="100.0" text="%data.collector" />
+                                    <TableColumn fx:id="tcPackML" editable="false" prefWidth="100.0" text="%packml.state" />
                                 </columns>
                               </TableView>
                               <ButtonBar buttonMinWidth="0.0" layoutX="71.0" layoutY="-6.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="50.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -175,6 +176,16 @@
                   <Tab fx:id="tbPlannedDowntimePareto" closable="false" text="%planned">
                     <content>
                       <AnchorPane fx:id="apPlannedDowntimePareto" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                    </content>
+                  </Tab>
+                  <Tab fx:id="tbPackMLStatePareto" text="%packml.state.pareto">
+                     <content>
+                        <AnchorPane fx:id="apPackMLStatePareto" prefHeight="200.0" prefWidth="200.0" />
+                     </content>
+                  </Tab>
+                  <Tab fx:id="tbPackMLReasonPareto" text="%packml.reason.pareto">
+                    <content>
+                      <AnchorPane fx:id="apPackMLReasonPareto" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                     </content>
                   </Tab>
                </tabs>

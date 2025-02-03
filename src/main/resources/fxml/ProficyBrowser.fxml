@@ -201,7 +201,7 @@
                            </GridPane.margin>
                         </Label>
                         <TextField fx:id="tfHost" promptText="%enter.host" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <ComboBox fx:id="cbDataSources" maxWidth="1.7976931348623157E308" onAction="#onSelectDataSource" GridPane.columnIndex="1" GridPane.columnSpan="2" />
+                        <ComboBox fx:id="cbDataSources" maxWidth="1.7976931348623157E308" onAction="#onSelectDataSource" GridPane.columnIndex="1" />
                         <Button fx:id="btSave" mnemonicParsing="false" onAction="#onSaveDataSource" prefWidth="100.0" text="%save" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                         <Label text="%description" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
                            <GridPane.margin>
@@ -213,6 +213,7 @@
                         <Button fx:id="btDelete" mnemonicParsing="false" onAction="#onDeleteDataSource" prefWidth="100.0" text="%delete" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
                         <Label text="%choose.saved" GridPane.halignment="RIGHT" />
                         <Button fx:id="btBackup" mnemonicParsing="false" onAction="#onBackup" prefWidth="100.0" text="%backup" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+                        <Button fx:id="btRefresh" mnemonicParsing="false" onAction="#onRefresh" prefHeight="16.0" prefWidth="16.0" GridPane.columnIndex="2" />
                      </children>
                   </GridPane>
                   <HBox alignment="CENTER" layoutX="53.0" layoutY="212.0" prefHeight="50.0" spacing="25.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="225.0" />

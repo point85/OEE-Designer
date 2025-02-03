@@ -6,7 +6,7 @@ import org.point85.domain.opc.ua.OpcUaSource;
 
 public abstract class OpcUaController extends DataSourceConnectionController {
 	// current source
-	private OpcUaSource dataSource;
+	protected OpcUaSource dataSource;
 
 	public OpcUaSource getSource() {
 		if (dataSource == null) {

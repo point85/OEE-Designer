@@ -1,5 +1,6 @@
 package org.point85.app.opc.da;
 
+import java.io.File;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,6 +16,8 @@ import org.point85.app.designer.ConnectionState;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.DomainUtils;
+import org.point85.domain.collector.CollectorDataSource;
+import org.point85.domain.exim.Exporter;
 import org.point85.domain.opc.da.OpcDaBrowserLeaf;
 import org.point85.domain.opc.da.OpcDaMonitoredGroup;
 import org.point85.domain.opc.da.OpcDaServerStatus;
@@ -92,6 +95,9 @@ public class OpcDaBrowserController extends OpcDaController {
 
 	@FXML
 	private Button btBackup;
+
+	@FXML
+	private Button btRefresh;
 
 	@FXML
 	private TreeView<OpcDaTagTreeBranch> tvBrowser;
@@ -278,10 +284,13 @@ public class OpcDaBrowserController extends OpcDaController {
 		// delete
 		btDelete.setGraphic(ImageManager.instance().getImageView(Images.DELETE));
 		btDelete.setContentDisplay(ContentDisplay.LEFT);
-		
+
 		// backup
 		btBackup.setGraphic(ImageManager.instance().getImageView(Images.BACKUP));
-		btBackup.setContentDisplay(ContentDisplay.LEFT); 
+		btBackup.setContentDisplay(ContentDisplay.LEFT);
+
+		// refresh
+		btRefresh.setGraphic(ImageManager.instance().getImageView(Images.REFRESH));
 	}
 
 	private void updateConnectionStatus(ConnectionState state) throws Exception {
@@ -412,8 +421,8 @@ public class OpcDaBrowserController extends OpcDaController {
 	@FXML
 	private void onSelectProgId() {
 		try {
-
 			if (getSelectedProgId() == null || getSelectedProgId().length() == 0) {
+				onNewDataSource();
 				return;
 			}
 
@@ -519,8 +528,12 @@ public class OpcDaBrowserController extends OpcDaController {
 			progIds.add(id);
 		}
 
-		if (progIds.size() == 1) {
-			this.cbProgIds.getSelectionModel().select(0);
+		String one = progIds.size() == 1 ? progIds.get(0) : null;
+		progIds.add(null);
+		cbProgIds.setItems(progIds);
+
+		if (one != null) {
+			cbProgIds.getSelectionModel().select(one);
 			onSelectProgId();
 		}
 	}
@@ -577,7 +590,55 @@ public class OpcDaBrowserController extends OpcDaController {
 	}
 
 	@FXML
+	private void onRefresh() throws Exception {
+		populateDataSources();
+	}
+
+	private void backupSources(List<CollectorDataSource> sources) {
+		try {
+			// show file chooser
+			File file = getBackupFile();
+
+			if (file != null) {
+				// backup
+				Exporter.instance().backupOpcDaSources(sources, file);
+
+				AppUtils.showInfoDialog(
+						DesignerLocalizer.instance().getLangString("backup.successful", file.getCanonicalPath()));
+			}
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+
+	@FXML
 	private void onBackup() {
-		backupToFile(OpcDaSource.class);
+		if (getSource() == null || getSource().getName() == null) {
+			// confirm all
+			ButtonType type = AppUtils.showConfirmationDialog(
+					DesignerLocalizer.instance().getLangString("all.export", OpcDaSource.class.getSimpleName()));
+
+			if (type.equals(ButtonType.CANCEL)) {
+				return;
+			}
+
+			backupToFile(OpcDaSource.class);
+		} else {
+			// one source
+			OpcDaSource source = getSource();
+
+			List<CollectorDataSource> sources = new ArrayList<>();
+			sources.add(source);
+
+			// confirm
+			ButtonType type = AppUtils.showConfirmationDialog(
+					DesignerLocalizer.instance().getLangString("object.export", source.getName()));
+
+			if (type.equals(ButtonType.CANCEL)) {
+				return;
+			}
+
+			backupSources(sources);
+		}
 	}
 }

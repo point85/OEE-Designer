@@ -1,5 +1,6 @@
 package org.point85.app.cron;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.DataSourceType;
 import org.point85.domain.cron.CronEventClient;
 import org.point85.domain.cron.CronEventSource;
+import org.point85.domain.exim.Exporter;
 import org.point85.domain.persistence.PersistenceService;
 
 import javafx.collections.FXCollections;
@@ -62,6 +64,9 @@ public class CronEditorController extends DesignerDialogController {
 	@FXML
 	private Button btBackup;
 
+	@FXML
+	private Button btRefresh;
+
 	public void initialize(DesignerApplication app) throws Exception {
 		// main app
 		setApp(app);
@@ -97,10 +102,13 @@ public class CronEditorController extends DesignerDialogController {
 		// test
 		btTest.setGraphic(ImageManager.instance().getImageView(Images.EXECUTE));
 		btTest.setContentDisplay(ContentDisplay.LEFT);
-		
+
 		// backup
 		btBackup.setGraphic(ImageManager.instance().getImageView(Images.BACKUP));
-		btBackup.setContentDisplay(ContentDisplay.LEFT); 
+		btBackup.setContentDisplay(ContentDisplay.LEFT);
+
+		// refresh
+		btRefresh.setGraphic(ImageManager.instance().getImageView(Images.REFRESH));
 	}
 
 	public CronEventSource getSource() {
@@ -120,6 +128,7 @@ public class CronEditorController extends DesignerDialogController {
 			dataSource = cbCronSources.getSelectionModel().getSelectedItem();
 
 			if (dataSource == null) {
+				onNewDataSource();
 				return;
 			}
 
@@ -221,10 +230,12 @@ public class CronEditorController extends DesignerDialogController {
 		for (CollectorDataSource source : sources) {
 			cronSources.add((CronEventSource) source);
 		}
+		CronEventSource one = cronSources.size() == 1 ? cronSources.get(0) : null;
+		cronSources.add(null);
 		cbCronSources.setItems(cronSources);
 
-		if (cronSources.size() == 1) {
-			this.cbCronSources.getSelectionModel().select(0);
+		if (one != null) {
+			cbCronSources.getSelectionModel().select(one);
 			onSelectDataSource();
 		}
 	}
@@ -242,7 +253,55 @@ public class CronEditorController extends DesignerDialogController {
 	}
 
 	@FXML
+	private void onRefresh() throws Exception {
+		populateDataSources();
+	}
+
+	private void backupSources(List<CollectorDataSource> sources) {
+		try {
+			// show file chooser
+			File file = getBackupFile();
+
+			if (file != null) {
+				// backup
+				Exporter.instance().backupCronSources(sources, file);
+
+				AppUtils.showInfoDialog(
+						DesignerLocalizer.instance().getLangString("backup.successful", file.getCanonicalPath()));
+			}
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+
+	@FXML
 	private void onBackup() {
-		backupToFile(CronEventSource.class);
+		if (dataSource == null) {
+			// confirm all
+			ButtonType type = AppUtils.showConfirmationDialog(
+					DesignerLocalizer.instance().getLangString("all.export", CronEventSource.class.getSimpleName()));
+
+			if (type.equals(ButtonType.CANCEL)) {
+				return;
+			}
+
+			backupToFile(CronEventSource.class);
+		} else {
+			// one source
+			CronEventSource source = getSource();
+
+			List<CollectorDataSource> sources = new ArrayList<>();
+			sources.add(source);
+
+			// confirm
+			ButtonType type = AppUtils.showConfirmationDialog(
+					DesignerLocalizer.instance().getLangString("object.export", source.getName()));
+
+			if (type.equals(ButtonType.CANCEL)) {
+				return;
+			}
+
+			backupSources(sources);
+		}
 	}
 }

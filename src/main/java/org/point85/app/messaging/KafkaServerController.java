@@ -1,5 +1,6 @@
 package org.point85.app.messaging;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.DomainUtils;
 import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.DataSourceType;
+import org.point85.domain.exim.Exporter;
 import org.point85.domain.kafka.KafkaOeeClient;
 import org.point85.domain.kafka.KafkaSource;
 import org.point85.domain.persistence.PersistenceService;
@@ -90,6 +92,9 @@ public class KafkaServerController extends DesignerDialogController {
 	@FXML
 	private Button btBackup;
 
+	@FXML
+	private Button btRefresh;
+
 	public void initialize(DesignerApplication app) throws Exception {
 		// main app
 		setApp(app);
@@ -127,10 +132,13 @@ public class KafkaServerController extends DesignerDialogController {
 
 		// clear SSL settings
 		btClearSSL.setGraphic(ImageManager.instance().getImageView(Images.CLEAR));
-		
+
 		// backup
 		btBackup.setGraphic(ImageManager.instance().getImageView(Images.BACKUP));
-		btBackup.setContentDisplay(ContentDisplay.LEFT); 
+		btBackup.setContentDisplay(ContentDisplay.LEFT);
+
+		// refresh
+		btRefresh.setGraphic(ImageManager.instance().getImageView(Images.REFRESH));
 	}
 
 	public KafkaSource getSource() {
@@ -188,6 +196,7 @@ public class KafkaServerController extends DesignerDialogController {
 			dataSource = cbDataSources.getSelectionModel().getSelectedItem();
 
 			if (dataSource == null) {
+				onNewDataSource();
 				return;
 			}
 
@@ -311,10 +320,12 @@ public class KafkaServerController extends DesignerDialogController {
 		for (CollectorDataSource source : sources) {
 			brokers.add((KafkaSource) source);
 		}
+		KafkaSource one = brokers.size() == 1 ? brokers.get(0) : null;
+		brokers.add(null);
 		cbDataSources.setItems(brokers);
 
-		if (brokers.size() == 1) {
-			this.cbDataSources.getSelectionModel().select(0);
+		if (one != null) {
+			cbDataSources.getSelectionModel().select(one);
 			onSelectDataSource();
 		}
 	}
@@ -360,7 +371,55 @@ public class KafkaServerController extends DesignerDialogController {
 	}
 
 	@FXML
+	private void onRefresh() throws Exception {
+		populateDataSources();
+	}
+
+	private void backupSources(List<CollectorDataSource> sources) {
+		try {
+			// show file chooser
+			File file = getBackupFile();
+
+			if (file != null) {
+				// backup
+				Exporter.instance().backupKafkaSources(sources, file);
+
+				AppUtils.showInfoDialog(
+						DesignerLocalizer.instance().getLangString("backup.successful", file.getCanonicalPath()));
+			}
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+
+	@FXML
 	private void onBackup() {
-		backupToFile(KafkaSource.class);
+		if (dataSource == null) {
+			// confirm all
+			ButtonType type = AppUtils.showConfirmationDialog(
+					DesignerLocalizer.instance().getLangString("all.export", KafkaSource.class.getSimpleName()));
+
+			if (type.equals(ButtonType.CANCEL)) {
+				return;
+			}
+
+			backupToFile(KafkaSource.class);
+		} else {
+			// one source
+			KafkaSource source = getSource();
+
+			List<CollectorDataSource> sources = new ArrayList<>();
+			sources.add(source);
+
+			// confirm
+			ButtonType type = AppUtils.showConfirmationDialog(
+					DesignerLocalizer.instance().getLangString("object.export", source.getName()));
+
+			if (type.equals(ButtonType.CANCEL)) {
+				return;
+			}
+
+			backupSources(sources);
+		}
 	}
 }

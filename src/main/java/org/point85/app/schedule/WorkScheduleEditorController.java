@@ -1,5 +1,6 @@
 package org.point85.app.schedule;
 
+import java.io.File;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -17,6 +18,7 @@ import org.point85.app.Images;
 import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
 import org.point85.app.designer.DesignerLocalizer;
+import org.point85.domain.exim.Exporter;
 import org.point85.domain.oee.TimeLoss;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.schedule.Break;
@@ -195,7 +197,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 	// breaks
 	@FXML
 	private TitledPane tpBreaks;
-	
+
 	@FXML
 	private TextField tfBreakName;
 
@@ -391,6 +393,9 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 
 	@FXML
 	private MenuItem miRefreshAll;
+
+	@FXML
+	private MenuItem miClearSelection;
 
 	// template schedule
 	@FXML
@@ -757,10 +762,10 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		// breaks
 		initBreakEditor(shift);
 	}
-	
+
 	private void initBreakEditor(Shift shift) {
 		tpBreaks.setDisable(false);
-		
+
 		List<Break> breaks = shift.getBreaks();
 		breakList.clear();
 
@@ -769,7 +774,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		}
 		Collections.sort(breakList);
 		tvBreaks.refresh();
-		
+
 		// clear editor
 		onNewBreak();
 	}
@@ -990,6 +995,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		// context menu
 		miSaveAll.setGraphic(ImageManager.instance().getImageView(Images.SAVE_ALL));
 		miRefreshAll.setGraphic(ImageManager.instance().getImageView(Images.REFRESH_ALL));
+		miClearSelection.setGraphic(ImageManager.instance().getImageView(Images.CLEAR));
 
 		// backup
 		btBackup.setGraphic(ImageManager.instance().getImageView(Images.BACKUP));
@@ -1088,7 +1094,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 			if (getSelectedSchedule() == null) {
 				return;
 			}
-			
+
 			removeEditedSchedule(selectedScheduleItem);
 
 			if (getSelectedSchedule().getKey() != null) {
@@ -1227,6 +1233,12 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 	}
 
 	@FXML
+	private void onClearSelection() {
+		this.tvSchedules.getSelectionModel().clearSelection();
+		this.selectedScheduleItem = null;
+	}
+
+	@FXML
 	private void onSaveAllSchedules() {
 		try {
 			// current material could have been edited
@@ -1267,7 +1279,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		}
 		Collections.sort(shiftList);
 		tvShifts.refresh();
-		
+
 		// breaks
 		breakList.clear();
 		tvBreaks.refresh();
@@ -1912,9 +1924,51 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		super.onCancel();
 	}
 
+	private void backupSchedules(List<WorkSchedule> schedules) {
+		try {
+			// show file chooser
+			File file = getBackupFile();
+
+			if (file != null) {
+				// backup
+				Exporter.instance().backupSchedules(schedules, file);
+
+				AppUtils.showInfoDialog(
+						DesignerLocalizer.instance().getLangString("backup.successful", file.getCanonicalPath()));
+			}
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+
 	@FXML
-	private void onBackup() {
-		backupToFile(WorkSchedule.class);
+	private void onBackup() throws Exception {
+		if (selectedScheduleItem == null) {
+			// confirm
+			ButtonType type = AppUtils.showConfirmationDialog(
+					DesignerLocalizer.instance().getLangString("all.export", WorkSchedule.class.getSimpleName()));
+
+			if (type.equals(ButtonType.CANCEL)) {
+				return;
+			}
+
+			backupToFile(WorkSchedule.class);
+		} else {
+			WorkSchedule schedule = selectedScheduleItem.getValue().getWorkSchedule();
+
+			List<WorkSchedule> schedules = new ArrayList<>();
+			schedules.add(schedule);
+
+			// confirm
+			ButtonType type = AppUtils.showConfirmationDialog(
+					DesignerLocalizer.instance().getLangString("object.export", getSelectedSchedule().getName()));
+
+			if (type.equals(ButtonType.CANCEL)) {
+				return;
+			}
+
+			backupSchedules(schedules);
+		}
 	}
 
 	@FXML

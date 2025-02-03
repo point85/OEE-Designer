@@ -1,5 +1,6 @@
 package org.point85.app.email;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import org.point85.domain.email.EmailClient;
 import org.point85.domain.email.EmailProtocol;
 import org.point85.domain.email.EmailSecurityPolicy;
 import org.point85.domain.email.EmailSource;
+import org.point85.domain.exim.Exporter;
 import org.point85.domain.persistence.PersistenceService;
 
 import javafx.collections.FXCollections;
@@ -89,9 +91,12 @@ public class EmailServerController extends DesignerDialogController {
 
 	@FXML
 	private Button btTest;
-	
+
 	@FXML
 	private Button btBackup;
+
+	@FXML
+	private Button btRefresh;
 
 	public void initialize(DesignerApplication app) throws Exception {
 		// main app
@@ -124,10 +129,13 @@ public class EmailServerController extends DesignerDialogController {
 		// test
 		btTest.setGraphic(ImageManager.instance().getImageView(Images.EXECUTE));
 		btTest.setContentDisplay(ContentDisplay.LEFT);
-		
+
 		// backup
 		btBackup.setGraphic(ImageManager.instance().getImageView(Images.BACKUP));
-		btBackup.setContentDisplay(ContentDisplay.LEFT); 
+		btBackup.setContentDisplay(ContentDisplay.LEFT);
+
+		// refresh
+		btRefresh.setGraphic(ImageManager.instance().getImageView(Images.REFRESH));
 	}
 
 	public EmailSource getSource() {
@@ -179,6 +187,7 @@ public class EmailServerController extends DesignerDialogController {
 			dataSource = cbDataSources.getSelectionModel().getSelectedItem();
 
 			if (dataSource == null) {
+				onNewDataSource();
 				return;
 			}
 
@@ -319,10 +328,12 @@ public class EmailServerController extends DesignerDialogController {
 		for (CollectorDataSource source : sources) {
 			servers.add((EmailSource) source);
 		}
+		EmailSource one = servers.size() == 1 ? servers.get(0) : null;
+		servers.add(null);
 		cbDataSources.setItems(servers);
 
-		if (servers.size() == 1) {
-			this.cbDataSources.getSelectionModel().select(0);
+		if (one != null) {
+			cbDataSources.getSelectionModel().select(one);
 			onSelectDataSource();
 		}
 	}
@@ -363,9 +374,57 @@ public class EmailServerController extends DesignerDialogController {
 			tfReceivePort.setText(String.valueOf(POP3_DEFAULT_PORT));
 		}
 	}
-	
+
+	@FXML
+	private void onRefresh() throws Exception {
+		populateDataSources();
+	}
+
+	private void backupSources(List<CollectorDataSource> sources) {
+		try {
+			// show file chooser
+			File file = getBackupFile();
+
+			if (file != null) {
+				// backup
+				Exporter.instance().backupEmailSources(sources, file);
+
+				AppUtils.showInfoDialog(
+						DesignerLocalizer.instance().getLangString("backup.successful", file.getCanonicalPath()));
+			}
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+
 	@FXML
 	private void onBackup() {
-		backupToFile(EmailSource.class);
+		if (dataSource == null) {
+			// confirm all
+			ButtonType type = AppUtils.showConfirmationDialog(
+					DesignerLocalizer.instance().getLangString("all.export", EmailSource.class.getSimpleName()));
+
+			if (type.equals(ButtonType.CANCEL)) {
+				return;
+			}
+
+			backupToFile(EmailSource.class);
+		} else {
+			// one source
+			EmailSource source = getSource();
+
+			List<CollectorDataSource> sources = new ArrayList<>();
+			sources.add(source);
+
+			// confirm
+			ButtonType type = AppUtils.showConfirmationDialog(
+					DesignerLocalizer.instance().getLangString("object.export", source.getName()));
+
+			if (type.equals(ButtonType.CANCEL)) {
+				return;
+			}
+
+			backupSources(sources);
+		}
 	}
 }

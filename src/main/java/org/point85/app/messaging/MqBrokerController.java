@@ -1,5 +1,6 @@
 package org.point85.app.messaging;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.DomainUtils;
 import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.DataSourceType;
+import org.point85.domain.exim.Exporter;
 import org.point85.domain.jms.JmsClient;
 import org.point85.domain.jms.JmsSource;
 import org.point85.domain.mqtt.MqttSource;
@@ -76,6 +78,9 @@ public class MqBrokerController extends DesignerDialogController {
 	@FXML
 	private Button btBackup;
 
+	@FXML
+	private Button btRefresh;
+
 	public void initialize(DesignerApplication app, DataSourceType type) throws Exception {
 		// set source
 		this.sourceType = type;
@@ -110,10 +115,13 @@ public class MqBrokerController extends DesignerDialogController {
 		// test
 		btTest.setGraphic(ImageManager.instance().getImageView(Images.EXECUTE));
 		btTest.setContentDisplay(ContentDisplay.LEFT);
-		
+
 		// backup
 		btBackup.setGraphic(ImageManager.instance().getImageView(Images.BACKUP));
-		btBackup.setContentDisplay(ContentDisplay.LEFT); 
+		btBackup.setContentDisplay(ContentDisplay.LEFT);
+
+		// refresh
+		btRefresh.setGraphic(ImageManager.instance().getImageView(Images.REFRESH));
 	}
 
 	public CollectorDataSource getSource() {
@@ -180,6 +188,7 @@ public class MqBrokerController extends DesignerDialogController {
 			dataSource = cbDataSources.getSelectionModel().getSelectedItem();
 
 			if (dataSource == null) {
+				onNewDataSource();
 				return;
 			}
 
@@ -291,10 +300,12 @@ public class MqBrokerController extends DesignerDialogController {
 		for (CollectorDataSource source : sources) {
 			brokers.add(source);
 		}
+		CollectorDataSource one = brokers.size() == 1 ? brokers.get(0) : null;
+		brokers.add(null);
 		cbDataSources.setItems(brokers);
 
-		if (brokers.size() == 1) {
-			this.cbDataSources.getSelectionModel().select(0);
+		if (one != null) {
+			cbDataSources.getSelectionModel().select(one);
 			onSelectDataSource();
 		}
 	}
@@ -320,11 +331,69 @@ public class MqBrokerController extends DesignerDialogController {
 	}
 
 	@FXML
+	private void onRefresh() throws Exception {
+		populateDataSources();
+	}
+
+	private void backupSources(List<CollectorDataSource> sources) {
+		try {
+			// show file chooser
+			File file = getBackupFile();
+
+			if (file != null) {
+				// backup
+				if (sourceType.equals(DataSourceType.JMS)) {
+					Exporter.instance().backupJmsSources(sources, file);
+				} else if (sourceType.equals(DataSourceType.RMQ)) {
+					Exporter.instance().backupRmqSources(sources, file);
+				} else {
+					return;
+				}
+
+				AppUtils.showInfoDialog(
+						DesignerLocalizer.instance().getLangString("backup.successful", file.getCanonicalPath()));
+			}
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+
+	@FXML
 	private void onBackup() {
-		if (sourceType.equals(DataSourceType.JMS)) {
-			backupToFile(JmsSource.class);
-		} else if (sourceType.equals(DataSourceType.RMQ)) {
-			backupToFile(RmqSource.class);
+		if (dataSource == null) {
+			Class<?> clazz = null;
+
+			if (sourceType.equals(DataSourceType.JMS)) {
+				clazz = JmsSource.class;
+			} else if (sourceType.equals(DataSourceType.RMQ)) {
+				clazz = RmqSource.class;
+			}
+
+			// confirm all
+			ButtonType type = AppUtils.showConfirmationDialog(
+					DesignerLocalizer.instance().getLangString("all.export", clazz.getSimpleName()));
+
+			if (type.equals(ButtonType.CANCEL)) {
+				return;
+			}
+
+			backupToFile(clazz);
+		} else {
+			// one source
+			CollectorDataSource source = getSource();
+
+			List<CollectorDataSource> sources = new ArrayList<>();
+			sources.add(source);
+
+			// confirm
+			ButtonType type = AppUtils.showConfirmationDialog(
+					DesignerLocalizer.instance().getLangString("object.export", source.getName()));
+
+			if (type.equals(ButtonType.CANCEL)) {
+				return;
+			}
+
+			backupSources(sources);
 		}
 	}
 }

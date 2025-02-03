@@ -1,5 +1,6 @@
 package org.point85.app.opc.ua;
 
+import java.io.File;
 import java.lang.reflect.Array;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -14,8 +15,8 @@ import org.eclipse.milo.opcua.stack.core.security.SecurityPolicy;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DateTime;
 import org.eclipse.milo.opcua.stack.core.types.builtin.ExpandedNodeId;
+import org.eclipse.milo.opcua.stack.core.types.builtin.ExtensionObject;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
-import org.eclipse.milo.opcua.stack.core.types.builtin.Variant;
 import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.MessageSecurityMode;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.NodeClass;
@@ -31,6 +32,7 @@ import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.DomainUtils;
 import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.DataSourceType;
+import org.point85.domain.exim.Exporter;
 import org.point85.domain.opc.ua.OpcUaServerStatus;
 import org.point85.domain.opc.ua.OpcUaSource;
 import org.point85.domain.persistence.PersistenceService;
@@ -99,6 +101,9 @@ public class OpcUaBrowserController extends OpcUaController {
 
 	@FXML
 	private Button btBackup;
+
+	@FXML
+	private Button btRefresh;
 
 	@FXML
 	private TreeView<OpcUaTreeNode> tvBrowser;
@@ -194,7 +199,7 @@ public class OpcUaBrowserController extends OpcUaController {
 				.addListener((observable, oldValue, newValue) -> populateAvailableNodes(newValue));
 	}
 
-	public void arrayToStringRecursive(Object someArray, StringBuilder sb) {
+	private void arrayToStringRecursive(Object someArray, StringBuilder sb) throws Exception {
 		if (someArray == null) {
 			sb.append("");
 			return;
@@ -207,12 +212,18 @@ public class OpcUaBrowserController extends OpcUaController {
 
 			sb.append('[');
 			for (int i = 0; i < length; i++) {
+				Object obj = Array.get(someArray, i);
+
+				if (Array.get(someArray, i) instanceof ExtensionObject) {
+					obj = getApp().getOpcUaClient().extensionObjectToString((ExtensionObject) Array.get(someArray, i));
+				}
+
 				// let's test if array is multidimensional
 				if (clazz.getComponentType().isArray()) {
-					arrayToStringRecursive(Array.get(someArray, i), sb);
+					arrayToStringRecursive(obj, sb);
 				} else {
 					// not an array
-					sb.append(Array.get(someArray, i));
+					sb.append(obj);
 					if (i < length - 1)
 						sb.append(", ");
 				}
@@ -223,7 +234,7 @@ public class OpcUaBrowserController extends OpcUaController {
 		}
 	}
 
-	private String arrayToString(Object[] values) {
+	private String arrayToString(Object[] values) throws Exception {
 		String valueText = null;
 		StringBuilder sb = new StringBuilder();
 
@@ -232,7 +243,11 @@ public class OpcUaBrowserController extends OpcUaController {
 		int end = values.length;
 
 		for (int i = 0; i < end; i++) {
-			valueText = values[i].toString();
+			Object obj = values[i];
+			if (values[i] instanceof ExtensionObject) {
+				obj = getApp().getOpcUaClient().extensionObjectToString((ExtensionObject) values[i]);
+			}
+			valueText = obj.toString();
 			sb.append(valueText);
 
 			if (i < (end - 1)) {
@@ -256,7 +271,6 @@ public class OpcUaBrowserController extends OpcUaController {
 		NodeClass nodeClass = ref.getNodeClass();
 		ExpandedNodeId nodeDataType = null;
 		Class<?> javaType = null;
-		boolean clazzIsArray = false;
 
 		Object value = null;
 		OffsetDateTime zdt = null;
@@ -265,11 +279,13 @@ public class OpcUaBrowserController extends OpcUaController {
 
 		if (nodeClass.equals(NodeClass.Variable)) {
 			DataValue dataValue = getApp().getOpcUaClient().readSynch(nodeId);
-			Variant variant = dataValue.getValue();
-			value = variant.getValue();
+			value = dataValue.getValue().getValue();
 
 			if (value != null) {
-				clazzIsArray = value.getClass().isArray();
+				if (value instanceof ExtensionObject) {
+					// decode if a codec is registered
+					value = getApp().getOpcUaClient().decodeExtensionObject((ExtensionObject) value);
+				}
 
 				// data type
 				Optional<ExpandedNodeId> dataType = dataValue.getValue().getDataType();
@@ -287,7 +303,7 @@ public class OpcUaBrowserController extends OpcUaController {
 		}
 
 		if (value != null) {
-			if (!clazzIsArray) {
+			if (!value.getClass().isArray()) {
 				typeText = javaType.getSimpleName();
 
 				if (javaType.equals(DateTime.class)) {
@@ -364,10 +380,13 @@ public class OpcUaBrowserController extends OpcUaController {
 
 		// clear
 		btClearAuthentication.setGraphic(ImageManager.instance().getImageView(Images.CLEAR));
-		
+
 		// backup
 		btBackup.setGraphic(ImageManager.instance().getImageView(Images.BACKUP));
-		btBackup.setContentDisplay(ContentDisplay.LEFT); 
+		btBackup.setContentDisplay(ContentDisplay.LEFT);
+
+		// refresh
+		btRefresh.setGraphic(ImageManager.instance().getImageView(Images.REFRESH));
 	}
 
 	private void updateConnectionStatus(ConnectionState state) throws Exception {
@@ -443,6 +462,10 @@ public class OpcUaBrowserController extends OpcUaController {
 			image = ImageManager.instance().getImage(Images.FOLDER);
 		} else if (nodeClass.equals(NodeClass.Variable)) {
 			image = ImageManager.instance().getImage(Images.VALUE);
+		} else if (nodeClass.equals(NodeClass.Method)) {
+			image = ImageManager.instance().getImage(Images.EXECUTE);
+		} else if (nodeClass.equals(NodeClass.VariableType)) {
+			image = ImageManager.instance().getImage(Images.REASON);
 		}
 		return image;
 	}
@@ -454,6 +477,10 @@ public class OpcUaBrowserController extends OpcUaController {
 
 		// browse root folder
 		List<ReferenceDescription> refs = getApp().getOpcUaClient().browseSynch(Identifiers.RootFolder);
+
+		Collections.sort(refs, (f1, f2) -> {
+			return f1.getDisplayName().getText().compareTo(f2.getDisplayName().getText());
+		});
 
 		for (ReferenceDescription ref : refs) {
 			// child nodes
@@ -523,6 +550,7 @@ public class OpcUaBrowserController extends OpcUaController {
 		try {
 			String name = getDataSourceId();
 			if (name == null || name.length() == 0) {
+				onNewDataSource();
 				return;
 			}
 
@@ -678,9 +706,11 @@ public class OpcUaBrowserController extends OpcUaController {
 		for (CollectorDataSource source : sources) {
 			servers.add(((OpcUaSource) source).getName());
 		}
+		String one = servers.size() == 1 ? servers.get(0) : null;
+		servers.add(null);
 
-		if (servers.size() == 1) {
-			this.cbDataSources.getSelectionModel().select(0);
+		if (one != null) {
+			cbDataSources.getSelectionModel().select(one);
 			onSelectDataSource();
 		}
 	}
@@ -751,13 +781,11 @@ public class OpcUaBrowserController extends OpcUaController {
 			// update node info
 			onSelectNode(treeNode);
 
-			if (treeNode.isBrowsed()) {
-				// check to see if a variable node to update the value
-				NodeClass nodeClass = treeNode.getReferenceDescription().getNodeClass();
+			// check to see if a variable node to stop browsing
+			NodeClass nodeClass = treeNode.getReferenceDescription().getNodeClass();
 
-				if (!nodeClass.equals(NodeClass.Variable)) {
-					return;
-				}
+			if (treeNode.isBrowsed() || nodeClass.equals(NodeClass.Variable)) {
+				return;
 			}
 
 			// fill in the child nodes
@@ -769,7 +797,18 @@ public class OpcUaBrowserController extends OpcUaController {
 			List<ReferenceDescription> childRefs = getApp().getOpcUaClient().browseSynch(nodeId);
 			treeNode.setBrowsed(true);
 
+			Collections.sort(childRefs, (f1, f2) -> {
+				return f1.getDisplayName().getText().compareTo(f2.getDisplayName().getText());
+			});
+
 			for (ReferenceDescription childRef : childRefs) {
+				// we only want variable nodes for a method
+				if (parentRef.getNodeClass().equals(NodeClass.Method)) {
+					if (!childRef.getNodeClass().equals(NodeClass.Variable)) {
+						continue;
+					}
+				}
+
 				NodeId childId = childRef.getNodeId().toNodeId(nst).orElse(null);
 
 				String id = childId.toString();
@@ -797,8 +836,56 @@ public class OpcUaBrowserController extends OpcUaController {
 	}
 
 	@FXML
+	private void onRefresh() throws Exception {
+		populateDataSources();
+	}
+
+	private void backupSources(List<CollectorDataSource> sources) {
+		try {
+			// show file chooser
+			File file = getBackupFile();
+
+			if (file != null) {
+				// backup
+				Exporter.instance().backupOpcUaSources(sources, file);
+
+				AppUtils.showInfoDialog(
+						DesignerLocalizer.instance().getLangString("backup.successful", file.getCanonicalPath()));
+			}
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+
+	@FXML
 	private void onBackup() {
-		backupToFile(OpcUaSource.class);
+		if (dataSource == null) {
+			// confirm all
+			ButtonType type = AppUtils.showConfirmationDialog(
+					DesignerLocalizer.instance().getLangString("all.export", OpcUaSource.class.getSimpleName()));
+
+			if (type.equals(ButtonType.CANCEL)) {
+				return;
+			}
+
+			backupToFile(OpcUaSource.class);
+		} else {
+			// one source
+			OpcUaSource source = getSource();
+
+			List<CollectorDataSource> sources = new ArrayList<>();
+			sources.add(source);
+
+			// confirm
+			ButtonType type = AppUtils.showConfirmationDialog(
+					DesignerLocalizer.instance().getLangString("object.export", source.getName()));
+
+			if (type.equals(ButtonType.CANCEL)) {
+				return;
+			}
+
+			backupSources(sources);
+		}
 	}
 
 }

@@ -1,5 +1,6 @@
 package org.point85.app.proficy;
 
+import java.io.File;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,6 +14,7 @@ import org.point85.app.designer.DesignerDialogController;
 import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.collector.CollectorDataSource;
 import org.point85.domain.collector.DataSourceType;
+import org.point85.domain.exim.Exporter;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.proficy.ProficyClient;
 import org.point85.domain.proficy.ProficySource;
@@ -94,6 +96,9 @@ public class ProficyBrowserController extends DesignerDialogController {
 
 	@FXML
 	private Button btBackup;
+	
+	@FXML
+	private Button btRefresh;
 
 	@FXML
 	private Button btFilter;
@@ -194,6 +199,9 @@ public class ProficyBrowserController extends DesignerDialogController {
 		// backup
 		btBackup.setGraphic(ImageManager.instance().getImageView(Images.BACKUP));
 		btBackup.setContentDisplay(ContentDisplay.LEFT); 
+		
+		// refresh
+		btRefresh.setGraphic(ImageManager.instance().getImageView(Images.REFRESH));
 	}
 
 	public ProficySource getSource() {
@@ -216,10 +224,12 @@ public class ProficyBrowserController extends DesignerDialogController {
 		for (CollectorDataSource source : sources) {
 			historians.add((ProficySource) source);
 		}
+		ProficySource one = historians.size() == 1 ? historians.get(0) : null;
+		historians.add(null);
 		cbDataSources.setItems(historians);
 
-		if (historians.size() == 1) {
-			cbDataSources.getSelectionModel().select(0);
+		if (one != null) {
+			cbDataSources.getSelectionModel().select(one);
 			onSelectDataSource();
 		}
 	}
@@ -230,6 +240,7 @@ public class ProficyBrowserController extends DesignerDialogController {
 			dataSource = cbDataSources.getSelectionModel().getSelectedItem();
 
 			if (dataSource == null) {
+				onNewDataSource();
 				return;
 			}
 
@@ -523,7 +534,55 @@ public class ProficyBrowserController extends DesignerDialogController {
 	}
 
 	@FXML
+	private void onRefresh() throws Exception {
+		populateDataSources();
+	}
+	
+	private void backupSources(List<CollectorDataSource> sources) {
+		try {
+			// show file chooser
+			File file = getBackupFile();
+
+			if (file != null) {
+				// backup
+				Exporter.instance().backupProficySources(sources, file);
+
+				AppUtils.showInfoDialog(
+						DesignerLocalizer.instance().getLangString("backup.successful", file.getCanonicalPath()));
+			}
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+	
+	@FXML
 	private void onBackup() {
-		backupToFile(ProficySource.class);
+		if (getSource() == null || getSource().getName() == null) {
+			// confirm all
+			ButtonType type = AppUtils.showConfirmationDialog(
+					DesignerLocalizer.instance().getLangString("all.export", ProficySource.class.getSimpleName()));
+
+			if (type.equals(ButtonType.CANCEL)) {
+				return;
+			}
+
+			backupToFile(ProficySource.class);
+		} else {
+			// one source
+			ProficySource source = getSource();
+
+			List<CollectorDataSource> sources = new ArrayList<>();
+			sources.add(source);
+
+			// confirm
+			ButtonType type = AppUtils.showConfirmationDialog(
+					DesignerLocalizer.instance().getLangString("object.export", source.getName()));
+
+			if (type.equals(ButtonType.CANCEL)) {
+				return;
+			}
+
+			backupSources(sources);
+		}
 	}
 }

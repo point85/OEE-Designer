@@ -281,7 +281,10 @@ public class TrendChartController extends DesignerController {
 
 	public void setEventResolver(EventResolver eventResolver) {
 		this.eventResolver = eventResolver;
-		this.setUpdatePeriodMsec(eventResolver.getUpdatePeriod());
+
+		if (eventResolver != null) {
+			setUpdatePeriodMsec(eventResolver.getUpdatePeriod());
+		}
 	}
 
 	public OeeEvent invokeResolver(OeeContext context, Object sourceValue, OffsetDateTime dateTime, String reason)
@@ -327,18 +330,15 @@ public class TrendChartController extends DesignerController {
 	}
 
 	private synchronized void addEvent(OeeEvent event) {
-		if (resolvedItems.size() > dataCount) {
-			try {
+		Platform.runLater(() -> {
+			if (resolvedItems.size() > dataCount) {
 				resolvedItems.remove(0);
-			} catch (Exception e) {
-				// the Open JDK JRE is throwing an exception here which does not appear to be
-				// valid
 			}
-		}
-		resolvedItems.add(event);
+			resolvedItems.add(event);
 
-		tvResolvedItems.setItems(resolvedItems);
-		tvResolvedItems.refresh();
+			tvResolvedItems.setItems(resolvedItems);
+			tvResolvedItems.refresh();
+		});
 	}
 
 	private void plotData(final Object inputValue, final Object plottedValue) {

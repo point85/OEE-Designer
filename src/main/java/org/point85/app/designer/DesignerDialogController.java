@@ -41,4 +41,14 @@ public abstract class DesignerDialogController extends DialogController {
 			AppUtils.showErrorDialog(e);
 		}
 	}
+
+	protected File getBackupFile() throws Exception {
+		// show file chooser
+		File file = AppUtils.showFileSaveDialog(getApp().getLastDirectory());
+
+		if (file != null) {
+			getApp().setLastDirectory(file.getParentFile());
+		}
+		return file;
+	}
 }

@@ -24,6 +24,7 @@ SOFTWARE.
 
 package org.point85.app.uom;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -36,6 +37,7 @@ import org.point85.app.designer.DesignerApplication;
 import org.point85.app.designer.DesignerDialogController;
 import org.point85.app.designer.DesignerLocalizer;
 import org.point85.domain.DomainUtils;
+import org.point85.domain.exim.Exporter;
 import org.point85.domain.persistence.PersistenceService;
 import org.point85.domain.uom.MeasurementSystem;
 import org.point85.domain.uom.MeasurementType;
@@ -179,6 +181,9 @@ public class UomEditorController extends DesignerDialogController {
 	@FXML
 	private MenuItem miSaveAll;
 
+	@FXML
+	private MenuItem miClearSelection;
+
 	// UOM import controller
 	private UomImporterController uomImportController;
 
@@ -304,10 +309,11 @@ public class UomEditorController extends DesignerDialogController {
 		// context menu
 		miSaveAll.setGraphic(ImageManager.instance().getImageView(Images.SAVE_ALL));
 		miRefreshAll.setGraphic(ImageManager.instance().getImageView(Images.REFRESH_ALL));
-		
+		miClearSelection.setGraphic(ImageManager.instance().getImageView(Images.CLEAR));
+
 		// backup
 		btBackup.setGraphic(ImageManager.instance().getImageView(Images.BACKUP));
-		btBackup.setContentDisplay(ContentDisplay.RIGHT); 
+		btBackup.setContentDisplay(ContentDisplay.RIGHT);
 	}
 
 	@FXML
@@ -362,17 +368,15 @@ public class UomEditorController extends DesignerDialogController {
 		if (item == null) {
 			return;
 		}
-
+		selectedUomItem = item;
+		
 		// leaf node is UOM
 		if (item.getValue().isUnitOfMeasure()) {
 			// display UOM properties
 			displayAttributes(item.getValue().getUnitOfMeasure());
-			selectedUomItem = item;
 			return;
 		} else {
 			// category selected
-			selectedUomItem = null;
-
 			cbCategories.getSelectionModel().select(item.getValue().getCategory());
 		}
 
@@ -582,6 +586,12 @@ public class UomEditorController extends DesignerDialogController {
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}
+	}
+
+	@FXML
+	private void onClearSelection() {
+		this.tvUoms.getSelectionModel().clearSelection();
+		this.selectedUomItem = null;
 	}
 
 	@FXML
@@ -1061,9 +1071,60 @@ public class UomEditorController extends DesignerDialogController {
 		}
 	}
 
+	private void backupUOMs(List<UnitOfMeasure> uoms) {
+		try {
+			// show file chooser
+			File file = getBackupFile();
+
+			if (file != null) {
+				// backup
+				Exporter.instance().backupUOMs(uoms, file);
+
+				AppUtils.showInfoDialog(
+						DesignerLocalizer.instance().getLangString("backup.successful", file.getCanonicalPath()));
+			}
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+
 	@FXML
-	private void onBackup() {
-		backupToFile(UnitOfMeasure.class);
+	private void onBackup() throws Exception {
+		if (selectedUomItem == null) {
+			// confirm
+			ButtonType type = AppUtils.showConfirmationDialog(
+					DesignerLocalizer.instance().getLangString("all.export", UnitOfMeasure.class.getSimpleName()));
+
+			if (type.equals(ButtonType.CANCEL)) {
+				return;
+			}
+
+			backupToFile(UnitOfMeasure.class);
+		} else {
+			String category = selectedUomItem.getValue().getCategory();
+			UnitOfMeasure uom = selectedUomItem.getValue().getUnitOfMeasure();
+
+			List<UnitOfMeasure> uoms = new ArrayList<>();
+
+			if (uom != null) {
+				// export this UOM
+				uoms.add(uom);
+			} else {
+				// fetch UOMs from database with this category
+				uoms = PersistenceService.instance().fetchUomsByCategory(category);
+			}
+
+			// confirm
+			String name = getSelectedUom() != null ? uom.getName() : category;
+			ButtonType type = AppUtils
+					.showConfirmationDialog(DesignerLocalizer.instance().getLangString("object.export", name));
+
+			if (type.equals(ButtonType.CANCEL)) {
+				return;
+			}
+
+			backupUOMs(uoms);
+		}
 	}
 
 	// class for holding attributes of UOM in a tree view leaf node
@@ -1073,6 +1134,11 @@ public class UomEditorController extends DesignerDialogController {
 
 		// category name
 		private String category;
+
+		private UomNode(String category, UnitOfMeasure uom) {
+			this.category = category;
+			this.uom = uom;
+		}
 
 		private UomNode(String category) {
 			this.category = category;

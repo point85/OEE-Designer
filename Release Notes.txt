@@ -335,5 +335,19 @@ Note that version 3.2.0 has the following schema changes:
 
 (46) 3.11.1, October 21, 2024:	
 	- Implemented a CrossOriginFilter for the Jetty embedded server
+	
+(47) 3.12.0, February 4, 2025:	
+	- Added support for PackML OPC UA extension data type objects
+	- Added PackML time-in-state and reason Pareto charts
+	- Added ability to export a single object and its children from the Designer editors and data sources
+	- Fixed issue with partial export of a plant entity hierarchy
+	- Fixed concurrency issue in the trend chart controller
+	- Updated Jetty to 9.4.57.v20241219
+	- Updated Milo to 0.6.15
+	- Updated RabbitMQ to 5.24.0
+	- Updated ActiveMQ to 5.18.6
+	- Updated Jackson to 2.18.2	
+	- Updated Nashorn to 15.6
+	- Updated WebSocket to 1.6.0	
 
 Please send comments and suggestions to point85.llc@gmail.com.

@@ -14,6 +14,7 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Series;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 
@@ -55,7 +56,20 @@ public class ParetoChartController {
 		lineChartSeries.setName(DesignerLocalizer.instance().getLangString("cumulative"));
 
 		// create the stacked charts
-		layerCharts(spPareto, createBarChart(categoryLabel), createLineChart(categoryLabel));
+		BarChart<String, Number> barChart = createBarChart(categoryLabel);
+		LineChart<String, Number> lineChart = createLineChart(categoryLabel);
+		layerCharts(spPareto, barChart, lineChart);
+
+		// click listener and tool tip
+		for (Series<String, Number> series : lineChart.getData()) {
+			for (XYChart.Data<String, Number> item : series.getData()) {
+				item.getNode().setOnMouseClicked((MouseEvent event) -> onLineChartNodeSelected(item));
+				
+				Number yValue = (Number)item.getExtraValue();
+				Tooltip tooltip = new Tooltip(String.format(String.valueOf(yValue.intValue()) + " sec"));
+				Tooltip.install(item.getNode(), tooltip);
+			}
+		}
 	}
 
 	public void createParetoChart(String title, StackPane spPareto, List<ParetoItem> items, String categoryLabel) {
@@ -122,18 +136,10 @@ public class ParetoChartController {
 			}
 		}
 
-		// add listener for mouse click on bar
-		for (Series<String, Number> series : chBarChart.getData()) {
-			for (XYChart.Data<String, Number> item : series.getData()) {
-
-				item.getNode().setOnMouseClicked((MouseEvent event) -> onBarChartNodeSelected(item));
-			}
-		}
-
 		return chBarChart;
 	}
 
-	private void onBarChartNodeSelected(XYChart.Data<String, Number> item) {
+	private void onLineChartNodeSelected(XYChart.Data<String, Number> item) {
 		if (clickListener != null) {
 			clickListener.onClickCategory(item);
 		}
@@ -168,6 +174,7 @@ public class ParetoChartController {
 		for (ParetoItem paretoItem : this.paretoItems) {
 			cumulative += paretoItem.getValue().floatValue() / total * 100.0f;
 			XYChart.Data<String, Number> point = new XYChart.Data<>(paretoItem.getCategory(), cumulative);
+			point.setExtraValue(paretoItem.getValue());
 			lineChartSeries.getData().add(point);
 		}
 
@@ -211,5 +218,4 @@ public class ParetoChartController {
 	public void setCategoryClickListener(CategoryClickListener listener) {
 		this.clickListener = listener;
 	}
-
 }
