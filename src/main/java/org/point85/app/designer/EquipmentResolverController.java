@@ -156,6 +156,8 @@ public class EquipmentResolverController extends DesignerController {
 
 		// data sources
 		cbDataSources.getItems().addAll(DataSourceType.values());
+		// but not generic
+		cbDataSources.getItems().remove(DataSourceType.GENERIC);
 
 		// resolver types
 		cbResolverTypes.getItems().addAll(OeeEventType.values());

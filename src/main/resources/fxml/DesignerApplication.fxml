@@ -134,6 +134,7 @@
                   <MenuItem fx:id="miDatabaseServerEditor" mnemonicParsing="false" onAction="#onShowDatabaseServerEditor" text="%item.database" />
                   <MenuItem fx:id="miEmailServerEditor" mnemonicParsing="false" onAction="#onShowEmailServerEditor" text="%item.email" />
                   <MenuItem fx:id="miFileShareEditor" mnemonicParsing="false" onAction="#onShowFileShareEditor" text="%item.file" />
+                  <MenuItem fx:id="miGenericEditor" mnemonicParsing="false" onAction="#onShowGenericEditor" text="%item.gen" />
                   <MenuItem fx:id="miHttpServerEditor" mnemonicParsing="false" onAction="#onShowHttpServerEditor" text="%item.http" />
                   <MenuItem fx:id="miJMSBrokerEditor" mnemonicParsing="false" onAction="#onShowJMSBrokerEditor" text="%item.jms" />
                   <MenuItem fx:id="miKafkaServerEditor" mnemonicParsing="false" onAction="#onShowKafkaServerEditor" text="%item.kafka" />

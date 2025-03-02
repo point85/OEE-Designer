@@ -18,6 +18,7 @@ import org.point85.app.email.EmailServerController;
 import org.point85.app.email.EmailTrendController;
 import org.point85.app.file.FileShareController;
 import org.point85.app.file.FileTrendController;
+import org.point85.app.generic.GenericSourceController;
 import org.point85.app.http.HttpServerController;
 import org.point85.app.http.HttpTrendController;
 import org.point85.app.material.MaterialEditorController;
@@ -52,6 +53,7 @@ import org.point85.domain.cron.CronEventSource;
 import org.point85.domain.db.DatabaseEventSource;
 import org.point85.domain.email.EmailSource;
 import org.point85.domain.file.FileEventSource;
+import org.point85.domain.generic.GenericSource;
 import org.point85.domain.http.HttpSource;
 import org.point85.domain.kafka.KafkaSource;
 import org.point85.domain.modbus.ModbusMaster;
@@ -358,7 +360,7 @@ public class DesignerApplication {
 		return opcUaBrowserController.getSelectedNodeId();
 	}
 
-	String showScriptEditor(EventResolver eventResolver) throws Exception {
+	public String showScriptEditor(EventResolver eventResolver) throws Exception {
 		// Load the fxml file and create a new stage for the pop-up dialog.
 		if (scriptController == null) {
 			FXMLLoader loader = FXMLLoaderFactory.eventResolverLoader();
@@ -485,6 +487,29 @@ public class DesignerApplication {
 		}
 
 		return wsServerController.getSource();
+	}
+	
+	GenericSource showGenericEditor() throws Exception {
+		FXMLLoader loader = FXMLLoaderFactory.genericSourceLoader();
+		AnchorPane page = (AnchorPane) loader.getRoot();
+
+		Stage dialogStage = new Stage(StageStyle.DECORATED);
+		dialogStage.setTitle(DesignerLocalizer.instance().getLangString("gen.editor.title"));
+
+		dialogStage.initModality(Modality.WINDOW_MODAL);
+		Scene scene = new Scene(page);
+		dialogStage.setScene(scene);
+
+		// get the controller
+		GenericSourceController genericController = loader.getController();
+		genericController.setDialogStage(dialogStage);
+		genericController.initialize(this);
+
+		if (!genericController.getDialogStage().isShowing()) {
+			genericController.getDialogStage().showAndWait();
+		}
+
+		return genericController.getSource();
 	}
 
 	void showWebSocketTrendDialog(EventResolver eventResolver) throws Exception {

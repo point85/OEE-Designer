@@ -20,11 +20,14 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.script.ScriptEngine;
+
 import org.eclipse.milo.opcua.stack.core.BuiltinDataType;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.ExpandedNodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.Variant;
+import org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import org.point85.app.AppUtils;
 import org.point85.app.ImageManager;
 import org.point85.app.Images;
@@ -93,6 +96,9 @@ import org.point85.domain.proficy.ProficyClient;
 import org.point85.domain.proficy.ProficySource;
 import org.point85.domain.rmq.RmqClient;
 import org.point85.domain.rmq.RmqMessageListener;
+import org.point85.domain.script.EventResolver;
+import org.point85.domain.script.OeeContext;
+import org.point85.domain.script.ResolverFunction;
 import org.point85.domain.socket.WebSocketMessageListener;
 import org.point85.domain.socket.WebSocketOeeClient;
 import org.point85.domain.socket.WebSocketSource;
@@ -107,6 +113,7 @@ import javafx.beans.Observable;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -114,10 +121,15 @@ import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 
 public class TesterController implements RmqMessageListener, JmsMessageListener, MqttMessageListener,
 		KafkaMessageListener, CronEventListener, WebSocketMessageListener, HttpEventListener {
@@ -254,6 +266,9 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 	private Button btGetMaterials;
 
 	@FXML
+	private Button btExecuteScript;
+
+	@FXML
 	private Button btGetReasons;
 
 	@FXML
@@ -276,7 +291,44 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 	// associated task
 	private LoadTask loadTask;
 
+	// script execution context
+	private OeeContext appContext;
+
+	// the JavaScript engine
+	private ScriptEngine scriptEngine;
+
+	// script editor
+	@FXML
+	private TextArea taScript;
+
+	@FXML
+	private Object onExecuteScript() throws Exception {
+		EventResolver eventResolver = new EventResolver();
+		Object result = null;
+		String script = taScript.getText();
+
+		if (script == null || script.length() == 0) {
+			return result;
+		}
+
+		try {
+			// create the functions
+			String functionScript = ResolverFunction.functionFromBody(script);
+			ResolverFunction resolver = new ResolverFunction(functionScript);
+
+			// invoke script function
+			result = resolver.invoke(scriptEngine, appContext, new String(""), eventResolver);
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+		return result;
+	}
+
 	void initialize() {
+		// script engine and context
+		scriptEngine = new NashornScriptEngineFactory().getScriptEngine();
+		appContext = new OeeContext();
+
 		setImages();
 
 		initializeEntityTable();
@@ -294,6 +346,20 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 		dataSourceTypes.addAll(DataSourceType.values());
 		Collections.sort(dataSourceTypes);
 		cbDataSourceType.setItems(dataSourceTypes);
+
+		// insert 4 spaces instead of a 8 char tab
+		taScript.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+			final KeyCombination combo = new KeyCodeCombination(KeyCode.TAB);
+
+			@Override
+			public void handle(KeyEvent event) {
+				// check for only tab key
+				if (combo.match(event)) {
+					taScript.insertText(taScript.getCaretPosition(), "    ");
+					event.consume();
+				}
+			}
+		});
 	}
 
 	private void setImages() {
@@ -320,6 +386,10 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 		// load test
 		btLoadTest.setGraphic(ImageManager.instance().getImageView(Images.STARTUP));
 		btLoadTest.setContentDisplay(ContentDisplay.LEFT);
+
+		// script editor
+		btExecuteScript.setGraphic(ImageManager.instance().getImageView(Images.SCRIPT));
+		btExecuteScript.setContentDisplay(ContentDisplay.LEFT);
 	}
 
 	@FXML
@@ -342,13 +412,13 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 			onSelectSourceType();
 
 			/*
-			tvMaterials.getSelectionModel().clearSelection();
-			ttvEntities.getSelectionModel().clearSelection();
-			ttvReasons.getSelectionModel().clearSelection();
-*/
+			 * tvMaterials.getSelectionModel().clearSelection();
+			 * ttvEntities.getSelectionModel().clearSelection();
+			 * ttvReasons.getSelectionModel().clearSelection();
+			 */
 			lbNotification.setText(null);
 
-			//selectedEntity = null;
+			// selectedEntity = null;
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}
@@ -372,7 +442,7 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 		try {
 			// populate source ids for this source type
 			DataSourceType sourceType = cbDataSourceType.getSelectionModel().getSelectedItem();
-			
+
 			if (sourceType == null) {
 				return;
 			}
@@ -600,6 +670,10 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 	private void onTest() {
 		try {
 			DataSourceType sourceType = cbDataSourceType.getSelectionModel().getSelectedItem();
+
+			if (sourceType == null) {
+				return;
+			}
 
 			switch (sourceType) {
 			case CRON:
@@ -1525,7 +1599,6 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 	@Override
 	public void onHttpEquipmentEvent(EquipmentEventRequestDto dto) throws Exception {
 		postNotification(dto.toString());
-
 	}
 
 	/********************* Load Testing Task ***********************************/

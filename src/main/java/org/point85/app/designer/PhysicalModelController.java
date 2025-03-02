@@ -21,6 +21,7 @@ import org.point85.domain.email.EmailSource;
 import org.point85.domain.exim.Exporter;
 import org.point85.domain.exim.Importer;
 import org.point85.domain.file.FileEventSource;
+import org.point85.domain.generic.GenericSource;
 import org.point85.domain.http.HttpSource;
 import org.point85.domain.jms.JmsSource;
 import org.point85.domain.kafka.KafkaSource;
@@ -157,7 +158,10 @@ public class PhysicalModelController extends DesignerController {
 	private MenuItem miCronEditor;
 
 	@FXML
-	private MenuItem miWebSocketEditor;
+	private MenuItem miWebSocketEditor;	
+	
+	@FXML
+	private MenuItem miGenericEditor;
 
 	@FXML
 	private MenuItem miCollectorEditor;
@@ -443,6 +447,8 @@ public class PhysicalModelController extends DesignerController {
 		miCronEditor.setGraphic(ImageManager.instance().getImageView(Images.CRON));
 
 		miWebSocketEditor.setGraphic(ImageManager.instance().getImageView(Images.CONNECT));
+		
+		miGenericEditor.setGraphic(ImageManager.instance().getImageView(Images.CATEGORY));
 
 		miCollectorEditor.setGraphic(ImageManager.instance().getImageView(Images.COLLECTOR));
 
@@ -537,6 +543,15 @@ public class PhysicalModelController extends DesignerController {
 	private void onShowWebSocketEditor() {
 		try {
 			this.getApp().showWebSocketEditor();
+		} catch (Exception e) {
+			AppUtils.showErrorDialog(e);
+		}
+	}
+	
+	@FXML
+	private void onShowGenericEditor() {
+		try {
+			this.getApp().showGenericEditor();
 		} catch (Exception e) {
 			AppUtils.showErrorDialog(e);
 		}
@@ -1242,6 +1257,7 @@ public class PhysicalModelController extends DesignerController {
 			Exporter.instance().prepare(ProficySource.class);
 			Exporter.instance().prepare(RmqSource.class);
 			Exporter.instance().prepare(WebSocketSource.class);
+			Exporter.instance().prepare(GenericSource.class);
 
 			Exporter.instance().backup(file);
 

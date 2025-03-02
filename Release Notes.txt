@@ -349,5 +349,11 @@ Note that version 3.2.0 has the following schema changes:
 	- Updated Jackson to 2.18.2	
 	- Updated Nashorn to 15.6
 	- Updated WebSocket to 1.6.0	
+	
+(48) 3.12.1, March 3, 2025:	
+	- Added a generic data source
+	- Added the capability to execute a script in the Tester application
+	- Documented an Apache RocketMQ example of a generic data source
+	- Updated RabbitMQ to 5.25.0
 
 Please send comments and suggestions to point85.llc@gmail.com.

@@ -174,6 +174,13 @@ public class FXMLLoaderFactory {
 		fxmlLoader.load();
 		return fxmlLoader;
 	}
+	
+	public static FXMLLoader genericSourceLoader() throws Exception {
+		FXMLLoader fxmlLoader = new FXMLLoader(FXMLLoaderFactory.class.getResource(FXML_PATH + "GenericSource.fxml"));
+		fxmlLoader.setResources(getDesignerLangBundle());
+		fxmlLoader.load();
+		return fxmlLoader;
+	}
 
 	public static FXMLLoader kafkaServerLoader() throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(FXMLLoaderFactory.class.getResource(FXML_PATH + "KafkaServer.fxml"));

@@ -23,6 +23,7 @@ Sources of equipment availability, performance and quality event data include:
 * Modbus: a Modbus master communicating with its slaves.
 * Cron Job: a cron job scheduled to execute at specified points in time
 * GE Proficy Historian: a historian server for equipment events
+* Generic:  user implemented script or Java code to extend provided functionality
 
 The Point85 applications supporting OEE are:
 * Designer:  a GUI application for defining the plant equipment, data sources, event resolution scripts, manufacturing work schedule, availability reasons, produced materials and units of measure for data collectors.  The designer also includes a dashboard and trending capabilities.
@@ -135,7 +136,7 @@ The Java Persistence 2.2 API (JPA) as implemented by the Hibernate ORM framework
 Hibernate and JPA abstract-away database specific aspects of inserting, updating, reading and deleting records in the tables.  The API is designed to work with any relational database supported by Hibernate.  
 
 ## What's New
-Version 3.12.0 adds support for the OPC UA PackML companion specification. Details can be found in the User Guide. Please see the Release Notes.txt file for release history and additional details.
+Version 3.12.1 adds a generic data source and the capability to execute a script in the Tester application. Details can be found in the User Guide. Please see the Release Notes.txt file for release history and additional details.
 
 ## Getting Started
 The desktop applications are packaged in the oee-<version>.zip file in the latest Git release link at https://github.com/point85/OEE-Designer/releases.  Download the oee-<version>.zip file and expand the archive into a folder of your choice.  Next, download the Point85 OEE Getting Started Guide and follow instructions in that document.  
