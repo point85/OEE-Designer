@@ -355,5 +355,11 @@ Note that version 3.2.0 has the following schema changes:
 	- Added the capability to execute a script in the Tester application
 	- Documented an Apache RocketMQ example of a generic data source
 	- Updated RabbitMQ to 5.25.0
+	
+(49) 3.12.2, May 18, 2025:	
+	- Updated Milo to 0.6.16
+	- Updated ActiveMQ to 5.18.7
+	- Updated Kafka to 4.0.0	
+	- Fixed working time NPE
 
 Please send comments and suggestions to point85.llc@gmail.com.
