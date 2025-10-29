@@ -361,5 +361,14 @@ Note that version 3.2.0 has the following schema changes:
 	- Updated ActiveMQ to 5.18.7
 	- Updated Kafka to 4.0.0	
 	- Fixed working time NPE
+	
+(50) 3.12.3, October 30, 2025:	
+	- Code improvements for domain's work schedule and unit of measure functionality
+	- Updated RabbitMQ to 5.27.0
+	- Updated ActiveMQ to 5.19.1
+	- Updated Jetty to 9.4.58.v20250814
+	- Updated Kafka to 4.1.0
+	- Updated Nashorn to 15.7
+	- Updated JavaFX to 17.0.17	
 
 Please send comments and suggestions to point85.llc@gmail.com.

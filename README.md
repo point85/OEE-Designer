@@ -119,7 +119,7 @@ For example, the screen for entering summarized availability is:
 ![Operator Web Availability](https://github.com/point85/OEE-Designer/blob/master/docs/operator-web-availability.png)
 
 ## Operator Applications
-The Operator iOS and Android mobile applications allow a user to enter availability, performance, production, material change and job events.  The events can be recorded in chronological order as they happened or in summary form over a period of time by duration of event.  On Google Play Store and Apple App Store, search for "Point85". 
+The Operator iOS and Android mobile applications allow a user to enter availability, performance, production, material change and job events.  The events can be recorded in chronological order as they happened or in summary form over a period of time by duration of event.  On Google Play Store and Apple App Store, search for "OEE" and "Point85". 
 
 For example, the screen for entering summarized availability is:
 ![Operator Mobile Availability](https://github.com/point85/OEE-Designer/blob/master/docs/AvailabilityPage.png)
@@ -129,14 +129,14 @@ Desktop applications are also available for Linux, Windows and macOS.  For macOS
 A demonstration HTTP server is running a Collector at IP address 52.37.56.187 on port 8182 and can be used for the operator apps.
 
 ## Localization
-All applications with user-visible text use resource bundles for localization.  The locale is the default locale of the desktop or web server machine.  Each application has two default resource bundles, one for text named (app name)Lang.properties and one for errors/exceptions named (app name)Error.properties with US English text.
+All applications with user-visible text use resource bundles for localization.  The locale is the default locale of the desktop or web server machine.  Each application has two default resource bundles, one for text named (app name)Lang.properties and one for errors/exceptions named (app name)Error.properties with US English default text.  Translations are provided in several additional languages.
 
 ## Database
 The Java Persistence 2.2 API (JPA) as implemented by the Hibernate ORM framework together with the Hikari connection pool is used to persist OEE information to the database. 
 Hibernate and JPA abstract-away database specific aspects of inserting, updating, reading and deleting records in the tables.  The API is designed to work with any relational database supported by Hibernate.  
 
 ## What's New
-Version 3.12.2 is a maintenance release.  Details can be found in the User Guide. Please see the Release Notes.txt file for release history and additional details.
+Version 3.12.3 is a maintenance release.  Details can be found in the User Guide. Please see the Release Notes.txt file for release history and additional details.
 
 ## Getting Started
 The desktop applications are packaged in the oee-<version>.zip file in the latest Git release link at https://github.com/point85/OEE-Designer/releases.  Download the oee-<version>.zip file and expand the archive into a folder of your choice.  Next, download the Point85 OEE Getting Started Guide and follow instructions in that document.  
