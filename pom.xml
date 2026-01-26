@@ -4,19 +4,19 @@
 
   <groupId>org.point85</groupId>
   <artifactId>oee-apps</artifactId>
-  <version>3.12.3</version>
+  <version>3.12.4</version>
   <packaging>jar</packaging>
   
   <name>Point85 OEE JavaFX Applications</name>
   <url>https://github.com/point85</url>
 
   <properties>
-  	<domain.version>3.12.3</domain.version>    
+  	<domain.version>3.12.4</domain.version>    
     <maven.compiler.release>11</maven.compiler.release>
     <javafx.version>17.0.17</javafx.version>
     <javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>
     <jetty.version>9.4.58.v20250814</jetty.version>
-    <log4j2.version>2.23.0</log4j2.version>
+    <log4j2.version>2.25.3</log4j2.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
@@ -84,7 +84,7 @@
 <dependency>
     <groupId>com.microsoft.sqlserver</groupId>
     <artifactId>mssql-jdbc</artifactId>
-    <version>7.4.1.jre11</version>
+    <version>10.2.4.jre11</version>
 </dependency>
 
 <!-- Oracle DATABASE -->
