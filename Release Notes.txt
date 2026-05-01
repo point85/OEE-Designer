@@ -377,5 +377,12 @@ Note that version 3.2.0 has the following schema changes:
 	- Updated Kafka to 4.1.1
 	- Updated Log4j2 to 2.25.3
 	- Updated SQL Server to 10.2.4.jre11
+	
+(52) 3.12.5, May 1, 2026:	
+	- Updated Bouncy Castle to 1.84	
+	- Updated RabbitMQ to 5.30.0
+	- Updated ActiveMQ to 5.19.6
+	- Updated Kafka to 4.2.0
+	- Updated Log4j2 to 2.25.4	
 
 Please send comments and suggestions to point85.apps@gmail.com.
