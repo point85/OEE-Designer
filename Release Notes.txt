@@ -384,5 +384,14 @@ Note that version 3.2.0 has the following schema changes:
 	- Updated ActiveMQ to 5.19.6
 	- Updated Kafka to 4.2.0
 	- Updated Log4j2 to 2.25.4	
+	- Updated HSQLDB to 2.7.4
+	
+(53) 3.12.6, June 9, 2026:	
+	- Updated RabbitMQ to 5.31.0
+	- Updated ActiveMQ to 5.19.7
+	- Updated Kafka to 4.3.0
+	- Updated Jackson to 2.18.8	
+	- Updated PostgreSQL to 42.7.11
+	- Updated HSQLDB to 2.7.4
 
 Please send comments and suggestions to point85.apps@gmail.com.

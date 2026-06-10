@@ -4,14 +4,14 @@
 
   <groupId>org.point85</groupId>
   <artifactId>oee-apps</artifactId>
-  <version>3.12.5</version>
+  <version>3.12.6</version>
   <packaging>jar</packaging>
   
   <name>Point85 OEE JavaFX Applications</name>
   <url>https://github.com/point85</url>
 
   <properties>
-  	<domain.version>3.12.5</domain.version>    
+  	<domain.version>3.12.6</domain.version>    
     <maven.compiler.release>11</maven.compiler.release>
     <javafx.version>17.0.17</javafx.version>
     <javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>
@@ -107,7 +107,7 @@
 <dependency>
     <groupId>org.postgresql</groupId>
     <artifactId>postgresql</artifactId>
-    <version>42.7.2</version>
+    <version>42.7.11</version>
 </dependency>
 
 <!-- HSQLDB DATABASE -->
@@ -115,7 +115,7 @@
 <dependency>
     <groupId>org.hsqldb</groupId>
     <artifactId>hsqldb</artifactId>
-    <version>2.7.2</version>
+    <version>2.7.4</version>
 </dependency>       
 
 <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-controls  -->
