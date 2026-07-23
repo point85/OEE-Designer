@@ -393,5 +393,12 @@ Note that version 3.2.0 has the following schema changes:
 	- Updated Jackson to 2.18.8	
 	- Updated PostgreSQL to 42.7.11
 	- Updated HSQLDB to 2.7.4
+	
+(53) 3.12.7, July 24, 2026:		
+	- Updated RabbitMQ to 5.34.0
+	- Updated ActiveMQ to 5.19.8	
+	- Updated Kafka to 4.3.1	
+	- Updated Jackson to 2.22.1	
+	- Updated PostgreSQL to 42.7.13
 
 Please send comments and suggestions to point85.apps@gmail.com.
