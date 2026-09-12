@@ -400,5 +400,12 @@ Note that version 3.2.0 has the following schema changes:
 	- Updated Kafka to 4.3.1	
 	- Updated Jackson to 2.22.1	
 	- Updated PostgreSQL to 42.7.13
+	
+(54) 3.12.8, September 13, 2026:		
+	- Updated Log4j2 to 2.25.5	
+	- Updated RabbitMQ to 5.35.0	
+	- Updated ActiveMQ to 5.19.11
+	- Updated Modbus to 3.4.0
+	- Updated Jackson to 2.22.2	
 
 Please send comments and suggestions to point85.apps@gmail.com.
