@@ -130,7 +130,8 @@ public class SmoothedChart<X, Y> extends AreaChart<X, Y> {
 
 
     // ******************** Initialization ************************************
-    private void init() {
+    @SuppressWarnings("unused")
+	private void init() {
         _smoothed                  = true;
         _chartType                 = ChartType.LINE;
         _subDivisions              = 16;

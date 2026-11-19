@@ -97,6 +97,7 @@ public class MaterialEditorController extends DesignerDialogController {
 		return material;
 	}
 
+	@SuppressWarnings("unused")
 	@FXML
 	public void initialize() {
 		// images for buttons

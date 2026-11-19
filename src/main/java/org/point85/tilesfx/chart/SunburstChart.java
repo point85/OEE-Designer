@@ -144,7 +144,8 @@ public class SunburstChart extends Region {
     public SunburstChart() {
         this(new TreeNode(new ChartData()));
     }
-    public SunburstChart(final TreeNode TREE) {
+    @SuppressWarnings("unused")
+	public SunburstChart(final TreeNode TREE) {
         backgroundPaint     = Color.TRANSPARENT;
         borderPaint         = Color.TRANSPARENT;
         borderWidth         = 0d;
@@ -196,7 +197,8 @@ public class SunburstChart extends Region {
         prepareData();
     }
 
-    private void registerListeners() {
+    @SuppressWarnings("unused")
+	private void registerListeners() {
         widthProperty().addListener(sizeListener);
         heightProperty().addListener(sizeListener);
         tree.setOnTreeNodeEvent(e -> redraw());
@@ -572,7 +574,8 @@ public class SunburstChart extends Region {
      * Defines the root element of the tree
      * @param TREE Tree node
      */
-    public void setTree(final TreeNode TREE) {
+    @SuppressWarnings("unused")
+	public void setTree(final TreeNode TREE) {
         if (null != tree) { tree.flattened().forEach(node -> node.removeAllTreeNodeEventListeners()); }
         tree = TREE;
         tree.flattened().forEach(node -> node.setOnTreeNodeEvent(e -> redraw()));
@@ -719,7 +722,8 @@ public class SunburstChart extends Region {
         segmentPane.getChildren().setAll(segments);
     }
 
-    private Path createSegment(final double START_ANGLE, final double END_ANGLE, final double INNER_RADIUS, final double OUTER_RADIUS, final Color FILL, final Color STROKE, final TreeNode NODE) {
+    @SuppressWarnings("unused")
+	private Path createSegment(final double START_ANGLE, final double END_ANGLE, final double INNER_RADIUS, final double OUTER_RADIUS, final Color FILL, final Color STROKE, final TreeNode NODE) {
         double  startAngleRad = Math.toRadians(START_ANGLE + 90);
         double  endAngleRad   = Math.toRadians(END_ANGLE + 90);
         boolean largeAngle    = Math.abs(END_ANGLE - START_ANGLE) > 180.0;

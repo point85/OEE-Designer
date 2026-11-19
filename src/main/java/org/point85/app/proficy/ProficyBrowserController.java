@@ -136,6 +136,7 @@ public class ProficyBrowserController extends DesignerDialogController {
 	// list of tags
 	private final ObservableList<String> filteredTags = FXCollections.observableArrayList();
 
+	@SuppressWarnings("unused")
 	public void initialize(DesignerApplication app) throws Exception {
 		// main app
 		setApp(app);

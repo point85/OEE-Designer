@@ -53,6 +53,7 @@ public class LeaderBoardTileSkin extends TileSkin {
 	}
 
 	// ******************** Initialization ************************************
+	@SuppressWarnings("unused")
 	@Override
 	protected void initGraphics() {
 		super.initGraphics();
@@ -110,6 +111,7 @@ public class LeaderBoardTileSkin extends TileSkin {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private void registerItemListeners() {
 		tile.getLeaderBoardItems().forEach(item -> {
 			// item.setFormatString(formatString);

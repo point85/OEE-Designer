@@ -68,7 +68,8 @@ public class MovingAverage {
     }
 
     public TimeData getFirstEntry() { return window.peek(); }
-    public TimeData getLastEntry() { return window.stream().reduce((first, second) -> second).orElse(null); }
+    @SuppressWarnings("unused")
+	public TimeData getLastEntry() { return window.stream().reduce((first, second) -> second).orElse(null); }
 
     public Instant getTimeSpan() {
         TimeData firstEntry = getFirstEntry();

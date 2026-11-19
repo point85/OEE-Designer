@@ -24,6 +24,7 @@ public class MaterialSelectorController extends DialogController {
 	private Material selectedMaterial;
 
 	// initialize
+	@SuppressWarnings("unused")
 	public void initialize() throws Exception {
 		// images for buttons
 		setImages();

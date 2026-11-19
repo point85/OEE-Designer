@@ -117,7 +117,8 @@ public class GaugeSparkLineTileSkin extends TileSkin {
 
 
     // ******************** Initialization ************************************
-    @Override protected void initGraphics() {
+    @SuppressWarnings("unused")
+	@Override protected void initGraphics() {
         super.initGraphics();
 
         averagingListener        = o -> handleEvents("AVERAGING_PERIOD");

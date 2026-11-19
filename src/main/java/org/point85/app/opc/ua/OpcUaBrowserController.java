@@ -191,6 +191,7 @@ public class OpcUaBrowserController extends OpcUaController {
 		cbDataSources.setItems(servers);
 	}
 
+	@SuppressWarnings("unused")
 	private void initializeTreeView() {
 		tvBrowser.setShowRoot(false);
 

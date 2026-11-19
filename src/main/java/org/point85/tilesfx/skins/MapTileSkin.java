@@ -60,7 +60,8 @@ public class MapTileSkin extends TileSkin {
 
 
     // ******************** Initialization ************************************
-    @Override protected void initGraphics() {
+    @SuppressWarnings("unused")
+	@Override protected void initGraphics() {
         super.initGraphics();
 
         mouseHandler     = event -> { if (event.getClickCount() == 2) { centerLocation(); } };

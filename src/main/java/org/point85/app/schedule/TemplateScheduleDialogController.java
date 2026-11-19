@@ -52,6 +52,7 @@ public class TemplateScheduleDialogController extends DesignerDialogController {
 	@FXML
 	private TableColumn<WorkSchedule, Long> tcRotations;
 
+	@SuppressWarnings("unused")
 	@FXML
 	public void initialize() throws Exception {
 		setImages();

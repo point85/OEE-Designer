@@ -65,6 +65,7 @@ public class OpcDaTrendController extends OpcDaController implements OpcDaDataCh
 	@FXML
 	private Label lbState;
 
+	@SuppressWarnings("unused")
 	public SplitPane initializeTrend() throws Exception {
 		if (trendChartController == null) {
 			// Load the fxml file and create the anchor pane

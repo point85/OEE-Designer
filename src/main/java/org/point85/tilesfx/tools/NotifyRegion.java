@@ -75,7 +75,8 @@ public class NotifyRegion extends Region {
         getChildren().setAll(canvas);
     }
 
-    private void registerListeners() {
+    @SuppressWarnings("unused")
+	private void registerListeners() {
         widthProperty().addListener(o -> resize());
         heightProperty().addListener(o -> resize());
     }

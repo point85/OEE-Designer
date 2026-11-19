@@ -4,19 +4,19 @@
 
   <groupId>org.point85</groupId>
   <artifactId>oee-apps</artifactId>
-  <version>3.12.9</version>
+  <version>3.12.10</version>
   <packaging>jar</packaging>
   
   <name>Point85 OEE JavaFX Applications</name>
   <url>https://github.com/point85</url>
 
   <properties>
-  	<domain.version>3.12.9</domain.version>    
-    <maven.compiler.release>11</maven.compiler.release>
-    <javafx.version>17.0.17</javafx.version>
+  	<domain.version>3.12.10</domain.version>    
+    <maven.compiler.release>25</maven.compiler.release>
+    <javafx.version>25.0.5</javafx.version>
     <javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>
-    <jetty.version>9.4.58.v20250814</jetty.version>
-    <log4j2.version>2.25.5</log4j2.version>
+    <jetty.version>12.1.14</jetty.version>
+    <log4j2.version>2.26.1</log4j2.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
@@ -38,10 +38,12 @@
 </dependency>
     
 <!--  Jetty servlet -->
+<!-- Source: https://mvnrepository.com/artifact/org.eclipse.jetty.ee10/jetty-ee10-servlet -->
 <dependency>
-    <groupId>org.eclipse.jetty</groupId>
-    <artifactId>jetty-servlet</artifactId>
+    <groupId>org.eclipse.jetty.ee10</groupId>
+    <artifactId>jetty-ee10-servlet</artifactId>
     <version>${jetty.version}</version>
+    <scope>compile</scope>
 </dependency>
 
 <dependency>
@@ -173,11 +175,11 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.11.0</version>
+        <version>3.14.1</version>
         <configuration>
           <executable>${JAVA_HOME}/bin/javac</executable>
-          <source>11</source>
-          <target>11</target>
+          <source>25</source>
+          <target>25</target>
         </configuration>
       </plugin>
       
@@ -196,26 +198,25 @@
 	    </configuration>
       </plugin>
        
-      <plugin>
-	    <groupId>org.apache.maven.plugins</groupId>
-	    <artifactId>maven-dependency-plugin</artifactId>
-		<version>3.2.0</version>
-		<executions>
-	      <execution>
-		    <id>copy-dependencies</id>
-		    <phase>package</phase>
-		    <goals>
-		      <goal>copy-dependencies</goal>
-		    </goals>
-		    <configuration>
-		      <outputDirectory>
-                ${project.build.directory}/lib/
-              </outputDirectory>
-		    </configuration>
-	      </execution>
-	    </executions>
-      </plugin>
-            
+<plugin>
+  <groupId>org.apache.maven.plugins</groupId>
+  <artifactId>maven-dependency-plugin</artifactId>
+  <version>3.8.1</version>
+  <executions>
+    <execution>
+      <?m2e ignore?>
+      <id>copy-dependencies</id>
+      <phase>package</phase>
+      <goals>
+        <goal>copy-dependencies</goal>
+      </goals>
+            <configuration>
+                <outputDirectory>${project.build.directory}/lib</outputDirectory>
+            </configuration>
+    </execution>
+  </executions>
+</plugin>
+                 
     </plugins>
   </build>
 </project>

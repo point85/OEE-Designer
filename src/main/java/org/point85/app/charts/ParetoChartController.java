@@ -40,6 +40,7 @@ public class ParetoChartController {
 	// listener for mouse clicks on an X-axis category
 	private CategoryClickListener clickListener;
 
+	@SuppressWarnings("unused")
 	public void createParetoChart(String title, StackPane spPareto, List<ParetoItem> items, Number totalCount,
 			String categoryLabel) {
 		barChartSeries = new XYChart.Series<>();

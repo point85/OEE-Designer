@@ -93,7 +93,8 @@ public class PixelMatrix extends Region {
     public PixelMatrix(final int COLS, final int ROWS, final Color DOT_ON_COLOR) {
         this(250, 250, COLS, ROWS, DOT_ON_COLOR, Tile.BACKGROUND.brighter(), PixelShape.SQUARE, MatrixFont8x8.INSTANCE);
     }
-    public PixelMatrix(final double PREFERRED_WIDTH, final double PREFERRED_HEIGHT, final int COLS, final int ROWS, final Color DOT_ON_COLOR, final Color DOT_OFF_COLOR, final PixelShape DOT_SHAPE, final MatrixFont FONT) {
+    @SuppressWarnings("unused")
+	public PixelMatrix(final double PREFERRED_WIDTH, final double PREFERRED_HEIGHT, final int COLS, final int ROWS, final Color DOT_ON_COLOR, final Color DOT_OFF_COLOR, final PixelShape DOT_SHAPE, final MatrixFont FONT) {
         preferredWidth         = PREFERRED_WIDTH;
         preferredHeight        = PREFERRED_HEIGHT;
         pixelOnColor           = convertToInt(DOT_ON_COLOR);

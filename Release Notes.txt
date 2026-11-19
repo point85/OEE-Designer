@@ -413,5 +413,14 @@ Note that version 3.2.0 has the following schema changes:
 	- Updated RabbitMQ to 5.37.0	
 	- Updated Kafka to 4.4.0	
 	- Updated Jackson to 2.22.3	
+	- Updated RabbitMQ to 5.37.1	
+	
+(56) 3.12.10, November 20, 2026:
+	- Updated Bouncy Castle to 1.87		
+	- Updated ActiveMQ to 5.19.12
+	- Updated Jackson to 2.23.0
+	- Updated Log4j2 to 2.26.1	
+	- Updated to Java 25 and JavaFX 25
+	- Updated Jetty to 12.1.14
 
 Please send comments and suggestions to point85.apps@gmail.com.

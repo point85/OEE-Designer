@@ -101,6 +101,7 @@ public class OeeApplication extends Application {
 		System.exit(0);
 	}
 
+	@SuppressWarnings("unused")
 	private void showSplash(final Stage stage, Task<String> task, InitCompletionHandler initCompletionHandler)
 			throws Exception {
 

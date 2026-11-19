@@ -92,7 +92,8 @@ public class TileSkin extends SkinBase<Tile> implements Skin<Tile> {
 
 
     // ******************** Constructors **************************************
-    public TileSkin(final Tile TILE) {
+    @SuppressWarnings("unused")
+	public TileSkin(final Tile TILE) {
         super(TILE);
         tile                 = TILE;
         minValue             = TILE.getMinValue();

@@ -59,7 +59,7 @@ public class SwitchTileSkin extends TileSkin {
 
 
     // ******************** Initialization ************************************
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings({ "rawtypes", "unused" })
 	@Override protected void initGraphics() {
         super.initGraphics();
 

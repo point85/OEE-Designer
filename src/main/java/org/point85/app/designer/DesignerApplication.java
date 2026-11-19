@@ -1197,6 +1197,7 @@ public class DesignerApplication {
 		databaseTrendController.getDialogStage().show();
 	}
 
+	@SuppressWarnings("unused")
 	private void setCloseBoxAction(Scene scene, DataSubscriber subscriber) {
 		scene.getWindow().setOnCloseRequest(evt -> {
 			try {

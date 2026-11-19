@@ -45,7 +45,8 @@ public class RadarChartTileSkin extends TileSkin {
 
 
     // ******************** Initialization ************************************
-    @Override protected void initGraphics() {
+    @SuppressWarnings("unused")
+	@Override protected void initGraphics() {
         super.initGraphics();
 
         radarChart = new RadarChart(tile.getChartData());

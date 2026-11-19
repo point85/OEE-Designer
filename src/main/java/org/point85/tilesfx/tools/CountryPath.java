@@ -38,7 +38,8 @@ public class CountryPath extends SVGPath {
     public CountryPath(final String NAME) {
         this(NAME, null);
     }
-    public CountryPath(final String NAME, final String CONTENT) {
+    @SuppressWarnings("deprecation")
+	public CountryPath(final String NAME, final String CONTENT) {
         super();
         name    = NAME;
         locale  = new Locale("", NAME);

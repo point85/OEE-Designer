@@ -45,7 +45,8 @@ public class FlowGridPane extends GridPane {
     public FlowGridPane(final @NamedArg("NO_OF_COLS")int NO_OF_COLS, final @NamedArg("NO_OF_ROWS")int NO_OF_ROWS) {
         this(NO_OF_COLS, NO_OF_ROWS, (Node)null);
     }
-    public FlowGridPane(final @NamedArg("NO_OF_COLS")int NO_OF_COLS, final @NamedArg("NO_OF_ROWS")int NO_OF_ROWS, final Node... NODES) {
+    @SuppressWarnings("unused")
+	public FlowGridPane(final @NamedArg("NO_OF_COLS")int NO_OF_COLS, final @NamedArg("NO_OF_ROWS")int NO_OF_ROWS, final Node... NODES) {
         super();
         internalCall = false;
         _noOfCols    = NO_OF_COLS;
@@ -95,7 +96,8 @@ public class FlowGridPane extends GridPane {
         if (null != NODES) { getChildren().setAll(NODES); }
     }
 
-    private void registerListeners() {
+    @SuppressWarnings("unused")
+	private void registerListeners() {
         widthProperty().addListener(o -> checkAspectRatio());
         heightProperty().addListener(o -> checkAspectRatio());
     }

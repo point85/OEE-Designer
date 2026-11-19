@@ -81,6 +81,7 @@ public class EntityWorkScheduleController extends DesignerController {
 		initializeScheduleTable();
 	}
 
+	@SuppressWarnings("unused")
 	private void initializeScheduleTable() {
 		// bind to list of plant entity work schedules
 		tvSchedules.setItems(entitySchedules);

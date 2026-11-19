@@ -137,7 +137,8 @@ public class FlipTileSkin extends TileSkin {
                                   flapTextBack);
     }
 
-    @Override protected void registerListeners() {
+    @SuppressWarnings("unused")
+	@Override protected void registerListeners() {
         super.registerListeners();
 
         rotateFlap.angleProperty().addListener((o, ov, nv) -> {

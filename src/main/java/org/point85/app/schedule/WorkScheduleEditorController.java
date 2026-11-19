@@ -405,6 +405,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 	@FXML
 	private Button btViewShifts;
 
+	@SuppressWarnings("unused")
 	private void initializeScheduleList() {
 		// list of schedules selection listener
 		tvSchedules.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
@@ -418,6 +419,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		tvSchedules.setShowRoot(false);
 	}
 
+	@SuppressWarnings("unused")
 	private void initializeShiftEditor() {
 		// bind to list of shifts
 		tvShifts.setItems(shiftList);
@@ -453,6 +455,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		initializeBreakEditor();
 	}
 
+	@SuppressWarnings("unused")
 	private void initializeRotationEditor() {
 
 		// spinner value factory
@@ -527,6 +530,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 
 	}
 
+	@SuppressWarnings("unused")
 	private void initializeTeamEditor() {
 		// list of rotations to choose from
 		this.cbTeamRotations.setItems(rotationNames);
@@ -573,6 +577,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 				AppUtils.stringFromDuration(cellDataFeatures.getValue().getHoursWorkedPerWeek(), false)));
 	}
 
+	@SuppressWarnings("unused")
 	private void initializeExceptionPeriodEditor() {
 		// bind to list of periods
 		this.tvExceptionPeriods.setItems(periodList);
@@ -623,6 +628,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 		cbLosses.getItems().add(TimeLoss.NO_LOSS);
 	}
 
+	@SuppressWarnings("unused")
 	private void initializeBreakEditor() {
 		// bind to list of breaks
 		this.tvBreaks.setItems(breakList);
@@ -678,6 +684,7 @@ public class WorkScheduleEditorController extends DesignerDialogController {
 	}
 
 	// initialize editor
+	@SuppressWarnings("unused")
 	public void initializeApp(DesignerApplication app) throws Exception {
 		// main app
 		setApp(app);

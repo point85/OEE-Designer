@@ -46,7 +46,8 @@ public class CustomTileSkin extends TileSkin {
 
 
     // ******************** Initialization ************************************
-    @Override protected void initGraphics() {
+    @SuppressWarnings("unused")
+	@Override protected void initGraphics() {
         super.initGraphics();
 
         graphicListener = (o, ov, nv) -> { if (nv != null) { graphicContainer.getChildren().setAll(tile.getGraphic()); }};

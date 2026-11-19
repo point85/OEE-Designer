@@ -279,6 +279,7 @@ public class PhysicalModelController extends DesignerController {
 	}
 
 	// initialize app
+	@SuppressWarnings("unused")
 	void initialize(DesignerApplication app) {
 		// main app
 		setApp(app);

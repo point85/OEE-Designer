@@ -69,7 +69,8 @@ public class CountryTileSkin extends TileSkin {
 
 
     // ******************** Initialization ************************************
-    @Override protected void initGraphics() {
+    @SuppressWarnings("unused")
+	@Override protected void initGraphics() {
         super.initGraphics();
 
         //poiLocations       = FXCollections.observableHashMap();

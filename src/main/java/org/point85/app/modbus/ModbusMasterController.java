@@ -339,11 +339,13 @@ public class ModbusMasterController extends ModbusController {
 	private void updateSource() throws Exception {
 		ModbusSource eventSource = getSource();
 
-		eventSource.setName(getName());
-		eventSource.setDescription(getDescription());
-		eventSource.setTransport(cbTransports.getSelectionModel().getSelectedItem());
-		eventSource.setHost(tfHost.getText());
-		eventSource.setPort(Integer.valueOf(tfPort.getText()));
+		if (eventSource != null) {
+			eventSource.setName(getName());
+			eventSource.setDescription(getDescription());
+			eventSource.setTransport(cbTransports.getSelectionModel().getSelectedItem());
+			eventSource.setHost(tfHost.getText());
+			eventSource.setPort(Integer.valueOf(tfPort.getText()));
+		}
 	}
 
 	@FXML

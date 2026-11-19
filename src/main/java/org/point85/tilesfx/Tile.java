@@ -548,7 +548,8 @@ public class Tile extends Control {
 
 
     // ******************** Initialization ************************************
-    private void init() {
+    @SuppressWarnings("unused")
+	private void init() {
         _minValue                           = 0;
         _maxValue                           = 100;
         value                               = new DoublePropertyBase(_minValue) {
@@ -738,7 +739,8 @@ public class Tile extends Control {
         });
     }
 
-    private void registerListeners() {
+    @SuppressWarnings("unused")
+	private void registerListeners() {
         disabledProperty().addListener(o -> setOpacity(isDisabled() ? 0.4 : 1));
         valueProperty().addListener((o, ov, nv) -> oldValue.set(ov.doubleValue()));
         currentValueProperty().addListener(o -> {
@@ -3403,7 +3405,8 @@ public class Tile extends Control {
         if (null == time) {
             ZonedDateTime now = ZonedDateTime.now();
             time = new ObjectPropertyBase<ZonedDateTime>(now) {
-                @Override protected void invalidated() {
+                @SuppressWarnings("unused")
+				@Override protected void invalidated() {
                     zoneId = get().getZone();
                     fireTileEvent(RECALC_EVENT);
                     if (!isRunning() && isAnimated()) {

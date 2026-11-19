@@ -324,6 +324,7 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 		return result;
 	}
 
+	@SuppressWarnings("unused")
 	void initialize() {
 		// script engine and context
 		scriptEngine = new NashornScriptEngineFactory().getScriptEngine();
@@ -506,6 +507,7 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private void initializeEntityTable() {
 		// add the table view listener
 		ttvEntities.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
@@ -537,6 +539,7 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 		ttvEntities.setRoot(root);
 	}
 
+	@SuppressWarnings("unused")
 	private void initializeReasonTable() {
 
 		// add the table view listener
@@ -579,6 +582,7 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 		ttvReasons.setRoot(root);
 	}
 
+	@SuppressWarnings("unused")
 	private void initializeMaterialTable() {
 		tvMaterials.setItems(materials);
 
@@ -1079,6 +1083,7 @@ public class TesterController implements RmqMessageListener, JmsMessageListener,
 				logger.info("Posting to URL: " + urlString);
 			}
 
+			@SuppressWarnings("deprecation")
 			URL url = new URL(urlString);
 
 			conn = (HttpURLConnection) url.openConnection();

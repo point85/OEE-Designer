@@ -112,6 +112,7 @@ public class ReasonEditorController extends DesignerDialogController {
 	}
 
 	// initialize
+	@SuppressWarnings("unused")
 	public void initialize(DesignerApplication app) throws Exception {
 		// main app
 		setApp(app);

@@ -163,6 +163,7 @@ public class OpcDaBrowserController extends OpcDaController {
 		cbProgIds.setItems(progIds);
 	}
 
+	@SuppressWarnings("unused")
 	private void initializeTreeView() {
 
 		tvBrowser.setShowRoot(false);

@@ -224,6 +224,7 @@ public class OeeEventTrendController extends DesignerDialogController {
 		AppUtils.showAlert(AlertType.INFORMATION, title, header, getProductionData(event));
 	}
 
+	@SuppressWarnings("unused")
 	private void plotOeeValue(OeeEvent event) throws Exception {
 		switch (event.getEventType()) {
 		case AVAILABILITY: {

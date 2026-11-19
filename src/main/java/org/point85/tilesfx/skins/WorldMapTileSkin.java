@@ -77,7 +77,7 @@ public class WorldMapTileSkin extends TileSkin {
 
 
     // ******************** Initialization ************************************
-    @SuppressWarnings("unlikely-arg-type")
+    @SuppressWarnings({ "unlikely-arg-type", "unused" })
 	@Override protected void initGraphics() {
         super.initGraphics();
 
@@ -196,7 +196,8 @@ public class WorldMapTileSkin extends TileSkin {
         getPane().getChildren().addAll(poiLocations.values());
     }
 
-    @Override protected void registerListeners() {
+    @SuppressWarnings("unused")
+	@Override protected void registerListeners() {
         super.registerListeners();
         countryPaths.forEach((name , pathList) -> {
             Country country = Country.valueOf(name);
@@ -223,7 +224,8 @@ public class WorldMapTileSkin extends TileSkin {
         }
     }
 
-    @Override public void dispose() {
+    @SuppressWarnings("unused")
+	@Override public void dispose() {
         countryPaths.forEach((name, pathList) -> pathList.forEach(path -> path.removeEventHandler(MouseEvent.MOUSE_PRESSED, handlerMap.get(path))));
         tile.getPoiList().removeListener(poiListener);
         tile.getChartData().removeListener(chartDataListener);

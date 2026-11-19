@@ -195,6 +195,7 @@ public class LeaderBoardItem extends Region implements Comparable<LeaderBoardIte
 		getChildren().setAll(pane);
 	}
 
+	@SuppressWarnings("unused")
 	private void registerListeners() {
 		widthProperty().addListener(o -> resize());
 		heightProperty().addListener(o -> resize());

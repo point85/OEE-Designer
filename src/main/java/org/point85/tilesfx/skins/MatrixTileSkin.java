@@ -60,7 +60,8 @@ public class MatrixTileSkin extends TileSkin {
 
 
     // ******************** Initialization ************************************
-    @Override protected void initGraphics() {
+    @SuppressWarnings("unused")
+	@Override protected void initGraphics() {
         super.initGraphics();
 
         matrix = PixelMatrixBuilder.create()

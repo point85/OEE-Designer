@@ -157,6 +157,7 @@ public class MonitorController {
 	private Button btRestart;
 
 	// initialize app
+	@SuppressWarnings("unused")
 	void initializeApplication(MonitorApplication app) throws Exception {
 		// the app
 		this.monitorApp = app;
@@ -206,6 +207,7 @@ public class MonitorController {
 		populateTopEntityNodes();
 	}
 
+	@SuppressWarnings("unused")
 	private void initializeStatusTable() {
 		// server status table
 		tvServerStatus.setItems(serverStatus);

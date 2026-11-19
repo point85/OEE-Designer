@@ -109,6 +109,7 @@ public class EquipmentMaterialController extends DesignerController {
 		initializeMaterialTable();
 	}
 
+	@SuppressWarnings("unused")
 	private void initializeMaterialTable() {
 		// bind to list of equipment material
 		tvMaterial.setItems(equipmentMaterials);

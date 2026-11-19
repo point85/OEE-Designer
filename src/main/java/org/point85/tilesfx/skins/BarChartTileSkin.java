@@ -57,7 +57,8 @@ public class BarChartTileSkin extends TileSkin {
 
 
     // ******************** Initialization ************************************
-    @Override protected void initGraphics() {
+    @SuppressWarnings("unused")
+	@Override protected void initGraphics() {
         super.initGraphics();
 
         updateHandler    = e -> updateChart();
@@ -92,7 +93,8 @@ public class BarChartTileSkin extends TileSkin {
         getPane().getChildren().addAll(titleText, text, barChartPane);
     }
 
-    @Override protected void registerListeners() {
+    @SuppressWarnings("unused")
+	@Override protected void registerListeners() {
         super.registerListeners();
         tile.getBarChartItems().addListener(new WeakListChangeListener<>(change -> {
             while (change.next()) {

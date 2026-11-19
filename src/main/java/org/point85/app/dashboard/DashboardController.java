@@ -623,6 +623,7 @@ public class DashboardController extends DialogController implements CategoryCli
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private void createLossChart() {
 		// build data series
 		netTimeList.clear();
@@ -976,6 +977,7 @@ public class DashboardController extends DialogController implements CategoryCli
 		btOeeTrend.setGraphic(ImageManager.instance().getImageView(Images.CHARTXY));
 	}
 
+	@SuppressWarnings("unused")
 	@FXML
 	public void initialize() {
 		setImages();
@@ -1051,6 +1053,7 @@ public class DashboardController extends DialogController implements CategoryCli
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private void initializeEventTable() {
 		tvResolvedEvents.setItems(resolvedEvents);
 

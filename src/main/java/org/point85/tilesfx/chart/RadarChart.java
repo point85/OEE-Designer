@@ -138,7 +138,8 @@ public class RadarChart extends Region {
 
     // ******************** Constructors **************************************
     public RadarChart() { this(null); }
-    public RadarChart(final List<ChartData> DATA) {
+    @SuppressWarnings("unused")
+	public RadarChart(final List<ChartData> DATA) {
         _minValue             = 0;
         _maxValue             = 100;
         _range                = 100;

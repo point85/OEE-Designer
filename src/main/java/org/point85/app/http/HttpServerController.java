@@ -215,6 +215,7 @@ public class HttpServerController extends DesignerDialogController {
 		HttpURLConnection conn = null;
 		try {
 			String urlString = "http://" + tfHost.getText() + ":" + tfPort.getText() + '/' + OeeHttpServer.EVENT_EP;
+			@SuppressWarnings("deprecation")
 			URL url = new URL(urlString);
 
 			conn = (HttpURLConnection) url.openConnection();

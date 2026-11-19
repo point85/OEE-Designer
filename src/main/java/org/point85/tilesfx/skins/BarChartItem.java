@@ -143,7 +143,8 @@ public class BarChartItem extends Region implements Comparable<BarChartItem>{
         getChildren().setAll(pane);
     }
 
-    private void registerListeners() {
+    @SuppressWarnings("unused")
+	private void registerListeners() {
         widthProperty().addListener(o -> resize());
         heightProperty().addListener(o -> resize());
     }

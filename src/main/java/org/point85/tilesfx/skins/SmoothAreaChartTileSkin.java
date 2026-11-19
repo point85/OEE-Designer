@@ -97,7 +97,8 @@ public class SmoothAreaChartTileSkin extends TileSkin {
 
 
     // ******************** Initialization ************************************
-    @Override protected void initGraphics() {
+    @SuppressWarnings("unused")
+	@Override protected void initGraphics() {
         super.initGraphics();
 
         chartEventListener         = e -> handleData();
@@ -210,7 +211,8 @@ public class SmoothAreaChartTileSkin extends TileSkin {
         }
     }
 
-    private void handleData() {
+    @SuppressWarnings("unused")
+	private void handleData() {
         selectorTooltip.hide();
         selector.setVisible(false);
         List<ChartData> data = tile.getChartData();

@@ -27,6 +27,7 @@ public class ReasonSelectorController extends DialogController {
 	private Reason selectedReason;
 
 	// initialize
+	@SuppressWarnings("unused")
 	public void initialize() throws Exception {
 		// images for buttons
 		setImages();

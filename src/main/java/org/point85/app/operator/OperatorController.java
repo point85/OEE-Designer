@@ -212,6 +212,7 @@ public class OperatorController {
 	@FXML
 	private TextField tfChangeoverTime;
 
+	@SuppressWarnings("unused")
 	void initialize() throws Exception {
 		// images
 		setImages();

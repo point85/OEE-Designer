@@ -220,6 +220,7 @@ public class UomEditorController extends DesignerDialogController {
 		return uom;
 	}
 
+	@SuppressWarnings("unused")
 	@FXML
 	public void initialize() throws Exception {
 		// images for buttons

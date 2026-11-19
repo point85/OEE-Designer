@@ -169,6 +169,7 @@ public class EquipmentResolverController extends DesignerController {
 		initializeResolverTable();
 	}
 
+	@SuppressWarnings("unused")
 	private void initializeResolverTable() {
 		// bind to list of event resolvers
 		tvResolvers.setItems(eventResolvers);

@@ -35,6 +35,7 @@ public class ProductionEditorController extends EventEditorController {
 	@FXML
 	private Label lbUOM;
 
+	@SuppressWarnings("unused")
 	public void initializeEditor(OeeEvent event) {
 		productionEvent = event;
 
